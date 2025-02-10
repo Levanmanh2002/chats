@@ -1,0 +1,55 @@
+name: chats
+description: "A new Flutter project."
+
+publish_to: 'none' 
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.6
+  flutter_dotenv: ^5.2.1
+  flutter_easyloading: ^3.0.5
+  flutter_local_notifications: ^18.0.1
+  get: ^4.6.6
+  cached_network_image: ^3.4.1
+  flutter_svg: ^2.0.17
+  easy_refresh: ^3.4.0
+  calendar_date_picker2: ^1.1.8
+  toastification: ^2.3.0
+  shared_preferences: ^2.3.3
+  image_picker: ^1.1.2
+  zoom_tap_animation: ^1.1.0
+  pin_code_fields: ^8.0.1
+  phone_number: ^2.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  build_runner: ^2.4.11
+  json_serializable: ^6.8.0
+
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
+    - .env
+
+  fonts:
+    - family: SemiBold
+      fonts:
+        - asset: assets/fonts/SVN-Poppins-SemiBold.ttf
+
+    - family: Regular
+      fonts:
+        - asset: assets/fonts/SVN-Poppins-Regular.ttf
