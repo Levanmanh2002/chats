@@ -11,4 +11,7 @@ class ImagesAssets {
   static const String bgTopProfileImage = '${_basePath}bg_top_profile.png';
   static const String cameraBorderImage = '${_basePath}camera_border.png';
   static const String topBgChatImage = '${_basePath}top_bg_chat.png';
+  static const String contactBorderImage = '${_basePath}contact_border.png';
+  static const String addFriendImage = '${_basePath}add_friend.png';
+  static const String contactRequestImage = '${_basePath}contact_request.png';
 }

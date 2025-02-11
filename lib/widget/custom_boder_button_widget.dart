@@ -47,7 +47,7 @@ class CustomBorderButtonWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(radius),
         child: Container(
           width: width != null ? width! : Get.size.width,
-          padding: paddings ?? padding(horizontal: 16, vertical: 15),
+          padding: paddings ?? paddings ?? padding(horizontal: 14, vertical: 13),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(radius),
             border: Border.all(

@@ -4,6 +4,7 @@ import 'package:chats/pages/profile/view/header_profile_view.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/image_asset_custom.dart';
+import 'package:chats/widget/list_loader.dart';
 import 'package:chats/widget/reponsive/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,48 +14,52 @@ class ProfilePage extends GetWidget<ProfileController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: appTheme.allSidesColor,
-      body: Column(
-        children: [
-          HeaderProfileView(),
-          SizedBox(height: 24.h),
-          _buildProfile(
-            icon: IconsAssets.userEmptyIcon,
-            title: 'Thông tin cá nhân',
-            onTap: () {},
-          ),
-          SizedBox(height: 8.h),
-          _buildProfile(
-            icon: IconsAssets.smartPhoneIcon,
-            title: 'Đồng bộ danh bạ',
-            onTap: () {},
-          ),
-          SizedBox(height: 8.h),
-          _buildProfile(
-            icon: IconsAssets.chatRoundLineIcon,
-            title: 'Cài đặt tin nhắn nhanh',
-            onTap: () {},
-          ),
-          SizedBox(height: 8.h),
-          _buildProfile(
-            icon: IconsAssets.keyholeIcon,
-            title: 'Cấu hình mã bảo vệ',
-            onTap: () {},
-          ),
-          SizedBox(height: 8.h),
-          _buildProfile(
-            icon: IconsAssets.trashBinIcon,
-            title: 'Xóa tài khoản',
-            onTap: () {},
-          ),
-          SizedBox(height: 8.h),
-          _buildProfile(
-            icon: IconsAssets.logoutIcon,
-            title: 'Đăng xuất',
-            colorIcon: appTheme.errorColor,
-            colorTitle: appTheme.errorColor,
-            onTap: () => controller.logout(isShowTitle: true),
-          ),
-        ],
+      body: ListLoader(
+        onRefresh: controller.onRefresh,
+        forceScrollable: true,
+        child: Column(
+          children: [
+            HeaderProfileView(),
+            SizedBox(height: 24.h),
+            _buildProfile(
+              icon: IconsAssets.userEmptyIcon,
+              title: 'personal_information'.tr,
+              onTap: () {},
+            ),
+            SizedBox(height: 8.h),
+            _buildProfile(
+              icon: IconsAssets.smartPhoneIcon,
+              title: 'sync_contacts'.tr,
+              onTap: () {},
+            ),
+            SizedBox(height: 8.h),
+            _buildProfile(
+              icon: IconsAssets.chatRoundLineIcon,
+              title: 'quick_message_settings'.tr,
+              onTap: () {},
+            ),
+            SizedBox(height: 8.h),
+            _buildProfile(
+              icon: IconsAssets.keyholeIcon,
+              title: 'security_code_configuration'.tr,
+              onTap: () {},
+            ),
+            SizedBox(height: 8.h),
+            _buildProfile(
+              icon: IconsAssets.trashBinIcon,
+              title: 'delete_account'.tr,
+              onTap: () {},
+            ),
+            SizedBox(height: 8.h),
+            _buildProfile(
+              icon: IconsAssets.logoutIcon,
+              title: 'log_out'.tr,
+              colorIcon: appTheme.errorColor,
+              colorTitle: appTheme.errorColor,
+              onTap: () => controller.logout(isShowTitle: true),
+            ),
+          ],
+        ),
       ),
     );
   }

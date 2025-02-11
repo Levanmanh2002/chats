@@ -40,6 +40,7 @@ abstract class BaseThemeData {
   Color yellowColor = const Color(0xFFFFD900);
 
   Color grayColor = const Color(0xFF676767);
+  Color grayB9Color = const Color(0xFFB9B9B9);
 
   Color oldSilverColor = const Color(0xFF828282);
 
@@ -47,6 +48,7 @@ abstract class BaseThemeData {
 
   Color blueColor = const Color(0xFF007AFF);
   Color blueFCColor = const Color(0xFF1DA6FC);
+  Color blueFFColor = const Color(0xFFE5EDFF);
 
   Gradient? redOrangeGradient = const LinearGradient(
     colors: [Color(0xFFDB021F), Color(0xFFFB8C33)],

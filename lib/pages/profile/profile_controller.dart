@@ -27,6 +27,10 @@ class ProfileController extends GetxController {
     super.onInit();
   }
 
+  Future<void> onRefresh() async {
+    getProfile();
+  }
+
   Future<void> getProfile() async {
     try {
       final response = await profileRepository.profile();

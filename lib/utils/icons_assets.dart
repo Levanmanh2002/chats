@@ -24,4 +24,10 @@ class IconsAssets {
   static const String logoutIcon = '${_basePath}logout.svg';
   static const String keyholeIcon = '${_basePath}keyhole.svg';
   static const String chatRoundLineIcon = '${_basePath}chat_round_line.svg';
+  static const String addIcon = '${_basePath}add.svg';
+  static const String phoneIcon = '${_basePath}phone.svg';
+  static const String userPlusRoundedIcon = '${_basePath}user_plus_rounded.svg';
+  static const String addGroupIcon = '${_basePath}add_group.svg';
+  static const String phoneRoundedIcon = '${_basePath}phone_rounded.svg';
+  static const String arrowRightWhiteIcon = '${_basePath}arrow_right_white.svg';
 }

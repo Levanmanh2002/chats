@@ -11,4 +11,8 @@ abstract class Routes {
   static const FORGOT_PASSWORD = '/forgot_password';
   static const OTP = '/otp';
   static const CHANGE_PASSWORD = '/change_password';
+  static const ADD_FRIEND = '/add_friend';
+  static const CREATE_GROUP = '/create_group';
+  static const MAKE_FRIENDS = '/make_friends';
+  static const SENT_REQUEST_CONTACT = '/sent_request_contact';
 }

@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 extension StringToInt on String? {
@@ -113,5 +114,23 @@ extension StringFormatting on String {
     String maskedPart = '*' * (length - 4);
 
     return '$firstChar$maskedPart$lastThree';
+  }
+}
+
+extension TimeAgoExtension on String {
+  String get timeAgo {
+    DateTime createdTime = DateTime.parse(this);
+    DateTime now = DateTime.now();
+    Duration difference = now.difference(createdTime);
+
+    if (difference.inHours >= 1) {
+      return 'field_hours_ago'.trParams({'field': '${difference.inHours}'});
+    } else if (difference.inMinutes >= 1) {
+      return 'field_minutes_ago'.trParams({'field': '${difference.inMinutes}'});
+    } else if (difference.inDays < 7) {
+      return 'field_days_ago'.trParams({'field': '${difference.inDays}'});
+    } else {
+      return 'just_now'.tr;
+    }
   }
 }

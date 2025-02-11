@@ -9,7 +9,7 @@ class DashboardBinding implements Bindings {
   void dependencies() {
     Get.put(DashboardController());
     Get.put(ChatsController());
-    Get.put(ContactsController());
+    Get.put(ContactsController(contactRepository: Get.find()));
     Get.put(ProfileController(profileRepository: Get.find()));
   }
 }

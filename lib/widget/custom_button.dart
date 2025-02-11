@@ -12,7 +12,8 @@ class CustomButton extends StatelessWidget {
   final double? width;
   final double radius;
   final Widget? icon;
-  // final Color? color;
+  final Color? color;
+  final Color? colorLoading;
   final Color? textColor;
   final bool isLoading;
   final EdgeInsets? paddings;
@@ -25,7 +26,8 @@ class CustomButton extends StatelessWidget {
     this.width,
     this.radius = 1000,
     this.icon,
-    // this.color,
+    this.color,
+    this.colorLoading,
     this.textColor,
     this.isLoading = false,
     this.paddings,
@@ -48,15 +50,17 @@ class CustomButton extends StatelessWidget {
           padding: paddings ?? padding(all: 14),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(radius),
-            color: onPressed == null ? appTheme.allSidesColor : null,
+            color: onPressed == null ? appTheme.allSidesColor : color,
             gradient: onPressed == null
                 ? null
-                : LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [appTheme.blueFCColor, appTheme.appColor],
-                    stops: const [0.0048, 0.8952],
-                  ),
+                : color == null
+                    ? LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [appTheme.blueFCColor, appTheme.appColor],
+                        stops: const [0.0048, 0.8952],
+                      )
+                    : null,
           ),
           child: isLoading
               ? Row(
@@ -67,12 +71,15 @@ class CustomButton extends StatelessWidget {
                       height: 15.w,
                       width: 15.w,
                       child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(appTheme.whiteColor),
+                        valueColor: AlwaysStoppedAnimation<Color>(colorLoading ?? appTheme.whiteColor),
                         strokeWidth: 2,
                       ),
                     ),
                     SizedBox(width: 8.w),
-                    Text('loading'.tr, style: StyleThemeData.size12Weight400(color: appTheme.whiteColor)),
+                    Text(
+                      'loading'.tr,
+                      style: StyleThemeData.size12Weight400(color: colorLoading ?? appTheme.whiteColor),
+                    ),
                   ],
                 )
               : Row(

@@ -27,6 +27,14 @@ class AppConstants {
   static const String logoutUri = '/api/v1/account/logout';
   static const String updateAvatarUri = '/api/v1/account/update-avatar';
 
-  static const String searchContactPhoneUri = '/api/v1/contact/find-user?search=';
+  static const String searchContactPhoneUri = '/api/v1/contact/find-user';
   static const String findAccountUri = '/api/v1/account/find';
+  static const String addFriendUri = '/api/v1/contact/send-friend-request';
+  static const String removeFriendUri = '/api/v1/contact/remove-friend-request';
+  static const String getReceivedRequestContactUri = '/api/v1/contact/my-friend-requested';
+  static const String getSentRequestContactUri = '/api/v1/contact/friend-requesteds';
+  static const String cancelFriendRequestUri = '/api/v1/contact/cancel-friend-request';
+  static const String acceptFriendRequestUri = '/api/v1/contact/accept-friend-request';
+  static const String contactAcceptedUri = '/api/v1/contact/friends';
+  static const String unfriendUri = '/api/v1/contact/unfriend';
 }

@@ -1,13 +1,21 @@
+import 'package:chats/pages/add_friend/add_friend_binding.dart';
+import 'package:chats/pages/add_friend/add_friend_page.dart';
 import 'package:chats/pages/change_password/change_password_binding.dart';
 import 'package:chats/pages/change_password/change_password_page.dart';
+import 'package:chats/pages/create_group/create_group_binding.dart';
+import 'package:chats/pages/create_group/create_group_page.dart';
 import 'package:chats/pages/dashboard/dashboard_binding.dart';
 import 'package:chats/pages/dashboard/dashboard_page.dart';
 import 'package:chats/pages/forgot_password/forgot_password_binding.dart';
 import 'package:chats/pages/forgot_password/forgot_password_page.dart';
 import 'package:chats/pages/html_app/html_app_binding.dart';
 import 'package:chats/pages/html_app/html_app_page.dart';
+import 'package:chats/pages/make_friends/make_friends_binding.dart';
+import 'package:chats/pages/make_friends/make_friends_page.dart';
 import 'package:chats/pages/otp/otp_binding.dart';
 import 'package:chats/pages/otp/otp_page.dart';
+import 'package:chats/pages/sent_request_contact/sent_request_contact_binding.dart';
+import 'package:chats/pages/sent_request_contact/sent_request_contact_page.dart';
 import 'package:chats/pages/sign_in/sign_in_binding.dart';
 import 'package:chats/pages/sign_in/sign_in_page.dart';
 import 'package:chats/pages/sign_up/sign_up_binding.dart';
@@ -59,6 +67,26 @@ abstract class AppPages {
       name: Routes.CHANGE_PASSWORD,
       page: () => ChangePasswordPage(),
       binding: ChangePasswordBinding(),
+    ),
+    GetPage(
+      name: Routes.ADD_FRIEND,
+      page: () => AddFriendPage(),
+      binding: AddFriendBinding(),
+    ),
+    GetPage(
+      name: Routes.CREATE_GROUP,
+      page: () => CreateGroupPage(),
+      binding: CreateGroupBinding(),
+    ),
+    GetPage(
+      name: Routes.MAKE_FRIENDS,
+      page: () => MakeFriendsPage(),
+      binding: MakeFriendsBinding(),
+    ),
+    GetPage(
+      name: Routes.SENT_REQUEST_CONTACT,
+      page: () => SentRequestContactPage(),
+      binding: SentRequestContactBinding(),
     ),
   ];
 }

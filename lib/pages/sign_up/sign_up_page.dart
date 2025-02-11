@@ -59,7 +59,7 @@ class SignUpPage extends GetWidget<SignUpController> {
                   () => CustomTextField(
                     controller: controller.phoneController,
                     titleText: 'phone_number'.tr,
-                    hintText: 'enter_phone_number'.tr,
+                    hintText: 'enter_phone'.tr,
                     contentPadding: padding(vertical: 8),
                     showBorder: false,
                     isStatus: true,
