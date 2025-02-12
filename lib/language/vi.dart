@@ -98,4 +98,5 @@ const Map<String, String> vi = {
   "not_updated_yet": "Chưa cập nhật",
   "download_successful": "Tải xuống thành công",
   "download_failed": "Tải xuống thất bại",
+  "chat": "Trò chuyện",
 };

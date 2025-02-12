@@ -99,4 +99,5 @@ const Map<String, String> en = {
   "not_updated_yet": "Not updated yet",
   "download_successful": "Download successful",
   "download_failed": "Download failed",
+  "chat": "Chat",
 };

@@ -1,4 +1,4 @@
-import 'package:chats/models/chats/files_models.dart';
+import 'package:chats/models/messages/files_models.dart';
 import 'package:chats/models/profile/user_model.dart';
 
 class AttachmentFullscreenParameter {

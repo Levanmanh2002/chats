@@ -1,5 +1,7 @@
 import 'package:chats/resourese/auth/auth_repository.dart';
 import 'package:chats/resourese/auth/iauth_repository.dart';
+import 'package:chats/resourese/chats/chats_repository.dart';
+import 'package:chats/resourese/chats/ichats_repository.dart';
 import 'package:chats/resourese/contact/contact_repository.dart';
 import 'package:chats/resourese/contact/icontact_repository.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
@@ -14,5 +16,6 @@ class AppService {
     Get.put<IContactRepository>(ContactRepository());
     Get.put<IProfileRepository>(ProfileRepository());
     Get.put<IMessagesRepository>(MessagesRepository());
+    Get.put<IChatsRepository>(ChatsRepository());
   }
 }

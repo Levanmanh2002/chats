@@ -1,7 +1,7 @@
 import 'package:chats/extension/data/file_extension.dart';
 import 'package:chats/extension/string_extension.dart';
 import 'package:chats/main.dart';
-import 'package:chats/models/chats/files_models.dart';
+import 'package:chats/models/messages/files_models.dart';
 import 'package:chats/pages/attachment_fullscreen/attachment_fullscreen_parameter.dart';
 import 'package:chats/pages/message/message_controller.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
@@ -36,7 +36,7 @@ class ChastListViewState extends State<ChastListView> {
       // if (_scrollController.offset <= _scrollController.position.minScrollExtent &&
       //     !_scrollController.position.outOfRange) {
       if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
-        widget.controller.fetchChatList(widget.controller.chatModels.value!.chat!.id!, isRefresh: false);
+        widget.controller.fetchChatList(widget.controller.messageModel.value!.chat!.id!, isRefresh: false);
       }
     });
   }
@@ -50,7 +50,7 @@ class ChastListViewState extends State<ChastListView> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final data = widget.controller.chatModels.value?.listMessages ?? [];
+      final data = widget.controller.messageModel.value?.listMessages ?? [];
       if (data.isEmpty) {
         return const SizedBox();
       }

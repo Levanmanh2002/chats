@@ -1,4 +1,5 @@
-import 'package:chats/models/chats/chat_models.dart';
+import 'package:chats/models/messages/message_data_model.dart';
+import 'package:chats/models/messages/message_models.dart';
 import 'package:chats/pages/message/message_parameter.dart';
 import 'package:chats/resourese/ibase_repository.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
@@ -20,8 +21,8 @@ class MessageController extends GetxController {
 
   var messageValue = ''.obs;
 
-  Rx<ChatModels?> chatModels = Rx<ChatModels?>(null);
-  Rx<Message?> message = Rx<Message?>(null);
+  Rx<MessageModels?> messageModel = Rx<MessageModels?>(null);
+  Rx<MessageDataModel?> message = Rx<MessageDataModel?>(null);
 
   @override
   void onInit() {
@@ -33,17 +34,18 @@ class MessageController extends GetxController {
 
   void fetchChatList(int chatId, {bool isRefresh = true}) async {
     try {
-      final response = await messagesRepository.chatList(
+      final response = await messagesRepository.messageList(
         chatId,
-        page: isRefresh ? 1 : (chatModels.value?.totalPage ?? 1) + 1,
+        page: isRefresh ? 1 : (messageModel.value?.totalPage ?? 1) + 1,
         limit: 10,
       );
-      if (response.statusCode == 200) {
-        final model = ChatModels.fromJson(response.body['data']);
 
-        chatModels.value = ChatModels(
+      if (response.statusCode == 200) {
+        final model = MessageModels.fromJson(response.body['data']);
+
+        messageModel.value = MessageModels(
           listMessages: [
-            if (!isRefresh) ...(chatModels.value?.listMessages ?? []),
+            if (!isRefresh) ...(messageModel.value?.listMessages ?? []),
             ...(model.listMessages ?? []),
           ],
           totalPage: model.totalPage,
@@ -86,9 +88,9 @@ class MessageController extends GetxController {
       final response = await messagesRepository.sendMessage(params, multipartBody);
 
       if (response.statusCode == 200) {
-        message.value = Message.fromJson(response.body['data']);
+        message.value = MessageDataModel.fromJson(response.body['data']);
         clearMessage();
-        if (chatModels.value != null) {
+        if (messageModel.value != null) {
           fetchChatList(message.value!.chatId!, isRefresh: false);
           onInsertMessage(message.value!);
         } else {
@@ -102,11 +104,11 @@ class MessageController extends GetxController {
     }
   }
 
-  void onInsertMessage(Message newMessages) {
-    chatModels.value = chatModels.value?.copyWith(
-      listMessages: chatModels.value?.listMessages?..insert(0, newMessages),
+  void onInsertMessage(MessageDataModel newMessages) {
+    messageModel.value = messageModel.value?.copyWith(
+      listMessages: messageModel.value?.listMessages?..insert(0, newMessages),
     );
-    chatModels.refresh();
+    messageModel.refresh();
   }
 
   void clearMessage() {
