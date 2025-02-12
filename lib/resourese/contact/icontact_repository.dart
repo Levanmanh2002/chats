@@ -10,6 +10,6 @@ abstract class IContactRepository extends IBaseRepository {
   Future<Response> getSent({required int page, required int limit});
   Future<Response> cancelFriendRequest(int id);
   Future<Response> acceptFriendRequest(int id);
-  Future<Response> getContactAccepted();
+  Future<Response> getContactAccepted({required int page, required int limit});
   Future<Response> unfriend(int id);
 }

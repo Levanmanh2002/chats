@@ -28,6 +28,9 @@ dependencies:
   zoom_tap_animation: ^1.1.0
   pin_code_fields: ^8.0.1
   phone_number: ^2.1.0
+  chewie: 1.7.4
+  video_player: ^2.9.2
+  flutter_file_downloader: ^2.0.0
 
 dev_dependencies:
   flutter_test:

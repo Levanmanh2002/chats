@@ -112,9 +112,9 @@ class ContactRepository extends IContactRepository {
   }
 
   @override
-  Future<Response> getContactAccepted() async {
+  Future<Response> getContactAccepted({required int page, required int limit}) async {
     try {
-      final result = await clientGetData(AppConstants.contactAcceptedUri);
+      final result = await clientGetData("${AppConstants.contactAcceptedUri}?page=$page&size=$limit");
 
       return result;
     } catch (error) {

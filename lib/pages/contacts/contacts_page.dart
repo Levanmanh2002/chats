@@ -102,9 +102,11 @@ class ContactsPage extends GetWidget<ContactsController> {
                     children: [
                       Text('friend_requests'.tr, style: StyleThemeData.size14Weight400()),
                       SizedBox(width: 2.w),
-                      Text(
-                        '(${controller.contactModel.value?.data?.length ?? '0'})'.tr,
-                        style: StyleThemeData.size14Weight400(color: appTheme.grayColor),
+                      Obx(
+                        () => Text(
+                          '(${controller.contactModel.value?.data?.length ?? '0'})'.tr,
+                          style: StyleThemeData.size14Weight400(color: appTheme.grayColor),
+                        ),
                       ),
                     ],
                   ),

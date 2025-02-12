@@ -12,7 +12,7 @@ class ContactsController extends GetxController with GetSingleTickerProviderStat
 
   var isLoading = false.obs;
 
-  Rx<ContactModelData?> contactModel = ContactModelData().obs;
+  Rx<ContactModelData?> contactModel = Rx<ContactModelData?>(null);
 
   @override
   void onInit() {
@@ -25,7 +25,10 @@ class ContactsController extends GetxController with GetSingleTickerProviderStat
     try {
       if (isRefresh) isLoading.value = true;
 
-      final response = await contactRepository.getContactAccepted();
+      final response = await contactRepository.getContactAccepted(
+        page: isRefresh ? 1 : (contactModel.value?.totalPage ?? 1) + 1,
+        limit: 10,
+      );
 
       if (response.statusCode == 200) {
         final model = ContactModelData.fromJson(response.body['data']);

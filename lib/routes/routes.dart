@@ -15,4 +15,6 @@ abstract class Routes {
   static const CREATE_GROUP = '/create_group';
   static const MAKE_FRIENDS = '/make_friends';
   static const SENT_REQUEST_CONTACT = '/sent_request_contact';
+  static const MESSAGE = '/message';
+  static const ATTACHMENT_FULLSCREEN = '/attachment_fullscreen';
 }

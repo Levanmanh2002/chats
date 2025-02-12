@@ -7,6 +7,7 @@ class MakeFriendsBinding implements Bindings {
     Get.lazyPut(
       () => MakeFriendsController(
         contactRepository: Get.find(),
+        messagesRepository: Get.find(),
         parameter: Get.arguments,
       ),
     );

@@ -50,16 +50,21 @@ class MakeFriendsPage extends GetWidget<MakeFriendsController> {
               SizedBox(height: 16.h),
               Row(
                 children: [
-                  Flexible(
-                    child: CustomBorderButtonWidget(
-                      buttonText: 'message'.tr,
-                      radius: 50,
-                      color: appTheme.whiteColor,
-                      textColor: appTheme.whiteColor,
-                      onPressed: () {},
+                  if (controller.contact?.isFriend == true) ...[
+                    Flexible(
+                      child: Obx(
+                        () => CustomBorderButtonWidget(
+                          buttonText: 'send_message'.tr,
+                          radius: 50,
+                          color: appTheme.whiteColor,
+                          textColor: appTheme.whiteColor,
+                          isLoading: controller.isLoadingMessage.isTrue,
+                          onPressed: controller.onMessage,
+                        ),
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 16.w),
+                    SizedBox(width: 16.w),
+                  ],
                   Flexible(
                     child: Obx(
                       () => controller.contact?.isSenderRequestFriend == true

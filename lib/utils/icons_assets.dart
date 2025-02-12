@@ -30,4 +30,11 @@ class IconsAssets {
   static const String addGroupIcon = '${_basePath}add_group.svg';
   static const String phoneRoundedIcon = '${_basePath}phone_rounded.svg';
   static const String arrowRightWhiteIcon = '${_basePath}arrow_right_white.svg';
+  static const String searchIcon = '${_basePath}search.svg';
+  static const String listIcon = '${_basePath}list.svg';
+  static const String sendIcon = '${_basePath}send.svg';
+  static const String galleryIcon = '${_basePath}gallery.svg';
+  static const String emojiIcon = '${_basePath}emoji.svg';
+  static const String downloadIcon = '${_basePath}download.svg';
+  static const String playVideoIcon = '${_basePath}play_video.svg';
 }

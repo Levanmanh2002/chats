@@ -1,22 +1,27 @@
 import 'package:chats/models/profile/user_model.dart';
 import 'package:chats/pages/contacts/contacts_controller.dart';
 import 'package:chats/pages/make_friends/make_friends_parameter.dart';
+import 'package:chats/pages/message/message_parameter.dart';
 import 'package:chats/pages/sent_request_contact/sent_request_contact_controller.dart';
 import 'package:chats/resourese/contact/icontact_repository.dart';
+import 'package:chats/resourese/messages/imessages_repository.dart';
+import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/dialog_utils.dart';
 import 'package:get/get.dart';
 
 class MakeFriendsController extends GetxController {
   final IContactRepository contactRepository;
+  final IMessagesRepository messagesRepository;
   final MakeFriendsParameter parameter;
 
   UserModel? get contact => parameter.contact;
 
-  MakeFriendsController({required this.contactRepository, required this.parameter});
+  MakeFriendsController({required this.contactRepository, required this.messagesRepository, required this.parameter});
 
   var isLoadingAdd = false.obs;
   var isLoadingRemove = false.obs;
   var isLoadingUnfriend = false.obs;
+  var isLoadingMessage = false.obs;
 
   void addFriend() async {
     try {
@@ -77,6 +82,30 @@ class MakeFriendsController extends GetxController {
       print(e);
     } finally {
       isLoadingUnfriend.value = false;
+    }
+  }
+
+  void onMessage() async {
+    try {
+      isLoadingMessage.value = true;
+
+      final response = await messagesRepository.getIdChatByUser(parameter.id);
+
+      if (response.statusCode == 200) {
+        Get.toNamed(
+          Routes.MESSAGE,
+          arguments: MessageParameter(id: response.body['data']['id'], contact: contact),
+        );
+      } else {
+        Get.toNamed(
+          Routes.MESSAGE,
+          arguments: MessageParameter(contact: contact),
+        );
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      isLoadingMessage.value = false;
     }
   }
 }

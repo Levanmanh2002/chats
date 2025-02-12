@@ -1,5 +1,7 @@
 import 'package:chats/pages/add_friend/add_friend_binding.dart';
 import 'package:chats/pages/add_friend/add_friend_page.dart';
+import 'package:chats/pages/attachment_fullscreen/attachment_fullscreen_binding.dart';
+import 'package:chats/pages/attachment_fullscreen/attachment_fullscreen_page.dart';
 import 'package:chats/pages/change_password/change_password_binding.dart';
 import 'package:chats/pages/change_password/change_password_page.dart';
 import 'package:chats/pages/create_group/create_group_binding.dart';
@@ -12,6 +14,8 @@ import 'package:chats/pages/html_app/html_app_binding.dart';
 import 'package:chats/pages/html_app/html_app_page.dart';
 import 'package:chats/pages/make_friends/make_friends_binding.dart';
 import 'package:chats/pages/make_friends/make_friends_page.dart';
+import 'package:chats/pages/message/message_binding.dart';
+import 'package:chats/pages/message/message_page.dart';
 import 'package:chats/pages/otp/otp_binding.dart';
 import 'package:chats/pages/otp/otp_page.dart';
 import 'package:chats/pages/sent_request_contact/sent_request_contact_binding.dart';
@@ -87,6 +91,16 @@ abstract class AppPages {
       name: Routes.SENT_REQUEST_CONTACT,
       page: () => SentRequestContactPage(),
       binding: SentRequestContactBinding(),
+    ),
+    GetPage(
+      name: Routes.MESSAGE,
+      page: () => MessagePage(),
+      binding: MessageBinding(),
+    ),
+    GetPage(
+      name: Routes.ATTACHMENT_FULLSCREEN,
+      page: () => AttachmentFullscreenPage(),
+      binding: AttachmentFullscreenBinding(),
     ),
   ];
 }
