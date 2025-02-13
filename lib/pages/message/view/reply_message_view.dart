@@ -26,14 +26,8 @@ class ReplyMessageView extends GetView<MessageController> {
       ),
       child: Row(
         children: [
-          Container(
-            height: 32.h,
-            width: 2.w,
-            color: appTheme.appColor,
-          ),
-          SizedBox(width: 8.w),
           (controller.messageReply.value?.files ?? []).isNotEmpty
-              ? Flexible(
+              ? Expanded(
                   child: Row(
                     children: [
                       _buildAttachFileView(controller.messageReply.value!.files!.first, 32.w, borderRadius: 2),
@@ -64,26 +58,37 @@ class ReplyMessageView extends GetView<MessageController> {
                     ],
                   ),
                 )
-              : Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              : Expanded(
+                  child: Row(
                     children: [
-                      Text(
-                        controller.messageReply.value?.sender?.name ?? '',
-                        style: StyleThemeData.size12Weight600(),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      SizedBox(height: 2.h),
-                      Text(
-                        controller.messageReply.value?.message ?? '',
-                        style: StyleThemeData.size8Weight400(color: appTheme.grayColor),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                      const ImageAssetCustom(imagePath: IconsAssets.replyIcon),
+                      SizedBox(width: 8.w),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            controller.messageReply.value?.sender?.name ?? '',
+                            style: StyleThemeData.size12Weight600(),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          SizedBox(height: 2.h),
+                          Text(
+                            controller.messageReply.value?.message ?? '',
+                            style: StyleThemeData.size8Weight400(color: appTheme.grayColor),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
+          SizedBox(width: 8.w),
+          InkWell(
+            onTap: controller.removeReplyMessage,
+            child: Icon(Icons.close, size: 24.w, color: appTheme.grayColor),
+          ),
         ],
       ),
     );

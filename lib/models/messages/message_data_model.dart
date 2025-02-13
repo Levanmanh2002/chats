@@ -1,4 +1,5 @@
 import 'package:chats/models/messages/files_models.dart';
+import 'package:chats/models/messages/likes.dart';
 import 'package:chats/models/messages/reply_message.dart';
 import 'package:chats/models/profile/user_model.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -24,6 +25,8 @@ class MessageDataModel {
   @JsonKey(name: 'reply_message')
   ReplyMessage? replyMessage;
 
+  List<LikeModel>? likes;
+
   @JsonKey(name: 'created_at')
   String? createdAt;
 
@@ -38,6 +41,7 @@ class MessageDataModel {
     this.files,
     this.isRollback,
     this.replyMessage,
+    this.likes,
     this.createdAt,
     this.status = MessageStatus.success,
   });
@@ -56,6 +60,7 @@ class MessageDataModel {
     List<FilesModels>? files,
     bool? isRollback,
     ReplyMessage? replyMessage,
+    List<LikeModel>? likes,
     String? createdAt,
     MessageStatus? status,
   }) {
@@ -67,6 +72,7 @@ class MessageDataModel {
       files: files ?? this.files,
       isRollback: isRollback ?? this.isRollback,
       replyMessage: replyMessage ?? this.replyMessage,
+      likes: likes ?? this.likes,
       createdAt: createdAt ?? this.createdAt,
       status: status ?? this.status,
     );

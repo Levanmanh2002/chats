@@ -103,4 +103,7 @@ const Map<String, String> vi = {
   "image_line": "[Hình ảnh]",
   "video_line": "[Video]",
   "attachment_line": "[Tệp đính kèm]",
+  "all": "Tất cả",
+  "unread": "Chưa đọc",
+  "message_rollback": "Tin nhắn đã được thu hồi",
 };

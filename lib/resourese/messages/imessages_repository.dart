@@ -5,4 +5,6 @@ abstract class IMessagesRepository extends IBaseRepository {
   Future<Response> getIdChatByUser(int userId);
   Future<Response> sendMessage(Map<String, String> body, List<MultipartBody> multipartBody);
   Future<Response> messageList(int chatId, {int page = 1, int limit = 10});
+  Future<Response> revokeMessage(int messageId);
+  Future<Response> heartMessage(int messageId);
 }

@@ -42,4 +42,6 @@ class AppConstants {
   static String messageList(int chatId, {int page = 1, int limit = 10}) =>
       '/api/v1/message/$chatId/conversion?page=$page&size=$limit';
   static const String chatListAllUri = '/api/v1/message/conversions';
+  static String heartMessage(int messageId) => '/api/v1/message/$messageId/like';
+  static String revokeMessage(int messageId) => '/api/v1/message/$messageId/rollback';
 }

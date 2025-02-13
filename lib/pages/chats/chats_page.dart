@@ -72,32 +72,7 @@ class ChatsPage extends GetWidget<ChatsController> {
               ),
             ],
           ),
-          TabBar(
-            controller: controller.tabController,
-            indicatorColor: appTheme.blackColor,
-            dividerColor: appTheme.allSidesColor,
-            labelColor: appTheme.blackColor,
-            unselectedLabelColor: appTheme.grayColor,
-            labelStyle: StyleThemeData.size14Weight600(),
-            unselectedLabelStyle: StyleThemeData.size14Weight600(color: appTheme.grayColor),
-            indicator: BoxDecoration(
-              border: Border(bottom: BorderSide(color: appTheme.blackColor, width: 1.w)),
-            ),
-            indicatorSize: TabBarIndicatorSize.tab,
-            tabs: [
-              Tab(text: 'Tất cả'.tr),
-              Tab(text: 'Chưa đọc'.tr),
-            ],
-          ),
-          Expanded(
-            child: TabBarView(
-              controller: controller.tabController,
-              children: [
-                ChatAllView(),
-                const SizedBox(),
-              ],
-            ),
-          ),
+          Expanded(child: ChatAllView()),
         ],
       ),
     );

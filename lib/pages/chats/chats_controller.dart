@@ -1,15 +1,12 @@
 import 'package:chats/models/chats/chats_models.dart';
 import 'package:chats/models/messages/message_data_model.dart';
 import 'package:chats/resourese/chats/ichats_repository.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ChatsController extends GetxController with GetSingleTickerProviderStateMixin {
   final IChatsRepository chatsRepository;
 
   ChatsController({required this.chatsRepository});
-
-  late final TabController tabController;
 
   Rx<ChatsModels?> chatsModels = Rx<ChatsModels?>(null);
 
@@ -18,7 +15,6 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
   @override
   void onInit() {
     super.onInit();
-    tabController = TabController(length: 2, vsync: this);
     fetchChatList();
   }
 

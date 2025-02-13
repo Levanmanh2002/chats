@@ -39,4 +39,28 @@ class MessagesRepository extends IMessagesRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<Response> heartMessage(int messageId) async {
+    try {
+      final result = await clientPostData(AppConstants.heartMessage(messageId), {});
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> revokeMessage(int messageId) async {
+    try {
+      final result = await clientPostData(AppConstants.revokeMessage(messageId), {});
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
 }

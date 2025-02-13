@@ -7,6 +7,7 @@ import 'package:chats/models/messages/message_models.dart';
 import 'package:chats/models/messages/reply_message.dart';
 import 'package:chats/pages/attachment_fullscreen/attachment_fullscreen_parameter.dart';
 import 'package:chats/pages/message/message_controller.dart';
+import 'package:chats/pages/message/widget/reaction_popup_widget.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
@@ -66,85 +67,156 @@ class ChastListView extends GetView<MessageController> {
                         style: StyleThemeData.size12Weight400(color: appTheme.whiteColor),
                       ),
                     ),
-                  Padding(
-                    padding: padding(horizontal: 16),
-                    child: Column(
-                      children: [
-                        AnimationReplyMessage(
-                          key: UniqueKey(),
-                          swipeSensitivity: 5,
-                          onRightSwipe: (details) {
-                            controller.updateReplyMessage(item);
-                          },
-                          onLeftSwipe: (details) {
-                            controller.updateReplyMessage(item);
-                          },
-                          child: _itemListMessage(
-                            text: item.message ?? '',
-                            isCurrentUser: item.sender?.id == Get.find<ProfileController>().user.value?.id,
-                            status: item.status,
-                            replyMessage: item.replyMessage,
+                  item.isRollback == true
+                      ? Align(
+                          alignment: item.sender?.id == Get.find<ProfileController>().user.value?.id
+                              ? Alignment.centerRight
+                              : Alignment.centerLeft,
+                          child: Container(
+                            margin: padding(horizontal: 16, vertical: 2),
+                            constraints: BoxConstraints(maxWidth: 300.w),
+                            padding: padding(all: 8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: item.sender?.id == Get.find<ProfileController>().user.value?.id
+                                  ? appTheme.appColor
+                                  : appTheme.whiteColor,
+                            ),
+                            child: Text(
+                              'message_rollback'.tr,
+                              style: StyleThemeData.size12Weight400(color: appTheme.blueBFFColor),
+                            ),
                           ),
-                        ),
-                        if ((item.files ?? []).isNotEmpty) ...[
-                          AnimationReplyMessage(
-                            key: UniqueKey(),
-                            swipeSensitivity: 5,
-                            onRightSwipe: (details) {
-                              controller.updateReplyMessage(item);
-                            },
-                            onLeftSwipe: (details) {
-                              controller.updateReplyMessage(item);
-                            },
-                            child: Align(
-                              alignment: item.sender?.id == Get.find<ProfileController>().user.value?.id
-                                  ? Alignment.centerRight
-                                  : Alignment.centerLeft,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                        )
+                      : Stack(
+                          children: [
+                            Padding(
+                              padding: padding(horizontal: 16, bottom: (item.likes ?? []).isNotEmpty ? 20 : 0),
+                              child: Column(
                                 children: [
-                                  Container(
-                                    constraints: BoxConstraints(maxWidth: 300.w),
-                                    child: DynamicGridItemView<FilesModels>(
-                                      items: item.files ?? [],
-                                      borderRadius: 8,
-                                      itemBuilder: (file, index) {
-                                        return LayoutBuilder(
-                                          builder: (context, constraint) => Padding(
-                                            padding: padding(all: 4),
-                                            child: InkWell(
-                                              onTap: () => Get.toNamed(
-                                                Routes.ATTACHMENT_FULLSCREEN,
-                                                arguments: AttachmentFullscreenParameter(
-                                                  files: item.files ?? [],
-                                                  index: index,
-                                                  user: item.sender,
-                                                ),
-                                              ),
-                                              borderRadius: BorderRadius.circular(8),
-                                              child: _buildAttachFileView(file, constraint.maxWidth.w),
-                                            ),
-                                          ),
-                                        );
+                                  GestureDetector(
+                                    onLongPress: () {
+                                      showReactionPopup(
+                                        item.message ?? '',
+                                        isCurrentUser: item.sender?.id == Get.find<ProfileController>().user.value?.id,
+                                        onRevoke: () => controller.onRevokeMessageLocal(item.id),
+                                        onHeart: () => controller.onHeartMessageLocal(item.id),
+                                      );
+                                    },
+                                    child: AnimationReplyMessage(
+                                      key: UniqueKey(),
+                                      swipeSensitivity: 5,
+                                      onRightSwipe: (details) {
+                                        controller.updateReplyMessage(item);
                                       },
+                                      onLeftSwipe: (details) {
+                                        controller.updateReplyMessage(item);
+                                      },
+                                      child: _itemListMessage(
+                                        text: item.message ?? '',
+                                        isCurrentUser: item.sender?.id == Get.find<ProfileController>().user.value?.id,
+                                        status: item.status,
+                                        replyMessage: item.replyMessage,
+                                      ),
                                     ),
                                   ),
-                                  if (item.status == MessageStatus.sending) ...[
-                                    SizedBox(width: 4.w),
-                                    Icon(Icons.watch_later, size: 16, color: appTheme.cardSendTimeColor),
-                                  ] else if (item.status == MessageStatus.failed) ...[
-                                    SizedBox(width: 4.w),
-                                    Icon(Icons.error, size: 16, color: appTheme.errorColor),
+                                  if ((item.files ?? []).isNotEmpty) ...[
+                                    GestureDetector(
+                                      onLongPress: () {
+                                        showReactionPopup(
+                                          item.message ?? '',
+                                          isCurrentUser:
+                                              item.sender?.id == Get.find<ProfileController>().user.value?.id,
+                                          onRevoke: () => controller.onRevokeMessageLocal(item.id),
+                                          onHeart: () => controller.onHeartMessageLocal(item.id),
+                                        );
+                                      },
+                                      child: AnimationReplyMessage(
+                                        key: UniqueKey(),
+                                        swipeSensitivity: 5,
+                                        onRightSwipe: (details) {
+                                          controller.updateReplyMessage(item);
+                                        },
+                                        onLeftSwipe: (details) {
+                                          controller.updateReplyMessage(item);
+                                        },
+                                        child: Align(
+                                          alignment: item.sender?.id == Get.find<ProfileController>().user.value?.id
+                                              ? Alignment.centerRight
+                                              : Alignment.centerLeft,
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            children: [
+                                              Container(
+                                                constraints: BoxConstraints(maxWidth: 300.w),
+                                                child: DynamicGridItemView<FilesModels>(
+                                                  items: item.files ?? [],
+                                                  borderRadius: 8,
+                                                  itemBuilder: (file, index) {
+                                                    return LayoutBuilder(
+                                                      builder: (context, constraint) => Padding(
+                                                        padding: padding(all: 4),
+                                                        child: InkWell(
+                                                          onTap: () => Get.toNamed(
+                                                            Routes.ATTACHMENT_FULLSCREEN,
+                                                            arguments: AttachmentFullscreenParameter(
+                                                              files: item.files ?? [],
+                                                              index: index,
+                                                              user: item.sender,
+                                                            ),
+                                                          ),
+                                                          borderRadius: BorderRadius.circular(8),
+                                                          child: _buildAttachFileView(file, constraint.maxWidth.w),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                              if (item.status == MessageStatus.sending) ...[
+                                                SizedBox(width: 4.w),
+                                                Icon(Icons.watch_later, size: 16, color: appTheme.cardSendTimeColor),
+                                              ] else if (item.status == MessageStatus.failed) ...[
+                                                SizedBox(width: 4.w),
+                                                Icon(Icons.error, size: 16, color: appTheme.errorColor),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ],
                               ),
                             ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
+                            if ((item.likes ?? []).isNotEmpty && item.isRollback == false)
+                              Positioned(
+                                right: 0,
+                                bottom: 0,
+                                child: Container(
+                                  margin: padding(horizontal: 16, bottom: 6),
+                                  padding: padding(vertical: 2, horizontal: 8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    border: Border.all(color: appTheme.allSidesColor),
+                                    color: appTheme.whiteColor,
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      ImageAssetCustom(imagePath: IconsAssets.heartColorIcon, width: 15.w),
+                                      SizedBox(width: 2.w),
+                                      Text(
+                                        item.likes?.length.toString() ?? '',
+                                        style: StyleThemeData.size10Weight600(),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
                 ],
               );
             },

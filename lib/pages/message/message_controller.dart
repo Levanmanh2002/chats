@@ -1,5 +1,6 @@
 import 'package:chats/extension/data/file_extension.dart';
 import 'package:chats/models/messages/files_models.dart';
+import 'package:chats/models/messages/likes.dart';
 import 'package:chats/models/messages/message_data_model.dart';
 import 'package:chats/models/messages/message_models.dart';
 import 'package:chats/models/messages/reply_message.dart';
@@ -208,6 +209,104 @@ class MessageController extends GetxController {
 
   void updateReplyMessage(MessageDataModel? message) {
     messageReply.value = message;
+  }
+
+  void removeReplyMessage() {
+    messageReply.value = null;
+  }
+
+  void onRevokeMessageLocal(int? messageId, {bool isRollback = true}) {
+    int index = messageModel.value?.listMessages?.indexWhere((msg) => msg.id == messageId) ?? -1;
+
+    if (index != -1) {
+      messageModel.value?.listMessages![index] = messageModel.value!.listMessages![index].copyWith(
+        isRollback: isRollback,
+      );
+
+      messageModel.refresh();
+    }
+
+    if (isRollback == true) onRevokeMessage(messageId);
+  }
+
+  void onRevokeMessage(int? messageId) async {
+    try {
+      if (messageId == null) return;
+      final response = await messagesRepository.revokeMessage(messageId);
+
+      if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 500) {
+        return;
+      } else {
+        onRevokeMessageLocal(messageId, isRollback: false);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void onHeartMessageLocal(int? messageId) {
+    if (messageId == null) return;
+
+    final userId = Get.find<ProfileController>().user.value?.id;
+    if (userId == null) return;
+
+    int index = messageModel.value?.listMessages?.indexWhere((msg) => msg.id == messageId) ?? -1;
+    if (index != -1) {
+      final message = messageModel.value?.listMessages![index];
+      List<LikeModel> likes = List.from(message?.likes ?? []);
+
+      int likeIndex = likes.indexWhere((like) => like.user?.id == userId);
+
+      if (likeIndex != -1) {
+        likes.removeAt(likeIndex);
+      } else {
+        likes.add(
+          LikeModel(
+            id: DateTime.now().millisecondsSinceEpoch,
+            user: Get.find<ProfileController>().user.value,
+            createdAt: DateTime.now().toString(),
+          ),
+        );
+      }
+      messageModel.value?.listMessages![index] = message!.copyWith(likes: likes);
+      messageModel.refresh();
+    }
+
+    onHeartMessage(messageId);
+  }
+
+  void onHeartMessage(int? messageId) async {
+    try {
+      if (messageId == null) return;
+      final response = await messagesRepository.heartMessage(messageId);
+
+      if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 500) {
+        return;
+      } else {
+        removeUserLike(messageId);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void removeUserLike(int? messageId) {
+    if (messageId == null) return;
+
+    final userId = Get.find<ProfileController>().user.value?.id;
+    if (userId == null) return;
+
+    int index = messageModel.value?.listMessages?.indexWhere((msg) => msg.id == messageId) ?? -1;
+
+    if (index != -1) {
+      final message = messageModel.value?.listMessages![index];
+      List<LikeModel> likes = List.from(message?.likes ?? []);
+
+      likes.removeWhere((like) => like.user?.id == userId);
+
+      messageModel.value?.listMessages![index] = message!.copyWith(likes: likes);
+      messageModel.refresh();
+    }
   }
 
   @override

@@ -104,4 +104,7 @@ const Map<String, String> en = {
   "image_line": "[Image]",
   "video_line": "[Video]",
   "attachment_line": "[Attachment]",
+  "all": "All",
+  "unread": "Unread",
+  "message_rollback": "Message has been revoked",
 };
