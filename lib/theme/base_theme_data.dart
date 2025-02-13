@@ -49,6 +49,9 @@ abstract class BaseThemeData {
   Color blueColor = const Color(0xFF007AFF);
   Color blueFCColor = const Color(0xFF1DA6FC);
   Color blueFFColor = const Color(0xFFE5EDFF);
+  Color blueBFFColor = const Color(0xFF9E9BFF);
+
+  Color cardSendTimeColor = const Color(0xFF8E9AA3);
 
   Gradient? redOrangeGradient = const LinearGradient(
     colors: [Color(0xFFDB021F), Color(0xFFFB8C33)],

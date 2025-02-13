@@ -100,4 +100,8 @@ const Map<String, String> en = {
   "download_successful": "Download successful",
   "download_failed": "Download failed",
   "chat": "Chat",
+  "new_messages": "New messages",
+  "image_line": "[Image]",
+  "video_line": "[Video]",
+  "attachment_line": "[Attachment]",
 };

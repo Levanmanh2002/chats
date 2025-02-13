@@ -6,7 +6,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'message_models.g.dart';
 
 extension MessageModelsExtension on MessageModels {
-  bool get hasNext => ((listMessages?.length ?? 0)) < (totalPage ?? 0);
+  bool get hasNext => ((listMessages?.length ?? 0)) < (totalCount ?? 0);
 }
 
 @JsonSerializable()

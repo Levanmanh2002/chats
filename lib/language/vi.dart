@@ -99,4 +99,8 @@ const Map<String, String> vi = {
   "download_successful": "Tải xuống thành công",
   "download_failed": "Tải xuống thất bại",
   "chat": "Trò chuyện",
+  "new_messages": "Có tin nhắn mới",
+  "image_line": "[Hình ảnh]",
+  "video_line": "[Video]",
+  "attachment_line": "[Tệp đính kèm]",
 };

@@ -4,6 +4,14 @@ import 'package:chats/widget/reponsive/extension.dart';
 import 'package:flutter/material.dart';
 
 class StyleThemeData {
+  static TextStyle size8Weight400({Color? color, double height = 1.5}) => TextStyle(
+        fontSize: 8.fontSize,
+        fontWeight: FontWeight.w400,
+        color: color ?? appTheme.blackColor,
+        height: height.h,
+        fontFamily: AppConstants.fontFamilyRegular,
+      );
+
   static TextStyle size10Weight300({Color? color, double height = 1.5}) => TextStyle(
         fontSize: 10.fontSize,
         fontWeight: FontWeight.w300,

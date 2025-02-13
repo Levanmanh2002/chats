@@ -12,10 +12,13 @@ class FilesModels {
   @JsonKey(name: 'file_type')
   String? fileType;
 
+  bool isLocal;
+
   FilesModels({
     this.id,
     this.fileUrl,
     this.fileType,
+    this.isLocal = false,
   });
 
   factory FilesModels.fromJson(Map<String, dynamic> json) => _$FilesModelsFromJson(json);

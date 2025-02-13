@@ -1,10 +1,13 @@
+import 'dart:io';
+
 import 'package:chats/main.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerWidget extends StatefulWidget {
-  const VideoPlayerWidget({super.key, required this.videoUrl});
-  final String videoUrl;
+  const VideoPlayerWidget({super.key, required this.videoPath, this.isLocal = false});
+  final String videoPath;
+  final bool isLocal;
 
   @override
   _VideoPlayerWidgetState createState() => _VideoPlayerWidgetState();
@@ -18,7 +21,9 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
+    _controller = widget.isLocal
+        ? VideoPlayerController.file(File(widget.videoPath))
+        : VideoPlayerController.networkUrl(Uri.parse(widget.videoPath))
       ..initialize().then((_) {
         _isInitializedNotifier.value = true;
         _isPlayingNotifier.value = _controller.value.isPlaying;

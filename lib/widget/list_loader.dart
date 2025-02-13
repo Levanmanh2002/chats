@@ -9,6 +9,7 @@ class ListLoader extends StatelessWidget {
   final Future<dynamic>? Function()? onRefresh;
   final bool hasNext;
   final bool forceScrollable;
+  final Color? color;
 
   const ListLoader({
     super.key,
@@ -17,6 +18,7 @@ class ListLoader extends StatelessWidget {
     this.hasNext = false,
     this.onLoad,
     this.forceScrollable = false,
+    this.color,
   });
 
   @override
@@ -31,7 +33,8 @@ class ListLoader extends StatelessWidget {
         noMoreText: 'refresh_no_more'.tr,
         processedText: ''.tr,
         // processedText: 'succeeded'.tr,
-        textStyle: StyleThemeData.size14Weight400(),
+        textStyle: StyleThemeData.size14Weight400(color: color),
+        iconTheme: IconThemeData(color: color),
       ),
       onRefresh: onRefresh,
       onLoad: hasNext ? onLoad : null,

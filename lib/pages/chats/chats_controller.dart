@@ -1,4 +1,5 @@
 import 'package:chats/models/chats/chats_models.dart';
+import 'package:chats/models/messages/message_data_model.dart';
 import 'package:chats/resourese/chats/ichats_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -48,6 +49,14 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
       print(e);
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  void updateChatLastMessage(MessageDataModel message) {
+    final chat = chatsModels.value?.chat?.firstWhereOrNull((e) => e.id == message.chatId);
+    if (chat != null) {
+      chat.latestMessage = message;
+      chatsModels.refresh();
     }
   }
 }

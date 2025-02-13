@@ -11,6 +11,7 @@ class AttachmentFullscreenController extends GetxController {
   AttachmentFullscreenController({required this.parameter});
 
   final pageController = PageController();
+  List<TransformationController> controllers = [];
 
   var isShowAppBar = true.obs;
 
@@ -20,6 +21,7 @@ class AttachmentFullscreenController extends GetxController {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       pageController.jumpToPage(parameter.index);
     });
+    initControllers(parameter.files?.length ?? 0);
   }
 
   Future<void> saveImage(String url) async {
@@ -49,8 +51,23 @@ class AttachmentFullscreenController extends GetxController {
     }
   }
 
-
   void toggleShowAppBar() {
     isShowAppBar.value = !isShowAppBar.value;
+  }
+
+  void initControllers(int count) {
+    controllers = List.generate(count, (_) => TransformationController());
+  }
+
+  void resetZoom(int index) {
+    controllers[index].value = Matrix4.identity();
+  }
+
+  @override
+  void onClose() {
+    for (var controller in controllers) {
+      controller.dispose();
+    }
+    super.onClose();
   }
 }

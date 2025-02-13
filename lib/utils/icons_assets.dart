@@ -37,4 +37,6 @@ class IconsAssets {
   static const String emojiIcon = '${_basePath}emoji.svg';
   static const String downloadIcon = '${_basePath}download.svg';
   static const String playVideoIcon = '${_basePath}play_video.svg';
+  static const String doubleArrowDownIcon = '${_basePath}double_arrow_down.svg';
+  static const String replyBorderIcon = '${_basePath}reply_border.svg';
 }

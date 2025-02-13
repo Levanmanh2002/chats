@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chats/extension/data/file_extension.dart';
 import 'package:chats/extension/string_extension.dart';
@@ -29,19 +31,36 @@ class AttachmentFullscreenPage extends GetWidget<AttachmentFullscreenController>
               itemBuilder: (context, index) {
                 final attachment = controller.parameter.files?[index];
                 if (attachment?.fileType?.getFileCategory == FileCategory.IMAGE) {
-                  return CachedNetworkImage(
-                    imageUrl: attachment?.fileUrl ?? '',
-                    placeholder: (context, url) => const ImageAssetCustom(
-                      imagePath: ImagesAssets.placeholder,
-                      boxFit: BoxFit.cover,
-                    ),
-                    errorWidget: (context, url, error) => const ImageAssetCustom(
-                      imagePath: ImagesAssets.placeholder,
-                      boxFit: BoxFit.cover,
+                  return GestureDetector(
+                    onDoubleTap: () => controller.resetZoom(index),
+                    child: InteractiveViewer(
+                      transformationController: controller.controllers[index],
+                      panEnabled: true,
+                      minScale: 1.0,
+                      maxScale: 4.0,
+                      child: attachment?.isLocal == true
+                          ? Image.file(
+                              File(attachment?.fileUrl ?? ''),
+                              fit: BoxFit.cover,
+                            )
+                          : CachedNetworkImage(
+                              imageUrl: attachment?.fileUrl ?? '',
+                              placeholder: (context, url) => const ImageAssetCustom(
+                                imagePath: ImagesAssets.placeholder,
+                                boxFit: BoxFit.cover,
+                              ),
+                              errorWidget: (context, url, error) => const ImageAssetCustom(
+                                imagePath: ImagesAssets.placeholder,
+                                boxFit: BoxFit.cover,
+                              ),
+                            ),
                     ),
                   );
                 } else {
-                  return VideoPlayerChewie(videoUrl: attachment?.fileUrl ?? '');
+                  return VideoPlayerChewie(
+                    videoPath: attachment?.fileUrl ?? '',
+                    isLocal: attachment?.isLocal ?? false,
+                  );
                 }
               },
             ),

@@ -1,6 +1,11 @@
+import 'package:chats/extension/data/file_extension.dart';
+import 'package:chats/models/messages/files_models.dart';
 import 'package:chats/models/messages/message_data_model.dart';
 import 'package:chats/models/messages/message_models.dart';
+import 'package:chats/models/messages/reply_message.dart';
+import 'package:chats/pages/chats/chats_controller.dart';
 import 'package:chats/pages/message/message_parameter.dart';
+import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/resourese/ibase_repository.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
 import 'package:flutter/material.dart';
@@ -14,15 +19,17 @@ class MessageController extends GetxController {
   MessageController({required this.messagesRepository, required this.parameter});
 
   final TextEditingController messageController = TextEditingController();
-
+  final scrollController = ScrollController();
+  var isShowScrollToBottom = false.obs;
+  var isShowNewMessScroll = false.obs;
   var isLoadingSendMess = false.obs;
 
   var imageFile = <XFile>[].obs;
-
   var messageValue = ''.obs;
 
   Rx<MessageModels?> messageModel = Rx<MessageModels?>(null);
-  Rx<MessageDataModel?> message = Rx<MessageDataModel?>(null);
+  Rx<MessageDataModel?> messageData = Rx<MessageDataModel?>(null);
+  Rx<MessageDataModel?> messageReply = Rx<MessageDataModel?>(null);
 
   @override
   void onInit() {
@@ -30,13 +37,22 @@ class MessageController extends GetxController {
     if (parameter.id != null) {
       fetchChatList(parameter.id!);
     }
+    scrollController.addListener(_scrollListener);
   }
 
-  void fetchChatList(int chatId, {bool isRefresh = true}) async {
+  void _scrollListener() {
+    if (scrollController.offset > 100 && !isShowScrollToBottom.value) {
+      isShowScrollToBottom.value = true;
+    } else if (scrollController.offset <= 100 && isShowScrollToBottom.value) {
+      isShowScrollToBottom.value = false;
+    }
+  }
+
+  Future<void> fetchChatList(int chatId, {bool isRefresh = true}) async {
     try {
       final response = await messagesRepository.messageList(
         chatId,
-        page: isRefresh ? 1 : (messageModel.value?.totalPage ?? 1) + 1,
+        page: isRefresh ? 1 : (messageModel.value?.page ?? 1) + 1,
         limit: 10,
       );
 
@@ -59,6 +75,10 @@ class MessageController extends GetxController {
     }
   }
 
+  int get messageId {
+    return parameter.id ?? messageModel.value?.chat?.id ?? messageModel.value?.listMessages?.first.chatId ?? 0;
+  }
+
   void updateMessage(String value) {
     messageValue.value = value;
   }
@@ -74,11 +94,61 @@ class MessageController extends GetxController {
 
   void onSendMessage() async {
     try {
-      isLoadingSendMess.value = true;
+      final messageText = messageController.text.trim();
+      final imageFile = this.imageFile.toList();
+      final replyMessageLocal = messageReply.value;
 
+      final tempFiles = imageFile
+          .map((file) => FilesModels(
+                id: DateTime.now().millisecondsSinceEpoch,
+                fileUrl: file.path,
+                fileType: file.path.resolveMimeType,
+                isLocal: true,
+              ))
+          .toList();
+
+      final tempMessage = MessageDataModel(
+        id: DateTime.now().millisecondsSinceEpoch,
+        message: messageText,
+        sender: Get.find<ProfileController>().user.value,
+        chatId: parameter.contact?.id,
+        createdAt: DateTime.now().toString(),
+        status: MessageStatus.sending,
+        files: tempFiles,
+        replyMessage: messageReply.value != null
+            ? ReplyMessage(
+                id: replyMessageLocal?.id,
+                message: replyMessageLocal?.message,
+                chatId: replyMessageLocal?.chatId,
+                sender: replyMessageLocal?.sender,
+                files: replyMessageLocal?.files,
+                createdAt: replyMessageLocal?.createdAt,
+              )
+            : null,
+      );
+
+      messageModel.value?.listMessages?.insert(0, tempMessage);
+      messageModel.refresh();
+
+      clearMessage();
+
+      _sendAndUpdateMessageLocal(tempMessage, messageText, imageFile, replyMessageLocal);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void _sendAndUpdateMessageLocal(
+    MessageDataModel tempMessage,
+    String messageText,
+    List<XFile> imageFile,
+    MessageDataModel? reply,
+  ) async {
+    try {
       Map<String, String> params = {
         "receiver_id": parameter.contact?.id.toString() ?? '',
-        "message": messageController.text.trim(),
+        "message": messageText,
+        if (reply != null) "reply_message_id": reply.id.toString(),
       };
 
       List<MultipartBody> multipartBody = [
@@ -88,19 +158,28 @@ class MessageController extends GetxController {
       final response = await messagesRepository.sendMessage(params, multipartBody);
 
       if (response.statusCode == 200) {
-        message.value = MessageDataModel.fromJson(response.body['data']);
-        clearMessage();
+        messageData.value = MessageDataModel.fromJson(response.body['data']);
         if (messageModel.value != null) {
-          fetchChatList(message.value!.chatId!, isRefresh: false);
-          onInsertMessage(message.value!);
+          fetchChatList(messageData.value!.chatId!, isRefresh: false);
+          messageModel.value?.listMessages?.removeWhere((msg) => msg.id == tempMessage.id);
+          onInsertMessage(messageData.value!);
         } else {
-          onInsertMessage(message.value!);
+          messageModel.value?.listMessages?.removeWhere((msg) => msg.id == tempMessage.id);
+          onInsertMessage(messageData.value!);
         }
+      } else {
+        replaceTemporaryMessage(tempMessage.id!, tempMessage.copyWith(status: MessageStatus.failed));
       }
     } catch (e) {
       print(e);
-    } finally {
-      isLoadingSendMess.value = false;
+    }
+  }
+
+  void replaceTemporaryMessage(int tempId, MessageDataModel newMessage) {
+    int index = (messageModel.value?.listMessages ?? []).indexWhere((msg) => msg.id == tempId);
+    if (index != -1) {
+      messageModel.value?.listMessages?[index] = newMessage;
+      messageModel.refresh();
     }
   }
 
@@ -109,11 +188,31 @@ class MessageController extends GetxController {
       listMessages: messageModel.value?.listMessages?..insert(0, newMessages),
     );
     messageModel.refresh();
+    Get.find<ChatsController>().updateChatLastMessage(newMessages);
   }
 
   void clearMessage() {
     messageController.clear();
     imageFile.clear();
     messageValue.value = '';
+    messageReply.value = null;
+  }
+
+  void scrollToBottom() {
+    scrollController.animateTo(
+      0.0,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void updateReplyMessage(MessageDataModel? message) {
+    messageReply.value = message;
+  }
+
+  @override
+  void onClose() {
+    scrollController.dispose();
+    super.onClose();
   }
 }
