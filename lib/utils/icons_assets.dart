@@ -41,4 +41,12 @@ class IconsAssets {
   static const String replyBorderIcon = '${_basePath}reply_border.svg';
   static const String heartColorIcon = '${_basePath}heart_color.svg';
   static const String replyIcon = '${_basePath}reply.svg';
+  static const String checkCircleIcon = '${_basePath}check_circle.svg';
+  static const String checkActiveCircleIcon = '${_basePath}check_active_circle.svg';
+  static const String closeCircleIcon = '${_basePath}close_circle.svg';
+  static const String userGroupIcon = '${_basePath}user_group.svg';
+  static const String galleryBorderIcon = '${_basePath}gallery_border.svg';
+  static const String borderAlbumIcon = '${_basePath}border_album.svg';
+  static const String userGroupTwoIcon = '${_basePath}user_group_two.svg';
+  static const String pen2Icon = '${_basePath}pen_2.svg';
 }

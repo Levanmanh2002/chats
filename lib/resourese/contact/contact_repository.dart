@@ -112,9 +112,15 @@ class ContactRepository extends IContactRepository {
   }
 
   @override
-  Future<Response> getContactAccepted({required int page, required int limit}) async {
+  Future<Response> getContactAccepted({required int page, required int limit, String search = ''}) async {
     try {
-      final result = await clientGetData("${AppConstants.contactAcceptedUri}?page=$page&size=$limit");
+      Response<dynamic> result;
+
+      if (search.isNotEmpty) {
+        result = await clientGetData("${AppConstants.contactAcceptedUri}?page=$page&size=$limit&search=$search");
+      } else {
+        result = await clientGetData("${AppConstants.contactAcceptedUri}?page=$page&size=$limit");
+      }
 
       return result;
     } catch (error) {

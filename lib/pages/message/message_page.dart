@@ -3,6 +3,7 @@ import 'package:chats/pages/message/message_controller.dart';
 import 'package:chats/pages/message/view/bottom_send_mess_view.dart';
 import 'package:chats/pages/message/view/chast_list_view.dart';
 import 'package:chats/pages/message/view/message_header_view.dart';
+import 'package:chats/pages/message/view/quick_message_view.dart';
 import 'package:chats/pages/message/view/reply_message_view.dart';
 import 'package:chats/pages/message/widget/info_contact_widget.dart';
 import 'package:chats/pages/message/widget/selected_images_list.dart';
@@ -40,6 +41,7 @@ class MessagePage extends GetWidget<MessageController> {
           ),
           Obx(() => (controller.messageReply.value != null) ? ReplyMessageView() : const SizedBox()),
           SelectedImagesList(),
+          Obx(() => (controller.quickMessage.value != null) ? QuickMessageView() : const SizedBox()),
           BottomSendMessView(),
         ],
       ),

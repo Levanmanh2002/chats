@@ -62,4 +62,16 @@ class FormatterUtil {
     NoInitialSpaceInputFormatterWidgets(),
     LengthLimitingTextInputFormatter(50),
   ];
+
+  static final List<TextInputFormatter> createGroupFormatter = [
+    FilteringTextInputFormatter.deny('  '),
+    NoInitialSpaceInputFormatterWidgets(),
+    LengthLimitingTextInputFormatter(50),
+  ];
+
+  static final List<TextInputFormatter> shortcutFormatter = [
+    FilteringTextInputFormatter.deny('  '),
+    NoInitialSpaceInputFormatterWidgets(),
+    LengthLimitingTextInputFormatter(15),
+  ];
 }

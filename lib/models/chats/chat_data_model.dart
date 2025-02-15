@@ -33,4 +33,24 @@ class ChatDataModel {
 
   factory ChatDataModel.fromJson(Map<String, dynamic> json) => _$ChatDataModelFromJson(json);
   Map<String, dynamic> toJson() => _$ChatDataModelToJson(this);
+
+  ChatDataModel copyWith({
+    int? id,
+    String? name,
+    UserModel? owner,
+    int? isGroup,
+    List<UserModel>? users,
+    MessageDataModel? latestMessage,
+    String? createdAt,
+  }) {
+    return ChatDataModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      owner: owner ?? this.owner,
+      isGroup: isGroup ?? this.isGroup,
+      users: users ?? this.users,
+      latestMessage: latestMessage ?? this.latestMessage,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
 }

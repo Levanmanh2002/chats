@@ -24,7 +24,7 @@ class CustomBorderButtonWidget extends StatelessWidget {
     required this.buttonText,
     this.margin,
     this.width,
-    this.radius = 12,
+    this.radius = 1000,
     this.icon,
     this.color,
     this.textColor,

@@ -94,7 +94,7 @@ class MakeFriendsController extends GetxController {
       if (response.statusCode == 200) {
         Get.toNamed(
           Routes.MESSAGE,
-          arguments: MessageParameter(id: response.body['data']['id'], contact: contact),
+          arguments: MessageParameter(chatId: response.body['data']['id'], contact: contact),
         );
       } else {
         Get.toNamed(

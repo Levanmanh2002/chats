@@ -4,6 +4,8 @@ import 'package:chats/resourese/chats/chats_repository.dart';
 import 'package:chats/resourese/chats/ichats_repository.dart';
 import 'package:chats/resourese/contact/contact_repository.dart';
 import 'package:chats/resourese/contact/icontact_repository.dart';
+import 'package:chats/resourese/groups/groups_repository.dart';
+import 'package:chats/resourese/groups/igroups_repository.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
 import 'package:chats/resourese/messages/messages_repository.dart';
 import 'package:chats/resourese/profile/iprofile_repository.dart';
@@ -17,5 +19,6 @@ class AppService {
     Get.put<IProfileRepository>(ProfileRepository());
     Get.put<IMessagesRepository>(MessagesRepository());
     Get.put<IChatsRepository>(ChatsRepository());
+    Get.put<IGroupsRepository>(GroupsRepository());
   }
 }

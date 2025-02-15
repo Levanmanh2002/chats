@@ -55,4 +55,12 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
       chatsModels.refresh();
     }
   }
+
+  void updateGroupName(int chatId, String groupName) {
+    final chat = chatsModels.value?.chat?.firstWhereOrNull((e) => e.id == chatId);
+    if (chat != null) {
+      chat.name = groupName;
+      chatsModels.refresh();
+    }
+  }
 }

@@ -4,6 +4,12 @@ import 'package:get/get.dart';
 class CreateGroupBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => CreateGroupController());
+    Get.lazyPut(
+      () => CreateGroupController(
+        contactRepository: Get.find(),
+        groupsRepository: Get.find(),
+        parameter: Get.arguments,
+      ),
+    );
   }
 }

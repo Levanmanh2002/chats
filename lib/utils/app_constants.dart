@@ -38,10 +38,17 @@ class AppConstants {
   static const String contactAcceptedUri = '/api/v1/contact/friends';
   static const String unfriendUri = '/api/v1/contact/unfriend';
   static String getIdChatByUser(int userId) => '/api/v1/message/$userId/get-chat-id-by-user';
-  static const String sendMessage = '/api/v1/message/send-message-to-user';
+  static const String sendMessageUri = '/api/v1/message/send-message-to-user';
   static String messageList(int chatId, {int page = 1, int limit = 10}) =>
       '/api/v1/message/$chatId/conversion?page=$page&size=$limit';
   static const String chatListAllUri = '/api/v1/message/conversions';
   static String heartMessage(int messageId) => '/api/v1/message/$messageId/like';
   static String revokeMessage(int messageId) => '/api/v1/message/$messageId/rollback';
+  static const String createGroupUri = '/api/v1/message/create-group';
+  static const String sendMessageGroupUri = '/api/v1/message/send-message-to-group';
+  static const String renameGroupUri = '/api/v1/message/rename-group';
+  static const String addInstantMessUri = '/api/v1/message/instant/add';
+  static const String getQuickMessageUri = '/api/v1/message/instant/list?chat_id=';
+  static const String updateInstantMessUri = '/api/v1/message/instant/edit';
+  static const String deleteInstantMessUri = '/api/v1/message/instant/delete';
 }

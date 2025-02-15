@@ -1,6 +1,7 @@
 import 'package:chats/main.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
 import 'package:chats/pages/chats/view/chat_all_view.dart';
+import 'package:chats/pages/create_group/create_group_parameter.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/icons_assets.dart';
@@ -51,7 +52,10 @@ class ChatsPage extends GetWidget<ChatsController> {
                           InkWell(
                             onTap: () {
                               Get.back();
-                              Get.toNamed(Routes.CREATE_GROUP);
+                              Get.toNamed(
+                                Routes.CREATE_GROUP,
+                                arguments: CreateGroupParameter(type: CreateGroupType.createGroup),
+                              );
                             },
                             child: Row(
                               mainAxisSize: MainAxisSize.min,

@@ -19,7 +19,7 @@ class MessagesRepository extends IMessagesRepository {
   @override
   Future<Response> sendMessage(Map<String, String> body, List<MultipartBody> multipartBody) async {
     try {
-      final result = await clientPostMultipartData(AppConstants.sendMessage, body, multipartBody);
+      final result = await clientPostMultipartData(AppConstants.sendMessageUri, body, multipartBody);
 
       return result;
     } catch (error) {
@@ -56,6 +56,54 @@ class MessagesRepository extends IMessagesRepository {
   Future<Response> revokeMessage(int messageId) async {
     try {
       final result = await clientPostData(AppConstants.revokeMessage(messageId), {});
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> addInstantMess(Map<String, dynamic> params) async {
+    try {
+      final result = await clientPostData(AppConstants.addInstantMessUri, params);
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> getInstantMess(int chatId) async {
+    try {
+      final result = await clientGetData('${AppConstants.getQuickMessageUri}$chatId');
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> updateInstantMess(Map<String, dynamic> params) async {
+    try {
+      final result = await clientPostData(AppConstants.updateInstantMessUri, params);
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> deleteInstantMess(int id) async {
+    try {
+      final result = await clientDeleteData('${AppConstants.deleteInstantMessUri}?id=$id');
 
       return result;
     } catch (error) {

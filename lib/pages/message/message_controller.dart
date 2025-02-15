@@ -3,6 +3,7 @@ import 'package:chats/models/messages/files_models.dart';
 import 'package:chats/models/messages/likes.dart';
 import 'package:chats/models/messages/message_data_model.dart';
 import 'package:chats/models/messages/message_models.dart';
+import 'package:chats/models/messages/quick_message.dart';
 import 'package:chats/models/messages/reply_message.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
 import 'package:chats/pages/message/message_parameter.dart';
@@ -32,12 +33,16 @@ class MessageController extends GetxController {
   Rx<MessageDataModel?> messageData = Rx<MessageDataModel?>(null);
   Rx<MessageDataModel?> messageReply = Rx<MessageDataModel?>(null);
 
+  RxList<QuickMessage> quickMessagesList = <QuickMessage>[].obs;
+  Rx<QuickMessage?> quickMessage = Rx<QuickMessage?>(null);
+
   @override
   void onInit() {
     super.onInit();
-    if (parameter.id != null) {
-      fetchChatList(parameter.id!);
+    if (parameter.chatId != null) {
+      fetchChatList(parameter.chatId!);
     }
+    _fetchQuickMessage();
     scrollController.addListener(_scrollListener);
   }
 
@@ -77,11 +82,55 @@ class MessageController extends GetxController {
   }
 
   int get messageId {
-    return parameter.id ?? messageModel.value?.chat?.id ?? messageModel.value?.listMessages?.first.chatId ?? 0;
+    return parameter.chatId ?? messageModel.value?.chat?.id ?? messageModel.value?.listMessages?.first.chatId ?? 0;
+  }
+
+  void _fetchQuickMessage() async {
+    try {
+      final response = await messagesRepository.getInstantMess(messageId);
+
+      if (response.statusCode == 200) {
+        quickMessagesList.value = QuickMessage.listFromJson(response.body['data']);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void updateNewDataQuickMessage(List<QuickMessage> quickMessage) {
+    quickMessagesList.value = quickMessage;
+  }
+
+  void updateQuickMessage(String value) {
+    if (value.startsWith('/')) {
+      final query = value.substring(1).trim();
+      if (query.isEmpty) {
+        quickMessage.value = quickMessagesList.isNotEmpty ? quickMessagesList.first : null;
+      } else {
+        try {
+          final match = quickMessagesList.firstWhere(
+            (msg) => (msg.shortKey ?? '').toLowerCase().startsWith(query.toLowerCase()),
+          );
+          quickMessage.value = match;
+        } catch (e) {
+          try {
+            final match = quickMessagesList.firstWhere(
+              (msg) => (msg.shortKey ?? '').toLowerCase().contains(query.toLowerCase()),
+            );
+            quickMessage.value = match;
+          } catch (e) {
+            quickMessage.value = null;
+          }
+        }
+      }
+    } else {
+      quickMessage.value = null;
+    }
   }
 
   void updateMessage(String value) {
     messageValue.value = value;
+    updateQuickMessage(value);
   }
 
   void pickImages() async {

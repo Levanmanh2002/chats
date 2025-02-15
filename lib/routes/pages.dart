@@ -10,12 +10,20 @@ import 'package:chats/pages/dashboard/dashboard_binding.dart';
 import 'package:chats/pages/dashboard/dashboard_page.dart';
 import 'package:chats/pages/forgot_password/forgot_password_binding.dart';
 import 'package:chats/pages/forgot_password/forgot_password_page.dart';
+import 'package:chats/pages/group_message/group_message_binding.dart';
+import 'package:chats/pages/group_message/group_message_page.dart';
+import 'package:chats/pages/group_option/group_option_binding.dart';
+import 'package:chats/pages/group_option/group_option_page.dart';
 import 'package:chats/pages/html_app/html_app_binding.dart';
 import 'package:chats/pages/html_app/html_app_page.dart';
+import 'package:chats/pages/instant_message/instant_message_binding.dart';
+import 'package:chats/pages/instant_message/instant_message_page.dart';
 import 'package:chats/pages/make_friends/make_friends_binding.dart';
 import 'package:chats/pages/make_friends/make_friends_page.dart';
 import 'package:chats/pages/message/message_binding.dart';
 import 'package:chats/pages/message/message_page.dart';
+import 'package:chats/pages/options/options_binding.dart';
+import 'package:chats/pages/options/options_page.dart';
 import 'package:chats/pages/otp/otp_binding.dart';
 import 'package:chats/pages/otp/otp_page.dart';
 import 'package:chats/pages/sent_request_contact/sent_request_contact_binding.dart';
@@ -26,6 +34,8 @@ import 'package:chats/pages/sign_up/sign_up_binding.dart';
 import 'package:chats/pages/sign_up/sign_up_page.dart';
 import 'package:chats/pages/splash/splash_binding.dart';
 import 'package:chats/pages/splash/splash_page.dart';
+import 'package:chats/pages/upsert_instant_mess/upsert_instant_mess_binding.dart';
+import 'package:chats/pages/upsert_instant_mess/upsert_instant_mess_page.dart';
 import 'package:get/get.dart';
 
 part 'routes.dart';
@@ -101,6 +111,31 @@ abstract class AppPages {
       name: Routes.ATTACHMENT_FULLSCREEN,
       page: () => AttachmentFullscreenPage(),
       binding: AttachmentFullscreenBinding(),
+    ),
+    GetPage(
+      name: Routes.OPTIONS,
+      page: () => OptionsPage(),
+      binding: OptionsBinding(),
+    ),
+    GetPage(
+      name: Routes.GROUP_MESSAGE,
+      page: () => GroupMessagePage(),
+      binding: GroupMessageBinding(),
+    ),
+    GetPage(
+      name: Routes.GROUP_OPTION,
+      page: () => GroupOptionPage(),
+      binding: GroupOptionBinding(),
+    ),
+    GetPage(
+      name: Routes.INSTANT_MESSAGE,
+      page: () => InstantMessagePage(),
+      binding: InstantMessageBinding(),
+    ),
+    GetPage(
+      name: Routes.UPSERT_INSTANT_MESS,
+      page: () => UpsertInstantMessPage(),
+      binding: UpsertInstantMessBinding(),
     ),
   ];
 }
