@@ -23,7 +23,7 @@ class MessagePage extends GetWidget<MessageController> {
         children: [
           MessageHeaderView(),
           Obx(
-            () => (controller.messageModel.value == null)
+            () => (controller.messageModel.value == null && (controller.messageModel.value?.listMessages ?? []).isEmpty)
                 ? InfoContactWidget(contact: controller.parameter.contact)
                 : const SizedBox(),
           ),

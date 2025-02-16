@@ -1,11 +1,11 @@
 import 'package:chats/main.dart';
-import 'package:chats/pages/message/message_controller.dart';
+import 'package:chats/pages/group_message/group_message_controller.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/widget/reponsive/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class QuickMessageView extends GetView<MessageController> {
+class GroupQuickMessageView extends GetView<GroupMessageController> {
   @override
   Widget build(BuildContext context) {
     return Obx(

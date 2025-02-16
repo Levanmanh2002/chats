@@ -3,6 +3,7 @@ import 'package:chats/pages/group_message/group_message_controller.dart';
 import 'package:chats/pages/group_message/view/group_bottom_send_mess_view.dart';
 import 'package:chats/pages/group_message/view/group_chast_list_view.dart';
 import 'package:chats/pages/group_message/view/group_message_header_view.dart';
+import 'package:chats/pages/group_message/view/group_quick_message_view.dart';
 import 'package:chats/pages/group_message/view/group_reply_message_view.dart';
 import 'package:chats/pages/group_message/view/group_selected_images_list.dart';
 import 'package:chats/theme/style/style_theme.dart';
@@ -39,6 +40,7 @@ class GroupMessagePage extends GetWidget<GroupMessageController> {
           ),
           Obx(() => (controller.messageReply.value != null) ? GroupReplyMessageView() : const SizedBox()),
           GroupSelectedImagesList(),
+          Obx(() => (controller.quickMessage.value != null) ? GroupQuickMessageView() : const SizedBox()),
           GroupBottomSendMessView(),
         ],
       ),

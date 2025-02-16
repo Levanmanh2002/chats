@@ -7,6 +7,7 @@ class GroupOptionBinding implements Bindings {
     Get.lazyPut(
       () => GroupOptionController(
         groupsRepository: Get.find(),
+        messagesRepository: Get.find(),
         parameter: Get.arguments,
       ),
     );

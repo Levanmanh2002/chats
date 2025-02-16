@@ -7,6 +7,7 @@ class CreateGroupParameter {
   final int? groupId;
   final List<UserModel>? users;
   final bool? updateAddMemberLocal;
+  final UserModel? user;
 
-  CreateGroupParameter({required this.type, this.groupId, this.users, this.updateAddMemberLocal});
+  CreateGroupParameter({required this.type, this.groupId, this.users, this.updateAddMemberLocal, this.user});
 }

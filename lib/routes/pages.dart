@@ -20,6 +20,8 @@ import 'package:chats/pages/instant_message/instant_message_binding.dart';
 import 'package:chats/pages/instant_message/instant_message_page.dart';
 import 'package:chats/pages/make_friends/make_friends_binding.dart';
 import 'package:chats/pages/make_friends/make_friends_page.dart';
+import 'package:chats/pages/media_files/media_files_binding.dart';
+import 'package:chats/pages/media_files/media_files_page.dart';
 import 'package:chats/pages/message/message_binding.dart';
 import 'package:chats/pages/message/message_page.dart';
 import 'package:chats/pages/options/options_binding.dart';
@@ -143,6 +145,11 @@ abstract class AppPages {
       name: Routes.VIEW_GROUP_MEMBERS,
       page: () => ViewGroupMembersPage(),
       binding: ViewGroupMembersBinding(),
+    ),
+    GetPage(
+      name: Routes.MEDIA_FILES,
+      page: () => MediaFilesPage(),
+      binding: MediaFilesBinding(),
     ),
   ];
 }

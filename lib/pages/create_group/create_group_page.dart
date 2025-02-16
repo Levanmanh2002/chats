@@ -94,32 +94,43 @@ class CreateGroupPage extends GetWidget<CreateGroupController> {
                   onChanged: (value) {
                     controller.chatValue.value = value;
                   },
-                  suffixIcon: controller.chatValue.value.isNotEmpty
+                  suffixIcon: controller.isLoading.isTrue
                       ? IconButton(
-                          onPressed: controller.clearSearch,
-                          icon: const ImageAssetCustom(imagePath: IconsAssets.closeCircleIcon),
+                          onPressed: null,
+                          icon: SizedBox(
+                            width: 22.w,
+                            height: 22.w,
+                            child: CircularProgressIndicator(color: appTheme.appColor, strokeWidth: 2.w),
+                          ),
                         )
-                      : null,
+                      : controller.chatValue.value.isNotEmpty
+                          ? IconButton(
+                              onPressed: controller.clearSearch,
+                              icon: const ImageAssetCustom(imagePath: IconsAssets.closeCircleIcon),
+                            )
+                          : null,
                 ),
               ),
             ),
             Expanded(
-              child: ListLoader(
-                onRefresh: controller.getContacts,
-                onLoad: () => controller.getContacts(isRefresh: false),
-                hasNext: controller.contactModel.value?.hasNext ?? false,
-                child: (controller.contactModel.value?.data ?? []).isNotEmpty
-                    ? Column(
-                        children: (controller.contactModel.value?.data ?? []).map((e) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _buildContactItem(e),
-                            ],
-                          );
-                        }).toList(),
-                      )
-                    : const Center(child: NoDataWidget()),
+              child: Obx(
+                () => ListLoader(
+                  onRefresh: controller.getContacts,
+                  onLoad: () => controller.getContacts(isRefresh: false),
+                  hasNext: controller.contactModel.value?.hasNext ?? false,
+                  child: (controller.contactModel.value?.data ?? []).isNotEmpty
+                      ? Column(
+                          children: (controller.contactModel.value?.data ?? []).map((e) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildContactItem(e),
+                              ],
+                            );
+                          }).toList(),
+                        )
+                      : const Center(child: NoDataWidget()),
+                ),
               ),
             ),
           ],
@@ -184,7 +195,7 @@ class CreateGroupPage extends GetWidget<CreateGroupController> {
                           onPressed: controller.createGroup,
                           icon: const ImageAssetCustom(imagePath: IconsAssets.sendIcon),
                         )
-                      else
+                      else if (controller.parameter.type == CreateGroupType.joinGroup)
                         IconButton(
                           onPressed: controller.addUserToGroup,
                           icon: const ImageAssetCustom(imagePath: IconsAssets.sendIcon),

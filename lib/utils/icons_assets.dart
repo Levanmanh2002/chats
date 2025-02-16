@@ -51,4 +51,5 @@ class IconsAssets {
   static const String pen2Icon = '${_basePath}pen_2.svg';
   static const String menuDotsIcon = '${_basePath}menu_dots.svg';
   static const String keyIcon = '${_basePath}key.svg';
+  static const String lockPasswordIcon = '${_basePath}lock_password.svg';
 }

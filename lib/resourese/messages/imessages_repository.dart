@@ -11,4 +11,6 @@ abstract class IMessagesRepository extends IBaseRepository {
   Future<Response> getInstantMess(int chatId);
   Future<Response> updateInstantMess(Map<String, dynamic> params);
   Future<Response> deleteInstantMess(int id);
+  Future<Response> getImageFileByChatId(int chatId, String type, {int page = 1, int limit = 10});
+  Future<Response> deleteChat(int chatId);
 }

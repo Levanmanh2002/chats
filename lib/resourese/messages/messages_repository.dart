@@ -111,4 +111,28 @@ class MessagesRepository extends IMessagesRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<Response> getImageFileByChatId(int chatId, String type, {int page = 1, int limit = 10}) async {
+    try {
+      final result = await clientGetData(AppConstants.getImageFileByChatId(chatId, type, page: page, limit: limit));
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> deleteChat(int chatId) async {
+    try {
+      final result = await clientDeleteData(AppConstants.deleteChat(chatId));
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
 }

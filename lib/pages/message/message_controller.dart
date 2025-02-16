@@ -133,6 +133,13 @@ class MessageController extends GetxController {
     updateQuickMessage(value);
   }
 
+  void onSendQuickMessage() {
+    if (quickMessage.value != null) {
+      messageController.text = quickMessage.value?.content ?? '';
+      quickMessage.value = null;
+    }
+  }
+
   void pickImages() async {
     List<XFile>? pickedFiles = await ImagePicker().pickMultiImage();
 

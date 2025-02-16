@@ -55,6 +55,20 @@ class CreateGroupController extends GetxController {
     } else {
       await getContacts();
     }
+
+    if (parameter.type == CreateGroupType.createGroup && parameter.user != null) {
+      final contacts = contactModel.value?.data ?? [];
+      ContactModel? matchingContact;
+      try {
+        matchingContact = contacts.firstWhere((contact) => contact.friend?.id == parameter.user!.id);
+      } catch (e) {
+        matchingContact = null;
+      }
+
+      if (matchingContact != null && !selectedContacts.any((contact) => contact.id == matchingContact!.id)) {
+        selectedContacts.add(matchingContact);
+      }
+    }
     updateSelectedContacts();
   }
 
@@ -136,7 +150,7 @@ class CreateGroupController extends GetxController {
         Get.find<ChatsController>().fetchChatList();
         Get.offNamed(
           Routes.GROUP_MESSAGE,
-          arguments: GroupMessageParameter(groupModel: groupModel.value),
+          arguments: GroupMessageParameter(chatId: groupModel.value?.id),
         );
       } else {
         DialogUtils.showErrorDialog(response.body['message']);

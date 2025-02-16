@@ -118,7 +118,7 @@ const Map<String, String> en = {
   "options": "Options",
   "search_messages": "Search messages",
   "export_pdf_file": "Export PDF file",
-  "images_files_links": "Images, files, links",
+  "images_files": "Images, files",
   "media_files_in_the_conversation_will_appear_here": "Media files in the conversation will appear here",
   "invite_more_group_members": "Invite more group members",
   "view_group_members": "View group members",
@@ -144,4 +144,8 @@ const Map<String, String> en = {
   "remove_field_from_the_group": "Remove @field from the group?",
   "transfer_group_ownership": "Transfer group ownership",
   "select_a_member_to_become_the_new_group_owner": "Select a member to become the new group owner",
+  "image": "Image",
+  "file": "File",
+  "are_you_sure_you_want_to_delete_the_conversation": "Are you sure you want to delete the conversation?",
+  "create_a_group_with": "Create a group with @field",
 };

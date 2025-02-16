@@ -34,8 +34,8 @@ class ProfilePage extends GetWidget<ProfileController> {
             ),
             SizedBox(height: 8.h),
             _buildProfile(
-              icon: IconsAssets.chatRoundLineIcon,
-              title: 'quick_message_settings'.tr,
+              icon: IconsAssets.lockPasswordIcon,
+              title: 'Đổi mật khẩu'.tr,
               onTap: () {},
             ),
             SizedBox(height: 8.h),

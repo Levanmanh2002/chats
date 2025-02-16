@@ -86,10 +86,11 @@ class MakeFriendsController extends GetxController {
   }
 
   void onMessage() async {
+    if (parameter.contact == null) return;
     try {
       isLoadingMessage.value = true;
 
-      final response = await messagesRepository.getIdChatByUser(parameter.id);
+      final response = await messagesRepository.getIdChatByUser(parameter.contact!.id!);
 
       if (response.statusCode == 200) {
         Get.toNamed(

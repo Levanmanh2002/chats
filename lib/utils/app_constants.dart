@@ -54,4 +54,7 @@ class AppConstants {
   static const String addUserToGroupUri = '/api/v1/message/add-user-to-group';
   static const String removeUserFromGroupUri = '/api/v1/message/remove-user-from-group';
   static const String transferOwnershipUri = '/api/v1/message/left-group';
+  static String getImageFileByChatId(int chatId, String type, {int page = 1, int limit = 10}) =>
+      '/api/v1/message/$chatId/files?type=$type&page=$page&size=$limit';
+  static String deleteChat(int chatId) => '/api/v1/message/$chatId/delete';
 }

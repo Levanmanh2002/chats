@@ -14,11 +14,15 @@ class FilesModels {
 
   bool isLocal;
 
+  @JsonKey(name: 'created_at')
+  String? createdAt;
+
   FilesModels({
     this.id,
     this.fileUrl,
     this.fileType,
     this.isLocal = false,
+    this.createdAt,
   });
 
   factory FilesModels.fromJson(Map<String, dynamic> json) => _$FilesModelsFromJson(json);

@@ -23,4 +23,5 @@ abstract class Routes {
   static const INSTANT_MESSAGE = '/instant_message';
   static const UPSERT_INSTANT_MESS = '/upsert_instant_mess';
   static const VIEW_GROUP_MEMBERS = '/view_group_members';
+  static const MEDIA_FILES = '/media_files';
 }

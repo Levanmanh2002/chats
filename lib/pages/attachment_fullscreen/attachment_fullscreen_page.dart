@@ -47,11 +47,9 @@ class AttachmentFullscreenPage extends GetWidget<AttachmentFullscreenController>
                               imageUrl: attachment?.fileUrl ?? '',
                               placeholder: (context, url) => const ImageAssetCustom(
                                 imagePath: ImagesAssets.placeholder,
-                                boxFit: BoxFit.cover,
                               ),
                               errorWidget: (context, url, error) => const ImageAssetCustom(
                                 imagePath: ImagesAssets.placeholder,
-                                boxFit: BoxFit.cover,
                               ),
                             ),
                     ),
@@ -90,19 +88,20 @@ class AttachmentFullscreenPage extends GetWidget<AttachmentFullscreenController>
                           onPressed: Get.back,
                         ),
                         SizedBox(width: 8.w),
-                        CustomImageWidget(
-                          imageUrl: controller.parameter.user?.avatar ?? '',
-                          size: 46.w,
-                          colorBoder: appTheme.appColor,
-                          showBoder: true,
-                        ),
+                        if (controller.parameter.user != null)
+                          CustomImageWidget(
+                            imageUrl: controller.parameter.user?.avatar ?? '',
+                            size: 46.w,
+                            colorBoder: appTheme.appColor,
+                            showBoder: true,
+                          ),
                         SizedBox(width: 8.w),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                controller.parameter.user?.name ?? 'not_updated_yet'.tr,
+                                controller.parameter.user?.name ?? '',
                                 style: StyleThemeData.size14Weight600(color: appTheme.whiteColor),
                               ),
                               SizedBox(height: 2.h),

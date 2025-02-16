@@ -117,7 +117,7 @@ const Map<String, String> vi = {
   "options": "Tuỳ chọn",
   "search_messages": "Tìm tin nhắn",
   "export_pdf_file": "Xuất file PDF",
-  "images_files_links": "Ảnh, file, link",
+  "images_files": "Ảnh, file",
   "media_files_in_the_conversation_will_appear_here": "Các file phương tiện trong trò chuyện sẽ xuất hiện tại đây",
   "invite_more_group_members": "Mời thêm thành viên nhóm",
   "view_group_members": "Xem thành viên nhóm",
@@ -143,4 +143,8 @@ const Map<String, String> vi = {
   "remove_field_from_the_group": "Xóa @field khỏi nhóm?",
   "transfer_group_ownership": "Chuyển quyền chủ nhóm",
   "select_a_member_to_become_the_new_group_owner": "Chọn một thành viên để làm chủ nhóm mới",
+  "image": "Ảnh",
+  "file": "File",
+  "are_you_sure_you_want_to_delete_the_conversation": "Bạn có chắc chắn muốn xóa cuộc trò chuyện?",
+  "create_a_group_with": "Tạo nhóm với @field",
 };

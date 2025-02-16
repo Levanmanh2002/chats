@@ -11,12 +11,14 @@ class BorderTitleIconWidget extends StatelessWidget {
     required this.icon,
     this.onTap,
     this.child,
+    this.color,
   });
 
   final String title;
   final String icon;
   final VoidCallback? onTap;
   final Widget? child;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +36,9 @@ class BorderTitleIconWidget extends StatelessWidget {
           children: [
             Row(
               children: [
-                ImageAssetCustom(imagePath: icon, size: 24.w, color: appTheme.blackColor),
+                ImageAssetCustom(imagePath: icon, size: 24.w, color: color ?? appTheme.blackColor),
                 SizedBox(width: 12.w),
-                Text(title, style: StyleThemeData.size14Weight400()),
+                Text(title, style: StyleThemeData.size14Weight400(color: color)),
               ],
             ),
             child ?? const SizedBox(),

@@ -1,12 +1,16 @@
 import 'package:chats/models/chats/chats_models.dart';
 import 'package:chats/models/messages/message_data_model.dart';
 import 'package:chats/resourese/chats/ichats_repository.dart';
+import 'package:chats/resourese/messages/imessages_repository.dart';
+import 'package:chats/utils/dialog_utils.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
 class ChatsController extends GetxController with GetSingleTickerProviderStateMixin {
   final IChatsRepository chatsRepository;
+  final IMessagesRepository messagesRepository;
 
-  ChatsController({required this.chatsRepository});
+  ChatsController({required this.chatsRepository, required this.messagesRepository});
 
   Rx<ChatsModels?> chatsModels = Rx<ChatsModels?>(null);
 
@@ -45,6 +49,25 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
       print(e);
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  void deleteChat(int chatId) async {
+    try {
+      EasyLoading.show(dismissOnTap: false, maskType: EasyLoadingMaskType.clear);
+
+      final response = await messagesRepository.deleteChat(chatId);
+
+      if (response.statusCode == 200) {
+        DialogUtils.showSuccessDialog(response.body['message']);
+        removeChat(chatId);
+      } else {
+        DialogUtils.showErrorDialog(response.body['message']);
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      EasyLoading.dismiss();
     }
   }
 

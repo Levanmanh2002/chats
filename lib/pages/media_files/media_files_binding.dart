@@ -1,11 +1,11 @@
-import 'package:chats/pages/options/options_controller.dart';
+import 'package:chats/pages/media_files/media_files_controller.dart';
 import 'package:get/get.dart';
 
-class OptionsBinding implements Bindings {
+class MediaFilesBinding implements Bindings {
   @override
   void dependencies() {
     Get.lazyPut(
-      () => OptionsController(
+      () => MediaFilesController(
         messagesRepository: Get.find(),
         parameter: Get.arguments,
       ),
