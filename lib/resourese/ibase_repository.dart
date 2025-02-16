@@ -112,6 +112,7 @@ class IBaseRepository {
   }) async {
     try {
       debugPrint('====> API Call: $uri\nHeader: ${getAuthorizationHeader()}');
+      debugPrint('====> Post API Body: $body');
       http.Response response = await http
           .delete(
             Uri.parse(AppConstants.baseUrl + uri),

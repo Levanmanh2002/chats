@@ -4,10 +4,14 @@ import 'package:chats/widget/reponsive/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-void showQuickMessageDialog(VoidCallback? onSubmit) {
+void showCommonDialog({
+  required String title,
+  String? buttonTitle,
+  String? buttonCancelTitle,
+  VoidCallback? onSubmit,
+}) {
   showDialog(
     context: Get.context!,
-    barrierDismissible: false,
     builder: (BuildContext context) {
       return Padding(
         padding: padding(horizontal: 16),
@@ -20,9 +24,14 @@ void showQuickMessageDialog(VoidCallback? onSubmit) {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(height: 16.h),
-              Text('delete_this_quick_message'.tr, style: StyleThemeData.size16Weight600()),
-              SizedBox(height: 16.h),
+              Padding(
+                padding: padding(all: 16),
+                child: Text(
+                  title,
+                  style: StyleThemeData.size16Weight600(),
+                  textAlign: TextAlign.center,
+                ),
+              ),
               Row(
                 children: [
                   Flexible(
@@ -39,7 +48,10 @@ void showQuickMessageDialog(VoidCallback? onSubmit) {
                             right: BorderSide(color: appTheme.allSidesColor, width: 0.5),
                           ),
                         ),
-                        child: Text('cancel'.tr, style: StyleThemeData.size14Weight400()),
+                        child: Text(
+                          buttonCancelTitle ?? 'cancel'.tr,
+                          style: StyleThemeData.size14Weight600(color: appTheme.appColor),
+                        ),
                       ),
                     ),
                   ),
@@ -60,7 +72,10 @@ void showQuickMessageDialog(VoidCallback? onSubmit) {
                             left: BorderSide(color: appTheme.allSidesColor, width: 0.5),
                           ),
                         ),
-                        child: Text('confirm'.tr, style: StyleThemeData.size14Weight600(color: appTheme.errorColor)),
+                        child: Text(
+                          buttonTitle ?? 'confirm'.tr,
+                          style: StyleThemeData.size14Weight600(color: appTheme.errorColor),
+                        ),
                       ),
                     ),
                   ),

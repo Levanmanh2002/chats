@@ -1,4 +1,5 @@
 import 'package:chats/models/chats/chat_data_model.dart';
+import 'package:chats/models/profile/user_model.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
 import 'package:chats/pages/group_message/group_message_controller.dart';
 import 'package:chats/pages/group_option/group_option_parameter.dart';
@@ -41,5 +42,15 @@ class GroupOptionController extends GetxController {
     } finally {
       EasyLoading.dismiss();
     }
+  }
+
+  void removeUserInChatGroup(UserModel user) {
+    chatDataModel.value?.users?.remove(user);
+    chatDataModel.refresh();
+  }
+
+  void updateNewDataUserChat(ChatDataModel chat) {
+    chatDataModel.value = chatDataModel.value?.copyWith(users: chat.users);
+    chatDataModel.refresh();
   }
 }

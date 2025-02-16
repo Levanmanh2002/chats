@@ -2,6 +2,7 @@ import 'package:chats/extension/string_extension.dart';
 import 'package:chats/main.dart';
 import 'package:chats/models/contact/contact_model.dart';
 import 'package:chats/pages/create_group/create_group_controller.dart';
+import 'package:chats/pages/create_group/create_group_parameter.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/formatter_util.dart';
 import 'package:chats/utils/icons_assets.dart';
@@ -40,7 +41,12 @@ class CreateGroupPage extends GetWidget<CreateGroupController> {
                       ),
                       Column(
                         children: [
-                          Text('new_group'.tr, style: StyleThemeData.size16Weight600(color: appTheme.whiteColor)),
+                          Text(
+                            controller.parameter.type == CreateGroupType.createGroup
+                                ? 'new_group'.tr
+                                : 'add_to_group'.tr,
+                            style: StyleThemeData.size16Weight600(color: appTheme.whiteColor),
+                          ),
                           SizedBox(height: 4.h),
                           Obx(
                             () => Text(
@@ -56,18 +62,19 @@ class CreateGroupPage extends GetWidget<CreateGroupController> {
                 ),
               ],
             ),
-            Padding(
-              padding: padding(all: 16),
-              child: CustomTextField(
-                controller: controller.groupNameController,
-                hintText: 'set_group_name'.tr,
-                showBorder: false,
-                onChanged: (value) {
-                  controller.createGroupValue.value = value;
-                },
-                formatter: FormatterUtil.createGroupFormatter,
+            if (controller.parameter.type == CreateGroupType.createGroup)
+              Padding(
+                padding: padding(all: 16),
+                child: CustomTextField(
+                  controller: controller.groupNameController,
+                  hintText: 'set_group_name'.tr,
+                  showBorder: false,
+                  onChanged: (value) {
+                    controller.createGroupValue.value = value;
+                  },
+                  formatter: FormatterUtil.createGroupFormatter,
+                ),
               ),
-            ),
             Obx(
               () => Padding(
                 padding: padding(all: 16),
@@ -151,19 +158,20 @@ class CreateGroupPage extends GetWidget<CreateGroupController> {
                                       colorBoder: appTheme.allSidesColor,
                                     ),
                                   ),
-                                  Positioned(
-                                    top: 0,
-                                    right: 5,
-                                    child: InkWell(
-                                      onTap: () => controller.selectedContacts.remove(e),
-                                      borderRadius: BorderRadius.circular(1000),
-                                      child: Container(
-                                        padding: padding(all: 4),
-                                        decoration: BoxDecoration(shape: BoxShape.circle, color: appTheme.errorColor),
-                                        child: Icon(Icons.clear, size: 8, color: appTheme.whiteColor),
+                                  if (controller.canDeleteContact(e.friend!.id!))
+                                    Positioned(
+                                      top: 0,
+                                      right: 5,
+                                      child: InkWell(
+                                        onTap: () => controller.removeContact(e),
+                                        borderRadius: BorderRadius.circular(1000),
+                                        child: Container(
+                                          padding: padding(all: 4),
+                                          decoration: BoxDecoration(shape: BoxShape.circle, color: appTheme.errorColor),
+                                          child: Icon(Icons.clear, size: 8, color: appTheme.whiteColor),
+                                        ),
                                       ),
                                     ),
-                                  ),
                                 ],
                               );
                             }).toList(),
@@ -174,6 +182,11 @@ class CreateGroupPage extends GetWidget<CreateGroupController> {
                       if (controller.createGroupValue.value.isNotEmpty)
                         IconButton(
                           onPressed: controller.createGroup,
+                          icon: const ImageAssetCustom(imagePath: IconsAssets.sendIcon),
+                        )
+                      else
+                        IconButton(
+                          onPressed: controller.addUserToGroup,
                           icon: const ImageAssetCustom(imagePath: IconsAssets.sendIcon),
                         ),
                     ],
@@ -188,7 +201,7 @@ class CreateGroupPage extends GetWidget<CreateGroupController> {
   Widget _buildContactItem(ContactModel e) {
     return Obx(
       () => InkWell(
-        onTap: () => controller.selectContact(e),
+        onTap: controller.canDeleteContact(e.friend!.id!) ? () => controller.selectContact(e) : null,
         child: Padding(
           padding: padding(horizontal: 16, vertical: 8),
           child: Row(

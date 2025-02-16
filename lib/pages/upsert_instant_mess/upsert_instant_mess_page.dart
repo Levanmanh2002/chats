@@ -6,7 +6,7 @@ import 'package:chats/utils/formatter_util.dart';
 import 'package:chats/widget/custom_button.dart';
 import 'package:chats/widget/custom_text_field.dart';
 import 'package:chats/widget/default_app_bar.dart';
-import 'package:chats/widget/dialog/show_quick_message_dialog.dart';
+import 'package:chats/widget/dialog/show_common_dialog.dart';
 import 'package:chats/widget/reponsive/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -57,7 +57,10 @@ class UpsertInstantMessPage extends GetWidget<UpsertInstantMessController> {
                 SizedBox(height: 12.h),
                 InkWell(
                   onTap: () {
-                    showQuickMessageDialog(controller.deleteInstantMess);
+                    showCommonDialog(
+                      title: 'delete_this_quick_message'.tr,
+                      onSubmit: controller.deleteInstantMess,
+                    );
                   },
                   child: Text(
                     'delete_quick_message'.tr,

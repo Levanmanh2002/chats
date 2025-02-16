@@ -2,6 +2,7 @@ import 'package:chats/main.dart';
 import 'package:chats/pages/create_group/create_group_parameter.dart';
 import 'package:chats/pages/group_option/group_option_controller.dart';
 import 'package:chats/pages/instant_message/instant_message_parameter.dart';
+import 'package:chats/pages/view_group_members/view_group_members_parameter.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/icons_assets.dart';
@@ -86,21 +87,54 @@ class GroupOptionPage extends GetWidget<GroupOptionController> {
                     ),
                   ),
                   SizedBox(height: 24.h),
-                  InkWell(
-                    onTap: () {},
-                    borderRadius: BorderRadius.circular(1000),
-                    child: Container(
-                      padding: padding(all: 8),
-                      decoration: BoxDecoration(shape: BoxShape.circle, color: appTheme.allSidesColor),
-                      child: ImageAssetCustom(
-                        imagePath: IconsAssets.searchIcon,
-                        color: appTheme.blackColor,
-                        size: 24.w,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        child: InkWell(
+                          onTap: () {},
+                          borderRadius: BorderRadius.circular(1000),
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: padding(all: 8),
+                                decoration: BoxDecoration(shape: BoxShape.circle, color: appTheme.allSidesColor),
+                                child: ImageAssetCustom(
+                                    imagePath: IconsAssets.searchIcon, color: appTheme.blackColor, size: 24.w),
+                              ),
+                              SizedBox(height: 4.h),
+                              Text('search_messages'.tr, style: StyleThemeData.size12Weight400()),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
+                      SizedBox(width: 24.w),
+                      Flexible(
+                        child: InkWell(
+                          onTap: () => Get.toNamed(
+                            Routes.CREATE_GROUP,
+                            arguments: CreateGroupParameter(
+                              type: CreateGroupType.joinGroup,
+                              users: controller.chatDataModel.value?.users,
+                              groupId: controller.chatDataModel.value?.id,
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: padding(all: 8),
+                                decoration: BoxDecoration(shape: BoxShape.circle, color: appTheme.allSidesColor),
+                                child: ImageAssetCustom(
+                                    imagePath: IconsAssets.addGroupIcon, color: appTheme.blackColor, size: 24.w),
+                              ),
+                              SizedBox(height: 4.h),
+                              Text('add_member'.tr, style: StyleThemeData.size12Weight400()),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 4.h),
-                  Text('search_messages'.tr, style: StyleThemeData.size12Weight400()),
                   SizedBox(height: 24.h),
                   BorderTitleIconWidget(
                     icon: IconsAssets.downloadIcon,
@@ -145,26 +179,19 @@ class GroupOptionPage extends GetWidget<GroupOptionController> {
                   ),
                   SizedBox(height: 8.h),
                   BorderTitleIconWidget(
-                    icon: IconsAssets.userPlusRoundedIcon,
-                    title: 'invite_more_group_members'.tr,
-                    onTap: () => Get.toNamed(
-                      Routes.CREATE_GROUP,
-                      arguments: CreateGroupParameter(
-                        type: CreateGroupType.joinGroup,
-                        users: controller.chatDataModel.value?.users,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
-                  BorderTitleIconWidget(
                     icon: IconsAssets.userGroupIcon,
                     title: 'view_group_members'.tr,
+                    onTap: () => Get.toNamed(
+                      Routes.VIEW_GROUP_MEMBERS,
+                      arguments: ViewGroupMembersParameter(chatGroup: controller.chatDataModel.value),
+                    ),
                   ),
                   SizedBox(height: 8.h),
                   BorderTitleIconWidget(
                     icon: IconsAssets.trashBinIcon,
                     title: 'delete_conversation'.tr,
                   ),
+                  SizedBox(height: 24.h),
                 ],
               ),
             ),

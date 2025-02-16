@@ -20,9 +20,9 @@ void showDateBottomSheet() {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+              children: [ 
                 IconButton(onPressed: Get.back, icon: const SizedBox()),
-                Text('Ngày sinh'.tr, style: StyleThemeData.size16Weight600()),
+                Text('date_of_birth'.tr, style: StyleThemeData.size16Weight600()),
                 IconButton(onPressed: Get.back, icon: const Icon(Icons.clear)),
               ],
             ),

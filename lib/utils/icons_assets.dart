@@ -49,4 +49,6 @@ class IconsAssets {
   static const String borderAlbumIcon = '${_basePath}border_album.svg';
   static const String userGroupTwoIcon = '${_basePath}user_group_two.svg';
   static const String pen2Icon = '${_basePath}pen_2.svg';
+  static const String menuDotsIcon = '${_basePath}menu_dots.svg';
+  static const String keyIcon = '${_basePath}key.svg';
 }

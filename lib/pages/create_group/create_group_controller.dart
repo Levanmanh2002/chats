@@ -1,9 +1,13 @@
+import 'package:chats/models/chats/chat_data_model.dart';
 import 'package:chats/models/contact/contact_model.dart';
 import 'package:chats/models/groups/group.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
 import 'package:chats/pages/contacts/contacts_controller.dart';
 import 'package:chats/pages/create_group/create_group_parameter.dart';
+import 'package:chats/pages/group_message/group_message_controller.dart';
 import 'package:chats/pages/group_message/group_message_parameter.dart';
+import 'package:chats/pages/group_option/group_option_controller.dart';
+import 'package:chats/pages/view_group_members/view_group_members_controller.dart';
 import 'package:chats/resourese/contact/icontact_repository.dart';
 import 'package:chats/resourese/groups/igroups_repository.dart';
 import 'package:chats/routes/pages.dart';
@@ -36,17 +40,33 @@ class CreateGroupController extends GetxController {
     super.onInit();
 
     if (Get.find<ContactsController>().contactModel.value != null) {
-      contactModel.value = Get.find<ContactsController>().contactModel.value;
-      // parameter.users?.map((e) {
+      final currentContacts = Get.find<ContactsController>().contactModel.value;
 
-      // });
+      if (parameter.type == CreateGroupType.joinGroup) {
+        final filteredData = currentContacts?.data?.where((contact) {
+          if (parameter.users == null || parameter.users!.isEmpty) return true;
+          return !parameter.users!.any((user) => user.id == contact.friend?.id);
+        }).toList();
+
+        contactModel.value = currentContacts?.copyWith(data: filteredData);
+      } else {
+        contactModel.value = currentContacts;
+      }
     } else {
       await getContacts();
-      // if (parameter.users != null) {
-      //   for (var element in parameter.users!) {
-      //     selectContact(ContactModel(friend: element));
-      //   }
-      // }
+    }
+    updateSelectedContacts();
+  }
+
+  void updateSelectedContacts() {
+    if (contactModel.value?.data == null || parameter.users == null) return;
+
+    for (var contact in contactModel.value!.data!) {
+      bool exists = parameter.users!.any((user) => user.id == contact.friend?.id);
+
+      if (exists && !selectedContacts.any((selected) => selected.id == contact.friend?.id)) {
+        selectedContacts.add(contact);
+      }
     }
   }
 
@@ -63,10 +83,19 @@ class CreateGroupController extends GetxController {
       if (response.statusCode == 200) {
         final model = ContactModelData.fromJson(response.body['data']);
 
+        List<ContactModel> newData = model.data ?? [];
+
+        if (parameter.type == CreateGroupType.joinGroup) {
+          newData = newData.where((contact) {
+            if (parameter.users == null || parameter.users!.isEmpty) return true;
+            return !parameter.users!.any((user) => user.id == contact.friend?.id);
+          }).toList();
+        }
+
         contactModel.value = ContactModelData(
           data: [
             if (!isRefresh) ...(contactModel.value?.data ?? []),
-            ...(model.data ?? []),
+            ...newData,
           ],
           totalPage: model.totalPage,
           totalCount: model.totalCount,
@@ -117,6 +146,47 @@ class CreateGroupController extends GetxController {
     } finally {
       EasyLoading.dismiss();
     }
+  }
+
+  void addUserToGroup() async {
+    if (selectedContacts.isEmpty) return;
+
+    try {
+      EasyLoading.show(dismissOnTap: false, maskType: EasyLoadingMaskType.clear);
+
+      Map<String, dynamic> params = {
+        'group_id': parameter.groupId,
+        'user_ids': selectedContacts.map((e) => e.friend?.id).toList(),
+      };
+
+      final response = await groupsRepository.addUserToGroup(params);
+
+      if (response.statusCode == 200) {
+        DialogUtils.showSuccessDialog(response.body['message']);
+        Get.find<GroupMessageController>().updateNewDataUserChat(ChatDataModel.fromJson(response.body['data']));
+        Get.find<GroupOptionController>().updateNewDataUserChat(ChatDataModel.fromJson(response.body['data']));
+        Get.back();
+        if (parameter.updateAddMemberLocal == true) {
+          Get.find<ViewGroupMembersController>().addMemberToGroup(selectedContacts);
+        }
+      } else {
+        DialogUtils.showErrorDialog(response.body['message']);
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  bool canDeleteContact(int contactId) {
+    return !(parameter.users?.any((user) => user.id == contactId) ?? false);
+  }
+
+  void removeContact(ContactModel contact) {
+    bool existsInCurrentUsers = parameter.users?.any((user) => user.id == contact.id) ?? false;
+
+    if (!existsInCurrentUsers) selectedContacts.removeWhere((c) => c.id == contact.id);
   }
 
   void selectContact(ContactModel contact) {

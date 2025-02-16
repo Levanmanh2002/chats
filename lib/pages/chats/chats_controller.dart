@@ -63,4 +63,9 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
       chatsModels.refresh();
     }
   }
+
+  void removeChat(int chatId) {
+    chatsModels.value?.chat?.removeWhere((e) => e.id == chatId);
+    chatsModels.refresh();
+  }
 }

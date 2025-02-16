@@ -36,6 +36,8 @@ import 'package:chats/pages/splash/splash_binding.dart';
 import 'package:chats/pages/splash/splash_page.dart';
 import 'package:chats/pages/upsert_instant_mess/upsert_instant_mess_binding.dart';
 import 'package:chats/pages/upsert_instant_mess/upsert_instant_mess_page.dart';
+import 'package:chats/pages/view_group_members/view_group_members_binding.dart';
+import 'package:chats/pages/view_group_members/view_group_members_page.dart';
 import 'package:get/get.dart';
 
 part 'routes.dart';
@@ -136,6 +138,11 @@ abstract class AppPages {
       name: Routes.UPSERT_INSTANT_MESS,
       page: () => UpsertInstantMessPage(),
       binding: UpsertInstantMessBinding(),
+    ),
+    GetPage(
+      name: Routes.VIEW_GROUP_MEMBERS,
+      page: () => ViewGroupMembersPage(),
+      binding: ViewGroupMembersBinding(),
     ),
   ];
 }

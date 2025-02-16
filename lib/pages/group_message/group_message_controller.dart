@@ -1,10 +1,12 @@
 import 'package:chats/extension/data/file_extension.dart';
+import 'package:chats/models/chats/chat_data_model.dart';
 import 'package:chats/models/messages/files_models.dart';
 import 'package:chats/models/messages/likes.dart';
 import 'package:chats/models/messages/message_data_model.dart';
 import 'package:chats/models/messages/message_models.dart';
 import 'package:chats/models/messages/quick_message.dart';
 import 'package:chats/models/messages/reply_message.dart';
+import 'package:chats/models/profile/user_model.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
 import 'package:chats/pages/group_message/group_message_parameter.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
@@ -363,6 +365,16 @@ class GroupMessageController extends GetxController {
 
   void updateGroupName(String name) {
     messageModel.value = messageModel.value?.copyWith(chat: messageModel.value?.chat?.copyWith(name: name));
+    messageModel.refresh();
+  }
+
+  void updateNewDataUserChat(ChatDataModel chat) {
+    messageModel.value = messageModel.value?.copyWith(chat: chat);
+    messageModel.refresh();
+  }
+
+  void removeUserInChatGroup(UserModel user) {
+    messageModel.value?.chat?.users?.remove(user);
     messageModel.refresh();
   }
 

@@ -34,6 +34,22 @@ class ContactModelData {
 
   factory ContactModelData.fromJson(Map<String, dynamic> json) => _$ContactModelDataFromJson(json);
   Map<String, dynamic> toJson() => _$ContactModelDataToJson(this);
+
+  ContactModelData copyWith({
+    List<ContactModel>? data,
+    int? totalPage,
+    int? totalCount,
+    int? page,
+    int? size,
+  }) {
+    return ContactModelData(
+      data: data ?? this.data,
+      totalPage: totalPage ?? this.totalPage,
+      totalCount: totalCount ?? this.totalCount,
+      page: page ?? this.page,
+      size: size ?? this.size,
+    );
+  }
 }
 
 @JsonSerializable()
