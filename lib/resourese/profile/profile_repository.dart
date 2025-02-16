@@ -117,4 +117,16 @@ class ProfileRepository extends IProfileRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<Response> syncContacts(Map<String, dynamic> params) async {
+    try {
+      final result = await clientPostData(AppConstants.syncContactsUri, params);
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
 }

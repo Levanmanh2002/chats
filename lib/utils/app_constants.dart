@@ -63,4 +63,6 @@ class AppConstants {
   static const String endableSecurityUri = '/api/v1/account/endable-security';
   static const String disableSecurityUri = '/api/v1/account/disable-security';
   static const String changeSecurityUri = '/api/v1/account/change-security';
+  static const String syncContactsUri = '/api/v1/contact/sync-contacts';
+  static const String getSyncContactsUri = '/api/v1/contact/list-contacts';
 }

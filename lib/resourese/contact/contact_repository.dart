@@ -142,4 +142,16 @@ class ContactRepository extends IContactRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<Response> getSyncContacts({required int page, required int limit, String search = ''}) async {
+    try {
+      final result = await clientGetData('${AppConstants.getSyncContactsUri}?page=$page&size=$limit&search=$search');
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
 }

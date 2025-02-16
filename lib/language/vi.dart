@@ -157,4 +157,9 @@ const Map<String, String> vi = {
   "confirm_passcode": "Xác nhận mã khóa",
   "the_old_code_is_incorrect_please_try_again": "Mã khóa cũ không chính xác, vui lòng thử lại.",
   "enter_new_passcode": "Nhập mã khóa mới",
+  "sync_contacts_print": "Đồng Bộ Danh Bạ",
+  "sync_contacts_content_1":
+      "Danh bạ của bạn sẽ được sử dụng để tìm kiếm bạn bè, gợi ý kết bạn, thêm vào danh sách danh bạ, đồng bộ lên máy chủ.",
+  "sync_contacts_content_2":
+      "Tất cả thông tin của bạn sẽ được bảo mật và mã hoá theo Điều Khoản Sử Dụng và Chính Sách Bảo Mật.",
 };

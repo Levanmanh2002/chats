@@ -158,4 +158,9 @@ const Map<String, String> en = {
   "confirm_passcode": "Confirm passcode",
   "the_old_code_is_incorrect_please_try_again": "The old passcode is incorrect, please try again.",
   "enter_new_passcode": "Enter a new passcode",
+  "sync_contacts_print": "Sync Contacts",
+  "sync_contacts_content_1":
+      "Your contacts will be used to find friends, suggest connections, add to your contact list, and sync to our servers.",
+  "sync_contacts_content_2":
+      "All of your information will be kept secure and encrypted in accordance with our Terms of Use and Privacy Policy.",
 };

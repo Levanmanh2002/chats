@@ -11,4 +11,5 @@ abstract class IProfileRepository extends IBaseRepository {
   Future<Response> endableSecurity(String securityPass);
   Future<Response> disableSecurity(String securityPass);
   Future<Response> changeSecurity(String securityPass);
+  Future<Response> syncContacts(Map<String, dynamic> params);
 }

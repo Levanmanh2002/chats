@@ -28,4 +28,5 @@ abstract class Routes {
   static const UPDATE_PASSWORD = '/update_password';
   static const SECURITY_CODE = '/security_code';
   static const ENTER_CODE_MUMBER = '/enter_code_mumber';
+  static const SYNC_CONTACT = '/sync_contact';
 }

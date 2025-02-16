@@ -37,7 +37,7 @@ class ProfilePage extends GetWidget<ProfileController> {
             _buildProfile(
               icon: IconsAssets.smartPhoneIcon,
               title: 'sync_contacts'.tr,
-              onTap: () {},
+              onTap: () => Get.toNamed(Routes.SYNC_CONTACT),
             ),
             SizedBox(height: 8.h),
             _buildProfile(

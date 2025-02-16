@@ -1,4 +1,5 @@
 import 'package:chats/models/contact/contact_model.dart';
+import 'package:chats/models/sync_contact/sync_contact_model.dart';
 import 'package:chats/resourese/contact/icontact_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,14 +12,17 @@ class ContactsController extends GetxController with GetSingleTickerProviderStat
   late final TabController tabController;
 
   var isLoading = false.obs;
+  var isLoadingSync = false.obs;
 
   Rx<ContactModelData?> contactModel = Rx<ContactModelData?>(null);
+  Rx<SyncContactModel?> syncContactModel = Rx<SyncContactModel?>(null);
 
   @override
   void onInit() {
     super.onInit();
     tabController = TabController(length: 2, vsync: this);
     getContacts();
+    fetchSyncContacts();
   }
 
   Future<void> getContacts({bool isRefresh = true}) async {
@@ -48,6 +52,36 @@ class ContactsController extends GetxController with GetSingleTickerProviderStat
       print(e);
     } finally {
       if (isRefresh) isLoading.value = false;
+    }
+  }
+
+  void fetchSyncContacts({bool isRefresh = true}) async {
+    try {
+      if (isRefresh) isLoadingSync.value = true;
+
+      final response = await contactRepository.getSyncContacts(
+        page: isRefresh ? 1 : (syncContactModel.value?.totalPage ?? 1) + 1,
+        limit: 10,
+      );
+
+      if (response.statusCode == 200) {
+        final model = SyncContactModel.fromJson(response.body['data']);
+
+        syncContactModel.value = SyncContactModel(
+          contacts: [
+            ...(syncContactModel.value?.contacts ?? []),
+            ...(model.contacts ?? []),
+          ],
+          totalPage: model.totalPage,
+          totalCount: model.totalCount,
+          page: model.page,
+          size: model.size,
+        );
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      if (isRefresh) isLoadingSync.value = false;
     }
   }
 

@@ -12,4 +12,5 @@ abstract class IContactRepository extends IBaseRepository {
   Future<Response> acceptFriendRequest(int id);
   Future<Response> getContactAccepted({required int page, required int limit, String search = ''});
   Future<Response> unfriend(int id);
+  Future<Response> getSyncContacts({required int page, required int limit, String search = ''});
 }
