@@ -39,4 +39,82 @@ class ProfileRepository extends IProfileRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<Response> updateProfile(Map<String, dynamic> params) async {
+    try {
+      final result = await clientPostData(AppConstants.updateProfileUri, params);
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> updateNewPassword(Map<String, dynamic> params) async {
+    try {
+      final result = await clientPostData(AppConstants.updateNewPasswordUri, params);
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> deleteAccount() async {
+    try {
+      final result = await clientDeleteData(AppConstants.deleteAccountUri);
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> endableSecurity(String securityPass) async {
+    try {
+      final result = await clientPostData(AppConstants.endableSecurityUri, {
+        'security_pass': securityPass,
+      });
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> disableSecurity(String securityPass) async {
+    try {
+      final result = await clientPostData(AppConstants.disableSecurityUri, {
+        'security_pass': securityPass,
+      });
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> changeSecurity(String securityPass) async {
+    try {
+      final result = await clientPostData(AppConstants.changeSecurityUri, {
+        'new_security_pass': securityPass,
+      });
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
 }

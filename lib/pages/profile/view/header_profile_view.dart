@@ -49,7 +49,10 @@ class HeaderProfileView extends GetView<ProfileController> {
           SizedBox(height: 12.h),
           Text(controller.user.value?.name ?? '', style: StyleThemeData.size16Weight600()),
           SizedBox(height: 2.h),
-          Text(controller.user.value?.phone ?? '', style: StyleThemeData.size12Weight400(color: appTheme.grayColor)),
+          Text(
+            controller.user.value?.phone?.replaceFirst(controller.phoneCode.value.getCodeAsString(), '0') ?? '',
+            style: StyleThemeData.size12Weight400(color: appTheme.grayColor),
+          ),
         ],
       ),
     );

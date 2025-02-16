@@ -1,3 +1,4 @@
+import 'package:chats/extension/date_time_extension.dart';
 import 'package:chats/main.dart';
 import 'package:chats/pages/sign_up/sign_up_controller.dart';
 import 'package:chats/routes/pages.dart';
@@ -135,6 +136,7 @@ class SignUpPage extends GetWidget<SignUpController> {
                     child: CustomTextField(
                       titleText: 'gender'.tr,
                       hintText: controller.selectGender.value?.title ?? 'select_gender'.tr,
+                      hintStyle: controller.selectGender.value != null ? StyleThemeData.size14Weight400() : null,
                       contentPadding: padding(vertical: 8),
                       showBorder: false,
                       showStar: false,
@@ -147,20 +149,28 @@ class SignUpPage extends GetWidget<SignUpController> {
                   ),
                 ),
                 SizedBox(height: 24.h),
-                GestureDetector(
-                  onTap: () {
-                    showDateBottomSheet();
-                  },
-                  child: CustomTextField(
-                    titleText: 'date_of_birth'.tr,
-                    hintText: 'select_date'.tr,
-                    contentPadding: padding(vertical: 8),
-                    showBorder: false,
-                    showStar: false,
-                    isEnabled: false,
-                    suffixIcon: const IconButton(
-                      onPressed: null,
-                      icon: ImageAssetCustom(imagePath: IconsAssets.calendarIcon),
+                Obx(
+                  () => GestureDetector(
+                    onTap: () {
+                      showDateBottomSheet(
+                        selectDate: controller.selectDate.value,
+                        onChanged: controller.saveDate,
+                      );
+                    },
+                    child: CustomTextField(
+                      titleText: 'date_of_birth'.tr,
+                      hintText: controller.selectDate.value != null
+                          ? controller.selectDate.value.toddMMyyyyDash
+                          : 'select_date'.tr,
+                      hintStyle: controller.selectDate.value != null ? StyleThemeData.size14Weight400() : null,
+                      contentPadding: padding(vertical: 8),
+                      showBorder: false,
+                      showStar: false,
+                      isEnabled: false,
+                      suffixIcon: const IconButton(
+                        onPressed: null,
+                        icon: ImageAssetCustom(imagePath: IconsAssets.calendarIcon),
+                      ),
                     ),
                   ),
                 ),

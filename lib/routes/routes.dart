@@ -24,4 +24,8 @@ abstract class Routes {
   static const UPSERT_INSTANT_MESS = '/upsert_instant_mess';
   static const VIEW_GROUP_MEMBERS = '/view_group_members';
   static const MEDIA_FILES = '/media_files';
+  static const UPDATE_PROFILE = '/update_profile';
+  static const UPDATE_PASSWORD = '/update_password';
+  static const SECURITY_CODE = '/security_code';
+  static const ENTER_CODE_MUMBER = '/enter_code_mumber';
 }

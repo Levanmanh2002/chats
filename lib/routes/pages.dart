@@ -8,6 +8,8 @@ import 'package:chats/pages/create_group/create_group_binding.dart';
 import 'package:chats/pages/create_group/create_group_page.dart';
 import 'package:chats/pages/dashboard/dashboard_binding.dart';
 import 'package:chats/pages/dashboard/dashboard_page.dart';
+import 'package:chats/pages/enter_code_mumber/enter_code_mumber_binding.dart';
+import 'package:chats/pages/enter_code_mumber/enter_code_mumber_page.dart';
 import 'package:chats/pages/forgot_password/forgot_password_binding.dart';
 import 'package:chats/pages/forgot_password/forgot_password_page.dart';
 import 'package:chats/pages/group_message/group_message_binding.dart';
@@ -28,6 +30,8 @@ import 'package:chats/pages/options/options_binding.dart';
 import 'package:chats/pages/options/options_page.dart';
 import 'package:chats/pages/otp/otp_binding.dart';
 import 'package:chats/pages/otp/otp_page.dart';
+import 'package:chats/pages/security_code/security_code_binding.dart';
+import 'package:chats/pages/security_code/security_code_page.dart';
 import 'package:chats/pages/sent_request_contact/sent_request_contact_binding.dart';
 import 'package:chats/pages/sent_request_contact/sent_request_contact_page.dart';
 import 'package:chats/pages/sign_in/sign_in_binding.dart';
@@ -36,6 +40,10 @@ import 'package:chats/pages/sign_up/sign_up_binding.dart';
 import 'package:chats/pages/sign_up/sign_up_page.dart';
 import 'package:chats/pages/splash/splash_binding.dart';
 import 'package:chats/pages/splash/splash_page.dart';
+import 'package:chats/pages/update_password/update_password_binding.dart';
+import 'package:chats/pages/update_password/update_password_page.dart';
+import 'package:chats/pages/update_profile/update_profile_binding.dart';
+import 'package:chats/pages/update_profile/update_profile_page.dart';
 import 'package:chats/pages/upsert_instant_mess/upsert_instant_mess_binding.dart';
 import 'package:chats/pages/upsert_instant_mess/upsert_instant_mess_page.dart';
 import 'package:chats/pages/view_group_members/view_group_members_binding.dart';
@@ -150,6 +158,26 @@ abstract class AppPages {
       name: Routes.MEDIA_FILES,
       page: () => MediaFilesPage(),
       binding: MediaFilesBinding(),
+    ),
+    GetPage(
+      name: Routes.UPDATE_PROFILE,
+      page: () => UpdateProfilePage(),
+      binding: UpdateProfileBinding(),
+    ),
+    GetPage(
+      name: Routes.UPDATE_PASSWORD,
+      page: () => UpdatePasswordPage(),
+      binding: UpdatePasswordBinding(),
+    ),
+    GetPage(
+      name: Routes.SECURITY_CODE,
+      page: () => SecurityCodePage(),
+      binding: SecurityCodeBinding(),
+    ),
+    GetPage(
+      name: Routes.ENTER_CODE_MUMBER,
+      page: () => EnterCodeMumberPage(),
+      binding: EnterCodeMumberBinding(),
     ),
   ];
 }

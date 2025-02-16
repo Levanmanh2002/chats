@@ -148,4 +148,14 @@ const Map<String, String> en = {
   "file": "File",
   "are_you_sure_you_want_to_delete_the_conversation": "Are you sure you want to delete the conversation?",
   "create_a_group_with": "Create a group with @field",
+  "update_password": "Update password",
+  "conform_delete_account":
+      "If you delete, you will not be able to recover the account. Are you sure you want to delete this account?",
+  "set_passcode": "Set passcode",
+  "change_passcode": "Change passcode",
+  "enter_passcode": "Enter passcode",
+  "passcodes_do_not_match": "Passcodes do not match!",
+  "confirm_passcode": "Confirm passcode",
+  "the_old_code_is_incorrect_please_try_again": "The old passcode is incorrect, please try again.",
+  "enter_new_passcode": "Enter a new passcode",
 };

@@ -147,4 +147,14 @@ const Map<String, String> vi = {
   "file": "File",
   "are_you_sure_you_want_to_delete_the_conversation": "Bạn có chắc chắn muốn xóa cuộc trò chuyện?",
   "create_a_group_with": "Tạo nhóm với @field",
+  "update_password": "Đổi mật khẩu",
+  "conform_delete_account":
+      "Nếu bạn xóa, bạn sẽ không thể khôi phục lại tài khoản. Bạn có chắc chắn muốn xóa tài khoản này không?",
+  "set_passcode": "Đặt mã khóa",
+  "change_passcode": "Thay đổi mã khóa",
+  "enter_passcode": "Nhập mã khóa",
+  "passcodes_do_not_match": "Mã không khớp!",
+  "confirm_passcode": "Xác nhận mã khóa",
+  "the_old_code_is_incorrect_please_try_again": "Mã khóa cũ không chính xác, vui lòng thử lại.",
+  "enter_new_passcode": "Nhập mã khóa mới",
 };

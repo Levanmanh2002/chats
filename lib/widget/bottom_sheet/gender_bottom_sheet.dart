@@ -76,12 +76,16 @@ void showGenderBottomSheet({
                       ),
                     ),
                     SizedBox(height: 24.h),
-                    CustomButton(
-                      buttonText: 'save'.tr,
-                      onPressed: () {
-                        onSelected(selectedGenderRx.value!);
-                        Get.back();
-                      },
+                    Obx(
+                      () => CustomButton(
+                        buttonText: 'save'.tr,
+                        onPressed: selectedGenderRx.value != null
+                            ? () {
+                                onSelected(selectedGenderRx.value!);
+                                Get.back();
+                              }
+                            : null,
+                      ),
                     ),
                   ],
                 ),

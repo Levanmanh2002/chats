@@ -1,3 +1,4 @@
+import 'package:chats/extension/date_time_extension.dart';
 import 'package:chats/models/request/sign_up_request.dart';
 import 'package:chats/models/response/phone_code_model.dart';
 import 'package:chats/pages/otp/otp_parameter.dart';
@@ -19,6 +20,8 @@ class SignUpController extends GetxController {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
 
+  Rx<DateTime?> selectDate = Rx<DateTime?>(null);
+
   Rx<Gender?> selectGender = Rx<Gender?>(null);
   var isPolicyChecked = false.obs;
 
@@ -38,6 +41,7 @@ class SignUpController extends GetxController {
     passwordController.addListener(_validateForm);
     selectGender.listen((_) => _validateForm());
     isPolicyChecked.listen((_) => _validateForm());
+    selectDate.listen((_) => _validateForm());
   }
 
   void _validateForm() {
@@ -46,7 +50,8 @@ class SignUpController extends GetxController {
         CustomValidator.validatePassword(passwordController.text).isEmpty &&
         CustomValidator.validateAddress(addressController.text).isEmpty &&
         selectGender.value != null &&
-        isPolicyChecked.value;
+        isPolicyChecked.value &&
+        selectDate.value != null;
   }
 
   final Rx<PhoneCodeModel> phoneCode = Rx(PhoneCodeModel());
@@ -67,6 +72,10 @@ class SignUpController extends GetxController {
     selectGender.value = gender;
   }
 
+  void saveDate(DateTime? date) {
+    selectDate.value = date;
+  }
+
   void confirm() async {
     try {
       clearError();
@@ -85,9 +94,9 @@ class SignUpController extends GetxController {
         phone: numberWithCountryCode,
         password: password,
         confirmPassword: password,
-        birthday: '2000-01-11',
+        birthday: selectDate.value?.toyyyyMMdd ?? '',
         gender: selectGender.value?.name ?? '',
-        address: addressController.text,
+        address: addressController.text.trim(),
       );
 
       final response = await contactRepository.findAccount(numberWithCountryCode);

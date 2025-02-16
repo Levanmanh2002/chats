@@ -14,4 +14,5 @@ class ImagesAssets {
   static const String contactBorderImage = '${_basePath}contact_border.png';
   static const String addFriendImage = '${_basePath}add_friend.png';
   static const String contactRequestImage = '${_basePath}contact_request.png';
+  static const String unionCloseImage = '${_basePath}union_close.png';
 }

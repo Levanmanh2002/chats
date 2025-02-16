@@ -46,7 +46,7 @@ class CustomValidator {
     if (password.isEmpty) {
       return 'validate_password'.tr;
     } else if (!passwordRegex.hasMatch(password)) {
-      return 'validate_password'.tr.tr;
+      return 'validate_password'.tr;
     }
     return '';
   }

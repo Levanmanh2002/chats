@@ -26,6 +26,9 @@ class AppConstants {
   static const String profileUri = '/api/v1/account/profile';
   static const String logoutUri = '/api/v1/account/logout';
   static const String updateAvatarUri = '/api/v1/account/update-avatar';
+  static const String updateProfileUri = '/api/v1/account/update-profile';
+  static const String updateNewPasswordUri = '/api/v1/account/update-password';
+  static const String deleteAccountUri = '/api/v1/account/remove-account';
 
   static const String searchContactPhoneUri = '/api/v1/contact/find-user';
   static const String findAccountUri = '/api/v1/account/find';
@@ -57,4 +60,7 @@ class AppConstants {
   static String getImageFileByChatId(int chatId, String type, {int page = 1, int limit = 10}) =>
       '/api/v1/message/$chatId/files?type=$type&page=$page&size=$limit';
   static String deleteChat(int chatId) => '/api/v1/message/$chatId/delete';
+  static const String endableSecurityUri = '/api/v1/account/endable-security';
+  static const String disableSecurityUri = '/api/v1/account/disable-security';
+  static const String changeSecurityUri = '/api/v1/account/change-security';
 }

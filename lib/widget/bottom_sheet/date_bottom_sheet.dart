@@ -2,10 +2,14 @@ import 'package:chats/main.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/widget/custom_button.dart';
 import 'package:chats/widget/reponsive/extension.dart';
+import 'package:chats/widget/scroll_date/scroll_date_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-void showDateBottomSheet() {
+void showDateBottomSheet({DateTime? selectDate, void Function(DateTime)? onChanged}) {
+  Rx<DateTime?> dateTime = Rx<DateTime?>(selectDate ?? DateTime.now());
+  Rx<DateTime?> selectedDate = Rx<DateTime?>(DateTime.now());
+
   showModalBottomSheet(
     context: Get.context!,
     backgroundColor: appTheme.whiteColor,
@@ -20,25 +24,30 @@ void showDateBottomSheet() {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [ 
+              children: [
                 IconButton(onPressed: Get.back, icon: const SizedBox()),
                 Text('date_of_birth'.tr, style: StyleThemeData.size16Weight600()),
                 IconButton(onPressed: Get.back, icon: const Icon(Icons.clear)),
               ],
             ),
+            SizedBox(height: 12.h),
+            ScrollDateView(
+              date: dateTime.value,
+              onChanged: (date) {
+                selectedDate.value = date;
+              },
+            ),
             Obx(
               () => Padding(
-                padding: padding(top: 12, horizontal: 16, bottom: 24),
-                child: Column(
-                  children: [
-                    SizedBox(height: 24.h),
-                    CustomButton(
-                      buttonText: 'save'.tr,
-                      onPressed: () {
-                        Get.back();
-                      },
-                    ),
-                  ],
+                padding: padding(top: 24, horizontal: 16, bottom: 24),
+                child: CustomButton(
+                  buttonText: 'save'.tr,
+                  onPressed: selectedDate.value != null
+                      ? () {
+                          onChanged?.call(selectedDate.value!);
+                          Get.back();
+                        }
+                      : null,
                 ),
               ),
             ),

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:chats/models/profile/user_model.dart';
+import 'package:chats/models/response/phone_code_model.dart';
 import 'package:chats/resourese/ibase_repository.dart';
 import 'package:chats/resourese/profile/iprofile_repository.dart';
 import 'package:chats/routes/pages.dart';
@@ -20,6 +21,8 @@ class ProfileController extends GetxController {
   Rx<UserModel?> user = Rx<UserModel?>(null);
 
   var avatarFile = Rxn<XFile>();
+
+  final Rx<PhoneCodeModel> phoneCode = Rx(PhoneCodeModel());
 
   @override
   void onInit() {
@@ -41,6 +44,11 @@ class ProfileController extends GetxController {
     } catch (e) {
       print(e);
     }
+  }
+
+  void updateProfile(UserModel newUser) {
+    user.value = newUser;
+    user.refresh();
   }
 
   void pickImageAvatar() async {
@@ -92,6 +100,25 @@ class ProfileController extends GetxController {
       Get.offAllNamed(Routes.SIGN_IN);
     } catch (e) {
       log(e.toString(), name: 'logout');
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  void deleteAccount() async {
+    try {
+      EasyLoading.show(dismissOnTap: false, maskType: EasyLoadingMaskType.clear);
+
+      final response = await profileRepository.deleteAccount();
+
+      if (response.statusCode == 200) {
+        DialogUtils.showSuccessDialog(response.body['message']);
+        Get.offAllNamed(Routes.SIGN_IN);
+      } else {
+        DialogUtils.showErrorDialog(response.body['message']);
+      }
+    } catch (e) {
+      print(e);
     } finally {
       EasyLoading.dismiss();
     }

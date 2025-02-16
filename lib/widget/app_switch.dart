@@ -19,8 +19,8 @@ class AppSwitch extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoSwitch(
       value: isActive,
-      activeColor: activeColor ?? appTheme.green44Color,
-      trackColor: trackColor ?? appTheme.grayColor,
+      activeColor: activeColor ?? appTheme.appColor,
+      trackColor: trackColor ?? appTheme.grayB9Color,
       onChanged: (bool value) {
         onChange?.call();
       },

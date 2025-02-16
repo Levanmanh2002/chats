@@ -6,4 +6,5 @@ class DateConstants {
   static const String hhmmddMMyyyy = 'HH:mm, dd/MM/yyyy';
   static const String MMMMyyyy = 'MMMM yyyy';
   static const String yyyyMMdd = 'yyyy-MM-dd';
+  static const String ddMMyyyyDash = 'dd-MM-yyyy';
 }

@@ -79,6 +79,18 @@ extension DateFormatter on String? {
 
     return DateFormat(DateConstants.ddMMyyyy).format(dateTime);
   }
+
+  String get toddMMyyyyDash {
+    if (this == null || this!.isEmpty) return 'undefined'.tr;
+
+    final dateTime = DateTime.parse(this ?? '');
+
+    return DateFormat(DateConstants.ddMMyyyyDash).format(dateTime);
+  }
+}
+
+extension StringToDateTimeFormatter on String {
+  DateTime get toDateTime => DateTime.parse(this);
 }
 
 extension DateTimeExtension on DateTime? {
@@ -101,6 +113,11 @@ extension DateTimeExtension on DateTime? {
   String get toDateddMMyyyy {
     if (this == null) return '--/--/----';
     return DateFormat(DateConstants.ddMMyyyy).format(this!);
+  }
+
+  String get toddMMyyyyDash {
+    if (this == null) return '--/--/----';
+    return DateFormat(DateConstants.ddMMyyyyDash).format(this!);
   }
 }
 

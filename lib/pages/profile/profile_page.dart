@@ -1,8 +1,12 @@
 import 'package:chats/main.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/pages/profile/view/header_profile_view.dart';
+import 'package:chats/pages/security_code/security_code_parameter.dart';
+import 'package:chats/pages/update_profile/update_profile_parameter.dart';
+import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/icons_assets.dart';
+import 'package:chats/widget/dialog/show_delete_account_dialog.dart';
 import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/list_loader.dart';
 import 'package:chats/widget/reponsive/extension.dart';
@@ -24,7 +28,10 @@ class ProfilePage extends GetWidget<ProfileController> {
             _buildProfile(
               icon: IconsAssets.userEmptyIcon,
               title: 'personal_information'.tr,
-              onTap: () {},
+              onTap: () => Get.toNamed(
+                Routes.UPDATE_PROFILE,
+                arguments: UpdateProfileParameter(user: controller.user.value),
+              ),
             ),
             SizedBox(height: 8.h),
             _buildProfile(
@@ -35,20 +42,25 @@ class ProfilePage extends GetWidget<ProfileController> {
             SizedBox(height: 8.h),
             _buildProfile(
               icon: IconsAssets.lockPasswordIcon,
-              title: 'Đổi mật khẩu'.tr,
-              onTap: () {},
+              title: 'update_password'.tr,
+              onTap: () => Get.toNamed(Routes.UPDATE_PASSWORD),
             ),
             SizedBox(height: 8.h),
             _buildProfile(
               icon: IconsAssets.keyholeIcon,
               title: 'security_code_configuration'.tr,
-              onTap: () {},
+              onTap: () => Get.toNamed(
+                Routes.SECURITY_CODE,
+                arguments: SecurityCodeParameter(user: controller.user.value),
+              ),
             ),
             SizedBox(height: 8.h),
             _buildProfile(
               icon: IconsAssets.trashBinIcon,
               title: 'delete_account'.tr,
-              onTap: () {},
+              onTap: () {
+                showDeleteAccountDialog(controller.deleteAccount);
+              },
             ),
             SizedBox(height: 8.h),
             _buildProfile(

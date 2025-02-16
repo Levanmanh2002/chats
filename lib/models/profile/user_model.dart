@@ -15,6 +15,9 @@ class UserModel {
   @JsonKey(name: 'is_enavle_security')
   bool? isEnableSecurity;
 
+  @JsonKey(name: 'security_code')
+  String? securityCode;
+
   @JsonKey(name: 'is_friend')
   bool? isFriend;
 
@@ -36,6 +39,7 @@ class UserModel {
     this.gender,
     this.address,
     this.isEnableSecurity,
+    this.securityCode,
     this.isFriend,
     this.isSenderRequestFriend,
     this.isReceiverIdRequestFriend,
