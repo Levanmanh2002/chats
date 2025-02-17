@@ -55,6 +55,9 @@ abstract class BaseThemeData {
 
   Color cardSendTimeColor = const Color(0xFF8E9AA3);
 
+  Color kSlateBlueGray = const Color(0xFF606C81);
+  Color kLightGrayBackground = const Color(0xFFE5E7EB);
+
   Gradient? redOrangeGradient = const LinearGradient(
     colors: [Color(0xFFDB021F), Color(0xFFFB8C33)],
     begin: Alignment.centerLeft,

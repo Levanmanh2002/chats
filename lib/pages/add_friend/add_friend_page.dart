@@ -1,5 +1,6 @@
 import 'package:chats/main.dart';
 import 'package:chats/pages/add_friend/add_friend_controller.dart';
+import 'package:chats/pages/contacts/contacts_controller.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/utils/images_assets.dart';
@@ -76,34 +77,20 @@ class AddFriendPage extends GetWidget<AddFriendController> {
               SizedBox(height: 8.h),
               Container(
                 color: appTheme.whiteColor,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: padding(vertical: 12, horizontal: 16),
-                      child: Row(
-                        children: [
-                          ImageAssetCustom(imagePath: ImagesAssets.contactBorderImage, width: 32.w),
-                          SizedBox(width: 12.w),
-                          Text('friend_list'.tr, style: StyleThemeData.size14Weight400()),
-                          SizedBox(width: 4.w),
-                          Text('(31)', style: StyleThemeData.size14Weight400(color: appTheme.grayColor)),
-                        ],
+                child: Padding(
+                  padding: padding(vertical: 12, horizontal: 16),
+                  child: Row(
+                    children: [
+                      ImageAssetCustom(imagePath: ImagesAssets.contactBorderImage, width: 32.w),
+                      SizedBox(width: 12.w),
+                      Text('friend_list'.tr, style: StyleThemeData.size14Weight400()),
+                      SizedBox(width: 4.w),
+                      Text(
+                        '(${Get.find<ContactsController>().contactModel.value?.data?.length ?? '0'})',
+                        style: StyleThemeData.size14Weight400(color: appTheme.grayColor),
                       ),
-                    ),
-                    Padding(
-                      padding: padding(vertical: 12, horizontal: 16),
-                      child: Row(
-                        children: [
-                          ImageAssetCustom(imagePath: ImagesAssets.contactRequestImage, width: 32.w),
-                          SizedBox(width: 12.w),
-                          Text('sent_requests'.tr, style: StyleThemeData.size14Weight400()),
-                          SizedBox(width: 4.w),
-                          Text('(31)', style: StyleThemeData.size14Weight400(color: appTheme.grayColor)),
-                        ],
-                      ),
-                    ), 
-
-                  ],
+                    ],
+                  ),
                 ),
               ),
               Padding(

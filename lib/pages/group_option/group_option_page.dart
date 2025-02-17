@@ -12,6 +12,7 @@ import 'package:chats/widget/border_title_icon_widget.dart';
 import 'package:chats/widget/custom_image_widget.dart';
 import 'package:chats/widget/dialog/show_common_dialog.dart';
 import 'package:chats/widget/dialog/show_update_namegroup_dialog.dart';
+import 'package:chats/widget/group_avatar_widget.dart';
 import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/reponsive/extension.dart';
 import 'package:flutter/material.dart';
@@ -50,9 +51,9 @@ class GroupOptionPage extends GetWidget<GroupOptionController> {
               padding: padding(horizontal: 16),
               child: Column(
                 children: [
-                  CustomImageWidget(
-                    imageUrl: '',
-                    size: 100,
+                  GroupAvatarWidget(
+                    imageUrls: controller.chatDataModel.value?.users?.map((e) => e.avatar ?? '').toList() ?? [],
+                    size: 100.w,
                     showBoder: true,
                     colorBoder: appTheme.allSidesColor,
                   ),

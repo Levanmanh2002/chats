@@ -5,7 +5,7 @@ import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/utils/images_assets.dart';
-import 'package:chats/widget/custom_image_widget.dart';
+import 'package:chats/widget/group_avatar_widget.dart';
 import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/reponsive/extension.dart';
 import 'package:flutter/material.dart';
@@ -48,11 +48,12 @@ class GroupMessageHeaderView extends GetView<GroupMessageController> {
                             : null,
                         child: Row(
                           children: [
-                            CustomImageWidget(
-                              imageUrl: '',
+                            GroupAvatarWidget(
+                              imageUrls:
+                                  controller.messageModel.value?.chat?.users?.map((e) => e.avatar ?? '').toList() ?? [],
                               size: 46.w,
-                              colorBoder: appTheme.appColor,
                               showBoder: true,
+                              colorBoder: appTheme.allSidesColor,
                             ),
                             SizedBox(width: 8.w),
                             Flexible(

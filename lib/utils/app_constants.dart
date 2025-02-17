@@ -29,6 +29,7 @@ class AppConstants {
   static const String updateProfileUri = '/api/v1/account/update-profile';
   static const String updateNewPasswordUri = '/api/v1/account/update-password';
   static const String deleteAccountUri = '/api/v1/account/remove-account';
+  static const String updateFcmTokenUri = '/api/v1/account/update-fcm-token';
 
   static const String searchContactPhoneUri = '/api/v1/contact/find-user';
   static const String findAccountUri = '/api/v1/account/find';

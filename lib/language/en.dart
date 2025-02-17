@@ -163,4 +163,5 @@ const Map<String, String> en = {
       "Your contacts will be used to find friends, suggest connections, add to your contact list, and sync to our servers.",
   "sync_contacts_content_2":
       "All of your information will be kept secure and encrypted in accordance with our Terms of Use and Privacy Policy.",
+  "field_years_ago": "@field years ago",
 };

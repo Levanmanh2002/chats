@@ -9,7 +9,9 @@ import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/custom_image_widget.dart';
 import 'package:chats/widget/dialog/show_common_dialog.dart';
+import 'package:chats/widget/group_avatar_widget.dart';
 import 'package:chats/widget/image_asset_custom.dart';
+import 'package:chats/widget/line_widget.dart';
 import 'package:chats/widget/list_loader.dart';
 import 'package:chats/widget/no_data_widget.dart';
 import 'package:chats/widget/reponsive/extension.dart';
@@ -28,7 +30,12 @@ class ChatAllView extends GetView<ChatsController> {
               child: (controller.chatsModels.value?.chat ?? []).isNotEmpty
                   ? SingleChildScrollView(
                       child: Column(
-                        children: (controller.chatsModels.value?.chat ?? []).map((e) => _buildChatItem(e)).toList(),
+                        children: List.generate((controller.chatsModels.value?.chat ?? []).length, (index) {
+                          return _buildChatItem(
+                            (controller.chatsModels.value?.chat ?? [])[index],
+                            isShowLine: index != (controller.chatsModels.value?.chat ?? []).length - 1,
+                          );
+                        }),
                       ),
                     )
                   : const Center(child: NoDataWidget()),
@@ -36,72 +43,88 @@ class ChatAllView extends GetView<ChatsController> {
     );
   }
 
-  Widget _buildChatItem(ChatDataModel e) {
+  Widget _buildChatItem(ChatDataModel e, {bool isShowLine = true}) {
     final otherUsers = e.users?.firstWhereOrNull((e) => e.id != Get.find<ProfileController>().user.value?.id);
 
-    return Dismissible(
-      key: ValueKey(e.id),
-      direction: DismissDirection.endToStart,
-      dismissThresholds: const {DismissDirection.endToStart: 0.2},
-      confirmDismiss: (direction) async {
-        showCommonDialog(
-          title: 'are_you_sure_you_want_to_delete_the_conversation'.tr,
-          onSubmit: () => controller.deleteChat(e.id!),
-        );
-        return null;
-      },
-      background: Container(
-        padding: padding(horizontal: 20),
-        color: appTheme.errorColor,
-        alignment: Alignment.centerRight,
-        child: ImageAssetCustom(imagePath: IconsAssets.trashBinIcon, size: 24.w, color: appTheme.whiteColor),
-      ),
-      child: InkWell(
-        onTap: e.isGroup == 1
-            ? () => Get.toNamed(
-                  Routes.GROUP_MESSAGE,
-                  arguments: GroupMessageParameter(chatId: e.latestMessage?.chatId),
-                )
-            : () => Get.toNamed(
-                  Routes.MESSAGE,
-                  arguments: MessageParameter(chatId: e.latestMessage?.chatId, contact: otherUsers),
-                ),
-        child: Container(
-          padding: padding(vertical: 12, horizontal: 16),
-          child: Row(
-            children: [
-              CustomImageWidget(
-                imageUrl: otherUsers?.avatar ?? '',
-                size: 54,
-                noImage: false,
-                showBoder: true,
-                colorBoder: appTheme.allSidesColor,
-              ),
-              SizedBox(width: 8.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      e.isGroup == 1 ? e.name ?? '' : otherUsers?.name ?? '',
-                      style: StyleThemeData.size16Weight600(),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+    return Column(
+      children: [
+        Dismissible(
+          key: ValueKey(e.id),
+          direction: DismissDirection.endToStart,
+          dismissThresholds: const {DismissDirection.endToStart: 0.2},
+          confirmDismiss: (direction) async {
+            showCommonDialog(
+              title: 'are_you_sure_you_want_to_delete_the_conversation'.tr,
+              onSubmit: () => controller.deleteChat(e.id!),
+            );
+            return null;
+          },
+          background: Container(
+            padding: padding(horizontal: 20),
+            color: appTheme.errorColor,
+            alignment: Alignment.centerRight,
+            child: ImageAssetCustom(imagePath: IconsAssets.trashBinIcon, size: 24.w, color: appTheme.whiteColor),
+          ),
+          child: InkWell(
+            onTap: e.isGroup == 1
+                ? () => Get.toNamed(
+                      Routes.GROUP_MESSAGE,
+                      arguments: GroupMessageParameter(chatId: e.latestMessage?.chatId),
+                    )
+                : () => Get.toNamed(
+                      Routes.MESSAGE,
+                      arguments: MessageParameter(chatId: e.latestMessage?.chatId, contact: otherUsers),
                     ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      e.latestMessage?.message ?? '',
-                      style: StyleThemeData.size12Weight400(color: appTheme.grayF8Color),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+            child: Container(
+              padding: padding(vertical: 12, horizontal: 16),
+              child: Row(
+                children: [
+                  e.isGroup == 1
+                      ? GroupAvatarWidget(
+                          imageUrls: e.users?.map((e) => e.avatar ?? '').toList() ?? [],
+                          size: 54.w,
+                          showBoder: true,
+                          colorBoder: appTheme.allSidesColor,
+                        )
+                      : CustomImageWidget(
+                          imageUrl: otherUsers?.avatar ?? '',
+                          size: 54.w,
+                          noImage: false,
+                          showBoder: true,
+                          colorBoder: appTheme.allSidesColor,
+                        ),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          e.isGroup == 1 ? e.name ?? '' : otherUsers?.name ?? '',
+                          style: StyleThemeData.size16Weight600(),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(height: 2.h),
+                        Text(
+                          e.latestMessage?.message ?? '',
+                          style: StyleThemeData.size12Weight400(color: appTheme.grayF8Color),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
-      ),
+        if (isShowLine)
+          Padding(
+            padding: padding(left: (16 + 54 + 8).w),
+            child: LineWidget(color: appTheme.allSidesColor),
+          ),
+      ],
     );
   }
 }

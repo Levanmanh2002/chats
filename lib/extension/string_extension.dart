@@ -123,14 +123,20 @@ extension TimeAgoExtension on String {
     DateTime now = DateTime.now();
     Duration difference = now.difference(createdTime);
 
-    if (difference.inHours >= 1) {
-      return 'field_hours_ago'.trParams({'field': '${difference.inHours}'});
-    } else if (difference.inMinutes >= 1) {
-      return 'field_minutes_ago'.trParams({'field': '${difference.inMinutes}'});
-    } else if (difference.inDays < 7) {
-      return 'field_days_ago'.trParams({'field': '${difference.inDays}'});
-    } else {
+    if (difference.inMinutes < 1) {
       return 'just_now'.tr;
+    } else if (difference.inMinutes < 60) {
+      return 'field_minutes_ago'.trParams({'field': '${difference.inMinutes}'});
+    } else if (difference.inHours < 24) {
+      return 'field_hours_ago'.trParams({'field': '${difference.inHours}'});
+    } else if (difference.inDays < 30) {
+      return 'field_days_ago'.trParams({'field': '${difference.inDays}'});
+    } else if (difference.inDays < 365) {
+      int months = (difference.inDays / 30).floor();
+      return 'field_months_ago'.trParams({'field': '$months'});
+    } else {
+      int years = (difference.inDays / 365).floor();
+      return 'field_years_ago'.trParams({'field': '$years'});
     }
   }
 }
