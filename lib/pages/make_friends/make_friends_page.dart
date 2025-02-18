@@ -1,3 +1,4 @@
+import 'package:chats/extension/string_extension.dart';
 import 'package:chats/main.dart';
 import 'package:chats/pages/make_friends/make_friends_controller.dart';
 import 'package:chats/theme/style/style_theme.dart';
@@ -44,7 +45,7 @@ class MakeFriendsPage extends GetWidget<MakeFriendsController> {
               Text(controller.contact?.name ?? '', style: StyleThemeData.size16Weight600(color: appTheme.whiteColor)),
               SizedBox(height: 2.h),
               Text(
-                '(${controller.contact?.phone})',
+                '(${controller.contact?.phone?.formatPhoneCode})',
                 style: StyleThemeData.size16Weight600(color: appTheme.whiteColor),
               ),
               SizedBox(height: 16.h),

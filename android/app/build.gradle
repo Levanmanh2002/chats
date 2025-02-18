@@ -56,3 +56,11 @@ android {
 flutter {
     source = "../.."
 }
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.group == 'com.google.errorprone') {
+            details.useVersion '2.10.0'
+        }
+    }
+}

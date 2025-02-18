@@ -1,5 +1,6 @@
 import 'package:chats/models/response/phone_code_model.dart';
 import 'package:chats/resourese/auth/iauth_repository.dart';
+import 'package:chats/resourese/service/pusher_service.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/custom_validator.dart';
 import 'package:chats/utils/dialog_utils.dart';
@@ -27,7 +28,7 @@ class SignInController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // PusherService.disconnect();
+    PusherService.disconnect();
     phoneController.addListener(_validateForm);
     passwordController.addListener(_validateForm);
   }

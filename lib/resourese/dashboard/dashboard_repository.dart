@@ -16,4 +16,16 @@ class DashboardRepository extends IDashboardRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<Response> systemSettings() async {
+    try {
+      final result = await clientGetData(AppConstants.systemSettingsUri);
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
 }

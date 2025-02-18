@@ -1,5 +1,5 @@
 class PusherType {
-  static const NEW_INVITE_EVENT = 'NEW_INVITE'; // Phát sự kiện tới user khi nhận được 1 lời mời kết bạn mới
+  // static const NEW_INVITE_EVENT = 'NEW_INVITE'; // Phát sự kiện tới user khi nhận được 1 lời mời kết bạn mới
   static const NEW_MESSAGE_EVENT = 'NEW_MESSAGE'; // Phát sự kiện tới user khi có 1 tin nhắn mới
   static const ROLLBACK_EVENT = 'ROLLBACK_MESSAGE'; // Trong 1 cuộc chat đơn hoặc chat nhóm có tin nhắn bị thu hồi
   static const LIKE_MESSAGE_EVENT = 'LIKE_MESSAGE'; // Tin nhắn trong cuộc chat đơn hoặc chat nhóm có người like mới

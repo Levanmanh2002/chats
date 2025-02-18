@@ -22,6 +22,15 @@ class MessageDataModel {
   @JsonKey(name: 'is_rollback')
   bool? isRollback;
 
+  @JsonKey(name: 'has_user_added_to_group')
+  bool? hasUserAddedToGroup;
+
+  @JsonKey(name: 'has_user_removed_from_group')
+  bool? hasUserRemovedFromGroup;
+
+  @JsonKey(name: 'has_user_left_group')
+  bool? hasUserLeftGroup;
+
   @JsonKey(name: 'reply_message')
   ReplyMessage? replyMessage;
 
@@ -40,6 +49,9 @@ class MessageDataModel {
     this.chatId,
     this.files,
     this.isRollback,
+    this.hasUserAddedToGroup,
+    this.hasUserRemovedFromGroup,
+    this.hasUserLeftGroup,
     this.replyMessage,
     this.likes,
     this.createdAt,

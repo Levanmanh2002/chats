@@ -115,6 +115,14 @@ extension StringFormatting on String {
 
     return '$firstChar$maskedPart$lastThree';
   }
+
+  String get formatPhoneCode {
+    if (startsWith('+84')) {
+      return replaceFirst('+84', '0');
+    } else {
+      return '+84${startsWith('0') ? substring(1) : this}';
+    }
+  }
 }
 
 extension TimeAgoExtension on String {

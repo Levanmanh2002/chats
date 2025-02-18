@@ -1,4 +1,5 @@
 import 'package:chats/models/profile/user_model.dart';
+import 'package:chats/models/response/phone_code_model.dart';
 import 'package:chats/pages/contacts/contacts_controller.dart';
 import 'package:chats/pages/make_friends/make_friends_parameter.dart';
 import 'package:chats/pages/message/message_parameter.dart';
@@ -17,6 +18,8 @@ class MakeFriendsController extends GetxController {
   UserModel? get contact => parameter.contact;
 
   MakeFriendsController({required this.contactRepository, required this.messagesRepository, required this.parameter});
+
+  final Rx<PhoneCodeModel> phoneCode = Rx(PhoneCodeModel());
 
   var isLoadingAdd = false.obs;
   var isLoadingRemove = false.obs;

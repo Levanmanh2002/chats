@@ -192,7 +192,8 @@ class ChastListView extends GetView<MessageController> {
                             ),
                             if ((item.likes ?? []).isNotEmpty && item.isRollback == false)
                               Positioned(
-                                right: 0,
+                                left: item.sender?.id == Get.find<ProfileController>().user.value?.id ? null : 0,
+                                right: item.sender?.id == Get.find<ProfileController>().user.value?.id ? 0 : null,
                                 bottom: 0,
                                 child: Container(
                                   margin: padding(horizontal: 16, bottom: 6),
@@ -217,6 +218,7 @@ class ChastListView extends GetView<MessageController> {
                               ),
                           ],
                         ),
+                  // SizedBox(height: 24.h),
                 ],
               );
             },

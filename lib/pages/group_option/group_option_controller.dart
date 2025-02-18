@@ -91,4 +91,9 @@ class GroupOptionController extends GetxController {
     chatDataModel.value = chatDataModel.value?.copyWith(users: chat.users);
     chatDataModel.refresh();
   }
+
+  void updateNameGroupEvent(String name) {
+    chatDataModel.value = chatDataModel.value?.copyWith(name: name);
+    chatDataModel.refresh();
+  }
 }

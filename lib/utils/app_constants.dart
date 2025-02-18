@@ -1,3 +1,5 @@
+import 'package:chats/utils/local_storage.dart';
+import 'package:chats/utils/shared_key.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AppConstants {
@@ -12,7 +14,9 @@ class AppConstants {
   static const String fontFamilyRegular = 'Regular';
 
   static String baseUrl = dotenv.get('BASE_URL');
-
+  static String get pusherApiKey => LocalStorage.getString(SharedKey.PUSHER_API_KEY);
+  static String pusherApiCluster = dotenv.get('PUSHER_API_CLUSTER');
+  static String pusherChannel = dotenv.get('PUSHER_CHANNEL');
   static String userType = 'client';
 
   static const String notificationChannelId = 'PREEPS-HAPPY-HOUSES-DRIVER-NOTIFICATION-CHANNEL-ID';
@@ -30,6 +34,7 @@ class AppConstants {
   static const String updateNewPasswordUri = '/api/v1/account/update-password';
   static const String deleteAccountUri = '/api/v1/account/remove-account';
   static const String updateFcmTokenUri = '/api/v1/account/update-fcm-token';
+  static const String systemSettingsUri = '/api/v1/system/settings';
 
   static const String searchContactPhoneUri = '/api/v1/contact/find-user';
   static const String findAccountUri = '/api/v1/account/find';

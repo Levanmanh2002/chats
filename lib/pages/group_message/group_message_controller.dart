@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:chats/extension/data/file_extension.dart';
 import 'package:chats/models/chats/chat_data_model.dart';
 import 'package:chats/models/messages/files_models.dart';
@@ -7,15 +11,21 @@ import 'package:chats/models/messages/message_models.dart';
 import 'package:chats/models/messages/quick_message.dart';
 import 'package:chats/models/messages/reply_message.dart';
 import 'package:chats/models/profile/user_model.dart';
+import 'package:chats/models/pusher/pusher_group_message.dart';
+import 'package:chats/models/pusher/pusher_message_model.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
 import 'package:chats/pages/group_message/group_message_parameter.dart';
+import 'package:chats/pages/group_option/group_option_controller.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/resourese/groups/igroups_repository.dart';
 import 'package:chats/resourese/ibase_repository.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
+import 'package:chats/resourese/service/pusher_service.dart';
+import 'package:chats/utils/app/pusher_type.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
 class GroupMessageController extends GetxController {
   final IMessagesRepository messagesRepository;
@@ -40,6 +50,8 @@ class GroupMessageController extends GetxController {
   RxList<QuickMessage> quickMessagesList = <QuickMessage>[].obs;
   Rx<QuickMessage?> quickMessage = Rx<QuickMessage?>(null);
 
+  StreamSubscription? _chatSubscription;
+
   @override
   void onInit() {
     super.onInit();
@@ -48,6 +60,8 @@ class GroupMessageController extends GetxController {
     }
     _fetchQuickMessage();
     scrollController.addListener(_scrollListener);
+    PusherService().connect();
+    _initStream();
   }
 
   void _scrollListener() {
@@ -385,9 +399,114 @@ class GroupMessageController extends GetxController {
     messageModel.refresh();
   }
 
+  void removeUsersInChatGroup(List<int> userIds) {
+    if (messageModel.value?.chat?.users != null) {
+      messageModel.value!.chat!.users!.removeWhere((user) => userIds.contains(user.id));
+      messageModel.refresh();
+    }
+  }
+
+  void updateNameGroupEvent(String name) {
+    messageModel.value = messageModel.value?.copyWith(chat: messageModel.value?.chat?.copyWith(name: name));
+    messageModel.refresh();
+    if (Get.isRegistered<GroupOptionController>()) Get.find<GroupOptionController>().updateNameGroupEvent(name);
+  }
+
+  void updateListUser(List<UserModel> users) {
+    messageModel.value = messageModel.value?.copyWith(chat: messageModel.value?.chat?.copyWith(users: users));
+    messageModel.refresh();
+  }
+
+  void removeUserFromGroup(List<int> userIds) {
+    if (messageModel.value?.chat?.users != null) {
+      final initialLength = messageModel.value!.chat!.users!.length;
+
+      messageModel.value!.chat!.users!.removeWhere((user) {
+        if (userIds.contains(user.id)) {
+          if (user.id == Get.find<ProfileController>().user.value?.id) {
+            Get.back();
+          }
+          return true;
+        }
+        return false;
+      });
+
+      if (messageModel.value!.chat!.users!.length != initialLength) {
+        messageModel.refresh();
+      }
+    }
+  }
+
+  void _initStream() {
+    _chatSubscription = PusherService().stream.listen(
+      (event) {
+        if (event is PusherEvent) {
+          try {
+            final json = jsonDecode(event.data) as Map<String, dynamic>;
+
+            if (json['payload']['data']['chat_id'] == parameter.chatId) {
+              final message = PusherMesageModel.fromJson(json);
+              if (message.payload == null) return;
+
+              switch (message.payload?.type) {
+                case PusherType.NEW_MESSAGE_EVENT:
+                  onInsertMessage(message.payload!.data!);
+                  break;
+                case PusherType.ROLLBACK_EVENT:
+                  int index =
+                      messageModel.value?.listMessages?.indexWhere((msg) => msg.id == message.payload!.data!.id) ?? -1;
+                  if (index != -1) {
+                    messageModel.value?.listMessages![index] =
+                        messageModel.value!.listMessages![index].copyWith(isRollback: true);
+                    messageModel.refresh();
+                  }
+                  break;
+                case PusherType.LIKE_MESSAGE_EVENT:
+                  onHeartMessageLocal(message.payload!.data!.id);
+                  break;
+                case PusherType.HAS_USER_REMOVED_FROM_GROUP_EVENT:
+                  break;
+                case PusherType.ADD_TO_GROUP_EVENT:
+                  final groupMessage = PusherGroupMessageModel.fromJson(json);
+                  if (groupMessage.payload != null) {
+                    onInsertMessage(groupMessage.payload!.data!.chat!.latestMessage!);
+                  }
+                  break;
+
+                case PusherType.GROUP_RENAME_EVENT:
+                  updateNameGroupEvent(json['payload']['data']['name']);
+                  break;
+
+                default:
+              }
+            } else {
+              final groupMessage = PusherGroupMessageModel.fromJson(json);
+
+              if (groupMessage.payload?.data?.chat?.id == parameter.chatId &&
+                  groupMessage.payload?.type == PusherType.NEW_MESSAGE_EVENT) {
+                onInsertMessage(groupMessage.payload!.data!.chat!.latestMessage!);
+
+                if (groupMessage.payload?.data?.message?.hasUserRemovedFromGroup == 1 &&
+                    (groupMessage.payload?.data?.users ?? []).isNotEmpty) {
+                  removeUsersInChatGroup(groupMessage.payload!.data!.users!);
+                  removeUserFromGroup(groupMessage.payload!.data!.users!);
+                } else if (groupMessage.payload?.data?.message?.hasUserAddedToGroup == 1) {
+                  updateListUser(groupMessage.payload!.data!.chat!.users!);
+                }
+              }
+            }
+          } catch (e) {
+            log(e.toString(), name: 'ERROR_STREAM_EVENT_GROUP_MESSAGE');
+          }
+        }
+      },
+    );
+  }
+
   @override
   void onClose() {
     scrollController.dispose();
+    _chatSubscription?.cancel();
     super.onClose();
   }
 }

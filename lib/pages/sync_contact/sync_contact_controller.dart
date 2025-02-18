@@ -1,3 +1,4 @@
+import 'package:chats/models/response/phone_code_model.dart';
 import 'package:chats/resourese/profile/iprofile_repository.dart';
 import 'package:chats/utils/dialog_utils.dart';
 import 'package:contacts_service/contacts_service.dart';
@@ -8,6 +9,8 @@ class SyncContactController extends GetxController {
   final IProfileRepository profileRepository;
 
   SyncContactController({required this.profileRepository});
+
+  final Rx<PhoneCodeModel> phoneCode = Rx(PhoneCodeModel());
 
   var isLoading = false.obs;
   RxList<Map<String, String>> contactsList = <Map<String, String>>[].obs;
@@ -44,7 +47,18 @@ class SyncContactController extends GetxController {
       List<Map<String, String>> formattedContacts = rawContacts.map((contact) {
         return {
           "contact_name": contact.displayName ?? "Không có tên",
-          "phone": (contact.phones?.isNotEmpty ?? false) ? contact.phones?.first.value ?? "" : "",
+          // "phone": (contact.phones?.isNotEmpty ?? false) ? contact.phones?.first.value ?? "" : "",
+          "phone": (() {
+            final rawPhone = contact.phones?.first.value ?? "";
+            final phoneClean = rawPhone.replaceAll(' ', '');
+            if (phoneClean.startsWith('+84') || phoneClean.startsWith('84')) {
+              return phoneClean;
+            } else if (phoneClean.startsWith('0')) {
+              return '+84${phoneClean.substring(1)}';
+            } else {
+              return '+84$phoneClean';
+            }
+          })(),
         };
       }).toList();
 

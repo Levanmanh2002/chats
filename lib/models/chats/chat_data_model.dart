@@ -5,7 +5,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'chat_data_model.g.dart';
 
 @JsonSerializable()
-class ChatDataModel {
+class ChatDataModel { 
   int? id;
   String? name;
   UserModel? owner;

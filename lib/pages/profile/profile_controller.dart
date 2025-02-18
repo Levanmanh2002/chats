@@ -2,8 +2,11 @@ import 'dart:developer';
 
 import 'package:chats/models/profile/user_model.dart';
 import 'package:chats/models/response/phone_code_model.dart';
+import 'package:chats/pages/chats/chats_controller.dart';
+import 'package:chats/resourese/dashboard/idashboard_repository.dart';
 import 'package:chats/resourese/ibase_repository.dart';
 import 'package:chats/resourese/profile/iprofile_repository.dart';
+import 'package:chats/resourese/service/pusher_service.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/dialog_utils.dart';
 import 'package:chats/utils/image_utils.dart';
@@ -15,8 +18,9 @@ import 'package:image_picker/image_picker.dart';
 
 class ProfileController extends GetxController {
   final IProfileRepository profileRepository;
+  final IDashboardRepository dashboardRepository;
 
-  ProfileController({required this.profileRepository});
+  ProfileController({required this.profileRepository, required this.dashboardRepository});
 
   Rx<UserModel?> user = Rx<UserModel?>(null);
 
@@ -25,16 +29,17 @@ class ProfileController extends GetxController {
   final Rx<PhoneCodeModel> phoneCode = Rx(PhoneCodeModel());
 
   @override
-  void onInit() {
-    getProfile();
+  void onInit() async {
+    await _getProfile();
+    _systemSettingPusher();
     super.onInit();
   }
 
   Future<void> onRefresh() async {
-    getProfile();
+    _getProfile();
   }
 
-  Future<void> getProfile() async {
+  Future<void> _getProfile() async {
     try {
       final response = await profileRepository.profile();
 
@@ -71,7 +76,7 @@ class ProfileController extends GetxController {
 
       if (response.statusCode == 200) {
         DialogUtils.showSuccessDialog(response.body['message']);
-        getProfile();
+        _getProfile();
         user.refresh();
       } else {
         DialogUtils.showErrorDialog(response.body['message']);
@@ -121,6 +126,21 @@ class ProfileController extends GetxController {
       print(e);
     } finally {
       EasyLoading.dismiss();
+    }
+  }
+
+  void _systemSettingPusher() async {
+    try {
+      final response = await dashboardRepository.systemSettings();
+
+      if (response.statusCode == 200) {
+        await LocalStorage.setString(SharedKey.PUSHER_API_KEY, response.body['data']['pusher']['key']);
+        await PusherService.initPusher();
+        // log(response.body['data']['pusher']['key'], name: 'PUSHER_API_KEY');
+        Get.find<ChatsController>().initStreamPusher();
+      }
+    } catch (e) {
+      print(e);
     }
   }
 }

@@ -52,28 +52,30 @@ void showReactionPopup(String message, {required bool isCurrentUser, VoidCallbac
                   child: const ImageAssetCustom(imagePath: IconsAssets.heartColorIcon),
                 ),
               ),
-              SizedBox(height: 4.h),
-              InkWell(
-                onTap: () {
-                  onRevoke!();
-                  Get.back();
-                },
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  padding: padding(all: 12),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: appTheme.whiteColor,
-                  ),
-                  child: Column(
-                    children: [
-                      ImageAssetCustom(imagePath: IconsAssets.trashBinIcon, color: appTheme.errorColor),
-                      SizedBox(height: 4.h),
-                      Text('revoke'.tr, style: StyleThemeData.size12Weight400()),
-                    ],
+              if (onRevoke != null) ...[
+                SizedBox(height: 4.h),
+                InkWell(
+                  onTap: () {
+                    onRevoke();
+                    Get.back();
+                  },
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    padding: padding(all: 12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: appTheme.whiteColor,
+                    ),
+                    child: Column(
+                      children: [
+                        ImageAssetCustom(imagePath: IconsAssets.trashBinIcon, color: appTheme.errorColor),
+                        SizedBox(height: 4.h),
+                        Text('revoke'.tr, style: StyleThemeData.size12Weight400()),
+                      ],
+                    ),
                   ),
                 ),
-              ),
+              ],
             ],
           ),
         ),

@@ -67,156 +67,177 @@ class GroupChastListView extends GetView<GroupMessageController> {
                         style: StyleThemeData.size12Weight400(color: appTheme.whiteColor),
                       ),
                     ),
-                  item.isRollback == true
-                      ? Align(
-                          alignment: item.sender?.id == Get.find<ProfileController>().user.value?.id
-                              ? Alignment.centerRight
-                              : Alignment.centerLeft,
-                          child: Container(
-                            margin: padding(horizontal: 16, vertical: 2),
-                            constraints: BoxConstraints(maxWidth: 300.w),
-                            padding: padding(all: 8),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: item.sender?.id == Get.find<ProfileController>().user.value?.id
-                                  ? appTheme.appColor
-                                  : appTheme.whiteColor,
-                            ),
-                            child: Text(
-                              'message_rollback'.tr,
-                              style: StyleThemeData.size12Weight400(color: appTheme.blueBFFColor),
-                            ),
+                  (item.hasUserAddedToGroup == true ||
+                          item.hasUserRemovedFromGroup == true ||
+                          item.hasUserLeftGroup == true)
+                      ? Container(
+                          margin: padding(all: 8),
+                          padding: padding(vertical: 4, horizontal: 8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50),
+                            color: appTheme.whiteColor,
+                          ),
+                          child: Text(
+                            item.message ?? '1221',
+                            style: StyleThemeData.size8Weight400(color: appTheme.appColor),
                           ),
                         )
-                      : Stack(
-                          children: [
-                            Padding(
-                              padding: padding(horizontal: 16, bottom: (item.likes ?? []).isNotEmpty ? 20 : 0),
-                              child: Column(
-                                children: [
-                                  GestureDetector(
-                                    onLongPress: () {
-                                      showReactionPopup(
-                                        item.message ?? '',
-                                        isCurrentUser: item.sender?.id == Get.find<ProfileController>().user.value?.id,
-                                        onRevoke: () => controller.onRevokeMessageLocal(item.id),
-                                        onHeart: () => controller.onHeartMessageLocal(item.id),
-                                      );
-                                    },
-                                    child: AnimationReplyMessage(
-                                      key: UniqueKey(),
-                                      swipeSensitivity: 5,
-                                      onRightSwipe: (details) {
-                                        controller.updateReplyMessage(item);
-                                      },
-                                      onLeftSwipe: (details) {
-                                        controller.updateReplyMessage(item);
-                                      },
-                                      child: _itemListMessage(
-                                        text: item.message ?? '',
-                                        isCurrentUser: item.sender?.id == Get.find<ProfileController>().user.value?.id,
-                                        status: item.status,
-                                        replyMessage: item.replyMessage,
-                                      ),
-                                    ),
-                                  ),
-                                  if ((item.files ?? []).isNotEmpty) ...[
-                                    GestureDetector(
-                                      onLongPress: () {
-                                        showReactionPopup(
-                                          item.message ?? '',
-                                          isCurrentUser:
-                                              item.sender?.id == Get.find<ProfileController>().user.value?.id,
-                                          onRevoke: () => controller.onRevokeMessageLocal(item.id),
-                                          onHeart: () => controller.onHeartMessageLocal(item.id),
-                                        );
-                                      },
-                                      child: AnimationReplyMessage(
-                                        key: UniqueKey(),
-                                        swipeSensitivity: 5,
-                                        onRightSwipe: (details) {
-                                          controller.updateReplyMessage(item);
+                      : item.isRollback == true
+                          ? Align(
+                              alignment: item.sender?.id == Get.find<ProfileController>().user.value?.id
+                                  ? Alignment.centerRight
+                                  : Alignment.centerLeft,
+                              child: Container(
+                                margin: padding(horizontal: 16, vertical: 2),
+                                constraints: BoxConstraints(maxWidth: 300.w),
+                                padding: padding(all: 8),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: item.sender?.id == Get.find<ProfileController>().user.value?.id
+                                      ? appTheme.appColor
+                                      : appTheme.whiteColor,
+                                ),
+                                child: Text(
+                                  'message_rollback'.tr,
+                                  style: StyleThemeData.size12Weight400(color: appTheme.blueBFFColor),
+                                ),
+                              ),
+                            )
+                          : Stack(
+                              children: [
+                                Padding(
+                                  padding: padding(horizontal: 16, bottom: (item.likes ?? []).isNotEmpty ? 20 : 0),
+                                  child: Column(
+                                    children: [
+                                      GestureDetector(
+                                        onLongPress: () {
+                                          showReactionPopup(
+                                            item.message ?? '',
+                                            isCurrentUser:
+                                                item.sender?.id == Get.find<ProfileController>().user.value?.id,
+                                            onRevoke: item.sender?.id == Get.find<ProfileController>().user.value?.id
+                                                ? () => controller.onRevokeMessageLocal(item.id)
+                                                : null,
+                                            onHeart: () => controller.onHeartMessageLocal(item.id),
+                                          );
                                         },
-                                        onLeftSwipe: (details) {
-                                          controller.updateReplyMessage(item);
-                                        },
-                                        child: Align(
-                                          alignment: item.sender?.id == Get.find<ProfileController>().user.value?.id
-                                              ? Alignment.centerRight
-                                              : Alignment.centerLeft,
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment: CrossAxisAlignment.end,
-                                            children: [
-                                              Container(
-                                                constraints: BoxConstraints(maxWidth: 300.w),
-                                                child: DynamicGridItemView<FilesModels>(
-                                                  items: item.files ?? [],
-                                                  borderRadius: 8,
-                                                  itemBuilder: (file, index) {
-                                                    return LayoutBuilder(
-                                                      builder: (context, constraint) => Padding(
-                                                        padding: padding(all: 4),
-                                                        child: InkWell(
-                                                          onTap: () => Get.toNamed(
-                                                            Routes.ATTACHMENT_FULLSCREEN,
-                                                            arguments: AttachmentFullscreenParameter(
-                                                              files: item.files ?? [],
-                                                              index: index,
-                                                              user: item.sender,
-                                                            ),
-                                                          ),
-                                                          borderRadius: BorderRadius.circular(8),
-                                                          child: _buildAttachFileView(file, constraint.maxWidth.w),
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
-                                                ),
-                                              ),
-                                              if (item.status == MessageStatus.sending) ...[
-                                                SizedBox(width: 4.w),
-                                                Icon(Icons.watch_later, size: 16, color: appTheme.cardSendTimeColor),
-                                              ] else if (item.status == MessageStatus.failed) ...[
-                                                SizedBox(width: 4.w),
-                                                Icon(Icons.error, size: 16, color: appTheme.errorColor),
-                                              ],
-                                            ],
+                                        child: AnimationReplyMessage(
+                                          key: UniqueKey(),
+                                          swipeSensitivity: 5,
+                                          onRightSwipe: (details) {
+                                            controller.updateReplyMessage(item);
+                                          },
+                                          onLeftSwipe: (details) {
+                                            controller.updateReplyMessage(item);
+                                          },
+                                          child: _itemListMessage(
+                                            text: item.message ?? '',
+                                            isCurrentUser:
+                                                item.sender?.id == Get.find<ProfileController>().user.value?.id,
+                                            status: item.status,
+                                            replyMessage: item.replyMessage,
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ],
-                              ),
-                            ),
-                            if ((item.likes ?? []).isNotEmpty && item.isRollback == false)
-                              Positioned(
-                                right: 0,
-                                bottom: 0,
-                                child: Container(
-                                  margin: padding(horizontal: 16, bottom: 6),
-                                  padding: padding(vertical: 2, horizontal: 8),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    border: Border.all(color: appTheme.allSidesColor),
-                                    color: appTheme.whiteColor,
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      ImageAssetCustom(imagePath: IconsAssets.heartColorIcon, width: 15.w),
-                                      SizedBox(width: 2.w),
-                                      Text(
-                                        item.likes?.length.toString() ?? '',
-                                        style: StyleThemeData.size10Weight600(),
-                                      ),
+                                      if ((item.files ?? []).isNotEmpty) ...[
+                                        GestureDetector(
+                                          onLongPress: () {
+                                            showReactionPopup(
+                                              item.message ?? '',
+                                              isCurrentUser:
+                                                  item.sender?.id == Get.find<ProfileController>().user.value?.id,
+                                              onRevoke: () => controller.onRevokeMessageLocal(item.id),
+                                              onHeart: () => controller.onHeartMessageLocal(item.id),
+                                            );
+                                          },
+                                          child: AnimationReplyMessage(
+                                            key: UniqueKey(),
+                                            swipeSensitivity: 5,
+                                            onRightSwipe: (details) {
+                                              controller.updateReplyMessage(item);
+                                            },
+                                            onLeftSwipe: (details) {
+                                              controller.updateReplyMessage(item);
+                                            },
+                                            child: Align(
+                                              alignment: item.sender?.id == Get.find<ProfileController>().user.value?.id
+                                                  ? Alignment.centerRight
+                                                  : Alignment.centerLeft,
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                crossAxisAlignment: CrossAxisAlignment.end,
+                                                children: [
+                                                  Container(
+                                                    constraints: BoxConstraints(maxWidth: 300.w),
+                                                    child: DynamicGridItemView<FilesModels>(
+                                                      items: item.files ?? [],
+                                                      borderRadius: 8,
+                                                      itemBuilder: (file, index) {
+                                                        return LayoutBuilder(
+                                                          builder: (context, constraint) => Padding(
+                                                            padding: padding(all: 4),
+                                                            child: InkWell(
+                                                              onTap: () => Get.toNamed(
+                                                                Routes.ATTACHMENT_FULLSCREEN,
+                                                                arguments: AttachmentFullscreenParameter(
+                                                                  files: item.files ?? [],
+                                                                  index: index,
+                                                                  user: item.sender,
+                                                                ),
+                                                              ),
+                                                              borderRadius: BorderRadius.circular(8),
+                                                              child: _buildAttachFileView(file, constraint.maxWidth.w),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                  ),
+                                                  if (item.status == MessageStatus.sending) ...[
+                                                    SizedBox(width: 4.w),
+                                                    Icon(Icons.watch_later,
+                                                        size: 16, color: appTheme.cardSendTimeColor),
+                                                  ] else if (item.status == MessageStatus.failed) ...[
+                                                    SizedBox(width: 4.w),
+                                                    Icon(Icons.error, size: 16, color: appTheme.errorColor),
+                                                  ],
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ],
                                   ),
                                 ),
-                              ),
-                          ],
-                        ),
+                                if ((item.likes ?? []).isNotEmpty && item.isRollback == false)
+                                  Positioned(
+                                    left: item.sender?.id == Get.find<ProfileController>().user.value?.id ? null : 0,
+                                    right: item.sender?.id == Get.find<ProfileController>().user.value?.id ? 0 : null,
+                                    bottom: 0,
+                                    child: Container(
+                                      margin: padding(horizontal: 16, bottom: 6),
+                                      padding: padding(vertical: 2, horizontal: 8),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        border: Border.all(color: appTheme.allSidesColor),
+                                        color: appTheme.whiteColor,
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          ImageAssetCustom(imagePath: IconsAssets.heartColorIcon, width: 15.w),
+                                          SizedBox(width: 2.w),
+                                          Text(
+                                            item.likes?.length.toString() ?? '',
+                                            style: StyleThemeData.size10Weight600(),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
                 ],
               );
             },

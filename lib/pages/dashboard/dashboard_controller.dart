@@ -2,6 +2,7 @@ import 'package:chats/pages/chats/chats_page.dart';
 import 'package:chats/pages/contacts/contacts_page.dart';
 import 'package:chats/pages/profile/profile_page.dart';
 import 'package:chats/resourese/dashboard/idashboard_repository.dart';
+import 'package:chats/resourese/service/pusher_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -48,7 +49,7 @@ class DashboardController extends GetxController {
   @override
   void dispose() {
     pageController.dispose();
-    // PusherService.disconnect();
+    PusherService.disconnect();
     super.dispose();
   }
 }

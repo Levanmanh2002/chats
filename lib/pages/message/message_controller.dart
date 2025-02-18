@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:chats/extension/data/file_extension.dart';
 import 'package:chats/models/messages/files_models.dart';
 import 'package:chats/models/messages/likes.dart';
@@ -5,14 +9,18 @@ import 'package:chats/models/messages/message_data_model.dart';
 import 'package:chats/models/messages/message_models.dart';
 import 'package:chats/models/messages/quick_message.dart';
 import 'package:chats/models/messages/reply_message.dart';
+import 'package:chats/models/pusher/pusher_message_model.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
 import 'package:chats/pages/message/message_parameter.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/resourese/ibase_repository.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
+import 'package:chats/resourese/service/pusher_service.dart';
+import 'package:chats/utils/app/pusher_type.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
 class MessageController extends GetxController {
   final IMessagesRepository messagesRepository;
@@ -36,6 +44,8 @@ class MessageController extends GetxController {
   RxList<QuickMessage> quickMessagesList = <QuickMessage>[].obs;
   Rx<QuickMessage?> quickMessage = Rx<QuickMessage?>(null);
 
+  StreamSubscription? _chatSubscription;
+
   @override
   void onInit() {
     super.onInit();
@@ -44,6 +54,8 @@ class MessageController extends GetxController {
     }
     _fetchQuickMessage();
     scrollController.addListener(_scrollListener);
+    PusherService().connect();
+    _initStream();
   }
 
   void _scrollListener() {
@@ -300,7 +312,7 @@ class MessageController extends GetxController {
     }
   }
 
-  void onHeartMessageLocal(int? messageId) {
+  void onHeartMessageLocal(int? messageId, {bool isCallServer = true}) {
     if (messageId == null) return;
 
     final userId = Get.find<ProfileController>().user.value?.id;
@@ -328,7 +340,7 @@ class MessageController extends GetxController {
       messageModel.refresh();
     }
 
-    onHeartMessage(messageId);
+    if (isCallServer) onHeartMessage(messageId);
   }
 
   void onHeartMessage(int? messageId) async {
@@ -365,9 +377,49 @@ class MessageController extends GetxController {
     }
   }
 
+  void _initStream() {
+    _chatSubscription = PusherService().stream.listen(
+      (event) {
+        if (event is PusherEvent) {
+          try {
+            final json = jsonDecode(event.data) as Map<String, dynamic>;
+            if (json['payload']['data']['chat_id'] == parameter.chatId) {
+              final message = PusherMesageModel.fromJson(json);
+              if (message.payload == null) return;
+
+              switch (message.payload?.type) {
+                case PusherType.NEW_MESSAGE_EVENT:
+                  onInsertMessage(message.payload!.data!);
+                  break;
+                case PusherType.ROLLBACK_EVENT:
+                  int index =
+                      messageModel.value?.listMessages?.indexWhere((msg) => msg.id == message.payload!.data!.id) ?? -1;
+                  if (index != -1) {
+                    messageModel.value?.listMessages![index] =
+                        messageModel.value!.listMessages![index].copyWith(isRollback: true);
+                    messageModel.refresh();
+                  }
+                  break;
+
+                case PusherType.LIKE_MESSAGE_EVENT:
+                  onHeartMessageLocal(message.payload!.data!.id);
+                  break;
+                default:
+              }
+            }
+          } catch (e) {
+            log(e.toString(), name: 'ERROR_STREAM_EVENT_MESSAGE');
+          }
+        }
+      },
+    );
+  }
+
   @override
   void onClose() {
     scrollController.dispose();
+    messageController.dispose();
+    _chatSubscription?.cancel();
     super.onClose();
   }
 }
