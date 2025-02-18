@@ -94,9 +94,8 @@ class GroupOptionPage extends GetWidget<GroupOptionController> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Flexible(
-                        child: InkWell(
+                        child: GestureDetector(
                           onTap: () {},
-                          borderRadius: BorderRadius.circular(1000),
                           child: Column(
                             children: [
                               Container(
@@ -113,7 +112,7 @@ class GroupOptionPage extends GetWidget<GroupOptionController> {
                       ),
                       SizedBox(width: 24.w),
                       Flexible(
-                        child: InkWell(
+                        child: GestureDetector(
                           onTap: () => Get.toNamed(
                             Routes.CREATE_GROUP,
                             arguments: CreateGroupParameter(

@@ -1,0 +1,161 @@
+import 'package:chats/main.dart';
+import 'package:chats/theme/style/style_theme.dart';
+import 'package:chats/utils/icons_assets.dart';
+import 'package:chats/widget/custom_text_field.dart';
+import 'package:chats/widget/image_asset_custom.dart';
+import 'package:chats/widget/reponsive/extension.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+class SearchAppbar extends StatefulWidget implements PreferredSizeWidget {
+  const SearchAppbar({
+    super.key,
+    this.title = '',
+    this.actions,
+    this.action,
+    this.backgroundColor,
+    this.onSubmitted,
+    this.isLoadingSearch = false,
+    this.isShowBack = false,
+    this.isSearch = true,
+  });
+
+  final String title;
+  final List<Widget>? actions;
+  final Widget? action;
+  final Color? backgroundColor;
+  final void Function(String)? onSubmitted;
+  final bool isLoadingSearch;
+  final bool isShowBack;
+  final bool isSearch;
+
+  @override
+  State<SearchAppbar> createState() => _SearchAppbarState();
+
+  @override
+  Size get preferredSize => Size.fromHeight(kToolbarHeight + 20.h);
+}
+
+class _SearchAppbarState extends State<SearchAppbar> {
+  final TextEditingController _controller = TextEditingController();
+
+  final ValueNotifier<bool> _toggleNotifier = ValueNotifier<bool>(true);
+  void _doToggle() => _toggleNotifier.value = !_toggleNotifier.value;
+
+  final ValueNotifier<String> _searchValueNotifier = ValueNotifier<String>('');
+
+  var searchValue = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      backgroundColor: widget.backgroundColor,
+      titleSpacing: 0,
+      leadingWidth: 0,
+      toolbarHeight: kToolbarHeight + 20.h,
+      actions: [
+        ValueListenableBuilder<bool>(
+          valueListenable: _toggleNotifier,
+          builder: (context, toggle, child) {
+            if (toggle) {
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                children: widget.actions ??
+                    [
+                      if (widget.isSearch)
+                        IconButton(
+                          onPressed: _doToggle,
+                          icon: ImageAssetCustom(
+                            imagePath: IconsAssets.searchIcon,
+                            size: 24.w,
+                            color: appTheme.whiteColor,
+                          ),
+                        ),
+                      if (widget.action != null) SizedBox(width: 4.w),
+                      widget.action ?? const SizedBox(),
+                    ],
+              );
+            } else {
+              return const SizedBox();
+            }
+          },
+        ),
+      ],
+      title: ValueListenableBuilder<bool>(
+        valueListenable: _toggleNotifier,
+        builder: (context, toggle, child) {
+          return Padding(
+            padding: padding(vertical: 16, left: widget.isShowBack ? 0 : 16, right: 16),
+            child: toggle
+                ? Text(
+                    widget.title,
+                    style: StyleThemeData.size30Weight600(color: appTheme.whiteColor),
+                  )
+                : Row(
+                    children: [
+                      (widget.isShowBack)
+                          ? IconButton(
+                              onPressed: () => Get.back(),
+                              icon: ImageAssetCustom(
+                                imagePath: IconsAssets.arrowLeftIcon,
+                                size: 24.w,
+                                color: appTheme.whiteColor,
+                              ),
+                            )
+                          : const SizedBox(),
+                      Flexible(
+                        child: CustomTextField(
+                          controller: _controller,
+                          hintText: 'search'.tr,
+                          onSubmit: widget.onSubmitted,
+                          showLine: false,
+                          prefixIcon: IconButton(
+                            onPressed: null,
+                            icon: ImageAssetCustom(imagePath: IconsAssets.searchIcon, color: appTheme.grayColor),
+                          ),
+                          onChanged: (value) => _searchValueNotifier.value = value,
+                          suffixIcon: ValueListenableBuilder<String>(
+                            valueListenable: _searchValueNotifier,
+                            builder: (context, searchValue, child) {
+                              if (widget.isLoadingSearch) {
+                                return IconButton(
+                                  onPressed: null,
+                                  icon: SizedBox(
+                                    width: 22.w,
+                                    height: 22.w,
+                                    child: CircularProgressIndicator(color: appTheme.appColor, strokeWidth: 2.w),
+                                  ),
+                                );
+                              } else if (searchValue.isNotEmpty) {
+                                return IconButton(
+                                  onPressed: () {
+                                    _controller.clear();
+                                    _searchValueNotifier.value = '';
+                                    _doToggle();
+                                    widget.onSubmitted?.call('');
+                                  },
+                                  icon: const ImageAssetCustom(imagePath: IconsAssets.closeCircleIcon),
+                                );
+                              } else {
+                                return const SizedBox();
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+          );
+        },
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _toggleNotifier.dispose();
+    _controller.dispose();
+    _searchValueNotifier.dispose();
+    super.dispose();
+  }
+}

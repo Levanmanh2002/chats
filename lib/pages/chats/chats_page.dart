@@ -5,26 +5,25 @@ import 'package:chats/pages/create_group/create_group_parameter.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/icons_assets.dart';
-import 'package:chats/widget/default_app_bar.dart';
 import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/popup/popup.dart';
 import 'package:chats/widget/reponsive/extension.dart';
+import 'package:chats/widget/search_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ChatsPage extends GetWidget<ChatsController> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: DefaultAppBar(
-        backgroundColor: appTheme.appColor,
-        title: 'chat'.tr,
-        titleStyle: StyleThemeData.size30Weight600(color: appTheme.whiteColor),
-        centerTitle: false,
-        backButton: false,
-        actions: [
-          Padding(
-            padding: padding(all: 16),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        appBar: SearchAppbar(
+          backgroundColor: appTheme.appColor,
+          title: 'chat'.tr,
+          onSubmitted: controller.onSearchChat,
+          action: Padding(
+            padding: padding(vertical: 16, right: 16),
             child: CustomPopup(
               content: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -68,13 +67,13 @@ class ChatsPage extends GetWidget<ChatsController> {
               child: const ImageAssetCustom(imagePath: IconsAssets.addIcon),
             ),
           ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // HeaderChatView(),
-          Expanded(child: ChatAllView()),
-        ],
+        ),
+        body: Column(
+          children: [
+            // HeaderChatView(),
+            Expanded(child: ChatAllView()),
+          ],
+        ),
       ),
     );
   }

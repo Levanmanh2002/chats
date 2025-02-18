@@ -34,13 +34,14 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
     fetchChatList();
   }
 
-  Future<void> fetchChatList({bool isRefresh = true}) async {
+  Future<void> fetchChatList({bool isRefresh = true, String search = ''}) async {
     try {
-      isLoading.value = true;
+      if (isRefresh) isLoading.value = true;
 
       final response = await chatsRepository.chatListAll(
         page: isRefresh ? 1 : (chatsModels.value?.totalPage ?? 1) + 1,
         limit: 10,
+        search: search,
       );
 
       if (response.statusCode == 200) {
@@ -60,7 +61,7 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
     } catch (e) {
       print(e);
     } finally {
-      isLoading.value = false;
+      if (isRefresh) isLoading.value = false;
     }
   }
 
@@ -80,6 +81,14 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
       print(e);
     } finally {
       EasyLoading.dismiss();
+    }
+  }
+
+  void onSearchChat(String value) async {
+    if (value.isNotEmpty) {
+      fetchChatList(search: value);
+    } else {
+      fetchChatList();
     }
   }
 

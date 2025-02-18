@@ -163,4 +163,5 @@ const Map<String, String> vi = {
   "sync_contacts_content_2":
       "Tất cả thông tin của bạn sẽ được bảo mật và mã hoá theo Điều Khoản Sử Dụng và Chính Sách Bảo Mật.",
   "field_years_ago": "@field năm trước",
+  "search": "Tìm kiếm",
 };

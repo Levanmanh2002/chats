@@ -80,7 +80,7 @@ class InstantMessagePage extends GetWidget<InstantMessageController> {
                             }).toList(),
                           ),
                         )
-                      : const Center(child: NoDataWidget()),
+                      : const Center(child: NoDataWidget(isSearch: false)),
                 ),
               ),
       ),

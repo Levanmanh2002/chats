@@ -52,6 +52,8 @@ class ChastListView extends GetView<MessageController> {
               final shouldShowTime = previousItem == null ||
                   item.createdAt?.formatToHourMinute != previousItem.createdAt?.formatToHourMinute;
 
+              final isLastItem = index == 0;
+
               return Column(
                 children: [
                   if (shouldShowTime)
@@ -218,7 +220,7 @@ class ChastListView extends GetView<MessageController> {
                               ),
                           ],
                         ),
-                  // SizedBox(height: 24.h),
+                  if (isLastItem) SizedBox(height: 16.h),
                 ],
               );
             },

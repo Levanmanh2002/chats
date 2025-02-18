@@ -52,6 +52,8 @@ class GroupChastListView extends GetView<GroupMessageController> {
               final shouldShowTime = previousItem == null ||
                   item.createdAt?.formatToHourMinute != previousItem.createdAt?.formatToHourMinute;
 
+              final isLastItem = index == 0;
+
               return Column(
                 children: [
                   if (shouldShowTime)
@@ -238,6 +240,7 @@ class GroupChastListView extends GetView<GroupMessageController> {
                                   ),
                               ],
                             ),
+                  if (isLastItem) SizedBox(height: 16.h),
                 ],
               );
             },
