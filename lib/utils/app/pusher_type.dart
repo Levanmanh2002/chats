@@ -11,4 +11,9 @@ class PusherType {
       'LEFT_GROUP_GROUP'; // Phát sự kiện tới các user còn lại trong nhóm khi có 1 user tự rời nhóm
   static const GROUP_RENAME_EVENT = 'GROUP_RENAME'; // Phát sự kiện tới các user trong nhóm kho nhóm được đổi tên
   static const NEW_MESSAGE_FOR_LIST_EVENT = 'NEW_MESSAGE_FOR_LIST';
+
+  static const NEW_INVITE_EVENT = 'NEW_INVITE'; // Phát sự kiện tới user khi nhận được 1 lời mời kết bạn mới
+  static const ROLLBACK_INVITE_EVENT =
+      'ROLLBACK_INVITE'; //  Phát sự kiện tới user nhân lời mời khi người gửi thu hồi lời mới kết bạn
+  static const CANCEL_INVITE_EVANT = 'CANCEL_INVITE'; // Phát sự kiện tới user gửi khi lời mời bị từ chốt
 }

@@ -26,6 +26,8 @@ import 'package:chats/pages/media_files/media_files_binding.dart';
 import 'package:chats/pages/media_files/media_files_page.dart';
 import 'package:chats/pages/message/message_binding.dart';
 import 'package:chats/pages/message/message_page.dart';
+import 'package:chats/pages/message_search/message_search_binding.dart';
+import 'package:chats/pages/message_search/message_search_page.dart';
 import 'package:chats/pages/options/options_binding.dart';
 import 'package:chats/pages/options/options_page.dart';
 import 'package:chats/pages/otp/otp_binding.dart';
@@ -192,6 +194,11 @@ abstract class AppPages {
       name: Routes.SYNC_CONTACT_DETAILS,
       page: () => SyncContactDetailsPage(),
       binding: SyncContactDetailsBinding(),
+    ),
+    GetPage(
+      name: Routes.MESSAGE_SEARCH_RESULT,
+      page: () => MessageSearchPage(),
+      binding: MessageSearchBinding(),
     ),
   ];
 }

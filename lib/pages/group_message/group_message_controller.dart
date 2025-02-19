@@ -39,6 +39,7 @@ class GroupMessageController extends GetxController {
   var isShowScrollToBottom = false.obs;
   var isShowNewMessScroll = false.obs;
   var isLoadingSendMess = false.obs;
+  var isLoading = false.obs;
 
   var imageFile = <XFile>[].obs;
   var messageValue = ''.obs;
@@ -74,6 +75,8 @@ class GroupMessageController extends GetxController {
 
   Future<void> fetchChatList(int chatId, {bool isRefresh = true}) async {
     try {
+      if (isRefresh) isLoading.value = true;
+
       final response = await messagesRepository.messageList(
         chatId,
         page: isRefresh ? 1 : (messageModel.value?.page ?? 1) + 1,
@@ -97,6 +100,8 @@ class GroupMessageController extends GetxController {
       }
     } catch (e) {
       print(e);
+    } finally {
+      if (isRefresh) isLoading.value = false;
     }
   }
 
@@ -169,6 +174,8 @@ class GroupMessageController extends GetxController {
   }
 
   void onSendMessage() async {
+    if (messageController.text.isEmpty) return;
+
     try {
       final messageText = messageController.text.trim();
       final imageFile = this.imageFile.toList();

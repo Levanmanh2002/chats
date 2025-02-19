@@ -74,4 +74,9 @@ class FormatterUtil {
     NoInitialSpaceInputFormatterWidgets(),
     LengthLimitingTextInputFormatter(15),
   ];
+
+  static final List<TextInputFormatter> chatMessageFormatter = [
+    NoInitialSpaceInputFormatterWidgets(),
+    LengthLimitingTextInputFormatter(1000),
+  ];
 }

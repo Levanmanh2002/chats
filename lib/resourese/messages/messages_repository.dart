@@ -29,9 +29,9 @@ class MessagesRepository extends IMessagesRepository {
   }
 
   @override
-  Future<Response> messageList(int chatId, {int page = 1, int limit = 10}) async {
+  Future<Response> messageList(int chatId, {int page = 1, int limit = 10, String search = ''}) async {
     try {
-      final result = await clientGetData(AppConstants.messageList(chatId, page: page, limit: limit));
+      final result = await clientGetData(AppConstants.messageList(chatId, page: page, limit: limit, search: search));
 
       return result;
     } catch (error) {

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:chats/extension/data/file_extension.dart';
+import 'package:chats/extension/num_extension.dart';
 import 'package:chats/models/messages/files_models.dart';
 import 'package:chats/models/messages/likes.dart';
 import 'package:chats/models/messages/message_data_model.dart';
@@ -12,11 +13,14 @@ import 'package:chats/models/messages/reply_message.dart';
 import 'package:chats/models/pusher/pusher_message_model.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
 import 'package:chats/pages/message/message_parameter.dart';
+import 'package:chats/pages/message_search/message_search_parameter.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/resourese/ibase_repository.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
 import 'package:chats/resourese/service/pusher_service.dart';
+import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/app/pusher_type.dart';
+import 'package:chats/utils/dialog_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -33,13 +37,16 @@ class MessageController extends GetxController {
   var isShowScrollToBottom = false.obs;
   var isShowNewMessScroll = false.obs;
   var isLoadingSendMess = false.obs;
+  var isLoadingSearch = false.obs;
 
   var imageFile = <XFile>[].obs;
   var messageValue = ''.obs;
 
+  var isLoading = false.obs;
   var isShowSearch = true.obs;
 
   Rx<MessageModels?> messageModel = Rx<MessageModels?>(null);
+  Rx<MessageModels?> messageSearchModel = Rx<MessageModels?>(null);
   Rx<MessageDataModel?> messageData = Rx<MessageDataModel?>(null);
   Rx<MessageDataModel?> messageReply = Rx<MessageDataModel?>(null);
 
@@ -47,6 +54,8 @@ class MessageController extends GetxController {
   Rx<QuickMessage?> quickMessage = Rx<QuickMessage?>(null);
 
   StreamSubscription? _chatSubscription;
+
+  RxMap<String, GlobalKey> messageKeys = <String, GlobalKey>{}.obs;
 
   @override
   void onInit() async {
@@ -70,6 +79,7 @@ class MessageController extends GetxController {
 
   Future<void> fetchChatList(int chatId, {bool isRefresh = true}) async {
     try {
+      if (isRefresh) isLoading.value = true;
       final response = await messagesRepository.messageList(
         chatId,
         page: isRefresh ? 1 : (messageModel.value?.page ?? 1) + 1,
@@ -92,6 +102,90 @@ class MessageController extends GetxController {
       }
     } catch (e) {
       print(e);
+    } finally {
+      if (isRefresh) isLoading.value = false;
+    }
+  }
+
+  Future<void> fetchChatListUntilPage({
+    required int chatId,
+    required int targetPage,
+    required int messageId,
+  }) async {
+    try {
+      log(messageId.toString(), name: 'MESSAGE_ID');
+      log(targetPage.toString(), name: 'TARGET_PAGE');
+      log(chatId.toString(), name: 'CHAT_ID');
+      final currentPage = messageModel.value?.page ?? 1;
+
+      for (int page = currentPage; page <= targetPage; page++) {
+        final response = await messagesRepository.messageList(
+          chatId,
+          page: page,
+          limit: 10,
+        );
+
+        if (response.statusCode == 200) {
+          final model = MessageModels.fromJson(response.body['data']);
+
+          messageModel.value = MessageModels(
+            listMessages: [
+              ...(messageModel.value?.listMessages ?? []),
+              ...(model.listMessages ?? []),
+            ],
+            totalPage: model.totalPage,
+            totalCount: model.totalCount,
+            page: model.page,
+            size: model.size,
+          );
+          messageModel.refresh();
+        } else {
+          break;
+        }
+      }
+
+      final messagesList = messageModel.value?.listMessages;
+      if (messagesList != null) {
+        scrollToMessage(messageId);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void scrollToMessage(int messageId) {
+    // Tìm key trong messageKeys mà bắt đầu bằng "${messageId}-"
+    final keyEntry = messageKeys.entries.firstWhereOrNull((entry) => entry.key.startsWith('$messageId-'));
+
+    if (keyEntry != null && keyEntry.value.currentContext != null) {
+      Scrollable.ensureVisible(
+        keyEntry.value.currentContext!,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      DialogUtils.showWarningDialog("Không tìm thấy tin nhắn có id: $messageId");
+    }
+  }
+
+  void onSearchMessage(String value) async {
+    try {
+      isLoadingSearch.value = true;
+      final response = await messagesRepository.messageList(parameter.chatId!, search: value);
+
+      if (response.statusCode == 200) {
+        messageSearchModel.value = MessageModels.fromJson(response.body['data']);
+        if (messageSearchModel.value != null) {
+          Get.toNamed(
+            Routes.MESSAGE_SEARCH_RESULT,
+            arguments: MessageSearchParameter(searchMessage: messageSearchModel.value!),
+          );
+        }
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      isLoadingSearch.value = false;
     }
   }
 
@@ -177,6 +271,7 @@ class MessageController extends GetxController {
   }
 
   void onSendMessage() async {
+    if (messageController.text.isEmpty) return;
     try {
       final messageText = messageController.text.trim();
       final imageFile = this.imageFile.toList();

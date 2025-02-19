@@ -1,6 +1,7 @@
 import 'package:chats/main.dart';
 import 'package:chats/pages/message/message_controller.dart';
 import 'package:chats/theme/style/style_theme.dart';
+import 'package:chats/utils/formatter_util.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/reponsive/extension.dart';
@@ -29,6 +30,7 @@ class BottomSendMessView extends GetView<MessageController> {
               minLines: 1,
               keyboardType: TextInputType.multiline,
               onChanged: controller.updateMessage,
+              inputFormatters: FormatterUtil.chatMessageFormatter,
             ),
           ),
           Obx(

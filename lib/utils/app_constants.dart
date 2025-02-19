@@ -50,8 +50,8 @@ class AppConstants {
   static const String unfriendUri = '/api/v1/contact/unfriend';
   static String getIdChatByUser(int userId) => '/api/v1/message/$userId/get-chat-id-by-user';
   static const String sendMessageUri = '/api/v1/message/send-message-to-user';
-  static String messageList(int chatId, {int page = 1, int limit = 10}) =>
-      '/api/v1/message/$chatId/conversion?page=$page&size=$limit';
+  static String messageList(int chatId, {int page = 1, int limit = 10, String search = ''}) =>
+      '/api/v1/message/$chatId/conversion?page=$page&size=$limit&search=$search';
   static const String chatListAllUri = '/api/v1/message/conversions';
   static String heartMessage(int messageId) => '/api/v1/message/$messageId/like';
   static String revokeMessage(int messageId) => '/api/v1/message/$messageId/rollback';

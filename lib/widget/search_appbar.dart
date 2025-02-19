@@ -67,7 +67,9 @@ class _SearchAppbarState extends State<SearchAppbar> {
 
   @override
   void didUpdateWidget(covariant SearchAppbar oldWidget) {
-    _toggleNotifier.value = widget.toggleNotifier;
+    if (widget.toggleNotifier != oldWidget.toggleNotifier) {
+      _toggleNotifier.value = widget.toggleNotifier;
+    }
     super.didUpdateWidget(oldWidget);
   }
 

@@ -30,4 +30,5 @@ abstract class Routes {
   static const ENTER_CODE_MUMBER = '/enter_code_mumber';
   static const SYNC_CONTACT = '/sync_contact';
   static const SYNC_CONTACT_DETAILS = '/sync_contact_details';
+  static const MESSAGE_SEARCH_RESULT = '/message_search_result';
 }

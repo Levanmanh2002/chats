@@ -119,15 +119,17 @@ class CreateGroupPage extends GetWidget<CreateGroupController> {
                   onLoad: () => controller.getContacts(isRefresh: false),
                   hasNext: controller.contactModel.value?.hasNext ?? false,
                   child: (controller.contactModel.value?.data ?? []).isNotEmpty
-                      ? Column(
-                          children: (controller.contactModel.value?.data ?? []).map((e) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _buildContactItem(e),
-                              ],
-                            );
-                          }).toList(),
+                      ? SingleChildScrollView(
+                          child: Column(
+                            children: (controller.contactModel.value?.data ?? []).map((e) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildContactItem(e),
+                                ],
+                              );
+                            }).toList(),
+                          ),
                         )
                       : const Center(child: NoDataWidget()),
                 ),

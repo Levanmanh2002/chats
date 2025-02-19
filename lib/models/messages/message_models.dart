@@ -28,6 +28,10 @@ class MessageModels {
   @JsonKey(fromJson: parseToInt)
   int? size;
 
+  List<MessageDataModel>? highlightedMessages;
+
+  List<int>? highlightedPages;
+
   MessageModels({
     this.chat,
     this.listMessages,
@@ -35,6 +39,8 @@ class MessageModels {
     this.totalCount,
     this.page,
     this.size,
+    this.highlightedMessages,
+    this.highlightedPages,
   });
 
   factory MessageModels.fromJson(Map<String, dynamic> json) => _$MessageModelsFromJson(json);

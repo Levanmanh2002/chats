@@ -15,6 +15,7 @@ import 'package:chats/widget/custom_image_widget.dart';
 import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/reponsive/extension.dart';
 import 'package:chats/widget/search_appbar.dart';
+import 'package:chats/widget/shimmer_animation/message_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -30,6 +31,8 @@ class MessagePage extends GetWidget<MessageController> {
           isOffSearch: true,
           sizeAction: 16.w,
           toggleNotifier: controller.isShowSearch.value,
+          onSubmitted: controller.onSearchMessage,
+          isLoadingSearch: controller.isLoadingSearch.isTrue,
           widgetTitle: Row(
             children: [
               SizedBox(width: 4.w),
@@ -100,15 +103,16 @@ class MessagePage extends GetWidget<MessageController> {
           children: [
             // MessageHeaderView(),
             Obx(
-              () =>
-                  (controller.messageModel.value == null && (controller.messageModel.value?.listMessages ?? []).isEmpty)
-                      ? InfoContactWidget(contact: controller.parameter.contact)
-                      : const SizedBox(),
+              () => (controller.isLoading.isFalse &&
+                      controller.messageModel.value == null &&
+                      (controller.messageModel.value?.listMessages ?? []).isEmpty)
+                  ? InfoContactWidget(contact: controller.parameter.contact)
+                  : const SizedBox(),
             ),
             Expanded(
               child: Stack(
                 children: [
-                  ChastListView(),
+                  Obx(() => controller.isLoading.isTrue ? const MessageShimmer() : ChastListView()),
                   Obx(
                     () => controller.isShowScrollToBottom.value
                         ? Positioned(bottom: 12, right: 16, child: _buildScrollToBottomMess())
