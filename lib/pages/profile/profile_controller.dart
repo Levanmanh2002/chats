@@ -45,6 +45,7 @@ class ProfileController extends GetxController {
 
       if (response.statusCode == 200) {
         user.value = UserModel.fromJson(response.body['data']);
+        PusherService().connect();
       }
     } catch (e) {
       print(e);
@@ -135,7 +136,6 @@ class ProfileController extends GetxController {
 
       if (response.statusCode == 200) {
         await LocalStorage.setString(SharedKey.PUSHER_API_KEY, response.body['data']['pusher']['key']);
-        await PusherService.initPusher();
         // log(response.body['data']['pusher']['key'], name: 'PUSHER_API_KEY');
         Get.find<ChatsController>().initStreamPusher();
       }

@@ -157,10 +157,23 @@ class MessageController extends GetxController {
   void pickImages() async {
     List<XFile>? pickedFiles = await ImagePicker().pickMultiImage();
 
-    if (pickedFiles.isNotEmpty) {
-      imageFile.addAll(pickedFiles);
-      // onSendMessage();
+    if (pickedFiles.isEmpty) return;
+
+    // final files = pickedFiles.length > 3 ? pickedFiles.sublist(0, 3) : pickedFiles;
+
+    // imageFile.assignAll(files);
+
+    for (var file in pickedFiles) {
+      if (imageFile.length >= 3) {
+        imageFile.removeLast();
+      }
+      imageFile.insert(0, file);
     }
+
+    // if (pickedFiles.isNotEmpty) {
+    //   imageFile.addAll(pickedFiles);
+    //   // onSendMessage();
+    // }
   }
 
   void onSendMessage() async {

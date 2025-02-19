@@ -10,4 +10,5 @@ class PusherType {
   static const LEFT_GROUP_GROUP_EVENT =
       'LEFT_GROUP_GROUP'; // Phát sự kiện tới các user còn lại trong nhóm khi có 1 user tự rời nhóm
   static const GROUP_RENAME_EVENT = 'GROUP_RENAME'; // Phát sự kiện tới các user trong nhóm kho nhóm được đổi tên
+  static const NEW_MESSAGE_FOR_LIST_EVENT = 'NEW_MESSAGE_FOR_LIST';
 }
