@@ -1,3 +1,4 @@
+import 'package:chats/constant/date_format_constants.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -94,6 +95,16 @@ extension StringFormatting on String {
     try {
       final date = DateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(this, true);
       return DateFormat("HH:mm, dd/MM/yyyy").format(date);
+    } catch (e) {
+      return this;
+    }
+  }
+
+  String get tohhmmSpaceddMMyyyy {
+    try {
+      final time = DateTime.parse(this).toLocal();
+
+      return DateFormat(DateConstants.hhmmSpaceddMMyyyy).format(time);
     } catch (e) {
       return this;
     }

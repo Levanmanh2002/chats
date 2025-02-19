@@ -57,10 +57,18 @@ class OptionsPage extends GetWidget<OptionsController> {
                   SizedBox(height: 8.h),
                   Text(controller.parameter.user?.name ?? '', style: StyleThemeData.size20Weight600()),
                   SizedBox(height: 24.h),
-                  Container(
-                    padding: padding(all: 8),
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: appTheme.allSidesColor),
-                    child: ImageAssetCustom(imagePath: IconsAssets.searchIcon, color: appTheme.blackColor, size: 24.w),
+                  InkWell(
+                    onTap: controller.onShowSearchMessage,
+                    borderRadius: BorderRadius.circular(1000),
+                    child: Container(
+                      padding: padding(all: 8),
+                      decoration: BoxDecoration(shape: BoxShape.circle, color: appTheme.allSidesColor),
+                      child: ImageAssetCustom(
+                        imagePath: IconsAssets.searchIcon,
+                        color: appTheme.blackColor,
+                        size: 24.w,
+                      ),
+                    ),
                   ),
                   SizedBox(height: 4.h),
                   Text('search_messages'.tr, style: StyleThemeData.size12Weight400()),

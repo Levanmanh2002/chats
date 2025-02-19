@@ -42,6 +42,8 @@ import 'package:chats/pages/splash/splash_binding.dart';
 import 'package:chats/pages/splash/splash_page.dart';
 import 'package:chats/pages/sync_contact/sync_contact_binding.dart';
 import 'package:chats/pages/sync_contact/sync_contact_page.dart';
+import 'package:chats/pages/sync_contact_details/sync_contact_details_binding.dart';
+import 'package:chats/pages/sync_contact_details/sync_contact_details_page.dart';
 import 'package:chats/pages/update_password/update_password_binding.dart';
 import 'package:chats/pages/update_password/update_password_page.dart';
 import 'package:chats/pages/update_profile/update_profile_binding.dart';
@@ -185,6 +187,11 @@ abstract class AppPages {
       name: Routes.SYNC_CONTACT,
       page: () => SyncContactPage(),
       binding: SyncContactBinding(),
+    ),
+    GetPage(
+      name: Routes.SYNC_CONTACT_DETAILS,
+      page: () => SyncContactDetailsPage(),
+      binding: SyncContactDetailsBinding(),
     ),
   ];
 }

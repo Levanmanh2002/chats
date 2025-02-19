@@ -37,6 +37,8 @@ class MessageController extends GetxController {
   var imageFile = <XFile>[].obs;
   var messageValue = ''.obs;
 
+  var isShowSearch = true.obs;
+
   Rx<MessageModels?> messageModel = Rx<MessageModels?>(null);
   Rx<MessageDataModel?> messageData = Rx<MessageDataModel?>(null);
   Rx<MessageDataModel?> messageReply = Rx<MessageDataModel?>(null);
@@ -47,14 +49,14 @@ class MessageController extends GetxController {
   StreamSubscription? _chatSubscription;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     if (parameter.chatId != null) {
       fetchChatList(parameter.chatId!);
     }
     _fetchQuickMessage();
     scrollController.addListener(_scrollListener);
-    PusherService().connect();
+    await PusherService().connect();
     _initStream();
   }
 
@@ -228,8 +230,8 @@ class MessageController extends GetxController {
 
       if (response.statusCode == 200) {
         messageData.value = MessageDataModel.fromJson(response.body['data']);
-        if (messageModel.value != null) {
-          fetchChatList(messageData.value!.chatId!, isRefresh: false);
+        if (parameter.chatId == null) {
+          fetchChatList(messageData.value!.chatId!);
           messageModel.value?.listMessages?.removeWhere((msg) => msg.id == tempMessage.id);
           onInsertMessage(messageData.value!);
         } else {
@@ -413,6 +415,11 @@ class MessageController extends GetxController {
         }
       },
     );
+  }
+
+  void updateShowSearch() {
+    isShowSearch.value = false;
+    isShowSearch.refresh();
   }
 
   @override

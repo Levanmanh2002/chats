@@ -1,5 +1,6 @@
 import 'package:chats/models/messages/media_file_model.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
+import 'package:chats/pages/message/message_controller.dart';
 import 'package:chats/pages/options/options_parameter.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
 import 'package:chats/utils/dialog_utils.dart';
@@ -50,5 +51,10 @@ class OptionsController extends GetxController {
     } finally {
       EasyLoading.dismiss();
     }
+  }
+
+  void onShowSearchMessage() {
+    Get.find<MessageController>().isShowSearch.value = false;
+    Get.back();
   }
 }

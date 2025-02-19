@@ -18,6 +18,12 @@ class SearchAppbar extends StatefulWidget implements PreferredSizeWidget {
     this.isLoadingSearch = false,
     this.isShowBack = false,
     this.isSearch = true,
+    this.widgetTitle,
+    this.onBack,
+    this.isActiveSearch = false,
+    this.isOffSearch = false,
+    this.sizeAction = 0,
+    this.toggleNotifier = true,
   });
 
   final String title;
@@ -28,6 +34,12 @@ class SearchAppbar extends StatefulWidget implements PreferredSizeWidget {
   final bool isLoadingSearch;
   final bool isShowBack;
   final bool isSearch;
+  final Widget? widgetTitle;
+  final VoidCallback? onBack;
+  final bool isActiveSearch;
+  final bool isOffSearch;
+  final double sizeAction;
+  final bool toggleNotifier;
 
   @override
   State<SearchAppbar> createState() => _SearchAppbarState();
@@ -39,20 +51,34 @@ class SearchAppbar extends StatefulWidget implements PreferredSizeWidget {
 class _SearchAppbarState extends State<SearchAppbar> {
   final TextEditingController _controller = TextEditingController();
 
-  final ValueNotifier<bool> _toggleNotifier = ValueNotifier<bool>(true);
-  void _doToggle() => _toggleNotifier.value = !_toggleNotifier.value;
+  late final ValueNotifier<bool> _toggleNotifier;
 
   final ValueNotifier<String> _searchValueNotifier = ValueNotifier<String>('');
 
   var searchValue = '';
 
   @override
+  void initState() {
+    super.initState();
+    _toggleNotifier = ValueNotifier<bool>(widget.toggleNotifier);
+  }
+
+  void _doToggle() => _toggleNotifier.value = !_toggleNotifier.value;
+
+  @override
+  void didUpdateWidget(covariant SearchAppbar oldWidget) {
+    _toggleNotifier.value = widget.toggleNotifier;
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: widget.backgroundColor,
+      backgroundColor: widget.backgroundColor ?? appTheme.whiteColor,
       titleSpacing: 0,
       leadingWidth: 0,
       toolbarHeight: kToolbarHeight + 20.h,
+      leading: const SizedBox(),
       actions: [
         ValueListenableBuilder<bool>(
           valueListenable: _toggleNotifier,
@@ -71,8 +97,8 @@ class _SearchAppbarState extends State<SearchAppbar> {
                             color: appTheme.whiteColor,
                           ),
                         ),
-                      if (widget.action != null) SizedBox(width: 4.w),
                       widget.action ?? const SizedBox(),
+                      widget.sizeAction > 0 ? SizedBox(width: widget.sizeAction) : const SizedBox(),
                     ],
               );
             } else {
@@ -87,15 +113,16 @@ class _SearchAppbarState extends State<SearchAppbar> {
           return Padding(
             padding: padding(vertical: 16, left: widget.isShowBack ? 0 : 16, right: 16),
             child: toggle
-                ? Text(
-                    widget.title,
-                    style: StyleThemeData.size30Weight600(color: appTheme.whiteColor),
-                  )
+                ? widget.widgetTitle ??
+                    Text(
+                      widget.title,
+                      style: StyleThemeData.size30Weight600(color: appTheme.whiteColor),
+                    )
                 : Row(
                     children: [
-                      (widget.isShowBack)
+                      (widget.isShowBack == true)
                           ? IconButton(
-                              onPressed: () => Get.back(),
+                              onPressed: widget.isOffSearch == true ? _doToggle : widget.onBack ?? () => Get.back(),
                               icon: ImageAssetCustom(
                                 imagePath: IconsAssets.arrowLeftIcon,
                                 size: 24.w,
@@ -131,7 +158,7 @@ class _SearchAppbarState extends State<SearchAppbar> {
                                   onPressed: () {
                                     _controller.clear();
                                     _searchValueNotifier.value = '';
-                                    _doToggle();
+                                    if (widget.isOffSearch == false) _doToggle();
                                     widget.onSubmitted?.call('');
                                   },
                                   icon: const ImageAssetCustom(imagePath: IconsAssets.closeCircleIcon),

@@ -28,4 +28,16 @@ class DashboardRepository extends IDashboardRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<Response> trackingTimeOnline() async {
+    try {
+      final result = await clientPostData(AppConstants.trackingTimeOnlineUri, {});
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
 }

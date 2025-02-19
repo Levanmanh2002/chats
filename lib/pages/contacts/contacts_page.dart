@@ -1,7 +1,6 @@
 import 'package:chats/main.dart';
 import 'package:chats/pages/contacts/contacts_controller.dart';
 import 'package:chats/pages/contacts/view/contacts_view.dart';
-import 'package:chats/pages/contacts/view/sync_contacts_view.dart';
 import 'package:chats/pages/create_group/create_group_parameter.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
@@ -83,6 +82,12 @@ class ContactsPage extends GetWidget<ContactsController> {
               border: Border(bottom: BorderSide(color: appTheme.blackColor, width: 1.w)),
             ),
             indicatorSize: TabBarIndicatorSize.tab,
+            onTap: (value) {
+              if (value == 1) {
+                Get.toNamed(Routes.SYNC_CONTACT_DETAILS);
+                controller.tabController.index = 0;
+              }
+            },
             tabs: [
               Tab(text: 'friends'.tr),
               Tab(text: 'contacts'.tr),
@@ -118,7 +123,7 @@ class ContactsPage extends GetWidget<ContactsController> {
               controller: controller.tabController,
               children: [
                 ContactsView(),
-                SyncContactsView(),
+                const SizedBox(),
               ],
             ),
           ),

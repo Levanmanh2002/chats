@@ -25,12 +25,16 @@ class SyncContactModel {
   @JsonKey(fromJson: parseToInt)
   int? size;
 
+  @JsonKey(name: 'last_sync_contacts')
+  String? lastSyncContacts;
+
   SyncContactModel({
     this.contacts,
     this.totalPage,
     this.totalCount,
     this.page,
     this.size,
+    this.lastSyncContacts,
   });
 
   factory SyncContactModel.fromJson(Map<String, dynamic> json) => _$SyncContactModelFromJson(json);

@@ -25,19 +25,21 @@ class ContactsView extends GetView<ContactsController> {
               onLoad: () => controller.getContacts(isRefresh: false),
               hasNext: controller.contactModel.value?.hasNext ?? false,
               child: (controller.contactModel.value?.data ?? []).isNotEmpty
-                  ? Column(
-                      children: controller.groupedContacts.entries.map((entry) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: padding(horizontal: 16, vertical: 12),
-                              child: Text(entry.key, style: StyleThemeData.size16Weight600()),
-                            ),
-                            ...entry.value.map((e) => _buildContactItem(e)),
-                          ],
-                        );
-                      }).toList(),
+                  ? SingleChildScrollView(
+                      child: Column(
+                        children: controller.groupedContacts.entries.map((entry) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: padding(horizontal: 16, vertical: 12),
+                                child: Text(entry.key, style: StyleThemeData.size16Weight600()),
+                              ),
+                              ...entry.value.map((e) => _buildContactItem(e)),
+                            ],
+                          );
+                        }).toList(),
+                      ),
                     )
                   : const Center(child: NoDataWidget()),
             ),

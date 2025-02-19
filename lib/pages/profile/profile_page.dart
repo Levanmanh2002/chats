@@ -21,56 +21,62 @@ class ProfilePage extends GetWidget<ProfileController> {
       body: ListLoader(
         onRefresh: controller.onRefresh,
         forceScrollable: true,
-        child: Column(
-          children: [
-            HeaderProfileView(),
-            SizedBox(height: 24.h),
-            _buildProfile(
-              icon: IconsAssets.userEmptyIcon,
-              title: 'personal_information'.tr,
-              onTap: () => Get.toNamed(
-                Routes.UPDATE_PROFILE,
-                arguments: UpdateProfileParameter(user: controller.user.value),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              HeaderProfileView(),
+              SizedBox(height: 24.h),
+              Column(
+                children: [
+                  _buildProfile(
+                    icon: IconsAssets.userEmptyIcon,
+                    title: 'personal_information'.tr,
+                    onTap: () => Get.toNamed(
+                      Routes.UPDATE_PROFILE,
+                      arguments: UpdateProfileParameter(user: controller.user.value),
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  _buildProfile(
+                    icon: IconsAssets.smartPhoneIcon,
+                    title: 'sync_contacts'.tr,
+                    onTap: () => Get.toNamed(Routes.SYNC_CONTACT),
+                  ),
+                  SizedBox(height: 8.h),
+                  _buildProfile(
+                    icon: IconsAssets.lockPasswordIcon,
+                    title: 'update_password'.tr,
+                    onTap: () => Get.toNamed(Routes.UPDATE_PASSWORD),
+                  ),
+                  SizedBox(height: 8.h),
+                  _buildProfile(
+                    icon: IconsAssets.keyholeIcon,
+                    title: 'security_code_configuration'.tr,
+                    onTap: () => Get.toNamed(
+                      Routes.SECURITY_CODE,
+                      arguments: SecurityCodeParameter(user: controller.user.value),
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  _buildProfile(
+                    icon: IconsAssets.trashBinIcon,
+                    title: 'delete_account'.tr,
+                    onTap: () {
+                      showDeleteAccountDialog(controller.deleteAccount);
+                    },
+                  ),
+                  SizedBox(height: 8.h),
+                  _buildProfile(
+                    icon: IconsAssets.logoutIcon,
+                    title: 'log_out'.tr,
+                    colorIcon: appTheme.errorColor,
+                    colorTitle: appTheme.errorColor,
+                    onTap: () => controller.logout(isShowTitle: true),
+                  ),
+                ],
               ),
-            ),
-            SizedBox(height: 8.h),
-            _buildProfile(
-              icon: IconsAssets.smartPhoneIcon,
-              title: 'sync_contacts'.tr,
-              onTap: () => Get.toNamed(Routes.SYNC_CONTACT),
-            ),
-            SizedBox(height: 8.h),
-            _buildProfile(
-              icon: IconsAssets.lockPasswordIcon,
-              title: 'update_password'.tr,
-              onTap: () => Get.toNamed(Routes.UPDATE_PASSWORD),
-            ),
-            SizedBox(height: 8.h),
-            _buildProfile(
-              icon: IconsAssets.keyholeIcon,
-              title: 'security_code_configuration'.tr,
-              onTap: () => Get.toNamed(
-                Routes.SECURITY_CODE,
-                arguments: SecurityCodeParameter(user: controller.user.value),
-              ),
-            ),
-            SizedBox(height: 8.h),
-            _buildProfile(
-              icon: IconsAssets.trashBinIcon,
-              title: 'delete_account'.tr,
-              onTap: () {
-                showDeleteAccountDialog(controller.deleteAccount);
-              },
-            ),
-            SizedBox(height: 8.h),
-            _buildProfile(
-              icon: IconsAssets.logoutIcon,
-              title: 'log_out'.tr,
-              colorIcon: appTheme.errorColor,
-              colorTitle: appTheme.errorColor,
-              onTap: () => controller.logout(isShowTitle: true),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

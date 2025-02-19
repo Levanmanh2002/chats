@@ -1,49 +1,128 @@
+import 'package:chats/extension/string_extension.dart';
 import 'package:chats/main.dart';
 import 'package:chats/pages/message/message_controller.dart';
 import 'package:chats/pages/message/view/bottom_send_mess_view.dart';
 import 'package:chats/pages/message/view/chast_list_view.dart';
-import 'package:chats/pages/message/view/message_header_view.dart';
 import 'package:chats/pages/message/view/quick_message_view.dart';
 import 'package:chats/pages/message/view/reply_message_view.dart';
 import 'package:chats/pages/message/widget/info_contact_widget.dart';
 import 'package:chats/pages/message/widget/selected_images_list.dart';
+import 'package:chats/pages/options/options_parameter.dart';
+import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/icons_assets.dart';
+import 'package:chats/widget/custom_image_widget.dart';
 import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/reponsive/extension.dart';
+import 'package:chats/widget/search_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MessagePage extends GetWidget<MessageController> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: appTheme.blueFFColor,
-      body: Column(
-        children: [
-          MessageHeaderView(),
-          Obx(
-            () => (controller.messageModel.value == null && (controller.messageModel.value?.listMessages ?? []).isEmpty)
-                ? InfoContactWidget(contact: controller.parameter.contact)
-                : const SizedBox(),
-          ),
-          Expanded(
-            child: Stack(
-              children: [
-                ChastListView(),
-                Obx(
-                  () => controller.isShowScrollToBottom.value
-                      ? Positioned(bottom: 12, right: 16, child: _buildScrollToBottomMess())
-                      : const SizedBox(),
+    return Obx(
+      () => Scaffold(
+        backgroundColor: appTheme.blueFFColor,
+        appBar: SearchAppbar(
+          backgroundColor: appTheme.appColor,
+          isShowBack: true,
+          isOffSearch: true,
+          sizeAction: 16.w,
+          toggleNotifier: controller.isShowSearch.value,
+          widgetTitle: Row(
+            children: [
+              SizedBox(width: 4.w),
+              IconButton(
+                onPressed: Get.back,
+                icon: ImageAssetCustom(imagePath: IconsAssets.arrowLeftIcon, color: appTheme.whiteColor),
+              ),
+              Flexible(
+                child: GestureDetector(
+                  onTap: controller.parameter.chatId != null
+                      ? () => Get.toNamed(
+                            Routes.OPTIONS,
+                            arguments: OptionsParameter(
+                              user: controller.parameter.contact,
+                              chatId: controller.parameter.chatId!,
+                            ),
+                          )
+                      : null,
+                  child: Row(
+                    children: [
+                      CustomImageWidget(
+                        imageUrl: controller.parameter.contact?.avatar ?? '',
+                        size: 46.w,
+                        colorBoder: appTheme.appColor,
+                        showBoder: true,
+                      ),
+                      SizedBox(width: 8.w),
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              controller.parameter.contact?.name ?? 'not_updated_yet'.tr,
+                              style: StyleThemeData.size14Weight600(color: appTheme.whiteColor),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 2.h),
+                            Text(
+                              controller.parameter.contact?.lastOnline?.timeAgo ?? '',
+                              style: StyleThemeData.size10Weight400(color: appTheme.whiteColor),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          Obx(() => (controller.messageReply.value != null) ? ReplyMessageView() : const SizedBox()),
-          SelectedImagesList(),
-          Obx(() => (controller.quickMessage.value != null) ? QuickMessageView() : const SizedBox()),
-          BottomSendMessView(),
-        ],
+          action: IconButton(
+            style: IconButton.styleFrom(
+              minimumSize: Size.zero,
+              fixedSize: Size(36.w, 36.w),
+              padding: EdgeInsets.zero,
+              alignment: Alignment.center,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              maximumSize: Size(36.w, 36.w),
+            ),
+            icon: ImageAssetCustom(imagePath: IconsAssets.phoneIcon, color: appTheme.whiteColor),
+            onPressed: () {},
+          ),
+        ),
+        body: Column(
+          children: [
+            // MessageHeaderView(),
+            Obx(
+              () =>
+                  (controller.messageModel.value == null && (controller.messageModel.value?.listMessages ?? []).isEmpty)
+                      ? InfoContactWidget(contact: controller.parameter.contact)
+                      : const SizedBox(),
+            ),
+            Expanded(
+              child: Stack(
+                children: [
+                  ChastListView(),
+                  Obx(
+                    () => controller.isShowScrollToBottom.value
+                        ? Positioned(bottom: 12, right: 16, child: _buildScrollToBottomMess())
+                        : const SizedBox(),
+                  ),
+                ],
+              ),
+            ),
+            Obx(() => (controller.messageReply.value != null) ? ReplyMessageView() : const SizedBox()),
+            SelectedImagesList(),
+            Obx(() => (controller.quickMessage.value != null) ? QuickMessageView() : const SizedBox()),
+            BottomSendMessView(),
+          ],
+        ),
       ),
     );
   }

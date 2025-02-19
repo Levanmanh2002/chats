@@ -9,6 +9,7 @@ class AppConstants {
   static const int minAddressLength = 12;
   static const int maxNameLength = 255;
   static const int timeOtp = 120;
+  static const int timeTrackingOnline = 1;
 
   static const String fontFamilyBold = 'SemiBold';
   static const String fontFamilyRegular = 'Regular';
@@ -35,6 +36,7 @@ class AppConstants {
   static const String deleteAccountUri = '/api/v1/account/remove-account';
   static const String updateFcmTokenUri = '/api/v1/account/update-fcm-token';
   static const String systemSettingsUri = '/api/v1/system/settings';
+  static const String trackingTimeOnlineUri = '/api/v1/account/tracking-time-online';
 
   static const String searchContactPhoneUri = '/api/v1/contact/find-user';
   static const String findAccountUri = '/api/v1/account/find';
