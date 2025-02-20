@@ -19,6 +19,7 @@ import 'package:chats/widget/list_loader.dart';
 import 'package:chats/widget/reponsive/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class ChastListView extends GetView<MessageController> {
   @override
@@ -36,11 +37,14 @@ class ChastListView extends GetView<MessageController> {
           onLoad: () => controller.fetchChatList(controller.messageId, isRefresh: false),
           hasNext: controller.messageModel.value?.hasNext ?? false,
           color: appTheme.cardSendTimeColor,
-          child: ListView.separated(
-            controller: controller.scrollController,
+          child: ScrollablePositionedList.builder(
+            // controller: controller.scrollController,
             itemCount: data.length,
+            itemScrollController: controller.itemScrollController,
+            itemPositionsListener: controller.itemPositionsListener,
+
             reverse: true,
-            separatorBuilder: (context, index) => const SizedBox(),
+            // separatorBuilder: (context, index) => const SizedBox(),
             itemBuilder: (context, int index) {
               final item = data[index];
               final previousItem = index < data.length - 1 ? data[index + 1] : null;
@@ -50,12 +54,11 @@ class ChastListView extends GetView<MessageController> {
 
               final isLastItem = index == 0;
 
-              if (!controller.messageKeys.containsKey(item.id.toString())) {
-                controller.messageKeys['${item.id}-$index'] = GlobalKey();
-              }
+              String messageId = item.id.toString();
+
+              controller.messageKeys[messageId] = GlobalKey();
 
               return Column(
-                key: controller.messageKeys['${item.id}-$index'],
                 children: [
                   if (shouldShowTime)
                     Container(

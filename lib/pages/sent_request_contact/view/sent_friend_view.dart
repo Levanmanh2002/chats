@@ -85,7 +85,7 @@ class SentFriendView extends GetView<SentRequestContactController> {
                       ),
                       Text(' • ', style: StyleThemeData.size10Weight400(color: appTheme.grayColor)),
                       Text(
-                        e.receiver?.phone ?? '',
+                        e.receiver?.phone?.formatPhoneCode ?? '',
                         style: StyleThemeData.size10Weight400(color: appTheme.grayColor),
                       ),
                     ],

@@ -8,6 +8,7 @@ import 'package:chats/utils/app_constants.dart';
 import 'package:chats/utils/app_enums.dart';
 import 'package:chats/utils/local_storage.dart';
 import 'package:chats/utils/shared_key.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -155,6 +156,7 @@ class IBaseRepository {
     String? savedLanguage = LocalStorage.getString(SharedKey.language);
 
     await LocalStorage.clearAll();
+    await FirebaseMessaging.instance.deleteToken();
 
     if (savedLanguage.isNotEmpty) {
       await LocalStorage.setString(SharedKey.language, savedLanguage);

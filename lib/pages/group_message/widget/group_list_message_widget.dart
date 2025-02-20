@@ -45,16 +45,17 @@ class GroupListMessageWidget extends StatelessWidget {
               if (isShowAvatar)
                 CustomImageWidget(
                   imageUrl: avatar,
-                  size: 16.w,
+                  size: 24.w,
                   showBoder: true,
                   colorBoder: appTheme.allSidesColor,
+                  noImage: false,
                 )
               else
-                SizedBox(width: 16.w, height: 16.w),
+                SizedBox(width: 24.w, height: 24.w),
               SizedBox(width: 8.w),
             ],
             Container(
-              constraints: BoxConstraints(maxWidth: 300.w),
+              constraints: BoxConstraints(maxWidth: 280.w),
               padding: padding(all: 8),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),

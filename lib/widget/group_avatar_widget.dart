@@ -74,6 +74,7 @@ class GroupAvatarWidget extends StatelessWidget {
               showBoder: showBoder,
               colorBoder: colorBoder,
               sizeBorder: sizeBorder,
+              noImage: false,
             ),
           ),
           Positioned(
@@ -85,6 +86,7 @@ class GroupAvatarWidget extends StatelessWidget {
               showBoder: showBoder,
               colorBoder: colorBoder,
               sizeBorder: sizeBorder,
+              noImage: false,
             ),
           ),
         ],
@@ -111,6 +113,7 @@ class GroupAvatarWidget extends StatelessWidget {
               showBoder: showBoder,
               colorBoder: colorBoder,
               sizeBorder: sizeBorder,
+              noImage: false,
             ),
           ),
           Positioned(
@@ -122,6 +125,7 @@ class GroupAvatarWidget extends StatelessWidget {
               showBoder: showBoder,
               colorBoder: colorBoder,
               sizeBorder: sizeBorder,
+              noImage: false,
             ),
           ),
           Positioned(
@@ -133,6 +137,7 @@ class GroupAvatarWidget extends StatelessWidget {
               showBoder: showBoder,
               colorBoder: colorBoder,
               sizeBorder: sizeBorder,
+              noImage: false,
             ),
           ),
         ],
@@ -157,6 +162,7 @@ class GroupAvatarWidget extends StatelessWidget {
               showBoder: showBoder,
               colorBoder: colorBoder,
               sizeBorder: sizeBorder,
+              noImage: false,
             ),
           ),
           Positioned(
@@ -168,6 +174,7 @@ class GroupAvatarWidget extends StatelessWidget {
               showBoder: showBoder,
               colorBoder: colorBoder,
               sizeBorder: sizeBorder,
+              noImage: false,
             ),
           ),
           Positioned(
@@ -179,6 +186,7 @@ class GroupAvatarWidget extends StatelessWidget {
               showBoder: showBoder,
               colorBoder: colorBoder,
               sizeBorder: sizeBorder,
+              noImage: false,
             ),
           ),
           Positioned(
@@ -190,6 +198,7 @@ class GroupAvatarWidget extends StatelessWidget {
               showBoder: showBoder,
               colorBoder: colorBoder,
               sizeBorder: sizeBorder,
+              noImage: false,
             ),
           ),
         ],
@@ -233,6 +242,7 @@ class GroupAvatarWidget extends StatelessWidget {
               showBoder: showBoder,
               colorBoder: colorBoder,
               sizeBorder: sizeBorder,
+              noImage: false,
             ),
           ),
           Positioned(
@@ -244,6 +254,7 @@ class GroupAvatarWidget extends StatelessWidget {
               showBoder: showBoder,
               colorBoder: colorBoder,
               sizeBorder: sizeBorder,
+              noImage: false,
             ),
           ),
           Positioned(
@@ -255,6 +266,7 @@ class GroupAvatarWidget extends StatelessWidget {
               showBoder: showBoder,
               colorBoder: colorBoder,
               sizeBorder: sizeBorder,
+              noImage: false,
             ),
           ),
         ],

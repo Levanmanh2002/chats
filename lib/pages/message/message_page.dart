@@ -10,12 +10,12 @@ import 'package:chats/pages/message/widget/selected_images_list.dart';
 import 'package:chats/pages/options/options_parameter.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
+import 'package:chats/utils/gif_utils.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/custom_image_widget.dart';
 import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/reponsive/extension.dart';
 import 'package:chats/widget/search_appbar.dart';
-import 'package:chats/widget/shimmer_animation/message_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -35,10 +35,9 @@ class MessagePage extends GetWidget<MessageController> {
           isLoadingSearch: controller.isLoadingSearch.isTrue,
           widgetTitle: Row(
             children: [
-              SizedBox(width: 4.w),
               IconButton(
                 onPressed: Get.back,
-                icon: ImageAssetCustom(imagePath: IconsAssets.arrowLeftIcon, color: appTheme.whiteColor),
+                icon: ImageAssetCustom(imagePath: IconsAssets.arrowLeftIcon, color: appTheme.whiteColor, size: 24.w),
               ),
               Flexible(
                 child: GestureDetector(
@@ -96,7 +95,9 @@ class MessagePage extends GetWidget<MessageController> {
               maximumSize: Size(36.w, 36.w),
             ),
             icon: ImageAssetCustom(imagePath: IconsAssets.phoneIcon, color: appTheme.whiteColor),
-            onPressed: () {},
+            onPressed: () {
+              controller.scrollToMessage(604);
+            },
           ),
         ),
         body: Column(
@@ -112,7 +113,9 @@ class MessagePage extends GetWidget<MessageController> {
             Expanded(
               child: Stack(
                 children: [
-                  Obx(() => controller.isLoading.isTrue ? const MessageShimmer() : ChastListView()),
+                  Obx(() => controller.isLoading.isTrue
+                      ? Center(child: Image.asset(GifUtils.noDataImageGif))
+                      : ChastListView()),
                   Obx(
                     () => controller.isShowScrollToBottom.value
                         ? Positioned(bottom: 12, right: 16, child: _buildScrollToBottomMess())

@@ -1,4 +1,5 @@
 import 'package:chats/models/contact/contact_model.dart';
+import 'package:chats/models/profile/user_model.dart';
 import 'package:chats/resourese/contact/icontact_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -52,8 +53,23 @@ class ContactsController extends GetxController with GetSingleTickerProviderStat
   }
 
   void removeContact(int id) {
-    contactModel.value?.data?.removeWhere((element) => element.id == id);
+    contactModel.value?.data?.removeWhere((element) => element.friend?.id == id);
     contactModel.refresh();
+  }
+
+  void updateContact(UserModel contact) {
+    if (contactModel.value == null || contactModel.value!.data == null) {
+      return;
+    }
+
+    bool isExist = contactModel.value!.data!.any(
+      (element) => element.friend?.id == contact.id,
+    );
+
+    if (!isExist) {
+      contactModel.value!.data!.add(ContactModel(friend: contact));
+      contactModel.refresh();
+    }
   }
 
   Map<String, List<ContactModel>> get groupedContacts {

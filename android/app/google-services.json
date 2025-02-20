@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "304691602967",
+    "project_id": "cservice-2a138",
+    "storage_bucket": "cservice-2a138.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:304691602967:android:1e4021d63b709ca7f09e52",
+        "android_client_info": {
+          "package_name": "com.admin.chats"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvpdfjE9Gr81R_yXCbHB5Dbq7u5r7WH1o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

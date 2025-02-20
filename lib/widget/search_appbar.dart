@@ -109,6 +109,7 @@ class _SearchAppbarState extends State<SearchAppbar> {
           },
         ),
       ],
+      centerTitle: false,
       title: ValueListenableBuilder<bool>(
         valueListenable: _toggleNotifier,
         builder: (context, toggle, child) {

@@ -18,6 +18,20 @@ int? parseToInt(dynamic value) {
   return null;
 }
 
+int? parseFromBoolToInt(dynamic value) {
+  if (value == null) return null;
+  if (value is bool) {
+    return value ? 1 : 0;
+  }
+  if (value is int) {
+    return value;
+  }
+  if (value is String) {
+    return int.tryParse(value);
+  }
+  return null;
+}
+
 double? parseToDouble(dynamic value) {
   if (value == null) return null;
   if (value is String) {

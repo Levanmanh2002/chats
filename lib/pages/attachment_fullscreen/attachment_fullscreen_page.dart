@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chats/extension/data/file_extension.dart';
-import 'package:chats/extension/string_extension.dart';
+import 'package:chats/extension/date_time_extension.dart';
 import 'package:chats/main.dart';
 import 'package:chats/pages/attachment_fullscreen/attachment_fullscreen_controller.dart';
 import 'package:chats/theme/style/style_theme.dart';
@@ -106,7 +106,7 @@ class AttachmentFullscreenPage extends GetWidget<AttachmentFullscreenController>
                               ),
                               SizedBox(height: 2.h),
                               Text(
-                                controller.parameter.user?.lastOnline?.timeAgo ?? '',
+                                controller.parameter.files?.firstOrNull?.createdAt?.toddMMyyyyHHmm ?? '',
                                 style: StyleThemeData.size10Weight400(color: appTheme.whiteColor),
                               ),
                             ],

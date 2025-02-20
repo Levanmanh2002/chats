@@ -51,7 +51,7 @@ class ContactsView extends GetView<ContactsController> {
       onTap: () => Get.toNamed(
         Routes.MAKE_FRIENDS,
         arguments: MakeFriendsParameter(
-          id: e.id!,
+          id: e.friend!.id!,
           contact: e.friend,
           type: MakeFriendsType.friend,
         ),

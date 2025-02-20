@@ -1,10 +1,17 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:chats/models/contact/friend_request.dart';
+import 'package:chats/models/pusher/pusher_model.dart';
 import 'package:chats/pages/contacts/contacts_controller.dart';
 import 'package:chats/resourese/contact/icontact_repository.dart';
+import 'package:chats/resourese/service/pusher_service.dart';
+import 'package:chats/utils/app/pusher_type.dart';
 import 'package:chats/utils/dialog_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
 class SentRequestContactController extends GetxController with GetSingleTickerProviderStateMixin {
   final IContactRepository contactRepository;
@@ -21,12 +28,16 @@ class SentRequestContactController extends GetxController with GetSingleTickerPr
   Rx<FriendRequestData?> friendRequest = Rx<FriendRequestData?>(null);
   Rx<FriendRequestData?> friendSendt = Rx<FriendRequestData?>(null);
 
+  StreamSubscription? _chatSubscription;
+
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     tabController = TabController(length: 2, vsync: this);
     onReceived();
     onSend();
+    await PusherService().connect();
+    _initStream();
   }
 
   Future<void> onReceived({bool isRefresh = true}) async {
@@ -155,6 +166,47 @@ class SentRequestContactController extends GetxController with GetSingleTickerPr
   void removeSent(int id) async {
     friendSendt.value?.data?.removeWhere((element) => element.id == id);
     friendSendt.refresh();
+  }
+
+  void _initStream() {
+    _chatSubscription = PusherService().stream.listen(
+      (event) {
+        if (event is PusherEvent) {
+          final json = jsonDecode(event.data) as Map<String, dynamic>;
+
+          final pusherModel = PusherModel.fromJson(
+            json,
+            (json) => FriendRequest.fromJson(json as Map<String, dynamic>),
+          );
+
+          if (pusherModel.payload != null && pusherModel.payload?.type == PusherType.NEW_INVITE_EVENT) {
+            var newData = pusherModel.payload!.data!;
+            bool exists = friendRequest.value?.data?.any((item) => item.id == newData.id) ?? false;
+
+            if (!exists) {
+              friendRequest.value?.data?.insert(0, newData);
+              friendRequest.refresh();
+            }
+          } else if (pusherModel.payload != null && pusherModel.payload?.type == PusherType.ROLLBACK_INVITE_EVENT) {
+            friendRequest.value?.data?.removeWhere((element) => element.id == pusherModel.payload!.data?.id);
+            friendRequest.refresh();
+          } else if (pusherModel.payload != null && pusherModel.payload?.type == PusherType.CANCEL_INVITE_EVANT) {
+            friendSendt.value?.data?.removeWhere((element) => element.id == pusherModel.payload!.data?.id);
+            friendSendt.refresh();
+          } else if (pusherModel.payload != null && pusherModel.payload?.type == PusherType.ACCEPTED_INVITE_EVENT) {
+            friendSendt.value?.data?.removeWhere((element) => element.id == pusherModel.payload!.data?.id);
+            friendSendt.refresh();
+            Get.find<ContactsController>().updateContact(pusherModel.payload!.data!.receiver!);
+          }
+        }
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _chatSubscription?.cancel();
   }
 }
 

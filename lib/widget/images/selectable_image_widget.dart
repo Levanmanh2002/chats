@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chats/utils/gif_utils.dart';
 import 'package:chats/widget/custom_image_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -33,6 +34,7 @@ class SelectableImageView extends StatelessWidget {
             imageUrl: fileUrl,
             size: size,
             borderRadius: borderRadius,
+            placeholder: Image.asset(GifUtils.noDataImageGif, width: size, height: size),
           );
   }
 }

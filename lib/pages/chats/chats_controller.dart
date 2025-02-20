@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:chats/models/chats/chat_data_model.dart';
 import 'package:chats/models/chats/chats_models.dart';
 import 'package:chats/models/messages/message_data_model.dart';
 import 'package:chats/models/profile/user_model.dart';
 import 'package:chats/models/pusher/pusher_chat.dart';
 import 'package:chats/models/pusher/pusher_group_message.dart';
 import 'package:chats/models/pusher/pusher_message_model.dart';
+import 'package:chats/models/pusher/pusher_model.dart';
 import 'package:chats/resourese/chats/ichats_repository.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
 import 'package:chats/resourese/service/pusher_service.dart';
@@ -96,7 +98,19 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
   void updateChatLastMessage(MessageDataModel message) {
     final chat = chatsModels.value?.chat?.firstWhereOrNull((e) => e.id == message.chatId);
     if (chat != null) {
+      chat.isRead = false;
       chat.latestMessage = message;
+      chatsModels.refresh();
+    }
+  }
+
+  void addNewChat(ChatDataModel chat) {
+    final chatList = chatsModels.value?.chat;
+    if (chatList == null) return;
+
+    final isExist = chatList.any((e) => e.id == chat.id);
+    if (!isExist) {
+      chatList.insert(0, chat..isRead = false);
       chatsModels.refresh();
     }
   }
@@ -134,6 +148,14 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
     }
   }
 
+  void updateReadStatus(int chatId) {
+    final chat = chatsModels.value?.chat?.firstWhereOrNull((e) => e.id == chatId);
+    if (chat != null) {
+      chat.isRead = true;
+      chatsModels.refresh();
+    }
+  }
+
   void initStreamPusher() {
     _initStream();
   }
@@ -154,23 +176,37 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
                 updateGroupName(json['payload']['data']['id'], json['payload']['data']['name']);
               }
             } else {
-              final groupMessage = PusherGroupMessageModel.fromJson(json);
+              try {
+                final groupMessage = PusherGroupMessageModel.fromJson(json);
 
-              if (groupMessage.payload != null && groupMessage.payload?.type == PusherType.NEW_MESSAGE_EVENT) {
-                if (groupMessage.payload?.type == PusherType.NEW_MESSAGE_EVENT) {
-                  updateChatLastMessage(groupMessage.payload!.data!.chat!.latestMessage!);
-                  if (groupMessage.payload?.data?.message?.hasUserRemovedFromGroup == 1 &&
-                      (groupMessage.payload?.data?.users ?? []).isNotEmpty) {
-                    removeListUser(groupMessage.payload!.data!.chat!.id!, groupMessage.payload!.data!.users!);
-                  } else if (groupMessage.payload?.data?.message?.hasUserAddedToGroup == 1) {
-                    updateListUser(groupMessage.payload!.data!.chat!.id!, groupMessage.payload!.data!.chat!.users!);
+                if (groupMessage.payload != null && groupMessage.payload?.type == PusherType.NEW_MESSAGE_EVENT) {
+                  if (groupMessage.payload?.type == PusherType.NEW_MESSAGE_EVENT) {
+                    updateChatLastMessage(groupMessage.payload!.data!.chat!.latestMessage!);
+                    if (groupMessage.payload?.data?.message?.hasUserRemovedFromGroup == 1 &&
+                        (groupMessage.payload?.data?.users ?? []).isNotEmpty) {
+                      removeListUser(groupMessage.payload!.data!.chat!.id!, groupMessage.payload!.data!.users!);
+                    } else if (groupMessage.payload?.data?.message?.hasUserAddedToGroup == 1) {
+                      updateListUser(groupMessage.payload!.data!.chat!.id!, groupMessage.payload!.data!.chat!.users!);
+                    }
                   }
                 }
-              }
+              } catch (_) {}
             }
-          } catch (e) {
+          } catch (e, a) {
             log(e.toString(), name: 'ERROR_STREAM_EVENT_CHATS_LIST');
+            log(a.toString(), name: 'ERROR_STREAM_EVENT_CHATS_LIST');
           }
+
+          try {
+            final pusherModel = PusherModel.fromJson(
+              json,
+              (json) => ChatDataModel.fromJson(json as Map<String, dynamic>),
+            );
+
+            if (pusherModel.payload != null && pusherModel.payload?.type == PusherType.ADD_TO_GROUP_EVENT) {
+              addNewChat(pusherModel.payload!.data!);
+            }
+          } catch (_) {}
 
           try {
             final chats = PusherChatModel.fromJson(json);
@@ -178,7 +214,6 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
             if (chats.payload != null && chats.payload?.type == PusherType.NEW_MESSAGE_FOR_LIST_EVENT) {
               final newChat = chats.payload!.data!;
               final currentChats = chatsModels.value?.chat;
-
               final exists = currentChats?.any((chat) => chat.id == newChat.id) ?? false;
 
               if (!exists) {

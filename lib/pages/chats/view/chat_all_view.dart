@@ -1,5 +1,6 @@
 import 'package:chats/main.dart';
 import 'package:chats/models/chats/chat_data_model.dart';
+import 'package:chats/models/chats/chats_models.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
 import 'package:chats/pages/group_message/group_message_parameter.dart';
 import 'package:chats/pages/message/message_parameter.dart';
@@ -26,6 +27,8 @@ class ChatAllView extends GetView<ChatsController> {
           ? Center(child: CircularProgressIndicator(color: appTheme.appColor))
           : ListLoader(
               onRefresh: controller.fetchChatList,
+              onLoad: () => controller.fetchChatList(isRefresh: false),
+              hasNext: controller.chatsModels.value?.hasNext ?? false,
               forceScrollable: true,
               child: (controller.chatsModels.value?.chat ?? []).isNotEmpty
                   ? SingleChildScrollView(
@@ -66,15 +69,20 @@ class ChatAllView extends GetView<ChatsController> {
             child: ImageAssetCustom(imagePath: IconsAssets.trashBinIcon, size: 24.w, color: appTheme.whiteColor),
           ),
           child: InkWell(
-            onTap: e.isGroup == 1
-                ? () => Get.toNamed(
-                      Routes.GROUP_MESSAGE,
-                      arguments: GroupMessageParameter(chatId: e.latestMessage?.chatId),
-                    )
-                : () => Get.toNamed(
-                      Routes.MESSAGE,
-                      arguments: MessageParameter(chatId: e.latestMessage?.chatId, contact: otherUsers),
-                    ),
+            onTap: () {
+              if (e.isGroup == 1) {
+                Get.toNamed(
+                  Routes.GROUP_MESSAGE,
+                  arguments: GroupMessageParameter(chatId: e.latestMessage?.chatId),
+                );
+              } else {
+                Get.toNamed(
+                  Routes.MESSAGE,
+                  arguments: MessageParameter(chatId: e.latestMessage?.chatId, contact: otherUsers),
+                );
+              }
+              controller.updateReadStatus(e.latestMessage!.chatId!);
+            },
             child: Container(
               padding: padding(vertical: 12, horizontal: 16),
               child: Row(
@@ -105,11 +113,27 @@ class ChatAllView extends GetView<ChatsController> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         SizedBox(height: 2.h),
-                        Text(
-                          e.latestMessage?.message ?? '',
-                          style: StyleThemeData.size12Weight400(color: appTheme.grayF8Color),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                e.latestMessage?.message ?? '',
+                                style: e.isRead == false
+                                    ? StyleThemeData.size12Weight600()
+                                    : StyleThemeData.size12Weight400(color: appTheme.grayF8Color),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            if (e.isRead == false) ...[
+                              SizedBox(width: 12.w),
+                              Container(
+                                width: 9.w,
+                                height: 9.w,
+                                decoration: BoxDecoration(shape: BoxShape.circle, color: appTheme.errorColor),
+                              ),
+                            ],
+                          ],
                         ),
                       ],
                     ),

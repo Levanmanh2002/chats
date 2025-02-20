@@ -16,4 +16,5 @@ class PusherType {
   static const ROLLBACK_INVITE_EVENT =
       'ROLLBACK_INVITE'; //  Phát sự kiện tới user nhân lời mời khi người gửi thu hồi lời mới kết bạn
   static const CANCEL_INVITE_EVANT = 'CANCEL_INVITE'; // Phát sự kiện tới user gửi khi lời mời bị từ chốt
+  static const ACCEPTED_INVITE_EVENT = 'ACCEPTED_INVITE'; // Phát sự kiện tới user lời mời kết bạn được đồng ý
 }

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:chats/extension/data/file_extension.dart';
-import 'package:chats/extension/num_extension.dart';
 import 'package:chats/models/messages/files_models.dart';
 import 'package:chats/models/messages/likes.dart';
 import 'package:chats/models/messages/message_data_model.dart';
@@ -20,11 +19,11 @@ import 'package:chats/resourese/messages/imessages_repository.dart';
 import 'package:chats/resourese/service/pusher_service.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/app/pusher_type.dart';
-import 'package:chats/utils/dialog_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class MessageController extends GetxController {
   final IMessagesRepository messagesRepository;
@@ -33,7 +32,7 @@ class MessageController extends GetxController {
   MessageController({required this.messagesRepository, required this.parameter});
 
   final TextEditingController messageController = TextEditingController();
-  final scrollController = ScrollController();
+  // final scrollController = ScrollController();
   var isShowScrollToBottom = false.obs;
   var isShowNewMessScroll = false.obs;
   var isLoadingSendMess = false.obs;
@@ -57,6 +56,9 @@ class MessageController extends GetxController {
 
   RxMap<String, GlobalKey> messageKeys = <String, GlobalKey>{}.obs;
 
+  final ItemScrollController itemScrollController = ItemScrollController();
+  final ItemPositionsListener itemPositionsListener = ItemPositionsListener.create();
+
   @override
   void onInit() async {
     super.onInit();
@@ -64,16 +66,32 @@ class MessageController extends GetxController {
       fetchChatList(parameter.chatId!);
     }
     _fetchQuickMessage();
-    scrollController.addListener(_scrollListener);
+    // scrollController.addListener(_scrollListener);
+    itemPositionsListener.itemPositions.addListener(() {
+      _scrollListener();
+    });
+
     await PusherService().connect();
     _initStream();
   }
 
   void _scrollListener() {
-    if (scrollController.offset > 100 && !isShowScrollToBottom.value) {
-      isShowScrollToBottom.value = true;
-    } else if (scrollController.offset <= 100 && isShowScrollToBottom.value) {
-      isShowScrollToBottom.value = false;
+    // if (scrollController.offset > 100 && !isShowScrollToBottom.value) {
+    //   isShowScrollToBottom.value = true;
+    // } else if (scrollController.offset <= 100 && isShowScrollToBottom.value) {
+    //   isShowScrollToBottom.value = false;
+    // }
+    final positions = itemPositionsListener.itemPositions.value;
+
+    if (positions.isNotEmpty) {
+      // Lấy vị trí index nhỏ nhất (ở trên cùng màn hình)
+      final minIndex = positions.map((e) => e.index).reduce((a, b) => a < b ? a : b);
+
+      if (minIndex > 2 && !isShowScrollToBottom.value) {
+        isShowScrollToBottom.value = true;
+      } else if (minIndex <= 2 && isShowScrollToBottom.value) {
+        isShowScrollToBottom.value = false;
+      }
     }
   }
 
@@ -113,6 +131,8 @@ class MessageController extends GetxController {
     required int messageId,
   }) async {
     try {
+      isLoadingSearch.value = true;
+
       log(messageId.toString(), name: 'MESSAGE_ID');
       log(targetPage.toString(), name: 'TARGET_PAGE');
       log(chatId.toString(), name: 'CHAT_ID');
@@ -138,37 +158,40 @@ class MessageController extends GetxController {
             page: model.page,
             size: model.size,
           );
+
           messageModel.refresh();
+
+          bool messageFound = messageModel.value?.listMessages?.any((msg) => msg.id == messageId) ?? false;
+
+          if (messageFound) {
+            FocusScope.of(Get.context!).unfocus();
+            scrollToMessage(messageId);
+            break;
+          }
         } else {
           break;
         }
       }
-
-      final messagesList = messageModel.value?.listMessages;
-      if (messagesList != null) {
-        scrollToMessage(messageId);
-      }
     } catch (e) {
       print(e);
+    } finally {
+      isLoadingSearch.value = false;
     }
   }
 
   void scrollToMessage(int messageId) {
-    // Tìm key trong messageKeys mà bắt đầu bằng "${messageId}-"
-    final keyEntry = messageKeys.entries.firstWhereOrNull((entry) => entry.key.startsWith('$messageId-'));
-
-    if (keyEntry != null && keyEntry.value.currentContext != null) {
-      Scrollable.ensureVisible(
-        keyEntry.value.currentContext!,
+    int index = (messageModel.value?.listMessages ?? []).indexWhere((msg) => msg.id == messageId);
+    if (index != -1) {
+      itemScrollController.scrollTo(
+        index: index,
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
-    } else {
-      DialogUtils.showWarningDialog("Không tìm thấy tin nhắn có id: $messageId");
     }
   }
 
   void onSearchMessage(String value) async {
+    if (value.isEmpty) return;
     try {
       isLoadingSearch.value = true;
       final response = await messagesRepository.messageList(parameter.chatId!, search: value);
@@ -185,7 +208,7 @@ class MessageController extends GetxController {
     } catch (e) {
       print(e);
     } finally {
-      isLoadingSearch.value = false;
+      if (value.isNotEmpty) isLoadingSearch.value = false;
     }
   }
 
@@ -378,8 +401,13 @@ class MessageController extends GetxController {
   }
 
   void scrollToBottom() {
-    scrollController.animateTo(
-      0.0,
+    // scrollController.animateTo(
+    //   0.0,
+    //   duration: const Duration(milliseconds: 300),
+    //   curve: Curves.easeInOut,
+    // );
+    itemScrollController.scrollTo(
+      index: 0,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
@@ -532,9 +560,18 @@ class MessageController extends GetxController {
 
   @override
   void onClose() {
-    scrollController.dispose();
+    // scrollController.dispose();
     messageController.dispose();
     _chatSubscription?.cancel();
+    itemPositionsListener.itemPositions.removeListener(_scrollListener);
     super.onClose();
+  }
+
+  @override
+  void dispose() {
+    messageController.dispose();
+    _chatSubscription?.cancel();
+    itemPositionsListener.itemPositions.removeListener(_scrollListener);
+    super.dispose();
   }
 }

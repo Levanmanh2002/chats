@@ -167,9 +167,18 @@ class GroupMessageController extends GetxController {
   void pickImages() async {
     List<XFile>? pickedFiles = await ImagePicker().pickMultiImage();
 
-    if (pickedFiles.isNotEmpty) {
-      imageFile.addAll(pickedFiles);
-      // onSendMessage();
+    if (pickedFiles.isEmpty) return;
+
+    // if (pickedFiles.isNotEmpty) {
+    //   imageFile.addAll(pickedFiles);
+    //   // onSendMessage();
+    // }
+
+    for (var file in pickedFiles) {
+      if (imageFile.length >= 3) {
+        imageFile.removeLast();
+      }
+      imageFile.insert(0, file);
     }
   }
 

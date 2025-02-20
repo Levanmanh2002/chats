@@ -7,10 +7,10 @@ import 'package:chats/pages/group_message/view/group_quick_message_view.dart';
 import 'package:chats/pages/group_message/view/group_reply_message_view.dart';
 import 'package:chats/pages/group_message/view/group_selected_images_list.dart';
 import 'package:chats/theme/style/style_theme.dart';
+import 'package:chats/utils/gif_utils.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/reponsive/extension.dart';
-import 'package:chats/widget/shimmer_animation/message_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -30,7 +30,9 @@ class GroupMessagePage extends GetWidget<GroupMessageController> {
           Expanded(
             child: Stack(
               children: [
-                Obx(() => controller.isLoading.isTrue ? const MessageShimmer() : GroupChastListView()),
+                Obx(() => controller.isLoading.isTrue
+                    ? Center(child: Image.asset(GifUtils.noDataImageGif))
+                    : GroupChastListView()),
                 Obx(
                   () => controller.isShowScrollToBottom.value
                       ? Positioned(bottom: 12, right: 16, child: _buildScrollToBottomMess())

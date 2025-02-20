@@ -19,6 +19,7 @@ class CustomImageWidget extends StatelessWidget {
     this.fit,
     this.noImage = true,
     this.sizeBorder,
+    this.placeholder,
   });
 
   final String imageUrl;
@@ -32,6 +33,7 @@ class CustomImageWidget extends StatelessWidget {
   final BoxFit? fit;
   final bool noImage;
   final double? sizeBorder;
+  final Widget? placeholder;
 
   @override
   Widget build(BuildContext context) {
@@ -48,17 +50,19 @@ class CustomImageWidget extends StatelessWidget {
           width: width ?? size,
           height: height ?? size,
           fit: fit ?? BoxFit.cover,
-          placeholder: (context, url) => noImage == true
-              ? ImageAssetCustom(
-                  imagePath: ImagesAssets.placeholder,
-                  boxFit: BoxFit.cover,
-                  size: size,
-                )
-              : ImageAssetCustom(
-                  imagePath: ImagesAssets.noProfileImage,
-                  boxFit: BoxFit.cover,
-                  size: size,
-                ),
+          placeholder: (context, url) =>
+              placeholder ??
+              (noImage == true
+                  ? ImageAssetCustom(
+                      imagePath: ImagesAssets.placeholder,
+                      boxFit: BoxFit.cover,
+                      size: size,
+                    )
+                  : ImageAssetCustom(
+                      imagePath: ImagesAssets.noProfileImage,
+                      boxFit: BoxFit.cover,
+                      size: size,
+                    )),
           errorWidget: (context, url, error) => noImage == true
               ? ImageAssetCustom(
                   imagePath: ImagesAssets.placeholder,

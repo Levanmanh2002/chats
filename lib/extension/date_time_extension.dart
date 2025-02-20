@@ -131,4 +131,14 @@ extension DateFormatting on String {
       return this;
     }
   }
+
+  String get toddMMyyyyHHmm {
+    try {
+      final dateTime = DateTime.parse(this);
+
+      return DateFormat(DateConstants.ddMMyyyyHHmm).format(dateTime);
+    } catch (e) {
+      return this;
+    }
+  }
 }

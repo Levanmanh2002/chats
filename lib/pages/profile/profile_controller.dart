@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:chats/models/profile/user_model.dart';
@@ -8,10 +9,12 @@ import 'package:chats/resourese/ibase_repository.dart';
 import 'package:chats/resourese/profile/iprofile_repository.dart';
 import 'package:chats/resourese/service/pusher_service.dart';
 import 'package:chats/routes/pages.dart';
+import 'package:chats/utils/app_constants.dart';
 import 'package:chats/utils/dialog_utils.dart';
 import 'package:chats/utils/image_utils.dart';
 import 'package:chats/utils/local_storage.dart';
 import 'package:chats/utils/shared_key.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -28,10 +31,14 @@ class ProfileController extends GetxController {
 
   final Rx<PhoneCodeModel> phoneCode = Rx(PhoneCodeModel());
 
+  Timer? _timer;
+
   @override
   void onInit() async {
     await _getProfile();
     _systemSettingPusher();
+    _trackingTimeOnline();
+    _startTrackingTimerOnline();
     super.onInit();
   }
 
@@ -97,6 +104,7 @@ class ProfileController extends GetxController {
       String? savedLanguage = LocalStorage.getString(SharedKey.language);
 
       await LocalStorage.clearAll();
+      await FirebaseMessaging.instance.deleteToken();
 
       if (savedLanguage.isNotEmpty) {
         await LocalStorage.setString(SharedKey.language, savedLanguage);
@@ -142,5 +150,22 @@ class ProfileController extends GetxController {
     } catch (e) {
       print(e);
     }
+  }
+
+  void _startTrackingTimerOnline() {
+    _timer = Timer.periodic(const Duration(minutes: AppConstants.timeTrackingOnline), (timer) {
+      _trackingTimeOnline();
+    });
+  }
+
+  void _trackingTimeOnline() async {
+    await dashboardRepository.trackingTimeOnline();
+    log('Tracking time online');
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _timer?.cancel();
   }
 }

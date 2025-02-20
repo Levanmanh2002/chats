@@ -67,7 +67,7 @@ class MessageSearchPage extends GetWidget<MessageSearchController> {
                                 style: StyleThemeData.size12Weight400(color: appTheme.grayF8Color),
                               ),
                               TextSpan(
-                                text: ' - ',
+                                text: ' • ',
                                 style: StyleThemeData.size12Weight400(color: appTheme.grayF8Color),
                               ),
                               TextSpan(
