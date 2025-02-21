@@ -121,21 +121,25 @@ class NotificationHelper {
     try {
       log(message.data.toString());
 
-      final chatId = int.tryParse(message.data['id'] ?? '');
+      final relatedId = int.tryParse(message.data['id'] ?? '');
 
       if (message.data['type'] == 'chat' && (message.data['is_group'] == 0 || message.data['is_group'] == "0")) {
-        if (chatId != null) {
+        if (relatedId != null) {
           Get.toNamed(
             Routes.MESSAGE,
-            arguments: MessageParameter(chatId: chatId),
+            arguments: MessageParameter(chatId: relatedId),
           );
         }
       } else if (message.data['type'] == 'chat' && (message.data['is_group'] == 1 || message.data['is_group'] == "1")) {
-        if (chatId != null) {
+        if (relatedId != null) {
           Get.toNamed(
             Routes.GROUP_MESSAGE,
-            arguments: GroupMessageParameter(chatId: chatId),
+            arguments: GroupMessageParameter(chatId: relatedId),
           );
+        }
+      } else if (message.data['type'] == 'friend_request') {
+        if (relatedId != null) {
+          Get.toNamed(Routes.SENT_REQUEST_CONTACT);
         }
       }
     } catch (e) {
