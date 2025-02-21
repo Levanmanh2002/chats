@@ -1,3 +1,4 @@
+import 'package:chats/extension/string_extension.dart';
 import 'package:chats/main.dart';
 import 'package:chats/models/chats/chat_data_model.dart';
 import 'package:chats/models/chats/chats_models.dart';
@@ -106,11 +107,21 @@ class ChatAllView extends GetView<ChatsController> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          e.isGroup == 1 ? e.name ?? '' : otherUsers?.name ?? '',
-                          style: StyleThemeData.size16Weight600(),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                e.isGroup == 1 ? e.name ?? '' : otherUsers?.name ?? '',
+                                style: StyleThemeData.size16Weight600(),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Text(
+                              e.latestMessage?.createdAt?.formattedTimeAgoChats ?? '',
+                              style: StyleThemeData.size12Weight400(color: appTheme.grayColor),
+                            ),
+                          ],
                         ),
                         SizedBox(height: 2.h),
                         Row(

@@ -27,7 +27,7 @@ class ContactsController extends GetxController with GetSingleTickerProviderStat
       if (isRefresh) isLoading.value = true;
 
       final response = await contactRepository.getContactAccepted(
-        page: isRefresh ? 1 : (contactModel.value?.totalPage ?? 1) + 1,
+        page: isRefresh ? 1 : (contactModel.value?.page ?? 1) + 1,
         limit: 10,
       );
 

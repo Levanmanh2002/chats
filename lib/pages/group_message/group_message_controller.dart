@@ -15,17 +15,20 @@ import 'package:chats/models/pusher/pusher_group_message.dart';
 import 'package:chats/models/pusher/pusher_message_model.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
 import 'package:chats/pages/group_message/group_message_parameter.dart';
+import 'package:chats/pages/group_message_search/group_message_search_parameter.dart';
 import 'package:chats/pages/group_option/group_option_controller.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/resourese/groups/igroups_repository.dart';
 import 'package:chats/resourese/ibase_repository.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
 import 'package:chats/resourese/service/pusher_service.dart';
+import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/app/pusher_type.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class GroupMessageController extends GetxController {
   final IMessagesRepository messagesRepository;
@@ -35,7 +38,7 @@ class GroupMessageController extends GetxController {
   GroupMessageController({required this.messagesRepository, required this.groupsRepository, required this.parameter});
 
   final TextEditingController messageController = TextEditingController();
-  final scrollController = ScrollController();
+  // final scrollController = ScrollController();
   var isShowScrollToBottom = false.obs;
   var isShowNewMessScroll = false.obs;
   var isLoadingSendMess = false.obs;
@@ -44,7 +47,11 @@ class GroupMessageController extends GetxController {
   var imageFile = <XFile>[].obs;
   var messageValue = ''.obs;
 
+  var isShowSearch = true.obs;
+  var isLoadingSearch = false.obs;
+
   Rx<MessageModels?> messageModel = Rx<MessageModels?>(null);
+  Rx<MessageModels?> messageSearchModel = Rx<MessageModels?>(null);
   Rx<MessageDataModel?> messageData = Rx<MessageDataModel?>(null);
   Rx<MessageDataModel?> messageReply = Rx<MessageDataModel?>(null);
 
@@ -53,6 +60,9 @@ class GroupMessageController extends GetxController {
 
   StreamSubscription? _chatSubscription;
 
+  ItemScrollController itemScrollController = ItemScrollController();
+  ItemPositionsListener itemPositionsListener = ItemPositionsListener.create();
+
   @override
   void onInit() {
     super.onInit();
@@ -60,16 +70,33 @@ class GroupMessageController extends GetxController {
       fetchChatList(parameter.chatId!);
     }
     _fetchQuickMessage();
-    scrollController.addListener(_scrollListener);
+    // scrollController.addListener(_scrollListener);
+
+    itemPositionsListener.itemPositions.addListener(() {
+      _scrollListener();
+    });
+
     PusherService().connect();
     _initStream();
   }
 
   void _scrollListener() {
-    if (scrollController.offset > 100 && !isShowScrollToBottom.value) {
-      isShowScrollToBottom.value = true;
-    } else if (scrollController.offset <= 100 && isShowScrollToBottom.value) {
-      isShowScrollToBottom.value = false;
+    // if (scrollController.offset > 100 && !isShowScrollToBottom.value) {
+    //   isShowScrollToBottom.value = true;
+    // } else if (scrollController.offset <= 100 && isShowScrollToBottom.value) {
+    //   isShowScrollToBottom.value = false;
+    // }
+    final positions = itemPositionsListener.itemPositions.value;
+
+    if (positions.isNotEmpty) {
+      // Lấy vị trí index nhỏ nhất (ở trên cùng màn hình)
+      final minIndex = positions.map((e) => e.index).reduce((a, b) => a < b ? a : b);
+
+      if (minIndex > 2 && !isShowScrollToBottom.value) {
+        isShowScrollToBottom.value = true;
+      } else if (minIndex <= 2 && isShowScrollToBottom.value) {
+        isShowScrollToBottom.value = false;
+      }
     }
   }
 
@@ -107,6 +134,93 @@ class GroupMessageController extends GetxController {
 
   int get messageId {
     return parameter.chatId ?? messageModel.value?.chat?.id ?? messageModel.value?.listMessages?.first.chatId ?? 0;
+  }
+
+  void onSearchMessage(String value) async {
+    if (value.isEmpty) return;
+    try {
+      isLoadingSearch.value = true;
+      final response = await messagesRepository.messageList(parameter.chatId!, search: value);
+
+      if (response.statusCode == 200) {
+        messageSearchModel.value = MessageModels.fromJson(response.body['data']);
+        if (messageSearchModel.value != null) {
+          Get.toNamed(
+            Routes.GROUP_MESSAGE_SEARCH_RESULT,
+            arguments: GroupMessageSearchParameter(searchMessage: messageSearchModel.value!),
+          );
+        }
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      if (value.isNotEmpty) isLoadingSearch.value = false;
+    }
+  }
+
+  Future<void> fetchChatListUntilPage({
+    required int chatId,
+    required int targetPage,
+    required int messageId,
+  }) async {
+    try {
+      isLoadingSearch.value = true;
+
+      log(messageId.toString(), name: 'MESSAGE_ID');
+      log(targetPage.toString(), name: 'TARGET_PAGE');
+      log(chatId.toString(), name: 'CHAT_ID');
+      final currentPage = messageModel.value?.page ?? 1;
+
+      for (int page = currentPage; page <= targetPage; page++) {
+        final response = await messagesRepository.messageList(
+          chatId,
+          page: page,
+          limit: 10,
+        );
+
+        if (response.statusCode == 200) {
+          final model = MessageModels.fromJson(response.body['data']);
+
+          messageModel.value = MessageModels(
+            listMessages: [
+              ...(messageModel.value?.listMessages ?? []),
+              ...(model.listMessages ?? []),
+            ],
+            totalPage: model.totalPage,
+            totalCount: model.totalCount,
+            page: model.page,
+            size: model.size,
+          );
+
+          messageModel.refresh();
+
+          bool messageFound = messageModel.value?.listMessages?.any((msg) => msg.id == messageId) ?? false;
+
+          if (messageFound) {
+            FocusScope.of(Get.context!).unfocus();
+            scrollToMessage(messageId);
+            break;
+          }
+        } else {
+          break;
+        }
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      isLoadingSearch.value = false;
+    }
+  }
+
+  void scrollToMessage(int messageId) {
+    int index = (messageModel.value?.listMessages ?? []).indexWhere((msg) => msg.id == messageId);
+    if (index != -1) {
+      itemScrollController.scrollTo(
+        index: index,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 
   void _fetchQuickMessage() async {
@@ -291,8 +405,13 @@ class GroupMessageController extends GetxController {
   }
 
   void scrollToBottom() {
-    scrollController.animateTo(
-      0.0,
+    // scrollController.animateTo(
+    //   0.0,
+    //   duration: const Duration(milliseconds: 300),
+    //   curve: Curves.easeInOut,
+    // );
+    itemScrollController.scrollTo(
+      index: 0,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
@@ -521,8 +640,18 @@ class GroupMessageController extends GetxController {
 
   @override
   void onClose() {
-    scrollController.dispose();
+    // scrollController.dispose();
+    messageController.dispose();
+    itemPositionsListener.itemPositions.removeListener(_scrollListener);
     _chatSubscription?.cancel();
     super.onClose();
+  }
+
+  @override
+  void dispose() {
+    messageController.dispose();
+    itemPositionsListener.itemPositions.removeListener(_scrollListener);
+    _chatSubscription?.cancel();
+    super.dispose();
   }
 }

@@ -54,10 +54,6 @@ class ChastListView extends GetView<MessageController> {
 
               final isLastItem = index == 0;
 
-              String messageId = item.id.toString();
-
-              controller.messageKeys[messageId] = GlobalKey();
-
               return Column(
                 children: [
                   if (shouldShowTime)

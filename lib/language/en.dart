@@ -165,4 +165,10 @@ const Map<String, String> en = {
       "All of your information will be kept secure and encrypted in accordance with our Terms of Use and Privacy Policy.",
   "field_years_ago": "@field years ago",
   "search": "Search",
+  "last_updated_contacts": "Last updated contacts",
+  "new_contact": "New contact",
+  "field_seconds": "@field seconds",
+  "field_minutes": "@field minutes",
+  "field_hours": "@field hours",
+  "yesterday": "Yesterday",
 };

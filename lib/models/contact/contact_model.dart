@@ -5,7 +5,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'contact_model.g.dart';
 
 extension ContactModelDataExtension on ContactModelData {
-  bool get hasNext => ((data?.length ?? 0)) < (totalPage ?? 0);
+  bool get hasNext => ((data?.length ?? 0)) < (totalCount ?? 0);
 }
 
 @JsonSerializable()

@@ -14,6 +14,8 @@ import 'package:chats/pages/forgot_password/forgot_password_binding.dart';
 import 'package:chats/pages/forgot_password/forgot_password_page.dart';
 import 'package:chats/pages/group_message/group_message_binding.dart';
 import 'package:chats/pages/group_message/group_message_page.dart';
+import 'package:chats/pages/group_message_search/group_message_search_binding.dart';
+import 'package:chats/pages/group_message_search/group_message_search_page.dart';
 import 'package:chats/pages/group_option/group_option_binding.dart';
 import 'package:chats/pages/group_option/group_option_page.dart';
 import 'package:chats/pages/html_app/html_app_binding.dart';
@@ -199,6 +201,11 @@ abstract class AppPages {
       name: Routes.MESSAGE_SEARCH_RESULT,
       page: () => MessageSearchPage(),
       binding: MessageSearchBinding(),
+    ),
+    GetPage(
+      name: Routes.GROUP_MESSAGE_SEARCH_RESULT,
+      page: () => GroupMessageSearchPage(),
+      binding: GroupMessageSearchBinding(),
     ),
   ];
 }

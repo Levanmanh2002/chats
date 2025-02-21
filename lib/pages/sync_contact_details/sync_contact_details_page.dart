@@ -37,7 +37,7 @@ class SyncContactDetailsPage extends GetWidget<SyncContactDetailsController> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Đã cập nhật danh bạ lần gần nhất', style: StyleThemeData.size12Weight400()),
+                          Text('last_updated_contacts'.tr, style: StyleThemeData.size12Weight400()),
                           SizedBox(height: 4.h),
                           Text(
                             controller.syncContactModel.value?.lastSyncContacts?.tohhmmSpaceddMMyyyy ?? '',
@@ -89,7 +89,7 @@ class SyncContactDetailsPage extends GetWidget<SyncContactDetailsController> {
             ),
             Padding(
               padding: padding(horizontal: 16),
-              child: Text('Liên hệ mới', style: StyleThemeData.size12Weight600()),
+              child: Text('new_contact'.tr, style: StyleThemeData.size12Weight600()),
             ),
             Expanded(
               child: Obx(

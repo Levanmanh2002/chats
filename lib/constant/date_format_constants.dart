@@ -8,4 +8,5 @@ class DateConstants {
   static const String yyyyMMdd = 'yyyy-MM-dd';
   static const String ddMMyyyyDash = 'dd-MM-yyyy';
   static const String ddMMyyyyHHmm = 'dd/MM/yyyy • HH:mm';
+  static const String ddMM = 'dd/MM';
 }

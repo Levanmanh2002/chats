@@ -158,4 +158,32 @@ extension TimeAgoExtension on String {
       return 'field_years_ago'.trParams({'field': '$years'});
     }
   }
+
+  String get formattedTimeAgoChats {
+    if (isEmpty) return '';
+
+    DateTime now = DateTime.now();
+    DateTime dateTime;
+
+    try {
+      dateTime = DateTime.parse(this);
+    } catch (e) {
+      return '';
+    }
+
+    Duration difference = now.difference(dateTime);
+
+    if (difference.inSeconds < 60) {
+      return 'field_seconds'.trParams({'field': '${difference.inSeconds}'});
+    } else if (difference.inMinutes < 60) {
+      return 'field_minutes'.trParams({'field': '${difference.inMinutes}'});
+    } else if (difference.inHours < 24) {
+      return 'field_hours'.trParams({'field': '${difference.inHours}'});
+    } else if (difference.inDays == 1) {
+      return 'yesterday'.tr;
+    } else {
+      String format = now.year == dateTime.year ? DateConstants.ddMM : DateConstants.ddMMyyyy;
+      return DateFormat(format).format(dateTime);
+    }
+  }
 }

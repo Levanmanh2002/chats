@@ -164,4 +164,10 @@ const Map<String, String> vi = {
       "Tất cả thông tin của bạn sẽ được bảo mật và mã hoá theo Điều Khoản Sử Dụng và Chính Sách Bảo Mật.",
   "field_years_ago": "@field năm trước",
   "search": "Tìm kiếm",
+  "last_updated_contacts": "Đã cập nhật danh bạ lần gần nhất",
+  "new_contact": "Liên hệ mới",
+  "field_seconds": "@field giây",
+  "field_minutes": "@field phút",
+  "field_hours": "@field giờ",
+  "yesterday": "Hôm qua",
 };

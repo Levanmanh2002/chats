@@ -24,7 +24,7 @@ class SyncContactDetailsController extends GetxController {
       if (isRefresh) isLoading.value = true;
 
       final response = await contactRepository.getSyncContacts(
-        page: isRefresh ? 1 : (syncContactModel.value?.totalPage ?? 1) + 1,
+        page: isRefresh ? 1 : (syncContactModel.value?.page ?? 1) + 1,
         limit: 10,
         search: search,
       );

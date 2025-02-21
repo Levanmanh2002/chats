@@ -42,7 +42,7 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
       if (isRefresh) isLoading.value = true;
 
       final response = await chatsRepository.chatListAll(
-        page: isRefresh ? 1 : (chatsModels.value?.totalPage ?? 1) + 1,
+        page: isRefresh ? 1 : (chatsModels.value?.page ?? 1) + 1,
         limit: 10,
         search: search,
       );

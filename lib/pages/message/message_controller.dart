@@ -54,8 +54,6 @@ class MessageController extends GetxController {
 
   StreamSubscription? _chatSubscription;
 
-  RxMap<String, GlobalKey> messageKeys = <String, GlobalKey>{}.obs;
-
   final ItemScrollController itemScrollController = ItemScrollController();
   final ItemPositionsListener itemPositionsListener = ItemPositionsListener.create();
 
@@ -551,11 +549,6 @@ class MessageController extends GetxController {
         }
       },
     );
-  }
-
-  void updateShowSearch() {
-    isShowSearch.value = false;
-    isShowSearch.refresh();
   }
 
   @override

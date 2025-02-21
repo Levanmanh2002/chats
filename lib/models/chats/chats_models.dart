@@ -6,7 +6,7 @@ import 'chat_data_model.dart';
 part 'chats_models.g.dart';
 
 extension ChatsModelsExtension on ChatsModels {
-  bool get hasNext => ((chat?.length ?? 0)) < (totalPage ?? 0);
+  bool get hasNext => ((chat?.length ?? 0)) < (totalCount ?? 0);
 }
 
 @JsonSerializable()

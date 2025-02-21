@@ -31,4 +31,5 @@ abstract class Routes {
   static const SYNC_CONTACT = '/sync_contact';
   static const SYNC_CONTACT_DETAILS = '/sync_contact_details';
   static const MESSAGE_SEARCH_RESULT = '/message_search_result';
+  static const GROUP_MESSAGE_SEARCH_RESULT = '/group_message_search_result';
 }

@@ -89,7 +89,7 @@ class CreateGroupController extends GetxController {
       if (isRefresh) isLoading.value = true;
 
       final response = await contactRepository.getContactAccepted(
-        page: isRefresh ? 1 : (contactModel.value?.totalPage ?? 1) + 1,
+        page: isRefresh ? 1 : (contactModel.value?.page ?? 1) + 1,
         limit: 10,
         search: search,
       );
