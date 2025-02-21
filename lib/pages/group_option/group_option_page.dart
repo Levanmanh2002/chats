@@ -95,7 +95,7 @@ class GroupOptionPage extends GetWidget<GroupOptionController> {
                     children: [
                       Flexible(
                         child: GestureDetector(
-                          onTap: () {},
+                          onTap: controller.onShowSearchMessage,
                           child: Column(
                             children: [
                               Container(

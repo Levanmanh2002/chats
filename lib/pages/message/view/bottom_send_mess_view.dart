@@ -31,6 +31,7 @@ class BottomSendMessView extends GetView<MessageController> {
               keyboardType: TextInputType.multiline,
               onChanged: controller.updateMessage,
               inputFormatters: FormatterUtil.chatMessageFormatter,
+              onTap: () => controller.isTickers.value = false,
             ),
           ),
           Obx(
@@ -48,7 +49,10 @@ class BottomSendMessView extends GetView<MessageController> {
                         padding: padding(horizontal: 14),
                         child: Row(
                           children: [
-                            InkWell(onTap: () {}, child: const ImageAssetCustom(imagePath: IconsAssets.emojiIcon)),
+                            InkWell(
+                              onTap: controller.toggleTickers,
+                              child: const ImageAssetCustom(imagePath: IconsAssets.emojiIcon),
+                            ),
                             SizedBox(width: 8.w),
                             InkWell(
                               onTap: controller.pickImages,

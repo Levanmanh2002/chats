@@ -47,4 +47,16 @@ class DashboardRepository extends IDashboardRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<Response> getTickers() async {
+    try {
+      final result = await clientGetData(AppConstants.getTickersUri);
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
 }

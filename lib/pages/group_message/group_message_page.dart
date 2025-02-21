@@ -5,6 +5,7 @@ import 'package:chats/pages/group_message/view/group_chast_list_view.dart';
 import 'package:chats/pages/group_message/view/group_quick_message_view.dart';
 import 'package:chats/pages/group_message/view/group_reply_message_view.dart';
 import 'package:chats/pages/group_message/view/group_selected_images_list.dart';
+import 'package:chats/pages/group_message/view/group_tickers_view.dart';
 import 'package:chats/pages/group_option/group_option_parameter.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
@@ -124,6 +125,7 @@ class GroupMessagePage extends GetWidget<GroupMessageController> {
             GroupSelectedImagesList(),
             Obx(() => (controller.quickMessage.value != null) ? GroupQuickMessageView() : const SizedBox()),
             GroupBottomSendMessView(),
+            Obx(() => controller.isTickers.isTrue ? GroupTickersView() : const SizedBox()),
           ],
         ),
       ),

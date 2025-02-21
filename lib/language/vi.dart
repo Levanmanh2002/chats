@@ -170,4 +170,5 @@ const Map<String, String> vi = {
   "field_minutes": "@field phút",
   "field_hours": "@field giờ",
   "yesterday": "Hôm qua",
+  "images": "Hình ảnh",
 };

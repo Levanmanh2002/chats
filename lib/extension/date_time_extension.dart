@@ -91,6 +91,15 @@ extension DateFormatter on String? {
 
 extension StringToDateTimeFormatter on String {
   DateTime get toDateTime => DateTime.parse(this);
+
+  bool isTimeDifferenceGreaterThan(String? otherTime, int hours) {
+    final current = toDateTime;
+    final other = otherTime?.toDateTime;
+
+    if (other == null) return true;
+
+    return current.difference(other).inHours >= hours;
+  }
 }
 
 extension DateTimeExtension on DateTime? {

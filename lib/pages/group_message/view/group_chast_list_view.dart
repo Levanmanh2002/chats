@@ -1,3 +1,4 @@
+import 'package:chats/extension/date_time_extension.dart';
 import 'package:chats/extension/string_extension.dart';
 import 'package:chats/main.dart';
 import 'package:chats/models/messages/files_models.dart';
@@ -13,6 +14,7 @@ import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/animation/animation_reply_message.dart';
 import 'package:chats/widget/chats/attach_file_widget.dart';
+import 'package:chats/widget/custom_image_widget.dart';
 import 'package:chats/widget/dynamic_grid_item_view.dart';
 import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/list_loader.dart';
@@ -49,6 +51,9 @@ class GroupChastListView extends GetView<GroupMessageController> {
               final shouldShowTime = previousItem == null ||
                   item.createdAt?.formatToHourMinute != previousItem.createdAt?.formatToHourMinute;
 
+              final shouldShowTimeHours =
+                  item.createdAt?.isTimeDifferenceGreaterThan(previousItem?.createdAt, 1) ?? shouldShowTime;
+
               final isLastItem = index == 0;
 
               final DateTime? currentDateTime =
@@ -56,15 +61,16 @@ class GroupChastListView extends GetView<GroupMessageController> {
               final DateTime? previousDateTime = previousItem?.createdAt != null && previousItem!.createdAt!.isNotEmpty
                   ? DateTime.tryParse(previousItem.createdAt!)
                   : null;
+
               final shouldShowGroupAvatar = previousItem == null ||
                   (currentDateTime != null &&
                       previousDateTime != null &&
-                      currentDateTime.difference(previousDateTime).inMinutes >= 5) ||
+                      currentDateTime.difference(previousDateTime).inHours >= 1) ||
                   (item.sender?.id != previousItem.sender?.id);
 
               return Column(
                 children: [
-                  if (shouldShowTime)
+                  if (shouldShowTimeHours)
                     Container(
                       margin: padding(all: 12),
                       padding: padding(horizontal: 12, vertical: 4),
@@ -119,38 +125,39 @@ class GroupChastListView extends GetView<GroupMessageController> {
                                   padding: padding(horizontal: 16, bottom: (item.likes ?? []).isNotEmpty ? 20 : 0),
                                   child: Column(
                                     children: [
-                                      GestureDetector(
-                                        onLongPress: () {
-                                          showReactionPopup(
-                                            item.message ?? '',
-                                            isCurrentUser:
-                                                item.sender?.id == Get.find<ProfileController>().user.value?.id,
-                                            onRevoke: item.sender?.id == Get.find<ProfileController>().user.value?.id
-                                                ? () => controller.onRevokeMessageLocal(item.id)
-                                                : null,
-                                            onHeart: () => controller.onHeartMessageLocal(item.id),
-                                          );
-                                        },
-                                        child: AnimationReplyMessage(
-                                          key: UniqueKey(),
-                                          swipeSensitivity: 5,
-                                          onRightSwipe: (details) {
-                                            controller.updateReplyMessage(item);
+                                      if ((item.message ?? '').isNotEmpty)
+                                        GestureDetector(
+                                          onLongPress: () {
+                                            showReactionPopup(
+                                              item.message ?? '',
+                                              isCurrentUser:
+                                                  item.sender?.id == Get.find<ProfileController>().user.value?.id,
+                                              onRevoke: item.sender?.id == Get.find<ProfileController>().user.value?.id
+                                                  ? () => controller.onRevokeMessageLocal(item.id)
+                                                  : null,
+                                              onHeart: () => controller.onHeartMessageLocal(item.id),
+                                            );
                                           },
-                                          onLeftSwipe: (details) {
-                                            controller.updateReplyMessage(item);
-                                          },
-                                          child: GroupListMessageWidget(
-                                            text: item.message ?? '',
-                                            avatar: item.sender?.avatar ?? '',
-                                            isShowAvatar: shouldShowGroupAvatar,
-                                            isCurrentUser:
-                                                item.sender?.id == Get.find<ProfileController>().user.value?.id,
-                                            status: item.status,
-                                            replyMessage: item.replyMessage,
+                                          child: AnimationReplyMessage(
+                                            key: UniqueKey(),
+                                            swipeSensitivity: 5,
+                                            onRightSwipe: (details) {
+                                              controller.updateReplyMessage(item);
+                                            },
+                                            onLeftSwipe: (details) {
+                                              controller.updateReplyMessage(item);
+                                            },
+                                            child: GroupListMessageWidget(
+                                              text: item.message ?? '',
+                                              avatar: item.sender?.avatar ?? '',
+                                              isShowAvatar: shouldShowGroupAvatar,
+                                              isCurrentUser:
+                                                  item.sender?.id == Get.find<ProfileController>().user.value?.id,
+                                              status: item.status,
+                                              replyMessage: item.replyMessage,
+                                            ),
                                           ),
                                         ),
-                                      ),
                                       if ((item.files ?? []).isNotEmpty) ...[
                                         GestureDetector(
                                           onLongPress: () {
@@ -218,6 +225,25 @@ class GroupChastListView extends GetView<GroupMessageController> {
                                                   ],
                                                 ],
                                               ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                      if (item.sticker != null) ...[
+                                        Align(
+                                          alignment: item.sender?.id == Get.find<ProfileController>().user.value?.id
+                                              ? Alignment.centerRight
+                                              : Alignment.centerLeft,
+                                          child: Container(
+                                            margin: padding(bottom: 6),
+                                            child: CustomImageWidget(
+                                              imageUrl: item.sticker?.url ?? '',
+                                              size: 60.w,
+                                              borderRadius: 0,
+                                              showBoder: false,
+                                              sizeBorder: 0,
+                                              color: appTheme.transparentColor,
+                                              colorBoder: appTheme.transparentColor,
                                             ),
                                           ),
                                         ),

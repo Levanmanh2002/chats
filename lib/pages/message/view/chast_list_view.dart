@@ -1,3 +1,4 @@
+import 'package:chats/extension/date_time_extension.dart';
 import 'package:chats/extension/string_extension.dart';
 import 'package:chats/main.dart';
 import 'package:chats/models/messages/files_models.dart';
@@ -13,6 +14,7 @@ import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/animation/animation_reply_message.dart';
 import 'package:chats/widget/chats/attach_file_widget.dart';
+import 'package:chats/widget/custom_image_widget.dart';
 import 'package:chats/widget/dynamic_grid_item_view.dart';
 import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/list_loader.dart';
@@ -49,8 +51,11 @@ class ChastListView extends GetView<MessageController> {
               final item = data[index];
               final previousItem = index < data.length - 1 ? data[index + 1] : null;
 
-              final shouldShowTime = previousItem == null ||
+              final shouldShowTimes = previousItem == null ||
                   item.createdAt?.formatToHourMinute != previousItem.createdAt?.formatToHourMinute;
+
+              final shouldShowTime =
+                  item.createdAt?.isTimeDifferenceGreaterThan(previousItem?.createdAt, 1) ?? shouldShowTimes;
 
               final isLastItem = index == 0;
 
@@ -96,32 +101,35 @@ class ChastListView extends GetView<MessageController> {
                               padding: padding(horizontal: 16, bottom: (item.likes ?? []).isNotEmpty ? 20 : 0),
                               child: Column(
                                 children: [
-                                  GestureDetector(
-                                    onLongPress: () {
-                                      showReactionPopup(
-                                        item.message ?? '',
-                                        isCurrentUser: item.sender?.id == Get.find<ProfileController>().user.value?.id,
-                                        onRevoke: () => controller.onRevokeMessageLocal(item.id),
-                                        onHeart: () => controller.onHeartMessageLocal(item.id),
-                                      );
-                                    },
-                                    child: AnimationReplyMessage(
-                                      key: UniqueKey(),
-                                      swipeSensitivity: 5,
-                                      onRightSwipe: (details) {
-                                        controller.updateReplyMessage(item);
+                                  if ((item.message ?? '').isNotEmpty)
+                                    GestureDetector(
+                                      onLongPress: () {
+                                        showReactionPopup(
+                                          item.message ?? '',
+                                          isCurrentUser:
+                                              item.sender?.id == Get.find<ProfileController>().user.value?.id,
+                                          onRevoke: () => controller.onRevokeMessageLocal(item.id),
+                                          onHeart: () => controller.onHeartMessageLocal(item.id),
+                                        );
                                       },
-                                      onLeftSwipe: (details) {
-                                        controller.updateReplyMessage(item);
-                                      },
-                                      child: MessageListWidget(
-                                        text: item.message ?? '',
-                                        isCurrentUser: item.sender?.id == Get.find<ProfileController>().user.value?.id,
-                                        status: item.status,
-                                        replyMessage: item.replyMessage,
+                                      child: AnimationReplyMessage(
+                                        key: UniqueKey(),
+                                        swipeSensitivity: 5,
+                                        onRightSwipe: (details) {
+                                          controller.updateReplyMessage(item);
+                                        },
+                                        onLeftSwipe: (details) {
+                                          controller.updateReplyMessage(item);
+                                        },
+                                        child: MessageListWidget(
+                                          text: item.message ?? '',
+                                          isCurrentUser:
+                                              item.sender?.id == Get.find<ProfileController>().user.value?.id,
+                                          status: item.status,
+                                          replyMessage: item.replyMessage,
+                                        ),
                                       ),
                                     ),
-                                  ),
                                   if ((item.files ?? []).isNotEmpty) ...[
                                     GestureDetector(
                                       onLongPress: () {
@@ -188,6 +196,25 @@ class ChastListView extends GetView<MessageController> {
                                               ],
                                             ],
                                           ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                  if (item.sticker != null) ...[
+                                    Align(
+                                      alignment: item.sender?.id == Get.find<ProfileController>().user.value?.id
+                                          ? Alignment.centerRight
+                                          : Alignment.centerLeft,
+                                      child: Container(
+                                        margin: padding(bottom: 6),
+                                        child: CustomImageWidget(
+                                          imageUrl: item.sticker?.url ?? '',
+                                          size: 60.w,
+                                          borderRadius: 0,
+                                          showBoder: false,
+                                          sizeBorder: 0,
+                                          color: appTheme.transparentColor,
+                                          colorBoder: appTheme.transparentColor,
                                         ),
                                       ),
                                     ),

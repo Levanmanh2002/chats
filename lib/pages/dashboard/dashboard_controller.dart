@@ -1,3 +1,4 @@
+import 'package:chats/models/tickers/tickers_model.dart';
 import 'package:chats/pages/chats/chats_page.dart';
 import 'package:chats/pages/contacts/contacts_page.dart';
 import 'package:chats/pages/profile/profile_page.dart';
@@ -21,11 +22,14 @@ class DashboardController extends GetxController {
     ProfilePage(),
   ];
 
+  RxList<TickersModel> tickersModel = <TickersModel>[].obs;
+
   @override
   void onInit() {
     super.onInit();
     pageController = PageController(initialPage: 0);
     _updateFcmToken();
+    _fetchTickers();
   }
 
   void animateToTab(int page) {
@@ -44,6 +48,17 @@ class DashboardController extends GetxController {
 
   void _updateFcmToken() async {
     await dashboardRepository.updateFcmToken();
+  }
+
+  void _fetchTickers() async {
+    try {
+      final response = await dashboardRepository.getTickers();
+      if (response.statusCode == 200) {
+        tickersModel.value = TickersModel.listFromJson(response.body['data']['data']);
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override

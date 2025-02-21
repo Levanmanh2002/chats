@@ -2,10 +2,14 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:chats/main.dart';
+import 'package:chats/pages/group_message/group_message_parameter.dart';
+import 'package:chats/pages/message/message_parameter.dart';
+import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/app_constants.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
 
 class NotificationHelper {
   static Future<void> initialize() async {
@@ -117,14 +121,23 @@ class NotificationHelper {
     try {
       log(message.data.toString());
 
-      // if (message.data['type'] == 'order_status') {
-      //   if (relatedId != null) {
-      //     Get.toNamed(
-      //       Routes.ORDERDETAILS,
-      //       arguments: OrderDetailsParameter(orderId: relatedId),
-      //     );
-      //   }
-      // }
+      final chatId = int.tryParse(message.data['id'] ?? '');
+
+      if (message.data['type'] == 'chat' && (message.data['is_group'] == 0 || message.data['is_group'] == "0")) {
+        if (chatId != null) {
+          Get.toNamed(
+            Routes.MESSAGE,
+            arguments: MessageParameter(chatId: chatId),
+          );
+        }
+      } else if (message.data['type'] == 'chat' && (message.data['is_group'] == 1 || message.data['is_group'] == "1")) {
+        if (chatId != null) {
+          Get.toNamed(
+            Routes.GROUP_MESSAGE,
+            arguments: GroupMessageParameter(chatId: chatId),
+          );
+        }
+      }
     } catch (e) {
       log(e.toString());
     }

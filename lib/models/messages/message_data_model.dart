@@ -2,6 +2,7 @@ import 'package:chats/models/messages/files_models.dart';
 import 'package:chats/models/messages/likes.dart';
 import 'package:chats/models/messages/reply_message.dart';
 import 'package:chats/models/profile/user_model.dart';
+import 'package:chats/models/tickers/tickers_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'message_data_model.g.dart';
@@ -36,6 +37,8 @@ class MessageDataModel {
 
   List<LikeModel>? likes;
 
+  TickersModel? sticker;
+
   @JsonKey(name: 'created_at')
   String? createdAt;
 
@@ -48,6 +51,7 @@ class MessageDataModel {
     this.sender,
     this.chatId,
     this.files,
+    this.sticker,
     this.isRollback,
     this.hasUserAddedToGroup,
     this.hasUserRemovedFromGroup,
@@ -70,6 +74,7 @@ class MessageDataModel {
     UserModel? sender,
     int? chatId,
     List<FilesModels>? files,
+    TickersModel? sticker,
     bool? isRollback,
     ReplyMessage? replyMessage,
     List<LikeModel>? likes,
@@ -82,6 +87,7 @@ class MessageDataModel {
       sender: sender ?? this.sender,
       chatId: chatId ?? this.chatId,
       files: files ?? this.files,
+      sticker: sticker ?? this.sticker,
       isRollback: isRollback ?? this.isRollback,
       replyMessage: replyMessage ?? this.replyMessage,
       likes: likes ?? this.likes,

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:chats/extension/data/file_extension.dart';
+import 'package:chats/models/chats/chat_data_model.dart';
 import 'package:chats/models/messages/files_models.dart';
 import 'package:chats/models/messages/likes.dart';
 import 'package:chats/models/messages/message_data_model.dart';
@@ -10,6 +11,7 @@ import 'package:chats/models/messages/message_models.dart';
 import 'package:chats/models/messages/quick_message.dart';
 import 'package:chats/models/messages/reply_message.dart';
 import 'package:chats/models/pusher/pusher_message_model.dart';
+import 'package:chats/models/tickers/tickers_model.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
 import 'package:chats/pages/message/message_parameter.dart';
 import 'package:chats/pages/message_search/message_search_parameter.dart';
@@ -44,6 +46,8 @@ class MessageController extends GetxController {
   var isLoading = false.obs;
   var isShowSearch = true.obs;
 
+  var isTickers = false.obs;
+
   Rx<MessageModels?> messageModel = Rx<MessageModels?>(null);
   Rx<MessageModels?> messageSearchModel = Rx<MessageModels?>(null);
   Rx<MessageDataModel?> messageData = Rx<MessageDataModel?>(null);
@@ -57,6 +61,8 @@ class MessageController extends GetxController {
   final ItemScrollController itemScrollController = ItemScrollController();
   final ItemPositionsListener itemPositionsListener = ItemPositionsListener.create();
 
+  Rx<TickersModel?> selectedTickers = Rx<TickersModel?>(null);
+
   @override
   void onInit() async {
     super.onInit();
@@ -67,6 +73,12 @@ class MessageController extends GetxController {
     // scrollController.addListener(_scrollListener);
     itemPositionsListener.itemPositions.addListener(() {
       _scrollListener();
+    });
+
+    FocusManager.instance.addListener(() {
+      if (FocusManager.instance.primaryFocus?.hasFocus == true) {
+        isTickers.value = false;
+      }
     });
 
     await PusherService().connect();
@@ -106,6 +118,7 @@ class MessageController extends GetxController {
         final model = MessageModels.fromJson(response.body['data']);
 
         messageModel.value = MessageModels(
+          chat: model.chat,
           listMessages: [
             if (!isRefresh) ...(messageModel.value?.listMessages ?? []),
             ...(model.listMessages ?? []),
@@ -270,6 +283,7 @@ class MessageController extends GetxController {
   }
 
   void pickImages() async {
+    isTickers.value = false;
     List<XFile>? pickedFiles = await ImagePicker().pickMultiImage();
 
     if (pickedFiles.isEmpty) return;
@@ -291,8 +305,22 @@ class MessageController extends GetxController {
     // }
   }
 
+  void toggleTickers() {
+    isTickers.value = !isTickers.value;
+    FocusScope.of(Get.context!).unfocus();
+  }
+
+  void sendTicker(TickersModel ticker) {
+    selectedTickers.value = ticker;
+    isTickers.value = false;
+    messageController.clear();
+    imageFile.clear();
+    messageValue.value = '';
+    messageReply.value = null;
+    onSendMessage();
+  }
+
   void onSendMessage() async {
-    if (messageController.text.isEmpty) return;
     try {
       final messageText = messageController.text.trim();
       final imageFile = this.imageFile.toList();
@@ -307,6 +335,14 @@ class MessageController extends GetxController {
               ))
           .toList();
 
+      final tempSticker = selectedTickers.value != null
+          ? TickersModel(
+              id: selectedTickers.value?.id,
+              name: selectedTickers.value?.name,
+              url: selectedTickers.value?.url,
+            )
+          : null;
+
       final tempMessage = MessageDataModel(
         id: DateTime.now().millisecondsSinceEpoch,
         message: messageText,
@@ -315,6 +351,7 @@ class MessageController extends GetxController {
         createdAt: DateTime.now().toString(),
         status: MessageStatus.sending,
         files: tempFiles,
+        sticker: tempSticker,
         replyMessage: messageReply.value != null
             ? ReplyMessage(
                 id: replyMessageLocal?.id,
@@ -332,7 +369,7 @@ class MessageController extends GetxController {
 
       clearMessage();
 
-      _sendAndUpdateMessageLocal(tempMessage, messageText, imageFile, replyMessageLocal);
+      _sendAndUpdateMessageLocal(tempMessage, messageText, imageFile, replyMessageLocal, tempSticker);
     } catch (e) {
       print(e);
     }
@@ -343,12 +380,14 @@ class MessageController extends GetxController {
     String messageText,
     List<XFile> imageFile,
     MessageDataModel? reply,
+    TickersModel? sticker,
   ) async {
     try {
       Map<String, String> params = {
         "receiver_id": parameter.contact?.id.toString() ?? '',
-        "message": messageText,
+        if (messageText.isNotEmpty) "message": messageText,
         if (reply != null) "reply_message_id": reply.id.toString(),
+        if (sticker != null) "sticker_id": sticker.id.toString(),
       };
 
       List<MultipartBody> multipartBody = [
@@ -388,7 +427,7 @@ class MessageController extends GetxController {
       listMessages: messageModel.value?.listMessages?..insert(0, newMessages),
     );
     messageModel.refresh();
-    Get.find<ChatsController>().updateChatLastMessage(newMessages);
+    Get.find<ChatsController>().updateChatLastMessage(newMessages, isRead: false);
   }
 
   void clearMessage() {
@@ -396,6 +435,7 @@ class MessageController extends GetxController {
     imageFile.clear();
     messageValue.value = '';
     messageReply.value = null;
+    selectedTickers.value = null;
   }
 
   void scrollToBottom() {
@@ -512,6 +552,9 @@ class MessageController extends GetxController {
       messageModel.refresh();
     }
   }
+
+  String getChatAvatar(ChatDataModel? chat) =>
+      (chat?.users ?? []).firstWhereOrNull((u) => u.id != Get.find<ProfileController>().user.value?.id)?.avatar ?? '';
 
   void _initStream() {
     _chatSubscription = PusherService().stream.listen(

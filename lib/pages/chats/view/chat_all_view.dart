@@ -8,6 +8,7 @@ import 'package:chats/pages/message/message_parameter.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
+import 'package:chats/utils/gif_utils.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/custom_image_widget.dart';
 import 'package:chats/widget/dialog/show_common_dialog.dart';
@@ -25,9 +26,9 @@ class ChatAllView extends GetView<ChatsController> {
   Widget build(BuildContext context) {
     return Obx(
       () => controller.isLoading.isTrue
-          ? Center(child: CircularProgressIndicator(color: appTheme.appColor))
+          ? Center(child: Image.asset(GifUtils.noDataImageGif))
           : ListLoader(
-              onRefresh: controller.fetchChatList,
+              onRefresh: () => controller.fetchChatList(isShowLoad: false),
               onLoad: () => controller.fetchChatList(isRefresh: false),
               hasNext: controller.chatsModels.value?.hasNext ?? false,
               forceScrollable: true,
@@ -128,7 +129,12 @@ class ChatAllView extends GetView<ChatsController> {
                           children: [
                             Expanded(
                               child: Text(
-                                e.latestMessage?.message ?? '',
+                                e.latestMessage?.message ??
+                                    (e.latestMessage?.sticker != null
+                                        ? 'Sticker'
+                                        : (e.latestMessage?.files ?? []).isNotEmpty
+                                            ? 'images'.tr
+                                            : ''),
                                 style: e.isRead == false
                                     ? StyleThemeData.size12Weight600()
                                     : StyleThemeData.size12Weight400(color: appTheme.grayF8Color),

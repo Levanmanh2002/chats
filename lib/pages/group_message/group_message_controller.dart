@@ -13,6 +13,7 @@ import 'package:chats/models/messages/reply_message.dart';
 import 'package:chats/models/profile/user_model.dart';
 import 'package:chats/models/pusher/pusher_group_message.dart';
 import 'package:chats/models/pusher/pusher_message_model.dart';
+import 'package:chats/models/tickers/tickers_model.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
 import 'package:chats/pages/group_message/group_message_parameter.dart';
 import 'package:chats/pages/group_message_search/group_message_search_parameter.dart';
@@ -50,6 +51,8 @@ class GroupMessageController extends GetxController {
   var isShowSearch = true.obs;
   var isLoadingSearch = false.obs;
 
+  var isTickers = false.obs;
+
   Rx<MessageModels?> messageModel = Rx<MessageModels?>(null);
   Rx<MessageModels?> messageSearchModel = Rx<MessageModels?>(null);
   Rx<MessageDataModel?> messageData = Rx<MessageDataModel?>(null);
@@ -63,6 +66,8 @@ class GroupMessageController extends GetxController {
   ItemScrollController itemScrollController = ItemScrollController();
   ItemPositionsListener itemPositionsListener = ItemPositionsListener.create();
 
+  Rx<TickersModel?> selectedTickers = Rx<TickersModel?>(null);
+
   @override
   void onInit() {
     super.onInit();
@@ -74,6 +79,12 @@ class GroupMessageController extends GetxController {
 
     itemPositionsListener.itemPositions.addListener(() {
       _scrollListener();
+    });
+
+    FocusManager.instance.addListener(() {
+      if (FocusManager.instance.primaryFocus?.hasFocus == true) {
+        isTickers.value = false;
+      }
     });
 
     PusherService().connect();
@@ -279,6 +290,8 @@ class GroupMessageController extends GetxController {
   }
 
   void pickImages() async {
+    isTickers.value = false;
+
     List<XFile>? pickedFiles = await ImagePicker().pickMultiImage();
 
     if (pickedFiles.isEmpty) return;
@@ -296,9 +309,22 @@ class GroupMessageController extends GetxController {
     }
   }
 
-  void onSendMessage() async {
-    if (messageController.text.isEmpty) return;
+  void toggleTickers() {
+    isTickers.value = !isTickers.value;
+    FocusScope.of(Get.context!).unfocus();
+  }
 
+  void sendTicker(TickersModel ticker) {
+    selectedTickers.value = ticker;
+    isTickers.value = false;
+    messageController.clear();
+    imageFile.clear();
+    messageValue.value = '';
+    messageReply.value = null;
+    onSendMessage();
+  }
+
+  void onSendMessage() async {
     try {
       final messageText = messageController.text.trim();
       final imageFile = this.imageFile.toList();
@@ -313,6 +339,14 @@ class GroupMessageController extends GetxController {
               ))
           .toList();
 
+      final tempSticker = selectedTickers.value != null
+          ? TickersModel(
+              id: selectedTickers.value?.id,
+              name: selectedTickers.value?.name,
+              url: selectedTickers.value?.url,
+            )
+          : null;
+
       final tempMessage = MessageDataModel(
         id: DateTime.now().millisecondsSinceEpoch,
         message: messageText,
@@ -321,6 +355,7 @@ class GroupMessageController extends GetxController {
         createdAt: DateTime.now().toString(),
         status: MessageStatus.sending,
         files: tempFiles,
+        sticker: tempSticker,
         replyMessage: messageReply.value != null
             ? ReplyMessage(
                 id: replyMessageLocal?.id,
@@ -338,7 +373,7 @@ class GroupMessageController extends GetxController {
 
       clearMessage();
 
-      _sendAndUpdateMessageLocal(tempMessage, messageText, imageFile, replyMessageLocal);
+      _sendAndUpdateMessageLocal(tempMessage, messageText, imageFile, replyMessageLocal, tempSticker);
     } catch (e) {
       print(e);
     }
@@ -349,12 +384,14 @@ class GroupMessageController extends GetxController {
     String messageText,
     List<XFile> imageFile,
     MessageDataModel? reply,
+    TickersModel? sticker,
   ) async {
     try {
       Map<String, String> params = {
         "chat_id": parameter.chatId.toString(),
-        "message": messageText,
+        if (messageText.isNotEmpty) "message": messageText,
         if (reply != null) "reply_message_id": reply.id.toString(),
+        if (sticker != null) "sticker_id": sticker.id.toString(),
       };
 
       List<MultipartBody> multipartBody = [
@@ -394,7 +431,7 @@ class GroupMessageController extends GetxController {
       listMessages: messageModel.value?.listMessages?..insert(0, newMessages),
     );
     messageModel.refresh();
-    Get.find<ChatsController>().updateChatLastMessage(newMessages);
+    Get.find<ChatsController>().updateChatLastMessage(newMessages, isRead: false);
   }
 
   void clearMessage() {
@@ -402,6 +439,7 @@ class GroupMessageController extends GetxController {
     imageFile.clear();
     messageValue.value = '';
     messageReply.value = null;
+    selectedTickers.value = null;
   }
 
   void scrollToBottom() {

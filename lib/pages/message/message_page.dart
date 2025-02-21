@@ -5,9 +5,11 @@ import 'package:chats/pages/message/view/bottom_send_mess_view.dart';
 import 'package:chats/pages/message/view/chast_list_view.dart';
 import 'package:chats/pages/message/view/quick_message_view.dart';
 import 'package:chats/pages/message/view/reply_message_view.dart';
+import 'package:chats/pages/message/view/tickers_view.dart';
 import 'package:chats/pages/message/widget/info_contact_widget.dart';
 import 'package:chats/pages/message/widget/selected_images_list.dart';
 import 'package:chats/pages/options/options_parameter.dart';
+import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/gif_utils.dart';
@@ -53,10 +55,15 @@ class MessagePage extends GetWidget<MessageController> {
                   child: Row(
                     children: [
                       CustomImageWidget(
-                        imageUrl: controller.parameter.contact?.avatar ?? '',
+                        imageUrl: controller.parameter.contact?.avatar ??
+                            (controller.messageModel.value?.chat?.users ?? [])
+                                .firstWhereOrNull((e) => e.id != Get.find<ProfileController>().user.value?.id)
+                                ?.avatar ??
+                            '',
                         size: 46.w,
                         colorBoder: appTheme.appColor,
                         showBoder: true,
+                        noImage: false,
                       ),
                       SizedBox(width: 8.w),
                       Flexible(
@@ -64,14 +71,23 @@ class MessagePage extends GetWidget<MessageController> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              controller.parameter.contact?.name ?? 'not_updated_yet'.tr,
+                              controller.parameter.contact?.name ??
+                                  (controller.messageModel.value?.chat?.users ?? [])
+                                      .firstWhereOrNull((e) => e.id != Get.find<ProfileController>().user.value?.id)
+                                      ?.name ??
+                                  'not_updated_yet'.tr,
                               style: StyleThemeData.size14Weight600(color: appTheme.whiteColor),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                             SizedBox(height: 2.h),
                             Text(
-                              controller.parameter.contact?.lastOnline?.timeAgo ?? '',
+                              controller.parameter.contact?.lastOnline?.timeAgo ??
+                                  (controller.messageModel.value?.chat?.users ?? [])
+                                      .firstWhereOrNull((e) => e.id != Get.find<ProfileController>().user.value?.id)
+                                      ?.lastOnline
+                                      ?.timeAgo ??
+                                  '',
                               style: StyleThemeData.size10Weight400(color: appTheme.whiteColor),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -95,9 +111,7 @@ class MessagePage extends GetWidget<MessageController> {
               maximumSize: Size(36.w, 36.w),
             ),
             icon: ImageAssetCustom(imagePath: IconsAssets.phoneIcon, color: appTheme.whiteColor),
-            onPressed: () {
-              controller.scrollToMessage(604);
-            },
+            onPressed: () {},
           ),
         ),
         body: Column(
@@ -128,6 +142,7 @@ class MessagePage extends GetWidget<MessageController> {
             SelectedImagesList(),
             Obx(() => (controller.quickMessage.value != null) ? QuickMessageView() : const SizedBox()),
             BottomSendMessView(),
+            Obx(() => controller.isTickers.isTrue ? TickersView() : const SizedBox()),
           ],
         ),
       ),

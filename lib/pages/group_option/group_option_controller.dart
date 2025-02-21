@@ -96,4 +96,9 @@ class GroupOptionController extends GetxController {
     chatDataModel.value = chatDataModel.value?.copyWith(name: name);
     chatDataModel.refresh();
   }
+
+  void onShowSearchMessage() {
+    Get.find<GroupMessageController>().isShowSearch.value = false;
+    Get.back();
+  }
 }

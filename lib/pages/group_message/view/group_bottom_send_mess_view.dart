@@ -48,7 +48,10 @@ class GroupBottomSendMessView extends GetView<GroupMessageController> {
                         padding: padding(horizontal: 14),
                         child: Row(
                           children: [
-                            InkWell(onTap: () {}, child: const ImageAssetCustom(imagePath: IconsAssets.emojiIcon)),
+                            InkWell(
+                              onTap: controller.toggleTickers,
+                              child: const ImageAssetCustom(imagePath: IconsAssets.emojiIcon),
+                            ),
                             SizedBox(width: 8.w),
                             InkWell(
                               onTap: controller.pickImages,

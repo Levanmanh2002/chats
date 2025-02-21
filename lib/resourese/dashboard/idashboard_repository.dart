@@ -5,4 +5,5 @@ abstract class IDashboardRepository extends IBaseRepository {
   Future<Response> updateFcmToken();
   Future<Response> systemSettings();
   Future<Response> trackingTimeOnline();
+  Future<Response> getTickers();
 }

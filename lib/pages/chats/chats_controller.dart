@@ -37,9 +37,9 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
     fetchChatList();
   }
 
-  Future<void> fetchChatList({bool isRefresh = true, String search = ''}) async {
+  Future<void> fetchChatList({bool isRefresh = true, String search = '', bool isShowLoad = true}) async {
     try {
-      if (isRefresh) isLoading.value = true;
+      if (isShowLoad && isRefresh) isLoading.value = true;
 
       final response = await chatsRepository.chatListAll(
         page: isRefresh ? 1 : (chatsModels.value?.page ?? 1) + 1,
@@ -64,7 +64,7 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
     } catch (e) {
       print(e);
     } finally {
-      if (isRefresh) isLoading.value = false;
+      if (isShowLoad && isRefresh) isLoading.value = false;
     }
   }
 
@@ -95,11 +95,16 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
     }
   }
 
-  void updateChatLastMessage(MessageDataModel message) {
-    final chat = chatsModels.value?.chat?.firstWhereOrNull((e) => e.id == message.chatId);
-    if (chat != null) {
-      chat.isRead = false;
+  void updateChatLastMessage(MessageDataModel message, {bool isRead = true}) {
+    final chatList = chatsModels.value?.chat;
+    if (chatList == null) return;
+
+    final index = chatList.indexWhere((e) => e.id == message.chatId);
+    if (index != -1) {
+      final chat = chatList.removeAt(index);
+      if (isRead == true) chat.isRead = false;
       chat.latestMessage = message;
+      chatList.insert(0, chat);
       chatsModels.refresh();
     }
   }
