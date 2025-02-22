@@ -41,6 +41,7 @@ class FriendRequest {
   int? id;
   String? status;
   UserModel? receiver;
+  UserModel? sender;
 
   @JsonKey(name: 'created_at')
   String? createdAt;
@@ -49,6 +50,7 @@ class FriendRequest {
     this.id,
     this.status,
     this.receiver,
+    this.sender,
     this.createdAt,
   });
 

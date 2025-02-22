@@ -108,7 +108,9 @@ class ChastListView extends GetView<MessageController> {
                                           item.message ?? '',
                                           isCurrentUser:
                                               item.sender?.id == Get.find<ProfileController>().user.value?.id,
-                                          onRevoke: () => controller.onRevokeMessageLocal(item.id),
+                                          onRevoke: item.sender?.id == Get.find<ProfileController>().user.value?.id
+                                              ? () => controller.onRevokeMessageLocal(item.id)
+                                              : null,
                                           onHeart: () => controller.onHeartMessageLocal(item.id),
                                         );
                                       },

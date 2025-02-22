@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:chats/models/contact/contact_model.dart';
 import 'package:chats/models/profile/user_model.dart';
 import 'package:chats/resourese/contact/icontact_repository.dart';
@@ -16,7 +18,7 @@ class ContactsController extends GetxController with GetSingleTickerProviderStat
   Rx<ContactModelData?> contactModel = Rx<ContactModelData?>(null);
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     tabController = TabController(length: 2, vsync: this);
     getContacts();

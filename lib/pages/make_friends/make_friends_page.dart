@@ -62,7 +62,7 @@ class MakeFriendsPage extends GetWidget<MakeFriendsController> {
                           isLoading: controller.isLoadingMessage.isTrue,
                           onPressed: controller.onMessage,
                         ),
-                      ),
+                      ), 
                     ),
                     SizedBox(width: 16.w),
                   ],

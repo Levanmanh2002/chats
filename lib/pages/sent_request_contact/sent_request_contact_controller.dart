@@ -215,7 +215,7 @@ extension GroupByMonth on List<FriendRequest> {
     return fold<Map<String, List<FriendRequest>>>({}, (map, item) {
       if (item.createdAt == null) return map;
       final date = DateTime.parse(item.createdAt!);
-      final key = 'Tháng ${date.month}/${date.year}';
+      final key = '${'month'.tr} ${date.month}/${date.year}';
 
       (map[key] ??= []).add(item);
       return map;

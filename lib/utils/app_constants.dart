@@ -3,7 +3,7 @@ import 'package:chats/utils/shared_key.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AppConstants {
-  static const String appName = 'HappyHouse';
+  static const String appName = 'Chat - Nhà Táo';
 
   static const int minNameLength = 2;
   static const int minAddressLength = 12;

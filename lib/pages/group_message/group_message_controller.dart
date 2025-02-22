@@ -111,9 +111,9 @@ class GroupMessageController extends GetxController {
     }
   }
 
-  Future<void> fetchChatList(int chatId, {bool isRefresh = true}) async {
+  Future<void> fetchChatList(int chatId, {bool isRefresh = true, bool isShowLoad = true}) async {
     try {
-      if (isRefresh) isLoading.value = true;
+      if (isRefresh && isShowLoad) isLoading.value = true;
 
       final response = await messagesRepository.messageList(
         chatId,
@@ -139,7 +139,7 @@ class GroupMessageController extends GetxController {
     } catch (e) {
       print(e);
     } finally {
-      if (isRefresh) isLoading.value = false;
+      if (isRefresh && isShowLoad) isLoading.value = false;
     }
   }
 
@@ -403,7 +403,7 @@ class GroupMessageController extends GetxController {
       if (response.statusCode == 200) {
         messageData.value = MessageDataModel.fromJson(response.body['data']);
         if (messageModel.value != null) {
-          fetchChatList(messageData.value!.chatId!, isRefresh: false);
+          fetchChatList(messageData.value!.chatId!, isShowLoad: false);
           messageModel.value?.listMessages?.removeWhere((msg) => msg.id == tempMessage.id);
           onInsertMessage(messageData.value!);
         } else {
@@ -492,7 +492,7 @@ class GroupMessageController extends GetxController {
     }
   }
 
-  void onHeartMessageLocal(int? messageId) {
+  void onHeartMessageLocal(int? messageId, {bool isCallServer = true}) {
     if (messageId == null) return;
 
     final userId = Get.find<ProfileController>().user.value?.id;
@@ -520,7 +520,7 @@ class GroupMessageController extends GetxController {
       messageModel.refresh();
     }
 
-    onHeartMessage(messageId);
+    if (isCallServer == true) onHeartMessage(messageId);
   }
 
   void onHeartMessage(int? messageId) async {
@@ -635,7 +635,7 @@ class GroupMessageController extends GetxController {
                   }
                   break;
                 case PusherType.LIKE_MESSAGE_EVENT:
-                  onHeartMessageLocal(message.payload!.data!.id);
+                  onHeartMessageLocal(message.payload!.data!.id, isCallServer: false);
                   break;
                 case PusherType.HAS_USER_REMOVED_FROM_GROUP_EVENT:
                   break;

@@ -40,7 +40,7 @@ class GroupMessagePage extends GetWidget<GroupMessageController> {
               ),
               Flexible(
                 child: GestureDetector(
-                  onTap: controller.parameter.chatId != null
+                  onTap: controller.messageModel.value != null
                       ? () => Get.toNamed(
                             Routes.GROUP_OPTION,
                             arguments: GroupOptionParameter(chat: controller.messageModel.value?.chat),
@@ -94,9 +94,7 @@ class GroupMessagePage extends GetWidget<GroupMessageController> {
               maximumSize: Size(36.w, 36.w),
             ),
             icon: ImageAssetCustom(imagePath: IconsAssets.phoneIcon, color: appTheme.whiteColor),
-            onPressed: () {
-              // controller.scrollToMessage(604);
-            },
+            onPressed: () => Get.toNamed(Routes.CALL),
           ),
         ),
         body: Column(

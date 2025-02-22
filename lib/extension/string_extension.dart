@@ -173,7 +173,9 @@ extension TimeAgoExtension on String {
 
     Duration difference = now.difference(dateTime);
 
-    if (difference.inSeconds < 60) {
+    if (difference.inSeconds <= 0) {
+      return 'just_now'.tr;
+    } else if (difference.inSeconds < 60) {
       return 'field_seconds'.trParams({'field': '${difference.inSeconds}'});
     } else if (difference.inMinutes < 60) {
       return 'field_minutes'.trParams({'field': '${difference.inMinutes}'});

@@ -6,9 +6,9 @@ import 'package:chats/pages/options/options_controller.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/icons_assets.dart';
-import 'package:chats/utils/images_assets.dart';
 import 'package:chats/widget/border_title_icon_widget.dart';
 import 'package:chats/widget/custom_image_widget.dart';
+import 'package:chats/widget/default_app_bar.dart';
 import 'package:chats/widget/dialog/show_common_dialog.dart';
 import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/reponsive/extension.dart';
@@ -19,30 +19,15 @@ class OptionsPage extends GetWidget<OptionsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: DefaultAppBar(
+        title: 'options'.tr,
+        backgroundColor: appTheme.appColor,
+        colorIcon: appTheme.whiteColor,
+        colorTitle: appTheme.whiteColor,
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Stack(
-              children: [
-                const ImageAssetCustom(imagePath: ImagesAssets.topBgChatImage),
-                Positioned(
-                  bottom: 12,
-                  left: 8,
-                  right: 12,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        onPressed: Get.back,
-                        icon: ImageAssetCustom(imagePath: IconsAssets.arrowLeftIcon, color: appTheme.whiteColor),
-                      ),
-                      Text('options'.tr, style: StyleThemeData.size16Weight600(color: appTheme.whiteColor)),
-                      const IconButton(onPressed: null, icon: SizedBox()),
-                    ],
-                  ),
-                ),
-              ],
-            ),
             SizedBox(height: 40.h),
             Padding(
               padding: padding(horizontal: 16),
@@ -73,11 +58,11 @@ class OptionsPage extends GetWidget<OptionsController> {
                   SizedBox(height: 4.h),
                   Text('search_messages'.tr, style: StyleThemeData.size12Weight400()),
                   SizedBox(height: 24.h),
-                  BorderTitleIconWidget(
-                    icon: IconsAssets.downloadIcon,
-                    title: 'export_pdf_file'.tr,
-                  ),
-                  SizedBox(height: 8.h),
+                  // BorderTitleIconWidget(
+                  //   icon: IconsAssets.downloadIcon,
+                  //   title: 'export_pdf_file'.tr,
+                  // ),
+                  // SizedBox(height: 8.h),
                   BorderTitleIconWidget(
                     icon: IconsAssets.chatRoundLineIcon,
                     title: 'manage_instant_messages'.tr,

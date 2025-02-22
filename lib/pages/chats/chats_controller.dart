@@ -4,12 +4,14 @@ import 'dart:developer';
 
 import 'package:chats/models/chats/chat_data_model.dart';
 import 'package:chats/models/chats/chats_models.dart';
+import 'package:chats/models/contact/friend_request.dart';
 import 'package:chats/models/messages/message_data_model.dart';
 import 'package:chats/models/profile/user_model.dart';
 import 'package:chats/models/pusher/pusher_chat.dart';
 import 'package:chats/models/pusher/pusher_group_message.dart';
 import 'package:chats/models/pusher/pusher_message_model.dart';
 import 'package:chats/models/pusher/pusher_model.dart';
+import 'package:chats/pages/contacts/contacts_controller.dart';
 import 'package:chats/resourese/chats/ichats_repository.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
 import 'package:chats/resourese/service/pusher_service.dart';
@@ -222,13 +224,26 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
               final exists = currentChats?.any((chat) => chat.id == newChat.id) ?? false;
 
               if (!exists) {
-                currentChats?.insert(0, newChat);
+                currentChats?.insert(0, newChat..isRead = false);
                 chatsModels.refresh();
               }
             }
           } catch (e) {
             log(e.toString(), name: 'ERROR_STREAM_EVENT_CHATS_LIST');
           }
+
+          try {
+            final pusherModel = PusherModel.fromJson(
+              json,
+              (json) => FriendRequest.fromJson(json as Map<String, dynamic>),
+            );
+
+            if (pusherModel.payload != null && pusherModel.payload?.type == PusherType.UNFRIEND_EVENT) {
+              Get.find<ContactsController>().removeContact(pusherModel.payload!.data!.receiver!.id!);
+            } else if (pusherModel.payload != null && pusherModel.payload?.type == PusherType.ACCEPTED_INVITE_EVENT) {
+              Get.find<ContactsController>().updateContact(pusherModel.payload!.data!.receiver!);
+            }
+          } catch (_) {}
         }
       },
     );

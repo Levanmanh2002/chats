@@ -172,4 +172,9 @@ const Map<String, String> en = {
   "field_hours": "@field hours",
   "yesterday": "Yesterday",
   "images": "Images",
+  "under_dev_title": "Feature under development!",
+  "under_dev_content":
+      "We are working hard to bring you this awesome new feature. Rest assured, everything will be completed soon and ready to serve you.",
+  "call": "Call",
+  "month": "Month",
 };

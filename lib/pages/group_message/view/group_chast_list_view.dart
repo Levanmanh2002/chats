@@ -104,7 +104,7 @@ class GroupChastListView extends GetView<GroupMessageController> {
                                   ? Alignment.centerRight
                                   : Alignment.centerLeft,
                               child: Container(
-                                margin: padding(horizontal: 16, vertical: 2),
+                                margin: padding(left: 40, right: 16, vertical: 2),
                                 constraints: BoxConstraints(maxWidth: 300.w),
                                 padding: padding(all: 8),
                                 decoration: BoxDecoration(
@@ -122,7 +122,7 @@ class GroupChastListView extends GetView<GroupMessageController> {
                           : Stack(
                               children: [
                                 Padding(
-                                  padding: padding(horizontal: 16, bottom: (item.likes ?? []).isNotEmpty ? 20 : 0),
+                                  padding: padding(left: 8, right: 16, bottom: (item.likes ?? []).isNotEmpty ? 20 : 0),
                                   child: Column(
                                     children: [
                                       if ((item.message ?? '').isNotEmpty)
@@ -253,7 +253,7 @@ class GroupChastListView extends GetView<GroupMessageController> {
                                 ),
                                 if ((item.likes ?? []).isNotEmpty && item.isRollback == false)
                                   Positioned(
-                                    left: item.sender?.id == Get.find<ProfileController>().user.value?.id ? null : 0,
+                                    left: item.sender?.id == Get.find<ProfileController>().user.value?.id ? null : 26,
                                     right: item.sender?.id == Get.find<ProfileController>().user.value?.id ? 0 : null,
                                     bottom: 0,
                                     child: Container(

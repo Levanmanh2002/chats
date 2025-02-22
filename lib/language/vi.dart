@@ -171,4 +171,9 @@ const Map<String, String> vi = {
   "field_hours": "@field giờ",
   "yesterday": "Hôm qua",
   "images": "Hình ảnh",
+  "under_dev_title": "Tính năng đang phát triển!",
+  "under_dev_content":
+      "Chúng tôi đang làm việc chăm chỉ để mang đến cho bạn tính năng mới tuyệt vời này. Hãy yên tâm, mọi thứ sẽ sớm hoàn thiện và sẵn sàng phục vụ bạn.",
+  "call": "Gọi",
+  "month": "Tháng",
 };

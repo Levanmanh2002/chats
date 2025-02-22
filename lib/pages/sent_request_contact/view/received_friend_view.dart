@@ -2,6 +2,7 @@ import 'package:chats/extension/string_extension.dart';
 import 'package:chats/main.dart';
 import 'package:chats/models/contact/friend_request.dart';
 import 'package:chats/pages/make_friends/make_friends_parameter.dart';
+import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/pages/sent_request_contact/sent_request_contact_controller.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
@@ -55,7 +56,7 @@ class ReceivedFriendView extends GetView<SentRequestContactController> {
         Routes.MAKE_FRIENDS,
         arguments: MakeFriendsParameter(
           id: e.id!,
-          contact: e.receiver,
+          contact: e.receiver?.id == Get.find<ProfileController>().user.value?.id ? e.sender : e.receiver,
           type: MakeFriendsType.friend,
         ),
       ),
@@ -66,7 +67,9 @@ class ReceivedFriendView extends GetView<SentRequestContactController> {
             Row(
               children: [
                 CustomImageWidget(
-                  imageUrl: e.receiver?.avatar ?? '',
+                  imageUrl: e.receiver?.id == Get.find<ProfileController>().user.value?.id
+                      ? e.sender?.avatar ?? ''
+                      : e.receiver?.avatar ?? '',
                   size: 41,
                   colorBoder: appTheme.allSidesColor,
                   showBoder: true,
@@ -75,7 +78,12 @@ class ReceivedFriendView extends GetView<SentRequestContactController> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(e.receiver?.name ?? '', style: StyleThemeData.size14Weight600()),
+                    Text(
+                      e.receiver?.id == Get.find<ProfileController>().user.value?.id
+                          ? e.sender?.name ?? ''
+                          : e.receiver?.name ?? '',
+                      style: StyleThemeData.size14Weight600(),
+                    ),
                     SizedBox(height: 2.h),
                     Row(
                       children: [
@@ -85,7 +93,9 @@ class ReceivedFriendView extends GetView<SentRequestContactController> {
                         ),
                         Text(' • ', style: StyleThemeData.size10Weight400(color: appTheme.grayColor)),
                         Text(
-                          e.receiver?.phone?.formatPhoneCode ?? '',
+                          e.receiver?.id == Get.find<ProfileController>().user.value?.id
+                              ? e.sender?.phone?.formatPhoneCode ?? ''
+                              : e.receiver?.phone?.formatPhoneCode ?? '',
                           style: StyleThemeData.size10Weight400(color: appTheme.grayColor),
                         ),
                       ],

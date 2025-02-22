@@ -55,6 +55,7 @@ class AddFriendController extends GetxController {
               type: MakeFriendsType.add,
             ),
           );
+          phoneController.clear();
         } else {
           if (numberWithCountryCode == Get.find<ProfileController>().user.value?.phone) {
             showNotiDialog('cannot_search_for_your_own_phone_number'.tr);

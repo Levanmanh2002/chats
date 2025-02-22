@@ -111,7 +111,7 @@ class MessagePage extends GetWidget<MessageController> {
               maximumSize: Size(36.w, 36.w),
             ),
             icon: ImageAssetCustom(imagePath: IconsAssets.phoneIcon, color: appTheme.whiteColor),
-            onPressed: () {},
+            onPressed: () => Get.toNamed(Routes.CALL),
           ),
         ),
         body: Column(

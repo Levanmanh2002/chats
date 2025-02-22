@@ -105,9 +105,9 @@ class MessageController extends GetxController {
     }
   }
 
-  Future<void> fetchChatList(int chatId, {bool isRefresh = true}) async {
+  Future<void> fetchChatList(int chatId, {bool isRefresh = true, bool isShowLoad = true}) async {
     try {
-      if (isRefresh) isLoading.value = true;
+      if (isRefresh && isShowLoad) isLoading.value = true;
       final response = await messagesRepository.messageList(
         chatId,
         page: isRefresh ? 1 : (messageModel.value?.page ?? 1) + 1,
@@ -132,7 +132,7 @@ class MessageController extends GetxController {
     } catch (e) {
       print(e);
     } finally {
-      if (isRefresh) isLoading.value = false;
+      if (isRefresh && isShowLoad) isLoading.value = false;
     }
   }
 
@@ -399,7 +399,7 @@ class MessageController extends GetxController {
       if (response.statusCode == 200) {
         messageData.value = MessageDataModel.fromJson(response.body['data']);
         if (parameter.chatId == null) {
-          fetchChatList(messageData.value!.chatId!);
+          fetchChatList(messageData.value!.chatId!, isShowLoad: false);
           messageModel.value?.listMessages?.removeWhere((msg) => msg.id == tempMessage.id);
           onInsertMessage(messageData.value!);
         } else {
@@ -516,7 +516,7 @@ class MessageController extends GetxController {
       messageModel.refresh();
     }
 
-    if (isCallServer) onHeartMessage(messageId);
+    if (isCallServer = true) onHeartMessage(messageId);
   }
 
   void onHeartMessage(int? messageId) async {
@@ -581,7 +581,7 @@ class MessageController extends GetxController {
                   break;
 
                 case PusherType.LIKE_MESSAGE_EVENT:
-                  onHeartMessageLocal(message.payload!.data!.id);
+                  onHeartMessageLocal(message.payload!.data!.id, isCallServer: false);
                   break;
                 default:
               }

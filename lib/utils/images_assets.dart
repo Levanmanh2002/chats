@@ -17,4 +17,5 @@ class ImagesAssets {
   static const String unionCloseImage = '${_basePath}union_close.png';
   static const String unionSyncImage = '${_basePath}union_sync.png';
   static const String searchEmptyImage = '${_basePath}search_empty.png';
+  static const String underDevelopmentImage = '${_basePath}under_development.png';
 }

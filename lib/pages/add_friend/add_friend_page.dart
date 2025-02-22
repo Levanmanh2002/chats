@@ -75,21 +75,24 @@ class AddFriendPage extends GetWidget<AddFriendController> {
                 ),
               ),
               SizedBox(height: 8.h),
-              Container(
-                color: appTheme.whiteColor,
-                child: Padding(
-                  padding: padding(vertical: 12, horizontal: 16),
-                  child: Row(
-                    children: [
-                      ImageAssetCustom(imagePath: ImagesAssets.contactBorderImage, width: 32.w),
-                      SizedBox(width: 12.w),
-                      Text('friend_list'.tr, style: StyleThemeData.size14Weight400()),
-                      SizedBox(width: 4.w),
-                      Text(
-                        '(${Get.find<ContactsController>().contactModel.value?.data?.length ?? '0'})',
-                        style: StyleThemeData.size14Weight400(color: appTheme.grayColor),
-                      ),
-                    ],
+              InkWell(
+                onTap: Get.back,
+                child: Container(
+                  color: appTheme.whiteColor,
+                  child: Padding(
+                    padding: padding(vertical: 12, horizontal: 16),
+                    child: Row(
+                      children: [
+                        ImageAssetCustom(imagePath: ImagesAssets.contactBorderImage, width: 32.w),
+                        SizedBox(width: 12.w),
+                        Text('friend_list'.tr, style: StyleThemeData.size14Weight400()),
+                        SizedBox(width: 4.w),
+                        Text(
+                          '(${Get.find<ContactsController>().contactModel.value?.data?.length ?? '0'})',
+                          style: StyleThemeData.size14Weight400(color: appTheme.grayColor),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

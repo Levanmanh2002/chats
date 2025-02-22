@@ -2,6 +2,8 @@ import 'package:chats/pages/add_friend/add_friend_binding.dart';
 import 'package:chats/pages/add_friend/add_friend_page.dart';
 import 'package:chats/pages/attachment_fullscreen/attachment_fullscreen_binding.dart';
 import 'package:chats/pages/attachment_fullscreen/attachment_fullscreen_page.dart';
+import 'package:chats/pages/call/call_binding.dart';
+import 'package:chats/pages/call/call_page.dart';
 import 'package:chats/pages/change_password/change_password_binding.dart';
 import 'package:chats/pages/change_password/change_password_page.dart';
 import 'package:chats/pages/create_group/create_group_binding.dart';
@@ -206,6 +208,11 @@ abstract class AppPages {
       name: Routes.GROUP_MESSAGE_SEARCH_RESULT,
       page: () => GroupMessageSearchPage(),
       binding: GroupMessageSearchBinding(),
+    ),
+    GetPage(
+      name: Routes.CALL,
+      page: () => CallPage(),
+      binding: CallBinding(),
     ),
   ];
 }

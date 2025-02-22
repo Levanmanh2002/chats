@@ -27,7 +27,7 @@
     </queries>
 
     <application
-        android:label="chats"
+        android:label="Chat - Nhà Táo"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
