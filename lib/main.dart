@@ -97,5 +97,3 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-
-/// cập nhật lại dữ liệu danh sách bạn bè đã kết bạn để bắt sự kiện vô màn chi tiết bạn bè

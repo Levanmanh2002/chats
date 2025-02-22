@@ -136,6 +136,8 @@ class SyncContactDetailsPage extends GetWidget<SyncContactDetailsController> {
               imageUrl: e.userContact?.avatar ?? '',
               size: 41.w,
               noImage: false,
+              name: e.userContact?.name ?? '',
+              isShowNameAvatar: true,
             ),
             SizedBox(width: 8.w),
             Expanded(

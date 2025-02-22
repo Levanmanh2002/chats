@@ -38,6 +38,8 @@ class OptionsPage extends GetWidget<OptionsController> {
                     size: 100,
                     showBoder: true,
                     colorBoder: appTheme.allSidesColor,
+                    name: controller.parameter.user?.name ?? '',
+                    isShowNameAvatar: true,
                   ),
                   SizedBox(height: 8.h),
                   Text(controller.parameter.user?.name ?? '', style: StyleThemeData.size20Weight600()),

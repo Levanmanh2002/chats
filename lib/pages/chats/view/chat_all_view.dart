@@ -102,6 +102,8 @@ class ChatAllView extends GetView<ChatsController> {
                           noImage: false,
                           showBoder: true,
                           colorBoder: appTheme.allSidesColor,
+                          name: otherUsers?.name ?? '',
+                          isShowNameAvatar: true,
                         ),
                   SizedBox(width: 8.w),
                   Expanded(

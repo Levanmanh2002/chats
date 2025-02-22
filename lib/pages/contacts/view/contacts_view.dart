@@ -64,6 +64,8 @@ class ContactsView extends GetView<ContactsController> {
               imageUrl: e.friend?.avatar ?? '',
               size: 41.w,
               noImage: false,
+              name: e.friend?.name ?? '',
+              isShowNameAvatar: true,
             ),
             SizedBox(width: 8.w),
             Expanded(

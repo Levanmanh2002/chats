@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chats/main.dart';
 import 'package:chats/utils/images_assets.dart';
 import 'package:chats/widget/image_asset_custom.dart';
+import 'package:chats/widget/profile_picture/profile_picture.dart';
 import 'package:chats/widget/reponsive/extension.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +21,8 @@ class CustomImageWidget extends StatelessWidget {
     this.noImage = true,
     this.sizeBorder,
     this.placeholder,
+    this.isShowNameAvatar = false,
+    this.name = '',
   });
 
   final String imageUrl;
@@ -34,6 +37,8 @@ class CustomImageWidget extends StatelessWidget {
   final bool noImage;
   final double? sizeBorder;
   final Widget? placeholder;
+  final bool isShowNameAvatar;
+  final String name;
 
   @override
   Widget build(BuildContext context) {
@@ -63,17 +68,19 @@ class CustomImageWidget extends StatelessWidget {
                       boxFit: BoxFit.cover,
                       size: size,
                     )),
-          errorWidget: (context, url, error) => noImage == true
-              ? ImageAssetCustom(
-                  imagePath: ImagesAssets.placeholder,
-                  boxFit: BoxFit.cover,
-                  size: size,
-                )
-              : ImageAssetCustom(
-                  imagePath: ImagesAssets.noProfileImage,
-                  size: size,
-                  boxFit: BoxFit.cover,
-                ),
+          errorWidget: (context, url, error) => isShowNameAvatar == true
+              ? AvatarGroup(name: name, fontsize: size / 3)
+              : noImage == true
+                  ? ImageAssetCustom(
+                      imagePath: ImagesAssets.placeholder,
+                      boxFit: BoxFit.cover,
+                      size: size,
+                    )
+                  : ImageAssetCustom(
+                      imagePath: ImagesAssets.noProfileImage,
+                      size: size,
+                      boxFit: BoxFit.cover,
+                    ),
         ),
       ),
     );

@@ -64,6 +64,12 @@ class MessagePage extends GetWidget<MessageController> {
                         colorBoder: appTheme.appColor,
                         showBoder: true,
                         noImage: false,
+                        name: controller.parameter.contact?.name ??
+                            (controller.messageModel.value?.chat?.users ?? [])
+                                .firstWhereOrNull((e) => e.id != Get.find<ProfileController>().user.value?.id)
+                                ?.name ??
+                            '',
+                        isShowNameAvatar: true,
                       ),
                       SizedBox(width: 8.w),
                       Flexible(

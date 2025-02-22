@@ -12,6 +12,8 @@ class GroupAvatarWidget extends StatelessWidget {
     this.showBoder = false,
     this.colorBoder,
     this.sizeBorder,
+    this.name = '',
+    this.isShowNameAvatar = false,
   });
 
   final List<String> imageUrls;
@@ -19,6 +21,8 @@ class GroupAvatarWidget extends StatelessWidget {
   final bool showBoder;
   final Color? colorBoder;
   final double? sizeBorder;
+  final String name;
+  final bool isShowNameAvatar;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +33,8 @@ class GroupAvatarWidget extends StatelessWidget {
           noImage: false,
           showBoder: showBoder,
           colorBoder: colorBoder,
+          name: name,
+          isShowNameAvatar: isShowNameAvatar,
         );
 
       case 1:
@@ -38,6 +44,8 @@ class GroupAvatarWidget extends StatelessWidget {
           noImage: false,
           showBoder: showBoder,
           colorBoder: colorBoder,
+          name: name,
+          isShowNameAvatar: isShowNameAvatar,
         );
 
       case 2:
@@ -75,6 +83,8 @@ class GroupAvatarWidget extends StatelessWidget {
               colorBoder: colorBoder,
               sizeBorder: sizeBorder,
               noImage: false,
+              name: name,
+              isShowNameAvatar: isShowNameAvatar,
             ),
           ),
           Positioned(
@@ -87,6 +97,8 @@ class GroupAvatarWidget extends StatelessWidget {
               colorBoder: colorBoder,
               sizeBorder: sizeBorder,
               noImage: false,
+              name: name,
+              isShowNameAvatar: isShowNameAvatar,
             ),
           ),
         ],
@@ -114,6 +126,8 @@ class GroupAvatarWidget extends StatelessWidget {
               colorBoder: colorBoder,
               sizeBorder: sizeBorder,
               noImage: false,
+              name: name,
+              isShowNameAvatar: isShowNameAvatar,
             ),
           ),
           Positioned(
@@ -126,6 +140,8 @@ class GroupAvatarWidget extends StatelessWidget {
               colorBoder: colorBoder,
               sizeBorder: sizeBorder,
               noImage: false,
+              name: name,
+              isShowNameAvatar: isShowNameAvatar,
             ),
           ),
           Positioned(
@@ -138,6 +154,8 @@ class GroupAvatarWidget extends StatelessWidget {
               colorBoder: colorBoder,
               sizeBorder: sizeBorder,
               noImage: false,
+              name: name,
+              isShowNameAvatar: isShowNameAvatar,
             ),
           ),
         ],
@@ -163,6 +181,8 @@ class GroupAvatarWidget extends StatelessWidget {
               colorBoder: colorBoder,
               sizeBorder: sizeBorder,
               noImage: false,
+              name: name,
+              isShowNameAvatar: isShowNameAvatar,
             ),
           ),
           Positioned(
@@ -175,6 +195,8 @@ class GroupAvatarWidget extends StatelessWidget {
               colorBoder: colorBoder,
               sizeBorder: sizeBorder,
               noImage: false,
+              name: name,
+              isShowNameAvatar: isShowNameAvatar,
             ),
           ),
           Positioned(
@@ -187,6 +209,8 @@ class GroupAvatarWidget extends StatelessWidget {
               colorBoder: colorBoder,
               sizeBorder: sizeBorder,
               noImage: false,
+              name: name,
+              isShowNameAvatar: isShowNameAvatar,
             ),
           ),
           Positioned(
@@ -199,6 +223,8 @@ class GroupAvatarWidget extends StatelessWidget {
               colorBoder: colorBoder,
               sizeBorder: sizeBorder,
               noImage: false,
+              name: name,
+              isShowNameAvatar: isShowNameAvatar,
             ),
           ),
         ],
@@ -243,6 +269,8 @@ class GroupAvatarWidget extends StatelessWidget {
               colorBoder: colorBoder,
               sizeBorder: sizeBorder,
               noImage: false,
+              name: name,
+              isShowNameAvatar: isShowNameAvatar,
             ),
           ),
           Positioned(
@@ -255,6 +283,8 @@ class GroupAvatarWidget extends StatelessWidget {
               colorBoder: colorBoder,
               sizeBorder: sizeBorder,
               noImage: false,
+              name: name,
+              isShowNameAvatar: isShowNameAvatar,
             ),
           ),
           Positioned(
@@ -267,6 +297,8 @@ class GroupAvatarWidget extends StatelessWidget {
               colorBoder: colorBoder,
               sizeBorder: sizeBorder,
               noImage: false,
+              name: name,
+              isShowNameAvatar: isShowNameAvatar,
             ),
           ),
         ],
