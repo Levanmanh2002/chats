@@ -5,6 +5,7 @@ import 'package:chats/pages/message/view/bottom_send_mess_view.dart';
 import 'package:chats/pages/message/view/chast_list_view.dart';
 import 'package:chats/pages/message/view/quick_message_view.dart';
 import 'package:chats/pages/message/view/reply_message_view.dart';
+import 'package:chats/pages/message/view/status_friend_view.dart';
 import 'package:chats/pages/message/view/tickers_view.dart';
 import 'package:chats/pages/message/widget/info_contact_widget.dart';
 import 'package:chats/pages/message/widget/selected_images_list.dart';
@@ -120,36 +121,37 @@ class MessagePage extends GetWidget<MessageController> {
             onPressed: () => Get.toNamed(Routes.CALL),
           ),
         ),
-        body: Column(
-          children: [
-            // MessageHeaderView(),
-            Obx(
-              () => (controller.isLoading.isFalse &&
+        body: Obx(
+          () => Column(
+            children: [
+              // MessageHeaderView(),
+              (controller.messageModel.value?.isFriend != true) ? StatusFriendView() : const SizedBox(),
+              (controller.isLoading.isFalse &&
                       controller.messageModel.value == null &&
                       (controller.messageModel.value?.listMessages ?? []).isEmpty)
                   ? InfoContactWidget(contact: controller.parameter.contact)
                   : const SizedBox(),
-            ),
-            Expanded(
-              child: Stack(
-                children: [
-                  Obx(() => controller.isLoading.isTrue
-                      ? Center(child: Image.asset(GifUtils.noDataImageGif))
-                      : ChastListView()),
-                  Obx(
-                    () => controller.isShowScrollToBottom.value
-                        ? Positioned(bottom: 12, right: 16, child: _buildScrollToBottomMess())
-                        : const SizedBox(),
-                  ),
-                ],
+              Expanded(
+                child: Stack(
+                  children: [
+                    Obx(() => controller.isLoading.isTrue
+                        ? Center(child: Image.asset(GifUtils.noDataImageGif))
+                        : ChastListView()),
+                    Obx(
+                      () => controller.isShowScrollToBottom.value
+                          ? Positioned(bottom: 12, right: 16, child: _buildScrollToBottomMess())
+                          : const SizedBox(),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Obx(() => (controller.messageReply.value != null) ? ReplyMessageView() : const SizedBox()),
-            SelectedImagesList(),
-            Obx(() => (controller.quickMessage.value != null) ? QuickMessageView() : const SizedBox()),
-            BottomSendMessView(),
-            Obx(() => controller.isTickers.isTrue ? TickersView() : const SizedBox()),
-          ],
+              (controller.messageReply.value != null) ? ReplyMessageView() : const SizedBox(),
+              SelectedImagesList(),
+              (controller.quickMessage.value != null) ? QuickMessageView() : const SizedBox(),
+              (controller.messageModel.value?.isFriend == true) ? BottomSendMessView() : const SizedBox(),
+              controller.isTickers.isTrue ? TickersView() : const SizedBox(),
+            ],
+          ),
         ),
       ),
     );

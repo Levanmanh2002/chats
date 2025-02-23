@@ -10,17 +10,20 @@ import 'package:chats/models/messages/message_data_model.dart';
 import 'package:chats/models/messages/message_models.dart';
 import 'package:chats/models/messages/quick_message.dart';
 import 'package:chats/models/messages/reply_message.dart';
+import 'package:chats/models/profile/user_model.dart';
 import 'package:chats/models/pusher/pusher_message_model.dart';
 import 'package:chats/models/tickers/tickers_model.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
 import 'package:chats/pages/message/message_parameter.dart';
 import 'package:chats/pages/message_search/message_search_parameter.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
+import 'package:chats/resourese/contact/icontact_repository.dart';
 import 'package:chats/resourese/ibase_repository.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
 import 'package:chats/resourese/service/pusher_service.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/app/pusher_type.dart';
+import 'package:chats/utils/dialog_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -29,9 +32,10 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class MessageController extends GetxController {
   final IMessagesRepository messagesRepository;
+  final IContactRepository contactRepository;
   final MessageParameter parameter;
 
-  MessageController({required this.messagesRepository, required this.parameter});
+  MessageController({required this.messagesRepository, required this.contactRepository, required this.parameter});
 
   final TextEditingController messageController = TextEditingController();
   // final scrollController = ScrollController();
@@ -39,6 +43,10 @@ class MessageController extends GetxController {
   var isShowNewMessScroll = false.obs;
   var isLoadingSendMess = false.obs;
   var isLoadingSearch = false.obs;
+  var isLoadingAddFriend = false.obs;
+  var isLoadingRemoveFriend = false.obs;
+  var isLoadingCancelFriend = false.obs;
+  var isLoadingAcceptFriend = false.obs;
 
   var imageFile = <XFile>[].obs;
   var messageValue = ''.obs;
@@ -127,6 +135,9 @@ class MessageController extends GetxController {
           totalCount: model.totalCount,
           page: model.page,
           size: model.size,
+          isFriend: model.isFriend,
+          isSenderRequestFriend: model.isSenderRequestFriend,
+          isReceiverIdRequestFriend: model.isReceiverIdRequestFriend,
         );
       }
     } catch (e) {
@@ -168,6 +179,9 @@ class MessageController extends GetxController {
             totalCount: model.totalCount,
             page: model.page,
             size: model.size,
+            isFriend: model.isFriend,
+            isSenderRequestFriend: model.isSenderRequestFriend,
+            isReceiverIdRequestFriend: model.isReceiverIdRequestFriend,
           );
 
           messageModel.refresh();
@@ -550,6 +564,110 @@ class MessageController extends GetxController {
 
       messageModel.value?.listMessages![index] = message!.copyWith(likes: likes);
       messageModel.refresh();
+    }
+  }
+
+  void addFriend() async {
+    try {
+      isLoadingAddFriend.value = true;
+
+      List<UserModel> filteredUsers = (messageModel.value?.chat?.users ?? [])
+          .where((user) => user.id != Get.find<ProfileController>().user.value?.id)
+          .toList();
+
+      if (filteredUsers.isEmpty) return;
+
+      final response = await contactRepository.addFriend(filteredUsers.first.id!);
+
+      if (response.statusCode == 200) {
+        messageModel.value = messageModel.value?.copyWith(isSenderRequestFriend: true);
+        messageModel.refresh();
+      } else {
+        DialogUtils.showErrorDialog(response.body['message']);
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      isLoadingAddFriend.value = false;
+    }
+  }
+
+  void removeFriend() async {
+    try {
+      isLoadingRemoveFriend.value = true;
+
+      List<UserModel> filteredUsers = (messageModel.value?.chat?.users ?? [])
+          .where((user) => user.id != Get.find<ProfileController>().user.value?.id)
+          .toList();
+
+      if (filteredUsers.isEmpty) return;
+
+      final response = await contactRepository.removeFriend(filteredUsers.first.id!);
+
+      if (response.statusCode == 200) {
+        messageModel.value = messageModel.value?.copyWith(isSenderRequestFriend: false);
+        messageModel.refresh();
+      } else {
+        DialogUtils.showErrorDialog(response.body['message']);
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      isLoadingRemoveFriend.value = false;
+    }
+  }
+
+  void cancelFriendRequest() async {
+    try {
+      isLoadingCancelFriend.value = true;
+
+      List<UserModel> filteredUsers = (messageModel.value?.chat?.users ?? [])
+          .where((user) => user.id != Get.find<ProfileController>().user.value?.id)
+          .toList();
+
+      if (filteredUsers.isEmpty) return;
+
+      final response = await contactRepository.cancelFriendRequest(filteredUsers.first.id!);
+
+      if (response.statusCode == 200) {
+        messageModel.value = messageModel.value?.copyWith(
+          isFriend: false,
+          isSenderRequestFriend: false,
+          isReceiverIdRequestFriend: false,
+        );
+        messageModel.refresh();
+      } else {
+        DialogUtils.showErrorDialog(response.body['message']);
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      isLoadingCancelFriend.value = false;
+    }
+  }
+
+  void acceptFriendRequest() async {
+    try {
+      isLoadingAcceptFriend.value = true;
+
+      List<UserModel> filteredUsers = (messageModel.value?.chat?.users ?? [])
+          .where((user) => user.id != Get.find<ProfileController>().user.value?.id)
+          .toList();
+
+      if (filteredUsers.isEmpty) return;
+
+      final response = await contactRepository.acceptFriendRequest(filteredUsers.first.id!);
+
+      if (response.statusCode == 200) {
+        messageModel.value = messageModel.value?.copyWith(isFriend: true);
+        messageModel.refresh();
+      } else {
+        DialogUtils.showErrorDialog(response.body['message']);
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      isLoadingAcceptFriend.value = false;
     }
   }
 

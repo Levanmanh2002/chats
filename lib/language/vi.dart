@@ -176,4 +176,5 @@ const Map<String, String> vi = {
       "Chúng tôi đang làm việc chăm chỉ để mang đến cho bạn tính năng mới tuyệt vời này. Hãy yên tâm, mọi thứ sẽ sớm hoàn thiện và sẵn sàng phục vụ bạn.",
   "call": "Gọi",
   "month": "Tháng",
+  "cancel_request": "Huỷ yêu cầu",
 };

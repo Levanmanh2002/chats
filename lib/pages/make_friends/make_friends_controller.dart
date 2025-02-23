@@ -27,7 +27,7 @@ class MakeFriendsController extends GetxController {
   var isLoadingMessage = false.obs;
 
   void addFriend() async {
-    try {
+    try { 
       if (contact == null) return;
       isLoadingAdd.value = true;
 

@@ -32,6 +32,15 @@ class MessageModels {
 
   List<int>? highlightedPages;
 
+  @JsonKey(name: 'is_friend', fromJson: parseToBool)
+  bool? isFriend;
+
+  @JsonKey(name: 'is_sender_request_friend', fromJson: parseToBool)
+  bool? isSenderRequestFriend;
+
+  @JsonKey(name: 'is_receiver_id_request_friend', fromJson: parseToBool)
+  bool? isReceiverIdRequestFriend;
+
   MessageModels({
     this.chat,
     this.listMessages,
@@ -41,6 +50,9 @@ class MessageModels {
     this.size,
     this.highlightedMessages,
     this.highlightedPages,
+    this.isFriend,
+    this.isSenderRequestFriend,
+    this.isReceiverIdRequestFriend,
   });
 
   factory MessageModels.fromJson(Map<String, dynamic> json) => _$MessageModelsFromJson(json);
@@ -53,6 +65,9 @@ class MessageModels {
     int? totalCount,
     int? page,
     int? size,
+    bool? isFriend,
+    bool? isSenderRequestFriend,
+    bool? isReceiverIdRequestFriend,
   }) {
     return MessageModels(
       chat: chat ?? this.chat,
@@ -61,6 +76,9 @@ class MessageModels {
       totalCount: totalCount ?? this.totalCount,
       page: page ?? this.page,
       size: size ?? this.size,
+      isFriend: isFriend ?? this.isFriend,
+      isSenderRequestFriend: isSenderRequestFriend ?? this.isSenderRequestFriend,
+      isReceiverIdRequestFriend: isReceiverIdRequestFriend ?? this.isReceiverIdRequestFriend,
     );
   }
 }

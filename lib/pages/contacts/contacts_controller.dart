@@ -69,7 +69,7 @@ class ContactsController extends GetxController with GetSingleTickerProviderStat
     );
 
     if (!isExist) {
-      contactModel.value!.data!.add(ContactModel(friend: contact));
+      contactModel.value!.data!.insert(0, ContactModel(friend: contact..isFriend = true));
       contactModel.refresh();
     }
   }

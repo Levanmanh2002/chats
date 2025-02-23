@@ -177,4 +177,5 @@ const Map<String, String> en = {
       "We are working hard to bring you this awesome new feature. Rest assured, everything will be completed soon and ready to serve you.",
   "call": "Call",
   "month": "Month",
+  "cancel_request": "Cancel request",
 };

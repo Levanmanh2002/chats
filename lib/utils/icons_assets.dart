@@ -53,4 +53,5 @@ class IconsAssets {
   static const String keyIcon = '${_basePath}key.svg';
   static const String lockPasswordIcon = '${_basePath}lock_password.svg';
   static const String altArrowRightImage = '${_basePath}alt_arrow_right.svg';
+  static const String addUserImage = '${_basePath}add_user.svg';
 }

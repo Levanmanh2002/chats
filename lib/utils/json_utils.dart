@@ -3,6 +3,8 @@ bool parseToBool(dynamic json) {
     return json;
   } else if (json is int) {
     return json == 1;
+  } else if (json is String) {
+    return int.tryParse(json) == 1;
   }
   return false;
 }

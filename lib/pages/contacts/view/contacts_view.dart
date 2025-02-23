@@ -27,15 +27,17 @@ class ContactsView extends GetView<ContactsController> {
               child: (controller.contactModel.value?.data ?? []).isNotEmpty
                   ? SingleChildScrollView(
                       child: Column(
-                        children: controller.groupedContacts.entries.map((entry) {
+                        // children: controller.groupedContacts.entries.map((entry) {
+                        children: (controller.contactModel.value?.data ?? []).map((e) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: padding(horizontal: 16, vertical: 12),
-                                child: Text(entry.key, style: StyleThemeData.size16Weight600()),
-                              ),
-                              ...entry.value.map((e) => _buildContactItem(e)),
+                              // Padding(
+                              //   padding: padding(horizontal: 16, vertical: 12),
+                              //   child: Text(entry.key, style: StyleThemeData.size16Weight600()),
+                              // ),
+                              // ...entry.value.map((e) => _buildContactItem(e)),
+                              _buildContactItem(e),
                             ],
                           );
                         }).toList(),

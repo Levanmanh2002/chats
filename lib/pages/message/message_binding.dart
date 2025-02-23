@@ -7,6 +7,7 @@ class MessageBinding implements Bindings {
     Get.lazyPut(
       () => MessageController(
         messagesRepository: Get.find(),
+        contactRepository: Get.find(),
         parameter: Get.arguments,
       ),
     );
