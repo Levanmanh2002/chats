@@ -239,10 +239,10 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
             );
 
             if (pusherModel.payload != null && pusherModel.payload?.type == PusherType.UNFRIEND_EVENT) {
-              Get.find<ContactsController>().removeContact(pusherModel.payload!.data!.receiver!.id!);
+              Get.find<ContactsController>().removeContact(json['payload']['data']['user_id']);
             } else if (pusherModel.payload != null && pusherModel.payload?.type == PusherType.ACCEPTED_INVITE_EVENT) {
               Get.find<ContactsController>().updateContact(pusherModel.payload!.data!.receiver!);
-            }
+            } else if (pusherModel.payload != null && pusherModel.payload?.type == PusherType.UNFRIEND_EVENT) {}
           } catch (_) {}
         }
       },
