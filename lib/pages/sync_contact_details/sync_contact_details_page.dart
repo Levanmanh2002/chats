@@ -154,10 +154,10 @@ class SyncContactDetailsPage extends GetWidget<SyncContactDetailsController> {
               ),
             ),
             SizedBox(width: 8.w),
-            IconButton(
-              onPressed: () => Get.toNamed(Routes.CALL),
-              icon: const ImageAssetCustom(imagePath: IconsAssets.phoneIcon),
-            ),
+            // IconButton(
+            //   onPressed: () => Get.toNamed(Routes.CALL),
+            //   icon: const ImageAssetCustom(imagePath: IconsAssets.phoneIcon),
+            // ),
           ],
         ),
       ),

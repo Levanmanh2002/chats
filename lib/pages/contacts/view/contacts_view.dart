@@ -5,9 +5,7 @@ import 'package:chats/pages/contacts/contacts_controller.dart';
 import 'package:chats/pages/make_friends/make_friends_parameter.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
-import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/custom_image_widget.dart';
-import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/list_loader.dart';
 import 'package:chats/widget/no_data_widget.dart';
 import 'package:chats/widget/reponsive/extension.dart';
@@ -27,17 +25,17 @@ class ContactsView extends GetView<ContactsController> {
               child: (controller.contactModel.value?.data ?? []).isNotEmpty
                   ? SingleChildScrollView(
                       child: Column(
-                        // children: controller.groupedContacts.entries.map((entry) {
-                        children: (controller.contactModel.value?.data ?? []).map((e) {
+                        children: controller.groupedContacts.entries.map((entry) {
+                          // children: (controller.contactModel.value?.data ?? []).map((e) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Padding(
-                              //   padding: padding(horizontal: 16, vertical: 12),
-                              //   child: Text(entry.key, style: StyleThemeData.size16Weight600()),
-                              // ),
-                              // ...entry.value.map((e) => _buildContactItem(e)),
-                              _buildContactItem(e),
+                              Padding(
+                                padding: padding(horizontal: 16, vertical: 12),
+                                child: Text(entry.key, style: StyleThemeData.size16Weight600()),
+                              ),
+                              ...entry.value.map((e) => _buildContactItem(e)),
+                              // _buildContactItem(e),
                             ],
                           );
                         }).toList(),
@@ -84,10 +82,10 @@ class ContactsView extends GetView<ContactsController> {
               ),
             ),
             SizedBox(width: 8.w),
-            IconButton(
-              onPressed: () => Get.toNamed(Routes.CALL),
-              icon: const ImageAssetCustom(imagePath: IconsAssets.phoneIcon),
-            ),
+            // IconButton(
+            //   onPressed: () => Get.toNamed(Routes.CALL),
+            //   icon: const ImageAssetCustom(imagePath: IconsAssets.phoneIcon),
+            // ),
           ],
         ),
       ),

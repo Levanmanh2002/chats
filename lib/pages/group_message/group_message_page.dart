@@ -84,18 +84,18 @@ class GroupMessagePage extends GetWidget<GroupMessageController> {
               ),
             ],
           ),
-          action: IconButton(
-            style: IconButton.styleFrom(
-              minimumSize: Size.zero,
-              fixedSize: Size(36.w, 36.w),
-              padding: EdgeInsets.zero,
-              alignment: Alignment.center,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              maximumSize: Size(36.w, 36.w),
-            ),
-            icon: ImageAssetCustom(imagePath: IconsAssets.phoneIcon, color: appTheme.whiteColor),
-            onPressed: () => Get.toNamed(Routes.CALL),
-          ),
+          // action: IconButton(
+          //   style: IconButton.styleFrom(
+          //     minimumSize: Size.zero,
+          //     fixedSize: Size(36.w, 36.w),
+          //     padding: EdgeInsets.zero,
+          //     alignment: Alignment.center,
+          //     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          //     maximumSize: Size(36.w, 36.w),
+          //   ),
+          //   icon: ImageAssetCustom(imagePath: IconsAssets.phoneIcon, color: appTheme.whiteColor),
+          //   onPressed: () => Get.toNamed(Routes.CALL),
+          // ),
         ),
         body: Column(
           children: [
