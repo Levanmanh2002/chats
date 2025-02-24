@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:chats/pages/call/call_parameter.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -10,9 +12,20 @@ const token =
 const channel = "flutter_chat_call";
 
 class CallController extends GetxController {
+  final CallCallParameter parameter;
+
+  CallController({required this.parameter});
+
   var remoteUidValue = 0.obs;
   var localUserJoined = false.obs;
+  var connectionDuration = 0.obs;
+
+  var isSpeakerOn = false.obs;
+  var isMicMuted = false.obs;
+
   late RtcEngine engine;
+
+  Timer? _timer;
 
   @override
   void onInit() {
@@ -22,9 +35,11 @@ class CallController extends GetxController {
 
   Future<void> initAgora() async {
     // retrieve permissions
-    await [Permission.microphone, Permission.camera].request();
+    await [
+      Permission.microphone,
+      // Permission.camera,
+    ].request();
 
-    //create the engine
     engine = createAgoraRtcEngine();
     await engine.initialize(const RtcEngineContext(
       appId: appId,
@@ -40,6 +55,7 @@ class CallController extends GetxController {
         onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
           log("remote user $remoteUid joined");
           remoteUidValue.value = remoteUid;
+          startTimer();
         },
         onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) {
           log("remote user $remoteUid left channel");
@@ -58,15 +74,55 @@ class CallController extends GetxController {
     await engine.joinChannel(
       token: token,
       channelId: channel,
-      uid: 0,
-      options: const ChannelMediaOptions(),
+      uid: parameter.contact?.id ?? 0,
+      options: const ChannelMediaOptions(
+        autoSubscribeAudio: true,
+        autoSubscribeVideo: false,
+      ),
     );
+  }
+
+  // Bật/tắt loa ngoài
+  void toggleSpeaker() {
+    isSpeakerOn.value = !isSpeakerOn.value;
+    engine.setEnableSpeakerphone(isSpeakerOn.value);
+  }
+
+  // Bật/tắt mic
+  void toggleMic() {
+    isMicMuted.value = !isMicMuted.value;
+    engine.muteLocalAudioStream(isMicMuted.value);
+  }
+
+  // Kết thúc cuộc gọi
+  Future<void> endCall() async {
+    await engine.leaveChannel();
+    Get.back(); // Quay về màn hình trước
+  }
+
+  void startTimer() {
+    connectionDuration.value = 0;
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (t) {
+      connectionDuration.value++;
+    });
+  }
+
+  void resetTimer() {
+    connectionDuration.value = 0;
+    _timer?.cancel();
+  }
+
+  @override
+  void onClose() {
+    _timer?.cancel();
+    super.onClose();
   }
 
   @override
   void dispose() {
     super.dispose();
-
+    _timer?.cancel();
     _dispose();
   }
 

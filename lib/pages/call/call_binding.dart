@@ -4,6 +4,10 @@ import 'package:get/get.dart';
 class CallBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => CallController());
+    Get.lazyPut(
+      () => CallController(
+        parameter: Get.arguments,
+      ),
+    );
   }
 }

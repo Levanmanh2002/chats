@@ -1,5 +1,6 @@
 import 'package:chats/extension/string_extension.dart';
 import 'package:chats/main.dart';
+import 'package:chats/pages/call/call_parameter.dart';
 import 'package:chats/pages/message/message_controller.dart';
 import 'package:chats/pages/message/view/bottom_send_mess_view.dart';
 import 'package:chats/pages/message/view/chast_list_view.dart';
@@ -118,7 +119,14 @@ class MessagePage extends GetWidget<MessageController> {
               maximumSize: Size(36.w, 36.w),
             ),
             icon: ImageAssetCustom(imagePath: IconsAssets.phoneIcon, color: appTheme.whiteColor),
-            onPressed: () => Get.toNamed(Routes.CALL),
+            onPressed: () => Get.toNamed(
+              Routes.CALL,
+              arguments: CallCallParameter(
+                contact: controller.messageModel.value?.chat?.users?.firstWhereOrNull(
+                  (e) => e.id != Get.find<ProfileController>().user.value?.id,
+                ),
+              ),
+            ),
           ),
         ),
         body: Obx(
