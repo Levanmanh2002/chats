@@ -110,24 +110,32 @@ class MessagePage extends GetWidget<MessageController> {
             ],
           ),
           action: IconButton(
-            style: IconButton.styleFrom(
-              minimumSize: Size.zero,
-              fixedSize: Size(36.w, 36.w),
-              padding: EdgeInsets.zero,
-              alignment: Alignment.center,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              maximumSize: Size(36.w, 36.w),
-            ),
-            icon: ImageAssetCustom(imagePath: IconsAssets.phoneIcon, color: appTheme.whiteColor),
-            onPressed: () => Get.toNamed(
-              Routes.CALL,
-              arguments: CallCallParameter(
-                contact: controller.messageModel.value?.chat?.users?.firstWhereOrNull(
-                  (e) => e.id != Get.find<ProfileController>().user.value?.id,
-                ),
+              style: IconButton.styleFrom(
+                minimumSize: Size.zero,
+                fixedSize: Size(36.w, 36.w),
+                padding: EdgeInsets.zero,
+                alignment: Alignment.center,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                maximumSize: Size(36.w, 36.w),
               ),
-            ),
-          ),
+              icon: ImageAssetCustom(imagePath: IconsAssets.phoneIcon, color: appTheme.whiteColor),
+              onPressed: () {
+                final contact = controller.messageModel.value?.chat?.users?.firstWhereOrNull(
+                  (e) => e.id != Get.find<ProfileController>().user.value?.id,
+                );
+
+                if (contact == null) return;
+
+                Get.toNamed(
+                  Routes.CALL,
+                  arguments: CallCallParameter(
+                    id: contact.id ?? DateTime.now().millisecondsSinceEpoch,
+                    name: contact.name ?? '',
+                    avatar: contact.avatar ?? '',
+                    channel: 'channel',
+                  ),
+                );
+              }),
         ),
         body: Obx(
           () => Column(

@@ -1,4 +1,3 @@
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:chats/main.dart';
 import 'package:chats/pages/call/call_controller.dart';
 import 'package:chats/theme/style/style_theme.dart';
@@ -25,18 +24,18 @@ class CallPage extends GetWidget<CallController> {
               ImageAssetCustom(imagePath: ImagesAssets.logoTitileWhiteImage, size: 61.w),
               SizedBox(height: 40.h),
               CustomImageWidget(
-                imageUrl: controller.parameter.contact?.avatar ?? '',
+                imageUrl: controller.parameter.avatar,
                 size: 160,
                 noImage: false,
                 showBoder: true,
                 colorBoder: appTheme.blueBFFColor,
                 sizeBorder: 4,
-                name: controller.parameter.contact?.name ?? '',
+                name: controller.parameter.name,
                 isShowNameAvatar: true,
               ),
               SizedBox(height: 24.h),
               Text(
-                controller.parameter.contact?.name ?? '',
+                controller.parameter.name,
                 style: StyleThemeData.size20Weight600(color: appTheme.whiteColor),
               ),
               SizedBox(height: 8.h),
@@ -146,20 +145,20 @@ class CallPage extends GetWidget<CallController> {
     );
   }
 
-  Widget _remoteVideo() {
-    if (controller.remoteUidValue.value != 0) {
-      return AgoraVideoView(
-        controller: VideoViewController.remote(
-          rtcEngine: controller.engine,
-          canvas: VideoCanvas(uid: controller.remoteUidValue.value),
-          connection: const RtcConnection(channelId: channel),
-        ),
-      );
-    } else {
-      return const Text(
-        'Please wait for remote user to join',
-        textAlign: TextAlign.center,
-      );
-    }
-  }
+  // Widget _remoteVideo() {
+  //   if (controller.remoteUidValue.value != 0) {
+  //     return AgoraVideoView(
+  //       controller: VideoViewController.remote(
+  //         rtcEngine: controller.engine,
+  //         canvas: VideoCanvas(uid: controller.remoteUidValue.value),
+  //         connection: const RtcConnection(channelId: channel),
+  //       ),
+  //     );
+  //   } else {
+  //     return const Text(
+  //       'Please wait for remote user to join',
+  //       textAlign: TextAlign.center,
+  //     );
+  //   }
+  // }
 }

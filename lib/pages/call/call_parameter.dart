@@ -1,7 +1,17 @@
-import 'package:chats/models/profile/user_model.dart';
-
 class CallCallParameter {
-  final UserModel? contact;
+  // id người gọi đến
+  final int id;
+  // thông tin người gọi
+  final String name;
+  final String avatar;
 
-  CallCallParameter({required this.contact});
+  // thông tin cuộc gọi
+  final String channel;
+
+  CallCallParameter({
+    required this.id,
+    required this.name,
+    required this.avatar,
+    required this.channel,
+  });
 }
