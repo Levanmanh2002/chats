@@ -1,22 +1,30 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:isolate';
+import 'dart:ui';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:chats/pages/call/call_parameter.dart';
+import 'package:chats/pages/profile/profile_controller.dart';
+import 'package:chats/resourese/messages/imessages_repository.dart';
+import 'package:chats/routes/pages.dart';
+import 'package:chats/utils/app_constants.dart';
 import 'package:chats/utils/audio_utils.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 const appId = "5b5c09358c194f21ac343634a5621bfc";
-const token =
-    "007eJxTYDA7qO+XNuGt9cXfwR1z8l/dPqh4Vn6WV+Pf0PDQtysvT5qkwGCaZJpsYGlsapFsaGmSZmSYmGxsYmxmbJJoamZkmJSWzH9ob3pDICPDRrEbLIwMEAjiCzOk5ZSWlKQWxSdnJJbEJyfm5MQbMTAAABGkJ0M=";
-const channel = "flutter_chat_call_2";
+// const token =
+//     "007eJxTYDiw8vgzj7+nDLf/Zj0YyZuw1Df5s6l1Lb/foVIWj1upAuUKDKZJpskGlsamFsmGliZpRoaJycYmxmbGJommZkaGSWnJDx/vTRfgY2B4NkGdlZGBkYEFiD9+3JvOBCaZwSQLlCxJLS5hZDAAAG4yKsw=";
+// const channel = "test";
 
 class CallController extends GetxController {
+  final IMessagesRepository messagesRepository;
   final CallCallParameter parameter;
 
-  CallController({required this.parameter});
+  CallController({required this.parameter, required this.messagesRepository});
 
   var remoteUidValue = 0.obs;
   var localUserJoined = false.obs;
@@ -29,13 +37,54 @@ class CallController extends GetxController {
 
   Timer? _timer;
 
+  final ReceivePort _receivePortReject = ReceivePort();
+
   @override
   void onInit() {
-    initAgora();
     super.onInit();
+    // initAgora();
+    if (parameter.type == CallType.call) {
+      _initCall();
+    } else if (parameter.type == CallType.incomingCall) {
+      initAgora(token: parameter.token!, channel: parameter.channel!);
+    }
+    _setupIsolated();
+
+    // _generateToken();
   }
 
-  Future<void> initAgora() async {
+  // @override
+  // void onReady() {
+  //   super.onReady();
+  //   _initCall();
+  // }
+
+  void _initCall() async {
+    try {
+      final channel = '${parameter.channel}_${parameter.id}_${Get.find<ProfileController>().user.value?.id}';
+
+      Map<String, String> params = {
+        "receiver_id": parameter.id.toString(),
+        "channel_name": channel,
+        // "uid": '${parameter.id}_${Get.find<ProfileController>().user.value?.id}',
+        "uid": '0',
+      };
+
+      final response = await messagesRepository.initCall(params);
+
+      if (response.statusCode == 200) {
+        log('Call initiated');
+        // _generateToken();
+        await initAgora(token: response.body['data']['call_token'], channel: response.body['data']['channel_name']);
+      } else {
+        log('Call initiation failed');
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Future<void> initAgora({required String token, required String channel}) async {
     // retrieve permissions
     await [
       Permission.microphone,
@@ -53,22 +102,29 @@ class CallController extends GetxController {
         onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
           log("local user ${connection.localUid} joined");
           localUserJoined.value = true;
-          startRingtone();
+          if (parameter.type == CallType.call) {
+            startRingtone();
+          }
         },
         onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
           log("remote user $remoteUid joined");
           remoteUidValue.value = remoteUid;
           stopRingtone();
           startTimer();
+          _fetchJoinCall();
         },
-        onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) {
+        onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) async {
           log("remote user $remoteUid left channel");
           remoteUidValue.value = 0;
           engine.leaveChannel();
+          await _fetchEndCall();
           Get.back();
         },
         onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
           log('[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
+        },
+        onError: (err, msg) {
+          log('onError: $err, $msg');
         },
       ),
     );
@@ -86,6 +142,38 @@ class CallController extends GetxController {
         autoSubscribeVideo: false,
       ),
     );
+  }
+
+  void _fetchJoinCall() async {
+    try {
+      Map<String, String> params = {
+        "message_id": parameter.messageId.toString(),
+      };
+
+      final response = await messagesRepository.joinCall(params);
+
+      if (response.statusCode == 200) {
+        log('Call joined');
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Future<void> _fetchEndCall() async {
+    try {
+      Map<String, String> params = {
+        "message_id": parameter.messageId.toString(),
+      };
+
+      final response = await messagesRepository.endCall(params);
+
+      if (response.statusCode == 200) {
+        log('Call ended');
+      }
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   // Gọi khi bắt đầu cuộc gọi
@@ -135,6 +223,32 @@ class CallController extends GetxController {
     _timer?.cancel();
   }
 
+  Future<void> _dispose() async {
+    await engine.leaveChannel();
+    await engine.release();
+    stopRingtone();
+  }
+
+  void _setupIsolated() async {
+    IsolateNameServer.removePortNameMapping(AppConstants.rejectCallChannelId);
+    IsolateNameServer.registerPortWithName(_receivePortReject.sendPort, AppConstants.rejectCallChannelId);
+
+    _receivePortReject.listen((valueData) async {
+      if (valueData is! Map<String, dynamic>) return;
+      try {
+        final message = RemoteMessage.fromMap(valueData);
+        if (message.data['type'] == 'chat' && message.data['call_action'] == 'reject_call') {
+          await _dispose();
+          if (Get.currentRoute == Routes.CALL) {
+            Get.back();
+          }
+        }
+      } catch (e) {
+        // No-op
+      }
+    });
+  }
+
   @override
   void onClose() {
     _timer?.cancel();
@@ -148,11 +262,6 @@ class CallController extends GetxController {
     super.dispose();
     _timer?.cancel();
     _dispose();
-  }
-
-  Future<void> _dispose() async {
-    await engine.leaveChannel();
-    await engine.release();
-    stopRingtone();
+    _receivePortReject.close();
   }
 }

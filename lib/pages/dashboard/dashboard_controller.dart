@@ -25,9 +25,26 @@ class DashboardController extends GetxController {
   RxList<TickersModel> tickersModel = <TickersModel>[].obs;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     pageController = PageController(initialPage: 0);
+    // final RemoteMessage? remoteMessage = await FirebaseMessaging.instance.getInitialMessage();
+
+    // if (remoteMessage != null) {
+    //   Get.toNamed(
+    //     Routes.CALL,
+    //     arguments: CallCallParameter(
+    //       id: int.tryParse(remoteMessage.data['user_id'] ?? '') ?? 0,
+    //       messageId: int.tryParse(remoteMessage.data['id'] ?? '') ?? 0,
+    //       name: remoteMessage.data['user_name'] ?? '',
+    //       avatar: remoteMessage.data['user_avatar'] ?? '',
+    //       channel: remoteMessage.data['channel_name'] ?? '',
+    //       token: remoteMessage.data['call_token'] ?? '',
+    //       type: CallType.incomingCall,
+    //     ),
+    //   );
+    // }
+
     _updateFcmToken();
     _fetchTickers();
   }

@@ -21,6 +21,7 @@ class AppConstants {
   static String userType = 'client';
 
   static const String notificationChannelId = 'CHATS-DRIVER-NOTIFICATION-CHANNEL-ID';
+  static const String rejectCallChannelId = 'CHATS-REJECT-CALL-CHANNEL-ID';
 
   static const String signInUri = '/api/v1/auth/login';
   static const String signUpUri = '/api/v1/auth/register';
@@ -74,4 +75,9 @@ class AppConstants {
   static const String syncContactsUri = '/api/v1/contact/sync-contacts';
   static const String getSyncContactsUri = '/api/v1/contact/list-contacts';
   static const String getTickersUri = '/api/v1/tickers/list?page=1&size=100';
+
+  static const String generateTokentUri = '/api/v1/call/gen-token';
+  static const String initCallUri = '/api/v1/call/init-call';
+  static const String endCallUri = '/api/v1/call/reject-call';
+  static const String joinCallUri = '/api/v1/call/join-call';
 }

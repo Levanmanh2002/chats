@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:chats/main.dart';
 import 'package:chats/pages/call/call_parameter.dart';
 import 'package:chats/pages/group_message/group_message_parameter.dart';
 import 'package:chats/pages/message/message_parameter.dart';
+import 'package:chats/resourese/messages/messages_repository.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/app_constants.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -48,9 +50,9 @@ class NotificationHelper {
     );
 
     DarwinInitializationSettings initializationSettingsIOS = const DarwinInitializationSettings(
-      requestAlertPermission: false,
-      requestBadgePermission: false,
-      requestSoundPermission: false,
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
     );
 
     InitializationSettings initializationSettings = InitializationSettings(
@@ -79,7 +81,7 @@ class NotificationHelper {
     }
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      if (message.data['type'] == 'incoming_call') {
+      if (message.data['type'] == 'chat' && message.data['call_token'] != null) {
         _handleIncomingCall(message);
       } else {
         showLocalNotification(message);
@@ -93,12 +95,23 @@ class NotificationHelper {
       }
 
       if (message.notification != null) {
-        // IsolateNameServer.lookupPortByName(AppConstants.notificationUnreadReceivePort)?.send(message.toMap());
+        if (message.data['type'] == 'chat' && message.data['call_action'] == 'reject_call') {
+          IsolateNameServer.lookupPortByName(AppConstants.rejectCallChannelId)?.send(message.toMap());
+        }
       }
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       _handleDirectMessage(message);
+
+      RemoteNotification? map = message.notification;
+
+      if (kDebugMode) {
+        print(
+          "onMessageOpenedApp: ${map?.title}/${map?.body}/${map?.titleLocKey}",
+        );
+        print("onMessageOpenedApp type: ${message.data['type']}/${message.data}");
+      }
     });
 
 // Event.actionCallIncoming	Nhận một cuộc gọi đến.
@@ -117,20 +130,31 @@ class NotificationHelper {
 // Event.actionCallCustom	Tuỳ chỉnh sự kiện cuộc gọi (dùng cho custom actions).
 
     FlutterCallkitIncoming.onEvent.listen((event) {
+      log((event?.body ?? {}).toString(), name: 'CallKitEvent');
       switch (event?.event) {
         case Event.actionCallAccept:
-          Get.toNamed(
-            Routes.CALL,
-            arguments: CallCallParameter(
-              id: 0,
-              name: 'firebase name',
-              avatar: '',
-              channel: 'channel',
-            ),
-          );
+          final extraData = event?.body?['extra'];
+
+          if (extraData != null) {
+            Get.toNamed(
+              Routes.CALL,
+              arguments: CallCallParameter(
+                id: int.tryParse(extraData['user_id'] ?? '') ?? 0,
+                messageId: int.tryParse(extraData['id'] ?? '') ?? 0,
+                name: extraData['user_name'] ?? '',
+                avatar: extraData['user_avatar'] ?? '',
+                channel: extraData['channel_name'] ?? '',
+                token: extraData['call_token'] ?? '',
+                type: CallType.incomingCall,
+              ),
+            );
+          }
+
           break;
         case Event.actionCallDecline:
-          log("Người dùng đã từ chối cuộc gọi");
+          final extraData = event?.body?['extra'];
+          sendCallDeclinedToServer(messageId: extraData['call_id']);
+
           break;
         case Event.actionCallEnded:
           log("Cuộc gọi đã kết thúc");
@@ -202,8 +226,6 @@ class NotificationHelper {
           Get.toNamed(Routes.SENT_REQUEST_CONTACT);
         }
       }
-
-      /// xử lý khi ấn cuộc gọi đến
     } catch (e) {
       log(e.toString());
     }
@@ -212,8 +234,6 @@ class NotificationHelper {
 
 @pragma('vm:entry-point')
 Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
-  print("🔔 Nhận thông báo nền: ${message.notification?.title}");
-
   _handleIncomingCall(message);
 
   if (kDebugMode) {
@@ -224,43 +244,46 @@ Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
   }
 
   if (message.notification != null) {
-    // IsolateNameServer.lookupPortByName(AppConstants.notificationUnreadReceivePort)?.send(message.toMap());
-
-    // if (message.data['type'] == 'order_status') {
-    //   IsolateNameServer.lookupPortByName(AppConstants.orderDetailsReceivePort)?.send(message.toMap());
-    // }
+    if (message.data['type'] == 'chat' && message.data['call_action'] == 'reject_call') {
+      IsolateNameServer.lookupPortByName(AppConstants.rejectCallChannelId)?.send(message.toMap());
+    }
   }
 }
 
 void _handleIncomingCall(RemoteMessage message) {
-  if (message.data['type'] == 'incoming_call') {
-    // String callerName = message.data['caller_name'] ?? 'Người gọi';
-    // String channel = message.data['channel'] ?? '';
-
-    // Nếu app đang mở, hiển thị màn hình nhận cuộc gọi
-    // if (Get.context != null) {
+  log(message.data.toString());
+  if (message.data['type'] == 'chat' &&
+      message.data['call_token'] != null &&
+      message.data['call_action'] == 'init_call') {
     _showCallKitIncomingCall(
-      channel: 'channel',
-      callerName: 'callerName',
-      avatar: 'https://i.pravatar.cc/100',
+      id: message.data['user_id'] ?? '',
+      token: message.data['call_token'] ?? '',
+      channel: message.data['channel_name'] ?? '',
+      callerName: message.data['user_name'] ?? '',
+      avatar: message.data['user_avatar'] ?? '',
+      message: message,
     );
-    // } else {
-    //   // Nếu app bị tắt, hiển thị thông báo đẩy
-    //   _showIncomingCallNotification('callerName', 'channel');
-    // }
   }
 }
 
-void _showCallKitIncomingCall({required String channel, required String callerName, required String avatar}) async {
+void _showCallKitIncomingCall({
+  required String id,
+  required String token,
+  required String channel,
+  required String callerName,
+  required String avatar,
+  required RemoteMessage message,
+}) async {
   CallKitParams callKitParams = CallKitParams(
     id: channel,
     nameCaller: callerName,
     appName: 'Chat - Nhà Táo',
     avatar: avatar,
-    // handle: '0123456789',
+    handle: token,
     type: 0, // 0: Audio Call, 1: Video Call
     textAccept: 'Chấp nhận',
     textDecline: 'Từ chối',
+    extra: message.data,
     missedCallNotification: const NotificationParams(
       showNotification: true,
       isShowCallback: true,
@@ -302,4 +325,19 @@ void _showCallKitIncomingCall({required String channel, required String callerNa
   Future.delayed(const Duration(seconds: 60), () async {
     await FlutterCallkitIncoming.endAllCalls();
   });
+}
+
+Future<void> sendCallDeclinedToServer({required String messageId}) async {
+  try {
+    final MessagesRepository messagesRepository = Get.put(MessagesRepository());
+
+    Map<String, String> params = {
+      "message_id": messageId.toString(),
+    };
+
+    final response = await messagesRepository.endCall(params);
+    log("Gửi từ chối cuộc gọi thành công: $response");
+  } catch (e) {
+    log("Lỗi khi gửi từ chối cuộc gọi: $e");
+  }
 }

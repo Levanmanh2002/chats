@@ -130,9 +130,10 @@ class MessagePage extends GetWidget<MessageController> {
                   Routes.CALL,
                   arguments: CallCallParameter(
                     id: contact.id ?? DateTime.now().millisecondsSinceEpoch,
+                    messageId: controller.messageModel.value!.chat!.id!,
                     name: contact.name ?? '',
                     avatar: contact.avatar ?? '',
-                    channel: 'channel',
+                    type: CallType.call,
                   ),
                 );
               }),

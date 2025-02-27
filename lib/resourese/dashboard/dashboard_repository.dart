@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:chats/resourese/dashboard/idashboard_repository.dart';
 import 'package:chats/utils/app_constants.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -11,10 +9,8 @@ class DashboardRepository extends IDashboardRepository {
     try {
       final fcmToken = await FirebaseMessaging.instance.getToken();
 
-      log('fcmToken: $fcmToken', name: 'FCM Token');
-
       final result = await clientPostData(AppConstants.updateFcmTokenUri, {
-        'fcm_token': fcmToken,
+        'fcm_token': fcmToken.toString(),
       });
 
       return result;

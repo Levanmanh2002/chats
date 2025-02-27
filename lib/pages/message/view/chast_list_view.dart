@@ -31,7 +31,7 @@ class ChastListView extends GetView<MessageController> {
       child: Obx(() {
         final data = controller.messageModel.value?.listMessages ?? [];
         if (data.isEmpty) {
-          return const SizedBox();
+          return const SizedBox(); 
         }
 
         return ListLoader(

@@ -135,4 +135,52 @@ class MessagesRepository extends IMessagesRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<Response> generateToken(Map<String, String> params) async {
+    try {
+      final result = await clientPostData(AppConstants.generateTokentUri, params);
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> initCall(Map<String, String> params) async {
+    try {
+      final result = await clientPostData(AppConstants.initCallUri, params);
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> endCall(Map<String, String> params) async {
+    try {
+      final result = await clientPostData(AppConstants.endCallUri, params);
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> joinCall(Map<String, String> params) async {
+    try {
+      final result = await clientPostData(AppConstants.joinCallUri, params);
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
 }

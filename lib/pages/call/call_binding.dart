@@ -7,6 +7,7 @@ class CallBinding implements Bindings {
     Get.lazyPut(
       () => CallController(
         parameter: Get.arguments,
+        messagesRepository: Get.find(),
       ),
     );
   }
