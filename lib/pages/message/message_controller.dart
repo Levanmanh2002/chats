@@ -439,11 +439,23 @@ class MessageController extends GetxController {
   }
 
   void onInsertMessage(MessageDataModel newMessages) {
-    messageModel.value = messageModel.value?.copyWith(
-      listMessages: messageModel.value?.listMessages?..insert(0, newMessages),
-    );
-    messageModel.refresh();
-    Get.find<ChatsController>().updateChatLastMessage(newMessages, isRead: false);
+    if (newMessages.isCall == true) {
+      bool isExesit = messageModel.value?.listMessages?.any((msg) => msg.id == newMessages.id) ?? false;
+
+      if (!isExesit) {
+        messageModel.value = messageModel.value?.copyWith(
+          listMessages: messageModel.value?.listMessages?..insert(0, newMessages),
+        );
+        messageModel.refresh();
+        Get.find<ChatsController>().updateChatLastMessage(newMessages, isRead: false);
+      }
+    } else {
+      messageModel.value = messageModel.value?.copyWith(
+        listMessages: messageModel.value?.listMessages?..insert(0, newMessages),
+      );
+      messageModel.refresh();
+      Get.find<ChatsController>().updateChatLastMessage(newMessages, isRead: false);
+    }
   }
 
   void clearMessage() {

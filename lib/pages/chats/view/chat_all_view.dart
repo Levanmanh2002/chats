@@ -134,10 +134,11 @@ class ChatAllView extends GetView<ChatsController> {
                                 e.latestMessage?.isCall == true
                                     ? e.latestMessage?.missedCall == true
                                         ? 'missed_call'.tr
-                                        : e.latestMessage?.isRejectCallId != null
-                                            ? 'receiver_declined_the_call'.tr
-                                            : e.latestMessage?.isCanceldId != null
-                                                ? 'call_canceled'.tr
+                                        : e.latestMessage?.isCanceldId != null &&
+                                                (e.latestMessage?.callJoinedAt ?? '').isEmpty
+                                            ? 'call_canceled'.tr
+                                            : e.latestMessage?.isRejectCallId != null
+                                                ? 'receiver_declined_the_call'.tr
                                                 : e.latestMessage?.isDontPickUp == true
                                                     ? 'call_not_answered'.tr
                                                     : e.latestMessage?.sender?.id ==

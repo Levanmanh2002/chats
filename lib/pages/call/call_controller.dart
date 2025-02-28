@@ -108,6 +108,13 @@ class CallController extends GetxController {
           if (parameter.type == CallType.call) {
             startRingtone();
           }
+
+          Future.delayed(const Duration(seconds: 60), () {
+            if (remoteUidValue.value == 0) {
+              log("Không có ai nhận cuộc gọi, tự động kết thúc.");
+              endCall();
+            }
+          });
         },
         onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
           log("remote user $remoteUid joined");
@@ -121,7 +128,9 @@ class CallController extends GetxController {
           remoteUidValue.value = 0;
           engine.leaveChannel();
           await _fetchEndCall();
-          Get.back();
+          if (Get.currentRoute == Routes.CALL) {
+            Get.back();
+          }
         },
         onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
           log('[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
@@ -258,7 +267,9 @@ class CallController extends GetxController {
         if (message.data['type'] == 'chat' && message.data['call_action'] == 'reject_call') {
           await _dispose();
           if (Get.currentRoute == Routes.CALL) {
-            Get.back();
+            if (Get.currentRoute == Routes.CALL) {
+              Get.back();
+            }
           }
         }
       } catch (e) {

@@ -22,6 +22,9 @@ class ChatDataModel {
   @JsonKey(name: 'latest_message')
   MessageDataModel? latestMessage;
 
+  @JsonKey(name: 'is_hide', fromJson: parseToBool)
+  bool? isHide;
+
   @JsonKey(name: 'created_at')
   String? createdAt;
 
@@ -33,6 +36,7 @@ class ChatDataModel {
     this.isRead,
     this.users,
     this.latestMessage,
+    this.isHide,
     this.createdAt,
   });
 
@@ -46,6 +50,7 @@ class ChatDataModel {
     int? isGroup,
     List<UserModel>? users,
     MessageDataModel? latestMessage,
+    bool? isHide,
     String? createdAt,
   }) {
     return ChatDataModel(
@@ -55,6 +60,7 @@ class ChatDataModel {
       isGroup: isGroup ?? this.isGroup,
       users: users ?? this.users,
       latestMessage: latestMessage ?? this.latestMessage,
+      isHide: isHide ?? this.isHide,
       createdAt: createdAt ?? this.createdAt,
     );
   }

@@ -1,9 +1,13 @@
 import 'package:chats/models/tickers/tickers_model.dart';
+import 'package:chats/pages/call/call_parameter.dart';
 import 'package:chats/pages/chats/chats_page.dart';
 import 'package:chats/pages/contacts/contacts_page.dart';
 import 'package:chats/pages/profile/profile_page.dart';
 import 'package:chats/resourese/dashboard/idashboard_repository.dart';
 import 'package:chats/resourese/service/pusher_service.dart';
+import 'package:chats/routes/pages.dart';
+import 'package:chats/utils/local_storage.dart';
+import 'package:chats/utils/shared_key.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -28,25 +32,35 @@ class DashboardController extends GetxController {
   void onInit() async {
     super.onInit();
     pageController = PageController(initialPage: 0);
-    // final RemoteMessage? remoteMessage = await FirebaseMessaging.instance.getInitialMessage();
-
-    // if (remoteMessage != null) {
-    //   Get.toNamed(
-    //     Routes.CALL,
-    //     arguments: CallCallParameter(
-    //       id: int.tryParse(remoteMessage.data['user_id'] ?? '') ?? 0,
-    //       messageId: int.tryParse(remoteMessage.data['id'] ?? '') ?? 0,
-    //       name: remoteMessage.data['user_name'] ?? '',
-    //       avatar: remoteMessage.data['user_avatar'] ?? '',
-    //       channel: remoteMessage.data['channel_name'] ?? '',
-    //       token: remoteMessage.data['call_token'] ?? '',
-    //       type: CallType.incomingCall,
-    //     ),
-    //   );
-    // }
-
+    _callEvent();
     _updateFcmToken();
     _fetchTickers();
+  }
+
+  void _callEvent() async {
+    try {
+      final extraData = await LocalStorage.getJSON(SharedKey.CALL_CHAT_EVENT);
+
+      if (extraData != null) {
+        Get.toNamed(
+          Routes.CALL,
+          arguments: CallCallParameter(
+            id: int.tryParse(extraData['user_id'] ?? '') ?? 0,
+            messageId: int.tryParse(extraData['id'] ?? '') ?? 0,
+            callId: int.tryParse(extraData['call_id'] ?? '') ?? 0,
+            name: extraData['user_name'] ?? '',
+            avatar: extraData['user_avatar'] ?? '',
+            channel: extraData['channel_name'] ?? '',
+            token: extraData['call_token'] ?? '',
+            type: CallType.incomingCall,
+          ),
+        );
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      LocalStorage.remove(SharedKey.CALL_CHAT_EVENT);
+    }
   }
 
   void animateToTab(int page) {

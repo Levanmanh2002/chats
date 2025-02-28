@@ -19,4 +19,6 @@ abstract class IMessagesRepository extends IBaseRepository {
   Future<Response> rejectCall(Map<String, String> params);
   Future<Response> joinCall(Map<String, String> params);
   Future<Response> endCall(Map<String, String> params);
+
+  Future<Response> hideChat(int chatId);
 }

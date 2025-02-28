@@ -81,4 +81,6 @@ class AppConstants {
   static const String rejectCallUri = '/api/v1/call/reject-call';
   static const String joinCallUri = '/api/v1/call/join-call';
   static const String endCallUri = '/api/v1/call/end-call';
+
+  static const String hideChatUri = '/api/v1/message/hide';
 }

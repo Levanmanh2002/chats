@@ -195,4 +195,16 @@ class MessagesRepository extends IMessagesRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<Response> hideChat(int chatId) async {
+    try {
+      final result = await clientPostData(AppConstants.hideChatUri, {'chat_id': chatId});
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
 }

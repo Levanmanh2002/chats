@@ -43,7 +43,10 @@ class GroupMessageHeaderView extends GetView<GroupMessageController> {
                         onTap: controller.messageModel.value != null
                             ? () => Get.toNamed(
                                   Routes.GROUP_OPTION,
-                                  arguments: GroupOptionParameter(chat: controller.messageModel.value?.chat),
+                                  arguments: GroupOptionParameter(
+                                    chat: controller.messageModel.value?.chat,
+                                    isHideMessage: controller.messageModel.value?.chat?.isHide ?? false,
+                                  ),
                                 )
                             : null,
                         child: Row(

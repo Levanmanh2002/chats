@@ -177,7 +177,6 @@ const Map<String, String> vi = {
   "call": "Gọi",
   "month": "Tháng",
   "cancel_request": "Huỷ yêu cầu",
-
   "missed_call": "Cuộc gọi nhỡ",
   "receiver_declined_the_call": "Người nhận từ chối cuộc gọi",
   "call_canceled": "Cuộc gọi bị hủy",
@@ -186,4 +185,5 @@ const Map<String, String> vi = {
   "incoming_call": "Cuộc gọi đến",
   "voice_call": "Cuộc gọi thoại",
   "call_back": "GỌI LẠI",
+  "hide_message": "Ẩn tin nhắn",
 };

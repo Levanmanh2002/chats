@@ -15,10 +15,13 @@ class OptionsController extends GetxController {
 
   Rx<MediaFileModel?> mediaImageModel = Rx<MediaFileModel?>(null);
 
+  var isHideMessage = false.obs;
+
   @override
   void onInit() {
     super.onInit();
     _fetchImages();
+    isHideMessage.value = parameter.isHideMessage;
   }
 
   Future<void> _fetchImages() async {
@@ -45,6 +48,24 @@ class OptionsController extends GetxController {
         Get.close(2);
       } else {
         DialogUtils.showErrorDialog(response.body['message']);
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  void onHideMessage() async {
+    try {
+      EasyLoading.show(dismissOnTap: false, maskType: EasyLoadingMaskType.clear);
+
+      final response = await messagesRepository.hideChat(parameter.chatId);
+
+      if (response.statusCode == 200) {
+        isHideMessage.value = !isHideMessage.value;
+        Get.find<MessageController>().messageModel.value?.chat?.isHide = isHideMessage.value;
+        Get.find<ChatsController>().fetchChatList();
       }
     } catch (e) {
       print(e);

@@ -46,7 +46,7 @@ class MessageDataModel {
   @JsonKey(ignore: true) // ✅ Bỏ qua khi parse JSON từ API
   MessageStatus status;
 
-  @JsonKey(name: 'is_call')
+  @JsonKey(name: 'is_call', fromJson: parseToBool)
   bool? isCall;
 
   @JsonKey(name: 'missed_call')

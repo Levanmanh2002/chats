@@ -51,6 +51,7 @@ class MessagePage extends GetWidget<MessageController> {
                             arguments: OptionsParameter(
                               user: controller.parameter.contact,
                               chatId: controller.parameter.chatId!,
+                              isHideMessage: controller.messageModel.value?.chat?.isHide ?? false,
                             ),
                           )
                       : null,

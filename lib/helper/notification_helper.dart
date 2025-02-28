@@ -3,12 +3,15 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:chats/main.dart';
+import 'package:chats/pages/call/call_controller.dart';
 import 'package:chats/pages/call/call_parameter.dart';
 import 'package:chats/pages/group_message/group_message_parameter.dart';
 import 'package:chats/pages/message/message_parameter.dart';
 import 'package:chats/resourese/messages/messages_repository.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/app_constants.dart';
+import 'package:chats/utils/local_storage.dart';
+import 'package:chats/utils/shared_key.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_callkit_incoming/entities/android_params.dart';
@@ -114,43 +117,29 @@ class NotificationHelper {
       }
     });
 
-// Event.actionCallIncoming	Nhận một cuộc gọi đến.
-// Event.actionCallStart	Bắt đầu một cuộc gọi đi.
-// Event.actionCallAccept	Người dùng chấp nhận cuộc gọi đến.
-// Event.actionCallDecline	Người dùng từ chối cuộc gọi đến.
-// Event.actionCallEnded	Cuộc gọi kết thúc (dù là cuộc gọi đến hay cuộc gọi đi).
-// Event.actionCallTimeout	Cuộc gọi bị nhỡ (không ai bắt máy).
-// Event.actionCallCallback	Chỉ trên Android - Nhấn vào "Gọi lại" trong thông báo cuộc gọi nhỡ.
-// Event.actionCallToggleHold	Chỉ trên iOS - Đưa cuộc gọi vào chế độ giữ máy (hold).
-// Event.actionCallToggleMute	Chỉ trên iOS - Bật/tắt chế độ tắt tiếng (mute).
-// Event.actionCallToggleDmtf	Chỉ trên iOS - Gửi tín hiệu DTMF (phím bấm trên điện thoại).
-// Event.actionCallToggleGroup	Chỉ trên iOS - Thêm cuộc gọi vào nhóm.
-// Event.actionCallToggleAudioSession	Chỉ trên iOS - Thay đổi thiết lập âm thanh trong cuộc gọi.
-// Event.actionDidUpdateDevicePushTokenVoip	Chỉ trên iOS - Cập nhật token VoIP cho thông báo đẩy.
-// Event.actionCallCustom	Tuỳ chỉnh sự kiện cuộc gọi (dùng cho custom actions).
-
     FlutterCallkitIncoming.onEvent.listen((event) {
       log((event?.body ?? {}).toString(), name: 'CallKitEvent');
       switch (event?.event) {
         case Event.actionCallAccept:
-          final extraData = event?.body?['extra'];
+          if (!Get.isRegistered<CallController>()) {
+            final extraData = event?.body?['extra'];
 
-          if (extraData != null) {
-            Get.toNamed(
-              Routes.CALL,
-              arguments: CallCallParameter(
-                id: int.tryParse(extraData['user_id'] ?? '') ?? 0,
-                messageId: int.tryParse(extraData['id'] ?? '') ?? 0,
-                callId: int.tryParse(extraData['call_id'] ?? '') ?? 0,
-                name: extraData['user_name'] ?? '',
-                avatar: extraData['user_avatar'] ?? '',
-                channel: extraData['channel_name'] ?? '',
-                token: extraData['call_token'] ?? '',
-                type: CallType.incomingCall,
-              ),
-            );
+            if (extraData != null) {
+              Get.toNamed(
+                Routes.CALL,
+                arguments: CallCallParameter(
+                  id: int.tryParse(extraData['user_id'] ?? '') ?? 0,
+                  messageId: int.tryParse(extraData['id'] ?? '') ?? 0,
+                  callId: int.tryParse(extraData['call_id'] ?? '') ?? 0,
+                  name: extraData['user_name'] ?? '',
+                  avatar: extraData['user_avatar'] ?? '',
+                  channel: extraData['channel_name'] ?? '',
+                  token: extraData['call_token'] ?? '',
+                  type: CallType.incomingCall,
+                ),
+              );
+            }
           }
-
           break;
         case Event.actionCallDecline:
           final extraData = event?.body?['extra'];
@@ -236,6 +225,22 @@ class NotificationHelper {
 @pragma('vm:entry-point')
 Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
   _handleIncomingCall(message);
+
+  if (message.data['type'] == 'chat' && message.data['call_token'] != null) {
+    await LocalStorage.init();
+    LocalStorage.setJSON(
+      SharedKey.CALL_CHAT_EVENT,
+      {
+        "id": message.data['id'] ?? '',
+        "user_id": message.data['user_id'] ?? '',
+        "call_id": message.data['call_id'] ?? '',
+        "call_token": message.data['call_token'] ?? '',
+        "channel_name": message.data['channel_name'] ?? '',
+        "user_name": message.data['user_name'] ?? '',
+        "user_avatar": message.data['user_avatar'] ?? '',
+      },
+    );
+  }
 
   if (kDebugMode) {
     print(

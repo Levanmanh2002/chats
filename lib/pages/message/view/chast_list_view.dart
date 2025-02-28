@@ -5,6 +5,7 @@ import 'package:chats/models/messages/files_models.dart';
 import 'package:chats/models/messages/message_data_model.dart';
 import 'package:chats/models/messages/message_models.dart';
 import 'package:chats/pages/attachment_fullscreen/attachment_fullscreen_parameter.dart';
+import 'package:chats/pages/call/call_parameter.dart';
 import 'package:chats/pages/message/message_controller.dart';
 import 'package:chats/pages/message/widget/message_list_widget.dart';
 import 'package:chats/pages/message/widget/reaction_popup_widget.dart';
@@ -275,7 +276,7 @@ class ChastListView extends GetView<MessageController> {
                                   ? 'missed_call'.tr
                                   : item.isRejectCallId != null
                                       ? 'receiver_declined_the_call'.tr
-                                      : item.isCanceldId != null
+                                      : item.isCanceldId != null && (item.callJoinedAt ?? '').isEmpty
                                           ? 'call_canceled'.tr
                                           : item.isDontPickUp == true
                                               ? 'call_not_answered'.tr
@@ -312,6 +313,25 @@ class ChastListView extends GetView<MessageController> {
                             const LineWidget(),
                             SizedBox(height: 4.h),
                             InkWell(
+                              onTap: () {
+                                final contact = controller.messageModel.value?.chat?.users?.firstWhereOrNull(
+                                  (e) => e.id != Get.find<ProfileController>().user.value?.id,
+                                );
+
+                                if (contact == null) return;
+
+                                Get.toNamed(
+                                  Routes.CALL,
+                                  arguments: CallCallParameter(
+                                    id: contact.id ?? DateTime.now().millisecondsSinceEpoch,
+                                    messageId: controller.messageModel.value!.chat!.id!,
+                                    callId: null,
+                                    name: contact.name ?? '',
+                                    avatar: contact.avatar ?? '',
+                                    type: CallType.call,
+                                  ),
+                                );
+                              },
                               child: Center(
                                 child: Text(
                                   'call_back'.tr,

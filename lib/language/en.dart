@@ -186,4 +186,5 @@ const Map<String, String> en = {
   "incoming_call": "Incoming call",
   "voice_call": "Voice call",
   "call_back": "CALL BACK",
+  "hide_message": "Hide message",
 };

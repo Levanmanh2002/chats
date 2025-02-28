@@ -6,6 +6,7 @@ import 'package:chats/pages/options/options_controller.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/icons_assets.dart';
+import 'package:chats/widget/app_switch.dart';
 import 'package:chats/widget/border_title_icon_widget.dart';
 import 'package:chats/widget/custom_image_widget.dart';
 import 'package:chats/widget/default_app_bar.dart';
@@ -60,11 +61,37 @@ class OptionsPage extends GetWidget<OptionsController> {
                   SizedBox(height: 4.h),
                   Text('search_messages'.tr, style: StyleThemeData.size12Weight400()),
                   SizedBox(height: 24.h),
-                  // BorderTitleIconWidget(
-                  //   icon: IconsAssets.downloadIcon,
-                  //   title: 'export_pdf_file'.tr,
-                  // ),
-                  // SizedBox(height: 8.h),
+                  BorderTitleIconWidget(
+                    icon: IconsAssets.downloadIcon,
+                    title: 'export_pdf_file'.tr,
+                  ),
+                  SizedBox(height: 8.h),
+                  Obx(
+                    () => Container(
+                      padding: padding(horizontal: 12, vertical: 16),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(width: 1.w, color: appTheme.allSidesColor),
+                      ),
+                      child: Row(
+                        children: [
+                          ImageAssetCustom(
+                            imagePath: IconsAssets.eyeSlashIcon,
+                            size: 24.w,
+                            color: appTheme.blackColor,
+                          ),
+                          SizedBox(width: 12.w),
+                          Text('hide_message'.tr, style: StyleThemeData.size14Weight400()),
+                          const Spacer(),
+                          AppSwitch(
+                            isActive: controller.isHideMessage.value,
+                            onChange: controller.onHideMessage,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
                   BorderTitleIconWidget(
                     icon: IconsAssets.chatRoundLineIcon,
                     title: 'manage_instant_messages'.tr,
