@@ -141,6 +141,7 @@ class NotificationHelper {
               arguments: CallCallParameter(
                 id: int.tryParse(extraData['user_id'] ?? '') ?? 0,
                 messageId: int.tryParse(extraData['id'] ?? '') ?? 0,
+                callId: int.tryParse(extraData['call_id'] ?? '') ?? 0,
                 name: extraData['user_name'] ?? '',
                 avatar: extraData['user_avatar'] ?? '',
                 channel: extraData['channel_name'] ?? '',
@@ -335,7 +336,7 @@ Future<void> sendCallDeclinedToServer({required String messageId}) async {
       "message_id": messageId.toString(),
     };
 
-    final response = await messagesRepository.endCall(params);
+    final response = await messagesRepository.rejectCall(params);
     log("Gửi từ chối cuộc gọi thành công: $response");
   } catch (e) {
     log("Lỗi khi gửi từ chối cuộc gọi: $e");

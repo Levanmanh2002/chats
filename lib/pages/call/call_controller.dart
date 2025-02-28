@@ -33,6 +33,8 @@ class CallController extends GetxController {
   var isSpeakerOn = false.obs;
   var isMicMuted = false.obs;
 
+  var isCallId = 0.obs;
+
   late RtcEngine engine;
 
   Timer? _timer;
@@ -75,6 +77,7 @@ class CallController extends GetxController {
       if (response.statusCode == 200) {
         log('Call initiated');
         // _generateToken();
+        isCallId.value = response.body['data']['id'];
         await initAgora(token: response.body['data']['call_token'], channel: response.body['data']['channel_name']);
       } else {
         log('Call initiation failed');
@@ -147,7 +150,7 @@ class CallController extends GetxController {
   void _fetchJoinCall() async {
     try {
       Map<String, String> params = {
-        "message_id": parameter.messageId.toString(),
+        "message_id": parameter.callId != null ? parameter.callId.toString() : isCallId.value.toString(),
       };
 
       final response = await messagesRepository.joinCall(params);
@@ -166,7 +169,7 @@ class CallController extends GetxController {
         "message_id": parameter.messageId.toString(),
       };
 
-      final response = await messagesRepository.endCall(params);
+      final response = await messagesRepository.rejectCall(params);
 
       if (response.statusCode == 200) {
         log('Call ended');
@@ -207,7 +210,22 @@ class CallController extends GetxController {
   Future<void> endCall() async {
     await engine.leaveChannel();
     stopRingtone();
+    await _endCall();
     Get.back();
+  }
+
+  Future<void> _endCall() async {
+    try {
+      final response = await messagesRepository.endCall({
+        "message_id": parameter.callId != null ? parameter.callId.toString() : isCallId.value.toString(),
+      });
+
+      if (response.statusCode == 200) {
+        log('Call ended');
+      }
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   void startTimer() {

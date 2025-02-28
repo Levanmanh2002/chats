@@ -131,6 +131,7 @@ class MessagePage extends GetWidget<MessageController> {
                   arguments: CallCallParameter(
                     id: contact.id ?? DateTime.now().millisecondsSinceEpoch,
                     messageId: controller.messageModel.value!.chat!.id!,
+                    callId: null,
                     name: contact.name ?? '',
                     avatar: contact.avatar ?? '',
                     type: CallType.call,

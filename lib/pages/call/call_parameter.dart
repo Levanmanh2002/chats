@@ -5,6 +5,7 @@ class CallCallParameter {
   final int id;
 
   final int messageId;
+  final int? callId;
   // thông tin người gọi
   final String name;
   final String avatar;
@@ -18,6 +19,7 @@ class CallCallParameter {
   CallCallParameter({
     required this.id,
     required this.messageId,
+    required this.callId,
     required this.name,
     required this.avatar,
     this.channel,

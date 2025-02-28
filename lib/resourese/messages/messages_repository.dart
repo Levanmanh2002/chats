@@ -161,9 +161,9 @@ class MessagesRepository extends IMessagesRepository {
   }
 
   @override
-  Future<Response> endCall(Map<String, String> params) async {
+  Future<Response> rejectCall(Map<String, String> params) async {
     try {
-      final result = await clientPostData(AppConstants.endCallUri, params);
+      final result = await clientPostData(AppConstants.rejectCallUri, params);
 
       return result;
     } catch (error) {
@@ -176,6 +176,18 @@ class MessagesRepository extends IMessagesRepository {
   Future<Response> joinCall(Map<String, String> params) async {
     try {
       final result = await clientPostData(AppConstants.joinCallUri, params);
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> endCall(Map<String, String> params) async {
+    try {
+      final result = await clientPostData(AppConstants.endCallUri, params);
 
       return result;
     } catch (error) {

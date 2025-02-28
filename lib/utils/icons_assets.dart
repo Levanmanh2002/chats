@@ -59,4 +59,5 @@ class IconsAssets {
   static const String micOffBorderImage = '${_basePath}mic_off_border.svg';
   static const String audioBorderImage = '${_basePath}audio_border.svg';
   static const String audioOffBorderImage = '${_basePath}audio_off_border.svg';
+  static const String callCancelImage = '${_basePath}call_cancel.svg';
 }

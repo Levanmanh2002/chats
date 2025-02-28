@@ -16,6 +16,7 @@ abstract class IMessagesRepository extends IBaseRepository {
 
   Future<Response> generateToken(Map<String, String> params);
   Future<Response> initCall(Map<String, String> params);
-  Future<Response> endCall(Map<String, String> params);
+  Future<Response> rejectCall(Map<String, String> params);
   Future<Response> joinCall(Map<String, String> params);
+  Future<Response> endCall(Map<String, String> params);
 }

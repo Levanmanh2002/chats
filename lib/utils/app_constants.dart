@@ -78,6 +78,7 @@ class AppConstants {
 
   static const String generateTokentUri = '/api/v1/call/gen-token';
   static const String initCallUri = '/api/v1/call/init-call';
-  static const String endCallUri = '/api/v1/call/reject-call';
+  static const String rejectCallUri = '/api/v1/call/reject-call';
   static const String joinCallUri = '/api/v1/call/join-call';
+  static const String endCallUri = '/api/v1/call/end-call';
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:chats/constant/date_format_constants.dart';
 import 'package:chats/extension/data/file_extension.dart';
 import 'package:chats/models/chats/chat_data_model.dart';
 import 'package:chats/models/messages/files_models.dart';
@@ -27,6 +28,7 @@ import 'package:chats/utils/dialog_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
@@ -668,6 +670,22 @@ class MessageController extends GetxController {
       print(e);
     } finally {
       isLoadingAcceptFriend.value = false;
+    }
+  }
+
+  String calculateCallDuration(String startTime, String endTime) {
+    DateTime start = DateFormat(DateConstants.yyyyMMddMMmmss).parse(startTime);
+    DateTime end = DateFormat(DateConstants.yyyyMMddMMmmss).parse(endTime);
+
+    Duration duration = end.difference(start);
+
+    int minutes = duration.inMinutes;
+    int seconds = duration.inSeconds % 60;
+
+    if (minutes > 0) {
+      return "$minutes phút ${seconds > 0 ? '$seconds giây' : ''}";
+    } else {
+      return "$seconds giây";
     }
   }
 

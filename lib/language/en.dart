@@ -178,4 +178,12 @@ const Map<String, String> en = {
   "call": "Call",
   "month": "Month",
   "cancel_request": "Cancel request",
+  "missed_call": "Missed call",
+  "receiver_declined_the_call": "Receiver declined the call",
+  "call_canceled": "Call canceled",
+  "call_not_answered": "Call not answered",
+  "outgoing_call": "Outgoing call",
+  "incoming_call": "Incoming call",
+  "voice_call": "Voice call",
+  "call_back": "CALL BACK",
 };
