@@ -136,6 +136,17 @@ class UpdateProfilePage extends GetWidget<UpdateProfileController> {
                   ),
                 ),
                 SizedBox(height: 24.h),
+                CustomTextField(
+                  controller: controller.autoMessage,
+                  titleText: 'auto_message'.tr,
+                  hintText: 'enter_auto_message_content'.tr,
+                  contentPadding: padding(vertical: 8),
+                  showBorder: false,
+                  isStatus: true,
+                  showStar: false,
+                  formatter: FormatterUtil.addressFormatter,
+                ),
+                SizedBox(height: 24.h),
                 Obx(
                   () => CustomButton(
                     buttonText: 'save'.tr,

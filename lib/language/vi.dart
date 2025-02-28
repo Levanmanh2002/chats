@@ -196,4 +196,6 @@ const Map<String, String> vi = {
   "privacy_policy": "Chính sách bảo mật",
   "change_quick_name": "Đổi tên gợi nhớ",
   "enter_new_name": "Nhập tên mới",
+  "auto_message": "Tin nhắn tự động",
+  "enter_auto_message_content": "Nhập nội dung tin nhắn tự động",
 };

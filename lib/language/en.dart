@@ -197,4 +197,6 @@ const Map<String, String> en = {
   "privacy_policy": "Privacy Policy",
   "change_quick_name": "Change quick name",
   "enter_new_name": "Enter new name",
+  "auto_message": "Auto message",
+  "enter_auto_message_content": "Enter auto message content",
 };
