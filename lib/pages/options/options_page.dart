@@ -1,3 +1,4 @@
+import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:chats/main.dart';
 import 'package:chats/pages/create_group/create_group_parameter.dart';
 import 'package:chats/pages/instant_message/instant_message_parameter.dart';
@@ -5,12 +6,14 @@ import 'package:chats/pages/media_files/media_files_parameter.dart';
 import 'package:chats/pages/options/options_controller.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
+import 'package:chats/utils/calendar_config_util.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/app_switch.dart';
 import 'package:chats/widget/border_title_icon_widget.dart';
 import 'package:chats/widget/custom_image_widget.dart';
 import 'package:chats/widget/default_app_bar.dart';
 import 'package:chats/widget/dialog/show_common_dialog.dart';
+import 'package:chats/widget/dialog/show_update_namegroup_dialog.dart';
 import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/reponsive/extension.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +46,37 @@ class OptionsPage extends GetWidget<OptionsController> {
                     isShowNameAvatar: true,
                   ),
                   SizedBox(height: 8.h),
-                  Text(controller.parameter.user?.name ?? '', style: StyleThemeData.size20Weight600()),
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: controller.parameter.user?.name ?? '',
+                          style: StyleThemeData.size20Weight600(),
+                        ),
+                        WidgetSpan(
+                          child: InkWell(
+                            onTap: () {
+                              showUpdateNameGroupDialog(
+                                groupName: controller.parameter.user?.name ?? '',
+                                title: 'change_quick_name'.tr,
+                                content: 'enter_new_name'.tr,
+                                onSubmit: controller.changePrimaryName,
+                              );
+                            },
+                            borderRadius: BorderRadius.circular(1000),
+                            child: Container(
+                              margin: padding(left: 8.w),
+                              padding: padding(all: 6),
+                              decoration: BoxDecoration(shape: BoxShape.circle, color: appTheme.allSidesColor),
+                              child: const ImageAssetCustom(imagePath: IconsAssets.pen2Icon),
+                            ),
+                          ),
+                          alignment: PlaceholderAlignment.middle,
+                        ),
+                      ],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                   SizedBox(height: 24.h),
                   InkWell(
                     onTap: controller.onShowSearchMessage,
@@ -64,6 +97,26 @@ class OptionsPage extends GetWidget<OptionsController> {
                   BorderTitleIconWidget(
                     icon: IconsAssets.downloadIcon,
                     title: 'export_pdf_file'.tr,
+                    onTap: () async {
+                      final ranges = await showCalendarDatePicker2Dialog(
+                        context: context,
+                        config: CalendarConfigUtil.getDefaultConfig(context),
+                        dialogSize: Size(Get.width, Get.width),
+                        borderRadius: BorderRadius.circular(15),
+                        value: [
+                          controller.earningRangeDate.value.start,
+                          controller.earningRangeDate.value.end,
+                        ],
+                        dialogBackgroundColor: appTheme.whiteColor,
+                      );
+                      if (ranges?.isEmpty ?? true) return;
+                      controller.changeRangeDate(
+                        DateTimeRange(
+                          start: ranges![0]!,
+                          end: ranges.length == 1 ? ranges[0]! : ranges[1]!,
+                        ),
+                      );
+                    },
                   ),
                   SizedBox(height: 8.h),
                   Obx(

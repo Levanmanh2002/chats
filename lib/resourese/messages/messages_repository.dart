@@ -207,4 +207,35 @@ class MessagesRepository extends IMessagesRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<Response> exportMessage(int chatId, {required String startDate, required String endDate}) async {
+    try {
+      final result = await clientPostData(AppConstants.exportMessageUri, {
+        'chat_id': chatId,
+        'start_date': startDate,
+        'end_date': endDate,
+      });
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> changePrimaryName(int userId, String name) async {
+    try {
+      final result = await clientPostData(
+        AppConstants.changePrimaryNameUri,
+        {"user_id": userId, "primary_name": name},
+      );
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
 }

@@ -33,6 +33,8 @@ class SignUpController extends GetxController {
   var passwordError = ''.obs;
   var showPassword = ''.obs;
 
+  final Rx<PhoneCodeModel> phoneCode = Rx(PhoneCodeModel());
+
   @override
   void onInit() {
     super.onInit();
@@ -53,8 +55,6 @@ class SignUpController extends GetxController {
         isPolicyChecked.value &&
         selectDate.value != null;
   }
-
-  final Rx<PhoneCodeModel> phoneCode = Rx(PhoneCodeModel());
 
   void validatePhone(String text) {
     phoneError.value = '';

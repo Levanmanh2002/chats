@@ -31,6 +31,8 @@ class ProfileController extends GetxController {
 
   final Rx<PhoneCodeModel> phoneCode = Rx(PhoneCodeModel());
 
+  var phoneSupport = ''.obs;
+
   Timer? _timer;
 
   @override
@@ -143,6 +145,7 @@ class ProfileController extends GetxController {
       final response = await dashboardRepository.systemSettings();
 
       if (response.statusCode == 200) {
+        phoneSupport.value = response.body['data']['page']['contact_phone'];
         await LocalStorage.setString(SharedKey.PUSHER_API_KEY, response.body['data']['pusher']['key']);
         // log(response.body['data']['pusher']['key'], name: 'PUSHER_API_KEY');
         Get.find<ChatsController>().initStreamPusher();

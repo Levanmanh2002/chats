@@ -83,4 +83,7 @@ class AppConstants {
   static const String endCallUri = '/api/v1/call/end-call';
 
   static const String hideChatUri = '/api/v1/message/hide';
+  static const String exportMessageUri = '/api/v1/message/export';
+
+  static const String changePrimaryNameUri = '/api/v1/contact/change-primary-name';
 }

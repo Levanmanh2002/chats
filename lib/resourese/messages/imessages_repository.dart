@@ -21,4 +21,7 @@ abstract class IMessagesRepository extends IBaseRepository {
   Future<Response> endCall(Map<String, String> params);
 
   Future<Response> hideChat(int chatId);
+  Future<Response> exportMessage(int chatId, {required String startDate, required String endDate});
+
+  Future<Response> changePrimaryName(int userId, String name);
 }
