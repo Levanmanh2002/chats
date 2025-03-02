@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.admin.chats.ios</string>
+	<string>com.admin.chats</string>
 	<key>PROJECT_ID</key>
 	<string>cservice-2a138</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:304691602967:ios:7ddeb50fe1098d3af09e52</string>
+	<string>1:304691602967:ios:35fb81d2abbaf2d2f09e52</string>
 </dict>
 </plist>
