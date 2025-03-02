@@ -20,6 +20,8 @@ class GroupOptionController extends GetxController {
   Rx<ChatDataModel?> chatDataModel = Rx<ChatDataModel?>(null);
   Rx<MediaFileModel?> mediaImageModel = Rx<MediaFileModel?>(null);
 
+  var isHideMessage = false.obs;
+
   @override
   void onInit() {
     chatDataModel.value = parameter.chat;
@@ -74,6 +76,25 @@ class GroupOptionController extends GetxController {
         Get.close(2);
       } else {
         DialogUtils.showErrorDialog(response.body['message']);
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  void onHideMessage() async {
+    if (parameter.chat == null) return;
+    try {
+      EasyLoading.show(dismissOnTap: false, maskType: EasyLoadingMaskType.clear);
+
+      final response = await messagesRepository.hideChat(parameter.chat!.id!);
+
+      if (response.statusCode == 200) {
+        isHideMessage.value = !isHideMessage.value;
+        Get.find<GroupMessageController>().messageModel.value?.chat?.isHide = isHideMessage.value;
+        Get.find<ChatsController>().fetchChatList();
       }
     } catch (e) {
       print(e);

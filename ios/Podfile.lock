@@ -1,6 +1,53 @@
 PODS:
+  - agora_rtc_engine (6.5.0):
+    - AgoraIrisRTC_iOS (= 4.5.0-build.1)
+    - AgoraRtcEngine_iOS (= 4.5.0)
+    - Flutter
+  - AgoraInfra_iOS (1.2.13)
+  - AgoraIrisRTC_iOS (4.5.0-build.1)
+  - AgoraRtcEngine_iOS (4.5.0):
+    - AgoraRtcEngine_iOS/AIAEC (= 4.5.0)
+    - AgoraRtcEngine_iOS/AIAECLL (= 4.5.0)
+    - AgoraRtcEngine_iOS/AINS (= 4.5.0)
+    - AgoraRtcEngine_iOS/AINSLL (= 4.5.0)
+    - AgoraRtcEngine_iOS/AudioBeauty (= 4.5.0)
+    - AgoraRtcEngine_iOS/ClearVision (= 4.5.0)
+    - AgoraRtcEngine_iOS/ContentInspect (= 4.5.0)
+    - AgoraRtcEngine_iOS/FaceCapture (= 4.5.0)
+    - AgoraRtcEngine_iOS/FaceDetection (= 4.5.0)
+    - AgoraRtcEngine_iOS/LipSync (= 4.5.0)
+    - AgoraRtcEngine_iOS/ReplayKit (= 4.5.0)
+    - AgoraRtcEngine_iOS/RtcBasic (= 4.5.0)
+    - AgoraRtcEngine_iOS/SpatialAudio (= 4.5.0)
+    - AgoraRtcEngine_iOS/VideoAv1CodecDec (= 4.5.0)
+    - AgoraRtcEngine_iOS/VideoAv1CodecEnc (= 4.5.0)
+    - AgoraRtcEngine_iOS/VideoCodecDec (= 4.5.0)
+    - AgoraRtcEngine_iOS/VideoCodecEnc (= 4.5.0)
+    - AgoraRtcEngine_iOS/VirtualBackground (= 4.5.0)
+    - AgoraRtcEngine_iOS/VQA (= 4.5.0)
+  - AgoraRtcEngine_iOS/AIAEC (4.5.0)
+  - AgoraRtcEngine_iOS/AIAECLL (4.5.0)
+  - AgoraRtcEngine_iOS/AINS (4.5.0)
+  - AgoraRtcEngine_iOS/AINSLL (4.5.0)
+  - AgoraRtcEngine_iOS/AudioBeauty (4.5.0)
+  - AgoraRtcEngine_iOS/ClearVision (4.5.0)
+  - AgoraRtcEngine_iOS/ContentInspect (4.5.0)
+  - AgoraRtcEngine_iOS/FaceCapture (4.5.0)
+  - AgoraRtcEngine_iOS/FaceDetection (4.5.0)
+  - AgoraRtcEngine_iOS/LipSync (4.5.0)
+  - AgoraRtcEngine_iOS/ReplayKit (4.5.0)
+  - AgoraRtcEngine_iOS/RtcBasic (4.5.0):
+    - AgoraInfra_iOS (= 1.2.13)
+  - AgoraRtcEngine_iOS/SpatialAudio (4.5.0)
+  - AgoraRtcEngine_iOS/VideoAv1CodecDec (4.5.0)
+  - AgoraRtcEngine_iOS/VideoAv1CodecEnc (4.5.0)
+  - AgoraRtcEngine_iOS/VideoCodecDec (4.5.0)
+  - AgoraRtcEngine_iOS/VideoCodecEnc (4.5.0)
+  - AgoraRtcEngine_iOS/VirtualBackground (4.5.0)
+  - AgoraRtcEngine_iOS/VQA (4.5.0)
   - contacts_service (0.2.2):
     - Flutter
+  - CryptoSwift (1.8.4)
   - Firebase/CoreOnly (11.8.0):
     - FirebaseCore (~> 11.8.0)
   - Firebase/Messaging (11.8.0):
@@ -34,7 +81,12 @@ PODS:
     - GoogleUtilities/UserDefaults (~> 8.0)
     - nanopb (~> 3.30910.0)
   - Flutter (1.0.0)
+  - flutter_callkit_incoming (0.0.1):
+    - CryptoSwift
+    - Flutter
   - flutter_local_notifications (0.0.1):
+    - Flutter
+  - flutter_ringtone_player (0.0.1):
     - Flutter
   - GoogleDataTransport (10.1.0):
     - nanopb (~> 3.30910.0)
@@ -64,6 +116,8 @@ PODS:
     - GoogleUtilities/Logger
     - GoogleUtilities/Privacy
   - image_picker_ios (0.0.1):
+    - Flutter
+  - iris_method_channel (0.0.1):
     - Flutter
   - nanopb (3.30910.0):
     - nanopb/decode (= 3.30910.0)
@@ -105,12 +159,16 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - agora_rtc_engine (from `.symlinks/plugins/agora_rtc_engine/ios`)
   - contacts_service (from `.symlinks/plugins/contacts_service/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
+  - flutter_callkit_incoming (from `.symlinks/plugins/flutter_callkit_incoming/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
+  - flutter_ringtone_player (from `.symlinks/plugins/flutter_ringtone_player/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
+  - iris_method_channel (from `.symlinks/plugins/iris_method_channel/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
@@ -124,6 +182,10 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - AgoraInfra_iOS
+    - AgoraIrisRTC_iOS
+    - AgoraRtcEngine_iOS
+    - CryptoSwift
     - Firebase
     - FirebaseCore
     - FirebaseCoreInternal
@@ -139,6 +201,8 @@ SPEC REPOS:
     - TweetNacl
 
 EXTERNAL SOURCES:
+  agora_rtc_engine:
+    :path: ".symlinks/plugins/agora_rtc_engine/ios"
   contacts_service:
     :path: ".symlinks/plugins/contacts_service/ios"
   firebase_core:
@@ -147,10 +211,16 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
     :path: Flutter
+  flutter_callkit_incoming:
+    :path: ".symlinks/plugins/flutter_callkit_incoming/ios"
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
+  flutter_ringtone_player:
+    :path: ".symlinks/plugins/flutter_ringtone_player/ios"
   image_picker_ios:
     :path: ".symlinks/plugins/image_picker_ios/ios"
+  iris_method_channel:
+    :path: ".symlinks/plugins/iris_method_channel/ios"
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
@@ -173,7 +243,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/wakelock_plus/ios"
 
 SPEC CHECKSUMS:
+  agora_rtc_engine: e3a02271977b2fb07580cb3fa6f1f8ef26ae75de
+  AgoraInfra_iOS: 65e11a2183ab7836258768868d06058c22701b13
+  AgoraIrisRTC_iOS: 8207edf56ceaae6b8ee773d8e2137c6b7cb062be
+  AgoraRtcEngine_iOS: 38b5e0a49bbad5616f284e6a4f9e4f5bb3fb3b2e
   contacts_service: 849e1f84281804c8bfbec1b4c3eedcb23c5d3eca
+  CryptoSwift: e64e11850ede528a02a0f3e768cec8e9d92ecb90
   Firebase: d80354ed7f6df5f9aca55e9eb47cc4b634735eaf
   firebase_core: 6e223dfa350b2edceb729cea505eaaef59330682
   firebase_messaging: 07fde77ae28c08616a1d4d870450efc2b38cf40d
@@ -182,10 +257,13 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 6c963bd2a86aca0481eef4f48f5a4df783ae5917
   FirebaseMessaging: 487b634ccdf6f7b7ff180fdcb2a9935490f764e8
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  flutter_callkit_incoming: 417dd1b46541cdd5d855ad795ccbe97d1c18155e
   flutter_local_notifications: df98d66e515e1ca797af436137b4459b160ad8c9
+  flutter_ringtone_player: 15eba85187230b87b2512f0e1b92225618bc03e7
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleUtilities: 26a3abef001b6533cf678d3eb38fd3f614b7872d
   image_picker_ios: c560581cceedb403a6ff17f2f816d7fea1421fc1
+  iris_method_channel: 0617c689164d8154c020c50f63ca79f92b8a7b9d
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   NWWebSocket: 040d22f23438cc09aaeabf537beff67699c3c76d
   package_info_plus: c0502532a26c7662a62a356cebe2692ec5fe4ec4

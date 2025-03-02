@@ -27,6 +27,7 @@ class UpdateProfileController extends GetxController {
 
   late TextEditingController nameController;
   late TextEditingController addressController;
+  late TextEditingController autoMessage;
 
   Rx<Gender?> selectGender = Rx<Gender?>(null);
   var avatarFile = Rxn<XFile>();
@@ -40,6 +41,7 @@ class UpdateProfileController extends GetxController {
     super.onInit();
     nameController = TextEditingController(text: user?.name)..addListener(_validateForm);
     addressController = TextEditingController(text: user?.address)..addListener(_validateForm);
+    autoMessage = TextEditingController(text: user?.autoMessage ?? '');
     selectGender.value = user?.gender?.nameValue;
     selectDate.value = user?.birthday?.toDateTime;
     selectGender.listen((_) => _validateForm());
@@ -72,6 +74,7 @@ class UpdateProfileController extends GetxController {
         "birthday": selectDate.value?.toyyyyMMdd ?? '',
         "gender": selectGender.value?.name ?? '',
         "address": addressController.text.trim(),
+        "auto_message": autoMessage.text.trim(),
       };
 
       final response = await profileRepository.updateProfile(params);

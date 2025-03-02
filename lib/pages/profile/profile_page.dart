@@ -6,6 +6,7 @@ import 'package:chats/pages/update_profile/update_profile_parameter.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/icons_assets.dart';
+import 'package:chats/utils/launch_url.dart';
 import 'package:chats/widget/dialog/show_delete_account_dialog.dart';
 import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/list_loader.dart';
@@ -56,6 +57,14 @@ class ProfilePage extends GetWidget<ProfileController> {
                       Routes.SECURITY_CODE,
                       arguments: SecurityCodeParameter(user: controller.user.value),
                     ),
+                  ),
+                  SizedBox(height: 8.h),
+                  _buildProfile(
+                    icon: IconsAssets.phoneIcon,
+                    title: 'contact_support'.tr,
+                    onTap: () {
+                      makePhoneCall(controller.phoneSupport.value);
+                    },
                   ),
                   SizedBox(height: 8.h),
                   _buildProfile(

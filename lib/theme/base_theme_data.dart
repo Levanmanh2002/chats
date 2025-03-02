@@ -27,6 +27,7 @@ abstract class BaseThemeData {
   Color green44Color = const Color(0xFF2AB644);
   Color greenEDColor = const Color(0xFFECFFED);
   Color greenF3Color = const Color(0xFFF6FFF3);
+  Color greenF00Color = const Color(0xFF1EFF00);
 
   Color bgGreenColor = const Color(0xFFE9FFEC);
 

@@ -31,6 +31,7 @@ void main() async {
   await AppService.initAppService();
   await PusherService.initPusher();
   await Firebase.initializeApp();
+
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   try {

@@ -54,4 +54,10 @@ class IconsAssets {
   static const String lockPasswordIcon = '${_basePath}lock_password.svg';
   static const String altArrowRightImage = '${_basePath}alt_arrow_right.svg';
   static const String addUserImage = '${_basePath}add_user.svg';
+  static const String phoneBorderImage = '${_basePath}phone_border.svg';
+  static const String micBorderImage = '${_basePath}mic_border.svg';
+  static const String micOffBorderImage = '${_basePath}mic_off_border.svg';
+  static const String audioBorderImage = '${_basePath}audio_border.svg';
+  static const String audioOffBorderImage = '${_basePath}audio_off_border.svg';
+  static const String callCancelImage = '${_basePath}call_cancel.svg';
 }

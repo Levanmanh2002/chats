@@ -6,7 +6,12 @@ import 'package:chats/widget/reponsive/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-void showUpdateNameGroupDialog({required String groupName, required Function(String name) onSubmit}) {
+void showUpdateNameGroupDialog({
+  required String groupName,
+  required Function(String name) onSubmit,
+  String? title,
+  String? content,
+}) {
   final TextEditingController groupNameController = TextEditingController();
 
   groupNameController.text = groupName;
@@ -27,12 +32,12 @@ void showUpdateNameGroupDialog({required String groupName, required Function(Str
             mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(height: 12.h),
-              Text('set_group_name'.tr, style: StyleThemeData.size16Weight600()),
+              Text(title ?? 'set_group_name'.tr, style: StyleThemeData.size16Weight600()),
               Padding(
                 padding: padding(horizontal: 12, vertical: 12),
                 child: CustomTextField(
                   controller: groupNameController,
-                  hintText: 'enter_the_new_group_name'.tr,
+                  hintText: content ?? 'enter_the_new_group_name'.tr,
                   formatter: FormatterUtil.createGroupFormatter,
                   colorBorder: appTheme.allSidesColor,
                   showLine: false,

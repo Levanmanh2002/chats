@@ -30,6 +30,9 @@ class UserModel {
   @JsonKey(name: 'last_online')
   String? lastOnline;
 
+  @JsonKey(name: 'auto_message')
+  String? autoMessage;
+
   UserModel({
     this.id,
     this.name,
@@ -44,6 +47,7 @@ class UserModel {
     this.isSenderRequestFriend,
     this.isReceiverIdRequestFriend,
     this.lastOnline,
+    this.autoMessage,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);

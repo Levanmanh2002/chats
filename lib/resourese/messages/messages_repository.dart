@@ -135,4 +135,107 @@ class MessagesRepository extends IMessagesRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<Response> generateToken(Map<String, String> params) async {
+    try {
+      final result = await clientPostData(AppConstants.generateTokentUri, params);
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> initCall(Map<String, String> params) async {
+    try {
+      final result = await clientPostData(AppConstants.initCallUri, params);
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> rejectCall(Map<String, String> params) async {
+    try {
+      final result = await clientPostData(AppConstants.rejectCallUri, params);
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> joinCall(Map<String, String> params) async {
+    try {
+      final result = await clientPostData(AppConstants.joinCallUri, params);
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> endCall(Map<String, String> params) async {
+    try {
+      final result = await clientPostData(AppConstants.endCallUri, params);
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> hideChat(int chatId) async {
+    try {
+      final result = await clientPostData(AppConstants.hideChatUri, {'chat_id': chatId});
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> exportMessage(int chatId, {required String startDate, required String endDate}) async {
+    try {
+      final result = await clientPostData(AppConstants.exportMessageUri, {
+        'chat_id': chatId,
+        'start_date': startDate,
+        'end_date': endDate,
+      });
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> changePrimaryName(int userId, String name) async {
+    try {
+      final result = await clientPostData(
+        AppConstants.changePrimaryNameUri,
+        {"user_id": userId, "primary_name": name},
+      );
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
 }

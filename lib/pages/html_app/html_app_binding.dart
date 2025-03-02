@@ -4,6 +4,10 @@ import 'package:get/get.dart';
 class HtmlAppBinding implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => HtmlAppController());
+    Get.lazyPut(
+      () => HtmlAppController(
+        dashboardRepository: Get.find(),
+      ),
+    );
   }
 }

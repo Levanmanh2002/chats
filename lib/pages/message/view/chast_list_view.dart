@@ -5,6 +5,7 @@ import 'package:chats/models/messages/files_models.dart';
 import 'package:chats/models/messages/message_data_model.dart';
 import 'package:chats/models/messages/message_models.dart';
 import 'package:chats/pages/attachment_fullscreen/attachment_fullscreen_parameter.dart';
+import 'package:chats/pages/call/call_parameter.dart';
 import 'package:chats/pages/message/message_controller.dart';
 import 'package:chats/pages/message/widget/message_list_widget.dart';
 import 'package:chats/pages/message/widget/reaction_popup_widget.dart';
@@ -17,6 +18,7 @@ import 'package:chats/widget/chats/attach_file_widget.dart';
 import 'package:chats/widget/custom_image_widget.dart';
 import 'package:chats/widget/dynamic_grid_item_view.dart';
 import 'package:chats/widget/image_asset_custom.dart';
+import 'package:chats/widget/line_widget.dart';
 import 'package:chats/widget/list_loader.dart';
 import 'package:chats/widget/reponsive/extension.dart';
 import 'package:flutter/material.dart';
@@ -252,6 +254,95 @@ class ChastListView extends GetView<MessageController> {
                               ),
                           ],
                         ),
+                  if (item.isCall == true)
+                    Align(
+                      alignment: item.sender?.id == Get.find<ProfileController>().user.value?.id
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
+                      child: Container(
+                        margin: padding(horizontal: 16, vertical: 2),
+                        padding: padding(vertical: 8, horizontal: 12),
+                        constraints: BoxConstraints(maxWidth: 160.w),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: appTheme.whiteColor,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              item.missedCall == true
+                                  ? 'missed_call'.tr
+                                  : item.isRejectCallId != null
+                                      ? 'receiver_declined_the_call'.tr
+                                      : item.isCanceldId != null && (item.callJoinedAt ?? '').isEmpty
+                                          ? 'call_canceled'.tr
+                                          : item.isDontPickUp == true
+                                              ? 'call_not_answered'.tr
+                                              : item.sender?.id == Get.find<ProfileController>().user.value?.id
+                                                  ? 'outgoing_call'.tr
+                                                  : item.sender?.id != Get.find<ProfileController>().user.value?.id
+                                                      ? 'incoming_call'.tr
+                                                      : 'voice_call'.tr,
+                              style: StyleThemeData.size14Weight600(
+                                color: item.missedCall == true ? appTheme.errorColor : appTheme.blackColor,
+                              ),
+                            ),
+                            SizedBox(height: 4.h),
+                            Row(
+                              children: [
+                                ImageAssetCustom(
+                                  imagePath:
+                                      item.missedCall == true ? IconsAssets.callCancelImage : IconsAssets.phoneIcon,
+                                  size: 20.w,
+                                ),
+                                SizedBox(width: 4.w),
+                                Text(
+                                  ((item.callJoinedAt ?? '').isNotEmpty && (item.callEndAt ?? '').isNotEmpty)
+                                      ? controller.calculateCallDuration(
+                                          item.callJoinedAt ?? '',
+                                          item.callEndAt ?? '',
+                                        )
+                                      : 'voice_call'.tr,
+                                  style: StyleThemeData.size12Weight400(),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 4.h),
+                            const LineWidget(),
+                            SizedBox(height: 4.h),
+                            InkWell(
+                              onTap: () {
+                                final contact = controller.messageModel.value?.chat?.users?.firstWhereOrNull(
+                                  (e) => e.id != Get.find<ProfileController>().user.value?.id,
+                                );
+
+                                if (contact == null) return;
+
+                                Get.toNamed(
+                                  Routes.CALL,
+                                  arguments: CallCallParameter(
+                                    id: contact.id ?? DateTime.now().millisecondsSinceEpoch,
+                                    messageId: controller.messageModel.value!.chat!.id!,
+                                    callId: null,
+                                    name: contact.name ?? '',
+                                    avatar: contact.avatar ?? '',
+                                    type: CallType.call,
+                                  ),
+                                );
+                              },
+                              child: Center(
+                                child: Text(
+                                  'call_back'.tr,
+                                  style: StyleThemeData.size14Weight600(color: appTheme.appColor),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   if (isLastItem) SizedBox(height: 16.h),
                 ],
               );

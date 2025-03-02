@@ -3,6 +3,7 @@ import 'package:chats/models/messages/likes.dart';
 import 'package:chats/models/messages/reply_message.dart';
 import 'package:chats/models/profile/user_model.dart';
 import 'package:chats/models/tickers/tickers_model.dart';
+import 'package:chats/utils/json_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'message_data_model.g.dart';
@@ -45,6 +46,30 @@ class MessageDataModel {
   @JsonKey(ignore: true) // ✅ Bỏ qua khi parse JSON từ API
   MessageStatus status;
 
+  @JsonKey(name: 'is_call', fromJson: parseToBool)
+  bool? isCall;
+
+  @JsonKey(name: 'missed_call')
+  bool? missedCall;
+
+  @JsonKey(name: 'is_dont_pick_up')
+  bool? isDontPickUp;
+
+  @JsonKey(name: 'is_reject_call_id', fromJson: parseToInt)
+  int? isRejectCallId;
+
+  @JsonKey(name: 'is_canceld_id', fromJson: parseToInt)
+  int? isCanceldId;
+
+  @JsonKey(name: 'call_started_at')
+  String? callStartedAt;
+
+  @JsonKey(name: 'call_joined_at')
+  String? callJoinedAt;
+
+  @JsonKey(name: 'call_end_at')
+  String? callEndAt;
+
   MessageDataModel({
     this.id,
     this.message,
@@ -60,6 +85,14 @@ class MessageDataModel {
     this.likes,
     this.createdAt,
     this.status = MessageStatus.success,
+    this.isCall,
+    this.missedCall,
+    this.isDontPickUp,
+    this.isRejectCallId,
+    this.isCanceldId,
+    this.callStartedAt,
+    this.callJoinedAt,
+    this.callEndAt,
   });
 
   factory MessageDataModel.fromJson(Map<String, dynamic> json) {
@@ -80,6 +113,13 @@ class MessageDataModel {
     List<LikeModel>? likes,
     String? createdAt,
     MessageStatus? status,
+    bool? isCall,
+    bool? missedCall,
+    int? isRejectCallId,
+    int? isCanceldId,
+    String? callStartedAt,
+    String? callJoinedAt,
+    String? callEndAt,
   }) {
     return MessageDataModel(
       id: id ?? this.id,
@@ -93,6 +133,13 @@ class MessageDataModel {
       likes: likes ?? this.likes,
       createdAt: createdAt ?? this.createdAt,
       status: status ?? this.status,
+      isCall: isCall ?? this.isCall,
+      missedCall: missedCall ?? this.missedCall,
+      isRejectCallId: isRejectCallId ?? this.isRejectCallId,
+      isCanceldId: isCanceldId ?? this.isCanceldId,
+      callStartedAt: callStartedAt ?? this.callStartedAt,
+      callJoinedAt: callJoinedAt ?? this.callJoinedAt,
+      callEndAt: callEndAt ?? this.callEndAt,
     );
   }
 }
