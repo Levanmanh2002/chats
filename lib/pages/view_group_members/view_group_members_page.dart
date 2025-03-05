@@ -1,6 +1,7 @@
 import 'package:chats/main.dart';
 import 'package:chats/models/profile/user_model.dart';
 import 'package:chats/pages/create_group/create_group_parameter.dart';
+import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/pages/view_group_members/view_group_members_controller.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
@@ -41,18 +42,24 @@ class ViewGroupMembersPage extends GetWidget<ViewGroupMembersController> {
                         icon: ImageAssetCustom(imagePath: IconsAssets.arrowLeftIcon, color: appTheme.whiteColor),
                       ),
                       Text('manage_members'.tr, style: StyleThemeData.size16Weight600(color: appTheme.whiteColor)),
-                      IconButton(
-                        onPressed: () => Get.toNamed(
-                          Routes.CREATE_GROUP,
-                          arguments: CreateGroupParameter(
-                            type: CreateGroupType.joinGroup,
-                            users: controller.chatGroupData.value?.users,
-                            groupId: controller.chatGroupData.value?.id,
-                            updateAddMemberLocal: true,
-                          ),
-                        ),
-                        icon: ImageAssetCustom(imagePath: IconsAssets.addGroupIcon, color: appTheme.whiteColor),
-                      ),
+                      Obx(() {
+                        if (controller.chatGroupData.value?.owner?.id == Get.find<ProfileController>().user.value?.id) {
+                          return IconButton(
+                            onPressed: () => Get.toNamed(
+                              Routes.CREATE_GROUP,
+                              arguments: CreateGroupParameter(
+                                type: CreateGroupType.joinGroup,
+                                users: controller.chatGroupData.value?.users,
+                                groupId: controller.chatGroupData.value?.id,
+                                updateAddMemberLocal: true,
+                              ),
+                            ),
+                            icon: ImageAssetCustom(imagePath: IconsAssets.addGroupIcon, color: appTheme.whiteColor),
+                          );
+                        } else {
+                          return const IconButton(onPressed: null, icon: SizedBox());
+                        }
+                      }),
                     ],
                   ),
                 ),
@@ -165,30 +172,47 @@ class ViewGroupMembersPage extends GetWidget<ViewGroupMembersController> {
           SizedBox(width: 8.w),
           IconButton(
             onPressed: () {
-              if (isLeader) {
-                showAssignOwnerBottomSheet(
-                  users: controller.chatGroupData.value?.users
-                      ?.where((user) => user.id != controller.chatGroupData.value?.owner?.id)
-                      .toList(),
-                  phoneCode: controller.phoneCode.value.getCodeAsString(),
-                  onConfirm: (UserModel user) {
-                    showCommonDialog(
-                      title: 'are_you_sure_you_want_to_leave_the_group'.tr,
-                      buttonTitle: 'leave_the_group'.tr,
-                      onSubmit: () => controller.transferOwnership(user),
-                    );
-                  },
+              if (owner?.id == Get.find<ProfileController>().user.value?.id) {
+                if (isLeader) {
+                  showAssignOwnerBottomSheet(
+                    users: controller.chatGroupData.value?.users
+                        ?.where((user) => user.id != controller.chatGroupData.value?.owner?.id)
+                        .toList(),
+                    phoneCode: controller.phoneCode.value.getCodeAsString(),
+                    onConfirm: (UserModel user) {
+                      showCommonDialog(
+                        title: 'are_you_sure_you_want_to_leave_the_group'.tr,
+                        buttonTitle: 'leave_the_group'.tr,
+                        onSubmit: () => controller.transferOwnership(user),
+                      );
+                    },
+                  );
+                } else {
+                  showInfoMemeberBottomBottomSheet(
+                    e,
+                    chatId: controller.chatGroupData.value?.id,
+                    onDelete: () {
+                      showCommonDialog(
+                        title: 'remove_field_from_the_group'.trParams({'field': e.name ?? ''}),
+                        buttonTitle: 'remove_from_group'.tr,
+                        onSubmit: () => controller.removeMemberFromGroup(e),
+                      );
+                    },
+                    onSendChat: () => controller.onMessage(e),
+                  );
+                }
+              } else if (e.id == Get.find<ProfileController>().user.value?.id) {
+                showCommonDialog(
+                  title: 'are_you_sure_you_want_to_leave_the_group'.tr,
+                  buttonTitle: 'leave_the_group'.tr,
+                  onSubmit: () => controller.memberOutGroup(),
                 );
               } else {
                 showInfoMemeberBottomBottomSheet(
                   e,
-                  onDelete: () {
-                    showCommonDialog(
-                      title: 'remove_field_from_the_group'.trParams({'field': e.name ?? ''}),
-                      buttonTitle: 'remove_from_group'.tr,
-                      onSubmit: () => controller.removeMemberFromGroup(e),
-                    );
-                  },
+                  chatId: controller.chatGroupData.value?.id,
+                  title: isLeader ? 'leader_member_info'.tr : null,
+                  onSendChat: () => controller.onMessage(e),
                 );
               }
             },

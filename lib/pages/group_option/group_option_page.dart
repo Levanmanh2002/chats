@@ -3,6 +3,7 @@ import 'package:chats/pages/create_group/create_group_parameter.dart';
 import 'package:chats/pages/group_option/group_option_controller.dart';
 import 'package:chats/pages/instant_message/instant_message_parameter.dart';
 import 'package:chats/pages/media_files/media_files_parameter.dart';
+import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/pages/view_group_members/view_group_members_parameter.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
@@ -116,31 +117,37 @@ class GroupOptionPage extends GetWidget<GroupOptionController> {
                           ),
                         ),
                       ),
-                      SizedBox(width: 24.w),
-                      Flexible(
-                        child: GestureDetector(
-                          onTap: () => Get.toNamed(
-                            Routes.CREATE_GROUP,
-                            arguments: CreateGroupParameter(
-                              type: CreateGroupType.joinGroup,
-                              users: controller.chatDataModel.value?.users,
-                              groupId: controller.chatDataModel.value?.id,
+                      if (controller.chatDataModel.value?.owner?.id ==
+                          Get.find<ProfileController>().user.value?.id) ...{
+                        SizedBox(width: 24.w),
+                        Flexible(
+                          child: GestureDetector(
+                            onTap: () => Get.toNamed(
+                              Routes.CREATE_GROUP,
+                              arguments: CreateGroupParameter(
+                                type: CreateGroupType.joinGroup,
+                                users: controller.chatDataModel.value?.users,
+                                groupId: controller.chatDataModel.value?.id,
+                              ),
+                            ),
+                            child: Column(
+                              children: [
+                                Container(
+                                  padding: padding(all: 8),
+                                  decoration: BoxDecoration(shape: BoxShape.circle, color: appTheme.allSidesColor),
+                                  child: ImageAssetCustom(
+                                    imagePath: IconsAssets.addGroupIcon,
+                                    color: appTheme.blackColor,
+                                    size: 24.w,
+                                  ),
+                                ),
+                                SizedBox(height: 4.h),
+                                Text('add_member'.tr, style: StyleThemeData.size12Weight400()),
+                              ],
                             ),
                           ),
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: padding(all: 8),
-                                decoration: BoxDecoration(shape: BoxShape.circle, color: appTheme.allSidesColor),
-                                child: ImageAssetCustom(
-                                    imagePath: IconsAssets.addGroupIcon, color: appTheme.blackColor, size: 24.w),
-                              ),
-                              SizedBox(height: 4.h),
-                              Text('add_member'.tr, style: StyleThemeData.size12Weight400()),
-                            ],
-                          ),
                         ),
-                      ),
+                      },
                     ],
                   ),
                   SizedBox(height: 24.h),

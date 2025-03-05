@@ -22,6 +22,7 @@ import 'package:flutter_callkit_incoming/entities/notification_params.dart';
 import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:uuid/uuid.dart';
 
 class NotificationHelper {
   static Future<void> initialize() async {
@@ -84,11 +85,11 @@ class NotificationHelper {
     }
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      if (message.data['type'] == 'chat' && message.data['call_token'] != null) {
-        _handleIncomingCall(message);
-      } else {
-        showLocalNotification(message);
-      }
+      // if (message.data['type'] == 'chat' && message.data['call_token'] != null) {
+      _handleIncomingCall(message);
+      // } else {
+      //   showLocalNotification(message);
+      // }
 
       if (kDebugMode) {
         print(
@@ -142,8 +143,8 @@ class NotificationHelper {
           }
           break;
         case Event.actionCallDecline:
-          final extraData = event?.body?['extra'];
-          sendCallDeclinedToServer(messageId: extraData['call_id']);
+          // final extraData = event?.body?['extra'];
+          // sendCallDeclinedToServer(messageId: extraData['call_id']);
 
           break;
         case Event.actionCallEnded:
@@ -280,8 +281,10 @@ void _showCallKitIncomingCall({
   required String avatar,
   required RemoteMessage message,
 }) async {
+  String uuidV4 = const Uuid().v4();
+
   CallKitParams callKitParams = CallKitParams(
-    id: channel,
+    id: uuidV4,
     nameCaller: callerName,
     appName: 'Chat - Nhà Táo',
     avatar: avatar,
@@ -310,7 +313,7 @@ void _showCallKitIncomingCall({
       isShowCallID: false,
     ),
     ios: const IOSParams(
-      iconName: 'CallKitLogo',
+      // iconName: 'CallKitLogo',
       handleType: 'generic',
       supportsVideo: true,
       maximumCallGroups: 2,

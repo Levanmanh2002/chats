@@ -8,6 +8,7 @@ class ViewGroupMembersBinding implements Bindings {
       () => ViewGroupMembersController(
         parameter: Get.arguments,
         groupsRepository: Get.find(),
+        messagesRepository: Get.find(),
       ),
     );
   }

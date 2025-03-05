@@ -26,18 +26,16 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSContactsUsageDescription</key>
-	<string>This app requires contacts access to function properly.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Ứng dụng cần sử dụng Microphone để gọi video</string>
-
 	<key>NSCameraUsageDescription</key>
 	<string>Ứng dụng cần truy cập camera để chụp ảnh và gửi trong cuộc trò chuyện.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Ứng dụng cần truy cập thư viện ảnh để chọn ảnh và gửi trong cuộc trò chuyện.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Ứng dụng này yêu cầu quyền truy cập vào danh bạ để cho phép bạn chọn và tương tác với danh bạ của mình.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Ứng dụng cần sử dụng Microphone để gọi video</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Ứng dụng cần truy cập thư viện ảnh để chọn ảnh và gửi trong cuộc trò chuyện.</string>
-
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Ứng dụng cần truy cập thư viện ảnh để chọn ảnh và gửi trong cuộc trò chuyện.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
@@ -46,6 +44,10 @@
 		<string>remote-notification</string>
 		<string>voip</string>
 		<string>fetch</string>
+	</array>
+	<key>UIDeviceFamily</key>
+	<array>
+		<integer>1</integer>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

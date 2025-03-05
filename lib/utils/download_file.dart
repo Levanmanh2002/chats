@@ -24,9 +24,19 @@ Future<void> downloadPdfToPublicDirectory(String url, String fileName) async {
       final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
-        Directory? picturesDirectory = await getExternalStorageDirectory();
-        String filePath = '${picturesDirectory?.path}/Pictures/$fileName';
-        await Directory('${picturesDirectory?.path}/Pictures').create(recursive: true);
+        Directory directory;
+        String folderPath;
+
+        if (Platform.isAndroid) {
+          directory = await getExternalStorageDirectory() ?? await getApplicationDocumentsDirectory();
+          folderPath = '${directory.path}/Pictures';
+        } else {
+          directory = await getApplicationDocumentsDirectory();
+          folderPath = directory.path;
+        }
+
+        String filePath = '$folderPath/$fileName';
+        await Directory(folderPath).create(recursive: true);
         File file = File(filePath);
         await file.writeAsBytes(response.bodyBytes);
 

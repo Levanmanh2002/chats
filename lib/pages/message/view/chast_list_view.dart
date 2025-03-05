@@ -328,6 +328,7 @@ class ChastListView extends GetView<MessageController> {
                                     callId: null,
                                     name: contact.name ?? '',
                                     avatar: contact.avatar ?? '',
+                                    channel: 'channel',
                                     type: CallType.call,
                                   ),
                                 );

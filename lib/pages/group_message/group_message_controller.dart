@@ -307,6 +307,8 @@ class GroupMessageController extends GetxController {
       }
       imageFile.insert(0, file);
     }
+
+    onSendMessage();
   }
 
   void toggleTickers() {
@@ -374,6 +376,7 @@ class GroupMessageController extends GetxController {
       clearMessage();
 
       _sendAndUpdateMessageLocal(tempMessage, messageText, imageFile, replyMessageLocal, tempSticker);
+      scrollToBottom();
     } catch (e) {
       print(e);
     }

@@ -193,7 +193,7 @@ class CallController extends GetxController {
     FlutterRingtonePlayer().play(
       fromAsset: AudioUtils.outgoingCallRingtone,
       // android: AndroidSounds.notification,
-      ios: const IosSound(1023),
+      ios: IosSounds.glass,
       looping: true,
     );
   }

@@ -22,7 +22,7 @@ class CallCallParameter {
     required this.callId,
     required this.name,
     required this.avatar,
-    this.channel,
+    required this.channel,
     this.token,
     required this.type,
   });

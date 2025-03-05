@@ -2,14 +2,20 @@ import 'dart:async';
 
 import 'package:chats/models/contact/contact_model.dart';
 import 'package:chats/models/profile/user_model.dart';
+import 'package:chats/pages/call/call_parameter.dart';
+import 'package:chats/pages/message/message_parameter.dart';
 import 'package:chats/resourese/contact/icontact_repository.dart';
+import 'package:chats/resourese/messages/imessages_repository.dart';
+import 'package:chats/routes/pages.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
 class ContactsController extends GetxController with GetSingleTickerProviderStateMixin {
   final IContactRepository contactRepository;
+  final IMessagesRepository messagesRepository;
 
-  ContactsController({required this.contactRepository});
+  ContactsController({required this.contactRepository, required this.messagesRepository});
 
   late final TabController tabController;
 
@@ -71,6 +77,38 @@ class ContactsController extends GetxController with GetSingleTickerProviderStat
     if (!isExist) {
       contactModel.value!.data!.insert(0, ContactModel(friend: contact..isFriend = true));
       contactModel.refresh();
+    }
+  }
+
+  void onMessage(int id, {required ContactModel contact}) async {
+    try {
+      EasyLoading.show(dismissOnTap: false, maskType: EasyLoadingMaskType.clear);
+
+      final response = await messagesRepository.getIdChatByUser(id);
+
+      if (response.statusCode == 200) {
+        Get.toNamed(
+          Routes.CALL,
+          arguments: CallCallParameter(
+            id: contact.friend?.id ?? DateTime.now().millisecondsSinceEpoch,
+            messageId: response.body['data']['id'],
+            callId: null,
+            name: contact.friend?.name ?? '',
+            avatar: contact.friend?.avatar ?? '',
+            channel: 'channel',
+            type: CallType.call,
+          ),
+        );
+      } else {
+        Get.toNamed(
+          Routes.MESSAGE,
+          arguments: MessageParameter(contact: contact.friend),
+        );
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      EasyLoading.dismiss();
     }
   }
 

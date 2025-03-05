@@ -140,6 +140,7 @@ class MessageController extends GetxController {
           isFriend: model.isFriend,
           isSenderRequestFriend: model.isSenderRequestFriend,
           isReceiverIdRequestFriend: model.isReceiverIdRequestFriend,
+          requestFriend: model.requestFriend,
         );
       }
     } catch (e) {
@@ -314,6 +315,7 @@ class MessageController extends GetxController {
       }
       imageFile.insert(0, file);
     }
+    onSendMessage();
 
     // if (pickedFiles.isNotEmpty) {
     //   imageFile.addAll(pickedFiles);
@@ -386,6 +388,7 @@ class MessageController extends GetxController {
       clearMessage();
 
       _sendAndUpdateMessageLocal(tempMessage, messageText, imageFile, replyMessageLocal, tempSticker);
+      scrollToBottom();
     } catch (e) {
       print(e);
     }
@@ -596,6 +599,8 @@ class MessageController extends GetxController {
       if (response.statusCode == 200) {
         messageModel.value = messageModel.value?.copyWith(isSenderRequestFriend: true);
         messageModel.refresh();
+
+        fetchChatList(messageModel.value?.chat?.id ?? parameter.chatId!, isShowLoad: false);
       } else {
         DialogUtils.showErrorDialog(response.body['message']);
       }
@@ -610,17 +615,16 @@ class MessageController extends GetxController {
     try {
       isLoadingRemoveFriend.value = true;
 
-      List<UserModel> filteredUsers = (messageModel.value?.chat?.users ?? [])
-          .where((user) => user.id != Get.find<ProfileController>().user.value?.id)
-          .toList();
+      final requestFriend = messageModel.value?.requestFriend;
+      if (requestFriend == null) return;
 
-      if (filteredUsers.isEmpty) return;
-
-      final response = await contactRepository.removeFriend(filteredUsers.first.id!);
+      final response = await contactRepository.removeFriend(requestFriend.id!);
 
       if (response.statusCode == 200) {
         messageModel.value = messageModel.value?.copyWith(isSenderRequestFriend: false);
         messageModel.refresh();
+
+        fetchChatList(messageModel.value?.chat?.id ?? parameter.chatId!, isShowLoad: false);
       } else {
         DialogUtils.showErrorDialog(response.body['message']);
       }
@@ -635,13 +639,10 @@ class MessageController extends GetxController {
     try {
       isLoadingCancelFriend.value = true;
 
-      List<UserModel> filteredUsers = (messageModel.value?.chat?.users ?? [])
-          .where((user) => user.id != Get.find<ProfileController>().user.value?.id)
-          .toList();
+      final requestFriend = messageModel.value?.requestFriend;
+      if (requestFriend == null) return;
 
-      if (filteredUsers.isEmpty) return;
-
-      final response = await contactRepository.cancelFriendRequest(filteredUsers.first.id!);
+      final response = await contactRepository.cancelFriendRequest(requestFriend.id!);
 
       if (response.statusCode == 200) {
         messageModel.value = messageModel.value?.copyWith(
@@ -650,6 +651,7 @@ class MessageController extends GetxController {
           isReceiverIdRequestFriend: false,
         );
         messageModel.refresh();
+        fetchChatList(messageModel.value?.chat?.id ?? parameter.chatId!, isShowLoad: false);
       } else {
         DialogUtils.showErrorDialog(response.body['message']);
       }
@@ -664,17 +666,15 @@ class MessageController extends GetxController {
     try {
       isLoadingAcceptFriend.value = true;
 
-      List<UserModel> filteredUsers = (messageModel.value?.chat?.users ?? [])
-          .where((user) => user.id != Get.find<ProfileController>().user.value?.id)
-          .toList();
+      final requestFriend = messageModel.value?.requestFriend;
+      if (requestFriend == null) return;
 
-      if (filteredUsers.isEmpty) return;
-
-      final response = await contactRepository.acceptFriendRequest(filteredUsers.first.id!);
+      final response = await contactRepository.acceptFriendRequest(requestFriend.id!);
 
       if (response.statusCode == 200) {
         messageModel.value = messageModel.value?.copyWith(isFriend: true);
         messageModel.refresh();
+        fetchChatList(messageModel.value?.chat?.id ?? parameter.chatId!, isShowLoad: false);
       } else {
         DialogUtils.showErrorDialog(response.body['message']);
       }

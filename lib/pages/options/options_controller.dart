@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chats/constant/date_format_constants.dart';
 import 'package:chats/extension/date_time_extension.dart';
 import 'package:chats/models/messages/media_file_model.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
@@ -107,7 +108,7 @@ class OptionsController extends GetxController {
       if (response.statusCode == 200) {
         await downloadPdfToPublicDirectory(
           response.body['download_url'],
-          'export_message_${DateFormat('yyyyMMdd').format(DateTime.now())}.pdf',
+          'export_message_${DateFormat(DateConstants.yyyyMMddMMmmss).format(DateTime.now())}.pdf',
         );
       } else {
         DialogUtils.showErrorDialog(response.body['message']);

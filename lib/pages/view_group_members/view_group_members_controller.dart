@@ -5,8 +5,11 @@ import 'package:chats/models/response/phone_code_model.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
 import 'package:chats/pages/group_message/group_message_controller.dart';
 import 'package:chats/pages/group_option/group_option_controller.dart';
+import 'package:chats/pages/message/message_parameter.dart';
 import 'package:chats/pages/view_group_members/view_group_members_parameter.dart';
 import 'package:chats/resourese/groups/igroups_repository.dart';
+import 'package:chats/resourese/messages/imessages_repository.dart';
+import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/dialog_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -15,8 +18,13 @@ import 'package:get/get.dart';
 class ViewGroupMembersController extends GetxController {
   final ViewGroupMembersParameter parameter;
   final IGroupsRepository groupsRepository;
+  final IMessagesRepository messagesRepository;
 
-  ViewGroupMembersController({required this.parameter, required this.groupsRepository});
+  ViewGroupMembersController({
+    required this.parameter,
+    required this.groupsRepository,
+    required this.messagesRepository,
+  });
 
   Rx<ChatDataModel?> chatGroupData = Rx<ChatDataModel?>(null);
 
@@ -112,6 +120,56 @@ class ViewGroupMembersController extends GetxController {
         }
       } else {
         DialogUtils.showErrorDialog(response.body['message']);
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  void memberOutGroup() async {
+    try {
+      EasyLoading.show(dismissOnTap: false, maskType: EasyLoadingMaskType.clear);
+
+      Map<String, dynamic> params = {
+        "group_id": parameter.chatGroup?.id,
+      };
+
+      final response = await groupsRepository.transferOwnership(params);
+
+      if (response.statusCode == 200) {
+        DialogUtils.showSuccessDialog(response.body['message']);
+        Get.close(3);
+        if (parameter.chatGroup != null) {
+          Get.find<ChatsController>().removeChat(parameter.chatGroup!.id!);
+        }
+      } else {
+        DialogUtils.showErrorDialog(response.body['message']);
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  void onMessage(UserModel user) async {
+    try {
+      EasyLoading.show(dismissOnTap: false, maskType: EasyLoadingMaskType.clear);
+
+      final response = await messagesRepository.getIdChatByUser(user.id!);
+
+      if (response.statusCode == 200) {
+        Get.toNamed(
+          Routes.MESSAGE,
+          arguments: MessageParameter(chatId: response.body['data']['id'], contact: user),
+        );
+      } else {
+        Get.toNamed(
+          Routes.MESSAGE,
+          arguments: MessageParameter(contact: user),
+        );
       }
     } catch (e) {
       print(e);

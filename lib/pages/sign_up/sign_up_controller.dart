@@ -44,16 +44,18 @@ class SignUpController extends GetxController {
     selectGender.listen((_) => _validateForm());
     isPolicyChecked.listen((_) => _validateForm());
     selectDate.listen((_) => _validateForm());
+    selectGender.value = Gender.values[0];
   }
 
   void _validateForm() {
     isFormValid.value = CustomValidator.validateName(nameController.text).isEmpty &&
         CustomValidator.validatePhone(phoneController.text).isEmpty &&
         CustomValidator.validatePassword(passwordController.text).isEmpty &&
-        CustomValidator.validateAddress(addressController.text).isEmpty &&
+        // CustomValidator.validateAddress(addressController.text).isEmpty &&
         selectGender.value != null &&
-        isPolicyChecked.value &&
-        selectDate.value != null;
+        isPolicyChecked.value;
+    // &&
+    // selectDate.value != null;
   }
 
   void validatePhone(String text) {
@@ -94,7 +96,7 @@ class SignUpController extends GetxController {
         phone: numberWithCountryCode,
         password: password,
         confirmPassword: password,
-        birthday: selectDate.value?.toyyyyMMdd ?? '',
+        birthday: selectDate.value?.toyyyyMMdd ?? '2000-11-01',
         gender: selectGender.value?.name ?? '',
         address: addressController.text.trim(),
       );

@@ -1,4 +1,5 @@
 import 'package:chats/models/chats/chat_data_model.dart';
+import 'package:chats/models/contact/sender_request_friend.dart';
 import 'package:chats/models/messages/message_data_model.dart';
 import 'package:chats/utils/json_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -41,6 +42,9 @@ class MessageModels {
   @JsonKey(name: 'is_receiver_id_request_friend', fromJson: parseToBool)
   bool? isReceiverIdRequestFriend;
 
+  @JsonKey(name: 'request_friend')
+  SenderRequestFriend? requestFriend;
+
   MessageModels({
     this.chat,
     this.listMessages,
@@ -53,6 +57,7 @@ class MessageModels {
     this.isFriend,
     this.isSenderRequestFriend,
     this.isReceiverIdRequestFriend,
+    this.requestFriend,
   });
 
   factory MessageModels.fromJson(Map<String, dynamic> json) => _$MessageModelsFromJson(json);
@@ -68,6 +73,7 @@ class MessageModels {
     bool? isFriend,
     bool? isSenderRequestFriend,
     bool? isReceiverIdRequestFriend,
+    SenderRequestFriend? requestFriend,
   }) {
     return MessageModels(
       chat: chat ?? this.chat,
@@ -79,6 +85,7 @@ class MessageModels {
       isFriend: isFriend ?? this.isFriend,
       isSenderRequestFriend: isSenderRequestFriend ?? this.isSenderRequestFriend,
       isReceiverIdRequestFriend: isReceiverIdRequestFriend ?? this.isReceiverIdRequestFriend,
+      requestFriend: requestFriend ?? this.requestFriend,
     );
   }
 }

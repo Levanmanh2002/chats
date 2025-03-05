@@ -198,4 +198,10 @@ const Map<String, String> vi = {
   "enter_new_name": "Nhập tên mới",
   "auto_message": "Tin nhắn tự động",
   "enter_auto_message_content": "Nhập nội dung tin nhắn tự động",
+  "connecting": "Đang kết nối",
+  "end": "Kết thúc",
+  "speaker": "Loa",
+  "request_permission": "Yêu cầu quyền truy cập",
+  "content_permission_contact": "Quyền truy cập danh bạ không được cấp. Vui lòng mở Cài đặt để bật quyền này.",
+  "leader_member_info": "Thông tin trưởng nhóm",
 };

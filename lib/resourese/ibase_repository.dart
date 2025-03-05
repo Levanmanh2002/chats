@@ -161,7 +161,9 @@ class IBaseRepository {
     if (savedLanguage.isNotEmpty) {
       await LocalStorage.setString(SharedKey.language, savedLanguage);
     }
-    Get.offAllNamed(Routes.SIGN_IN);
+    if (Get.currentRoute != Routes.SIGN_IN) {
+      Get.offAllNamed(Routes.SIGN_IN);
+    }
   }
 }
 

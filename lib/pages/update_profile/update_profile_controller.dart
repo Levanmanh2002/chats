@@ -51,10 +51,10 @@ class UpdateProfileController extends GetxController {
   }
 
   void _validateForm() {
-    isFormValid.value = CustomValidator.validateName(nameController.text).isEmpty &&
-        CustomValidator.validateAddress(addressController.text).isEmpty &&
-        selectGender.value != null &&
-        selectDate.value != null;
+    isFormValid.value = CustomValidator.validateName(nameController.text).isEmpty;
+    // CustomValidator.validateAddress(addressController.text).isEmpty &&
+    // selectGender.value != null &&
+    // selectDate.value != null;
   }
 
   void saveGender(Gender gender) {

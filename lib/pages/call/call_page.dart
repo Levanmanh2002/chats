@@ -49,7 +49,7 @@ class CallPage extends GetWidget<CallController> {
                   );
                 }
                 return Text(
-                  'Đang kết nối',
+                  'connecting'.tr,
                   style: StyleThemeData.size16Weight400(color: appTheme.greenF00Color),
                 );
               }),
@@ -77,7 +77,7 @@ class CallPage extends GetWidget<CallController> {
                       ),
                     ),
                     SizedBox(height: 4.h),
-                    Text('Loa', style: StyleThemeData.size12Weight400(color: appTheme.whiteColor)),
+                    Text('speaker'.tr, style: StyleThemeData.size12Weight400(color: appTheme.whiteColor)),
                   ],
                 ),
               ),
@@ -91,7 +91,7 @@ class CallPage extends GetWidget<CallController> {
                     icon: const ImageAssetCustom(imagePath: IconsAssets.phoneBorderImage),
                   ),
                   SizedBox(height: 4.h),
-                  Text('Kết thúc', style: StyleThemeData.size12Weight400(color: appTheme.whiteColor)),
+                  Text('end'.tr, style: StyleThemeData.size12Weight400(color: appTheme.whiteColor)),
                 ],
               ),
             ),
@@ -116,49 +116,6 @@ class CallPage extends GetWidget<CallController> {
           ],
         ),
       ),
-      // body: Obx(
-      //   () => Stack(
-      //     children: [
-      //       Center(
-      //         child: _remoteVideo(),
-      //       ),
-      //       Align(
-      //         alignment: Alignment.topLeft,
-      //         child: SizedBox(
-      //           width: 100,
-      //           height: 150,
-      //           child: Center(
-      //             child: controller.localUserJoined.value
-      //                 ? AgoraVideoView(
-      //                     controller: VideoViewController(
-      //                       rtcEngine: controller.engine,
-      //                       canvas: const VideoCanvas(uid: 0),
-      //                     ),
-      //                   )
-      //                 : const CircularProgressIndicator(),
-      //           ),
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
     );
   }
-
-  // Widget _remoteVideo() {
-  //   if (controller.remoteUidValue.value != 0) {
-  //     return AgoraVideoView(
-  //       controller: VideoViewController.remote(
-  //         rtcEngine: controller.engine,
-  //         canvas: VideoCanvas(uid: controller.remoteUidValue.value),
-  //         connection: const RtcConnection(channelId: channel),
-  //       ),
-  //     );
-  //   } else {
-  //     return const Text(
-  //       'Please wait for remote user to join',
-  //       textAlign: TextAlign.center,
-  //     );
-  //   }
-  // }
 }

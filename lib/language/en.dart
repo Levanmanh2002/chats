@@ -199,4 +199,10 @@ const Map<String, String> en = {
   "enter_new_name": "Enter new name",
   "auto_message": "Auto message",
   "enter_auto_message_content": "Enter auto message content",
+  "connecting": "Connecting",
+  "end": "End",
+  "speaker": "Speaker",
+  "request_permission": "Request permission",
+  "content_permission_contact": "Contacts access is not granted. Please open Settings to enable this permission.",
+  "leader_member_info": "Leader member info",
 };

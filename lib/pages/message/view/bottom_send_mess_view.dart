@@ -46,17 +46,16 @@ class BottomSendMessView extends GetView<MessageController> {
                   )
                 : controller.messageValue.value.isEmpty
                     ? Padding(
-                        padding: padding(horizontal: 14),
+                        padding: padding(horizontal: 12),
                         child: Row(
                           children: [
-                            InkWell(
-                              onTap: controller.toggleTickers,
-                              child: const ImageAssetCustom(imagePath: IconsAssets.emojiIcon),
+                            IconButton(
+                              onPressed: controller.toggleTickers,
+                              icon: const ImageAssetCustom(imagePath: IconsAssets.emojiIcon),
                             ),
-                            SizedBox(width: 8.w),
-                            InkWell(
-                              onTap: controller.pickImages,
-                              child: const ImageAssetCustom(imagePath: IconsAssets.galleryIcon),
+                            IconButton(
+                              onPressed: controller.pickImages,
+                              icon: const ImageAssetCustom(imagePath: IconsAssets.galleryIcon),
                             ),
                           ],
                         ),
