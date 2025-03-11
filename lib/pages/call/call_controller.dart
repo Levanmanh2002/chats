@@ -267,9 +267,7 @@ class CallController extends GetxController {
         if (message.data['type'] == 'chat' && message.data['call_action'] == 'reject_call') {
           await _dispose();
           if (Get.currentRoute == Routes.CALL) {
-            if (Get.currentRoute == Routes.CALL) {
-              Get.back();
-            }
+            Get.back();
           }
         }
       } catch (e) {

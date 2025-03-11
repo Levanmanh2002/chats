@@ -38,6 +38,7 @@ class SyncContactPage extends GetWidget<SyncContactController> {
               () => CustomButton(
                 buttonText: 'sync_contacts'.tr,
                 isLoading: controller.isLoading.isTrue,
+                // onPressed: controller.onSubmitContact,
                 onPressed: controller.syncContacts,
               ),
             ),

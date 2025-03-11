@@ -83,7 +83,7 @@ class SyncContactController extends GetxController {
         if (openSettings) {
           await openAppSettings();
         } else {
-          throw Exception("Quyền truy cập danh bạ không được cấp!");
+          DialogUtils.showErrorDialog('Quyền truy cập danh bạ không được cấp!');
         }
       }
       Iterable<Contact> rawContacts = await ContactsService.getContacts();

@@ -12,6 +12,7 @@ import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/app_constants.dart';
 import 'package:chats/utils/local_storage.dart';
 import 'package:chats/utils/shared_key.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_callkit_incoming/entities/android_params.dart';
@@ -85,11 +86,11 @@ class NotificationHelper {
     }
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      // if (message.data['type'] == 'chat' && message.data['call_token'] != null) {
-      _handleIncomingCall(message);
-      // } else {
-      //   showLocalNotification(message);
-      // }
+      if (message.data['type'] == 'chat' && message.data['call_token'] != null) {
+        _handleIncomingCall(message);
+      } else {
+        showLocalNotification(message);
+      }
 
       if (kDebugMode) {
         print(
@@ -143,8 +144,8 @@ class NotificationHelper {
           }
           break;
         case Event.actionCallDecline:
-          // final extraData = event?.body?['extra'];
-          // sendCallDeclinedToServer(messageId: extraData['call_id']);
+          final extraData = event?.body?['extra'];
+          sendCallDeclinedToServer(messageId: extraData['call_id']);
 
           break;
         case Event.actionCallEnded:
@@ -225,7 +226,56 @@ class NotificationHelper {
 
 @pragma('vm:entry-point')
 Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print('xu ly tin nhan trong background');
   _handleIncomingCall(message);
+
+  FlutterCallkitIncoming.onEvent.listen((event) {
+    log((event?.body ?? {}).toString(), name: 'CallKitEvent');
+    switch (event?.event) {
+      case Event.actionCallAccept:
+        if (!Get.isRegistered<CallController>()) {
+          final extraData = event?.body?['extra'];
+
+          if (extraData != null) {
+            Get.toNamed(
+              Routes.CALL,
+              arguments: CallCallParameter(
+                id: int.tryParse(extraData['user_id'] ?? '') ?? 0,
+                messageId: int.tryParse(extraData['id'] ?? '') ?? 0,
+                callId: int.tryParse(extraData['call_id'] ?? '') ?? 0,
+                name: extraData['user_name'] ?? '',
+                avatar: extraData['user_avatar'] ?? '',
+                channel: extraData['channel_name'] ?? '',
+                token: extraData['call_token'] ?? '',
+                type: CallType.incomingCall,
+              ),
+            );
+          }
+        }
+        break;
+      case Event.actionCallDecline:
+        final extraData = event?.body?['extra'];
+        sendCallDeclinedToServer(messageId: extraData['call_id']);
+
+        break;
+      case Event.actionCallEnded:
+        sendCallDeclinedToServer(messageId: event?.body?['id']);
+        break;
+      case Event.actionCallIncoming:
+        log("Cuộc gọi đến");
+        break;
+      case Event.actionCallTimeout:
+        log("Cuộc gọi đã hết hạn");
+        break;
+      case Event.actionCallCallback:
+        log("Bắt đầu cuộc gọi");
+        break;
+      default:
+        log("Sự kiện không xác định: ${event?.event}");
+        break;
+    }
+  });
 
   if (message.data['type'] == 'chat' && message.data['call_token'] != null) {
     await LocalStorage.init();
@@ -258,7 +308,8 @@ Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
 }
 
 void _handleIncomingCall(RemoteMessage message) {
-  log(message.data.toString());
+  log('Xử lý cuộc gọi đến');
+  print('Xử lý cuộc gọi đến');
   if (message.data['type'] == 'chat' &&
       message.data['call_token'] != null &&
       message.data['call_action'] == 'init_call') {
@@ -295,14 +346,14 @@ void _showCallKitIncomingCall({
     extra: message.data,
     missedCallNotification: const NotificationParams(
       showNotification: true,
-      isShowCallback: true,
+      isShowCallback: false,
       subtitle: 'Cuộc gọi nhỡ',
       callbackText: 'Gọi lại',
     ),
-    duration: 30000,
+    duration: 20000,
     android: AndroidParams(
       isCustomNotification: true,
-      isShowLogo: false,
+      isShowLogo: true,
       ringtonePath: 'system_ringtone_default',
       backgroundColor: '#0955fa',
       backgroundUrl: avatar,
@@ -331,9 +382,6 @@ void _showCallKitIncomingCall({
   );
 
   await FlutterCallkitIncoming.showCallkitIncoming(callKitParams);
-  Future.delayed(const Duration(seconds: 60), () async {
-    await FlutterCallkitIncoming.endAllCalls();
-  });
 }
 
 Future<void> sendCallDeclinedToServer({required String messageId}) async {
