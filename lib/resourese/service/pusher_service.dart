@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:chats/helper/notification_helper.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/utils/app_constants.dart';
 import 'package:get/get.dart';
@@ -81,6 +82,7 @@ class PusherService {
 
   static void onEvent(PusherEvent event) {
     log("onEvent: $event");
+    handleIncomingCall(event.data);
   }
 
   static void onSubscriptionSucceeded(String channelName, dynamic data) {

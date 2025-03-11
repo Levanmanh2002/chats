@@ -12,6 +12,7 @@ import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/app_constants.dart';
 import 'package:chats/utils/local_storage.dart';
 import 'package:chats/utils/shared_key.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_callkit_incoming/entities/android_params.dart';
@@ -23,6 +24,42 @@ import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
+
+@pragma('vm:entry-point')
+Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  handleIncomingCall(message.data);
+
+  if (message.data['type'] == 'chat' && message.data['call_token'] != null) {
+    await LocalStorage.init();
+    LocalStorage.setJSON(
+      SharedKey.CALL_CHAT_EVENT,
+      {
+        "id": message.data['id'] ?? '',
+        "user_id": message.data['user_id'] ?? '',
+        "call_id": message.data['call_id'] ?? '',
+        "call_token": message.data['call_token'] ?? '',
+        "channel_name": message.data['channel_name'] ?? '',
+        "user_name": message.data['user_name'] ?? '',
+        "user_avatar": message.data['user_avatar'] ?? '',
+      },
+    );
+  }
+
+  if (kDebugMode) {
+    print(
+      "onBackground: ${message.notification!.title}/${message.notification!.body}/${message.notification!.titleLocKey}",
+    );
+    print("onMessage type: ${message.data['type']}/${message.data}");
+  }
+
+  if (message.notification != null) {
+    if (message.data['type'] == 'chat' && message.data['call_action'] == 'reject_call') {
+      IsolateNameServer.lookupPortByName(AppConstants.rejectCallChannelId)?.send(message.toMap());
+    }
+  }
+}
+
 
 class NotificationHelper {
   static Future<void> initialize() async {
@@ -86,7 +123,7 @@ class NotificationHelper {
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       // if (message.data['type'] == 'chat' && message.data['call_token'] != null) {
-      _handleIncomingCall(message);
+      handleIncomingCall(message.data);
       // } else {
       //   showLocalNotification(message);
       // }
@@ -223,52 +260,19 @@ class NotificationHelper {
   }
 }
 
-@pragma('vm:entry-point')
-Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
-  _handleIncomingCall(message);
 
-  if (message.data['type'] == 'chat' && message.data['call_token'] != null) {
-    await LocalStorage.init();
-    LocalStorage.setJSON(
-      SharedKey.CALL_CHAT_EVENT,
-      {
-        "id": message.data['id'] ?? '',
-        "user_id": message.data['user_id'] ?? '',
-        "call_id": message.data['call_id'] ?? '',
-        "call_token": message.data['call_token'] ?? '',
-        "channel_name": message.data['channel_name'] ?? '',
-        "user_name": message.data['user_name'] ?? '',
-        "user_avatar": message.data['user_avatar'] ?? '',
-      },
-    );
-  }
-
-  if (kDebugMode) {
-    print(
-      "onBackground: ${message.notification!.title}/${message.notification!.body}/${message.notification!.titleLocKey}",
-    );
-    print("onMessage type: ${message.data['type']}/${message.data}");
-  }
-
-  if (message.notification != null) {
-    if (message.data['type'] == 'chat' && message.data['call_action'] == 'reject_call') {
-      IsolateNameServer.lookupPortByName(AppConstants.rejectCallChannelId)?.send(message.toMap());
-    }
-  }
-}
-
-void _handleIncomingCall(RemoteMessage message) {
-  log(message.data.toString());
-  if (message.data['type'] == 'chat' &&
-      message.data['call_token'] != null &&
-      message.data['call_action'] == 'init_call') {
+void handleIncomingCall(Map<String, dynamic> data) {
+  log(data.toString());
+  if (data['type'] == 'chat' &&
+      data['call_token'] != null &&
+      data['call_action'] == 'init_call') {
     _showCallKitIncomingCall(
-      id: message.data['user_id'] ?? '',
-      token: message.data['call_token'] ?? '',
-      channel: message.data['channel_name'] ?? '',
-      callerName: message.data['user_name'] ?? '',
-      avatar: message.data['user_avatar'] ?? '',
-      message: message,
+      id: data['user_id'] ?? '',
+      token: data['call_token'] ?? '',
+      channel: data['channel_name'] ?? '',
+      callerName: data['user_name'] ?? '',
+      avatar: data['user_avatar'] ?? '',
+      data: data,
     );
   }
 }
@@ -279,7 +283,7 @@ void _showCallKitIncomingCall({
   required String channel,
   required String callerName,
   required String avatar,
-  required RemoteMessage message,
+  required Map<String, dynamic> data,
 }) async {
   String uuidV4 = const Uuid().v4();
 
@@ -292,7 +296,7 @@ void _showCallKitIncomingCall({
     type: 0, // 0: Audio Call, 1: Video Call
     textAccept: 'Chấp nhận',
     textDecline: 'Từ chối',
-    extra: message.data,
+    extra: data,
     missedCallNotification: const NotificationParams(
       showNotification: true,
       isShowCallback: true,

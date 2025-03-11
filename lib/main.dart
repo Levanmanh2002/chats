@@ -33,11 +33,12 @@ void main() async {
   await Firebase.initializeApp();
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
+  FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
   try {
     await NotificationHelper.initialize();
-    FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
-  } catch (_) {}
+  } catch (_) {
+    print(_);
+  }
 
   runApp(LayoutBuilder(builder: (context, constraints) {
     SizeConfig.instance.init(constraints: constraints, screenHeight: 812, screenWidth: 375);
