@@ -21,19 +21,23 @@ void showReactionPopup(String message, {required bool isCurrentUser, VoidCallbac
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
-              Container(
-                constraints: BoxConstraints(maxWidth: 300.w),
-                padding: padding(all: 8),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: isCurrentUser ? appTheme.appColor : appTheme.whiteColor,
-                ),
-                child: MessageTextView(
-                  message: message,
-                  textStyle: StyleThemeData.size14Weight400(
-                    color: isCurrentUser ? appTheme.whiteColor : appTheme.blackColor,
+              Flexible(
+                child: SingleChildScrollView(
+                  child: Container(
+                    constraints: BoxConstraints(maxWidth: 300.w),
+                    padding: padding(all: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: isCurrentUser ? appTheme.appColor : appTheme.whiteColor,
+                    ),
+                    child: MessageTextView(
+                      message: message,
+                      textStyle: StyleThemeData.size14Weight400(
+                        color: isCurrentUser ? appTheme.whiteColor : appTheme.blackColor,
+                      ),
+                      color: isCurrentUser ? appTheme.whiteColor : appTheme.blackColor,
+                    ),
                   ),
-                  color: isCurrentUser ? appTheme.whiteColor : appTheme.blackColor,
                 ),
               ),
               SizedBox(height: 4.h),

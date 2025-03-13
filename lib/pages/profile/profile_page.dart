@@ -82,6 +82,7 @@ class ProfilePage extends GetWidget<ProfileController> {
                     colorTitle: appTheme.errorColor,
                     onTap: () => controller.logout(isShowTitle: true),
                   ),
+                  SizedBox(height: 24.h),
                 ],
               ),
             ],

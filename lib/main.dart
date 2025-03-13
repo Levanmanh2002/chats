@@ -36,9 +36,7 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
   try {
     await NotificationHelper.initialize();
-  } catch (_) {
-    print(_);
-  }
+  } catch (_) {}
 
   runApp(LayoutBuilder(builder: (context, constraints) {
     SizeConfig.instance.init(constraints: constraints, screenHeight: 812, screenWidth: 375);

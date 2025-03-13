@@ -38,7 +38,14 @@ class BorderTitleIconWidget extends StatelessWidget {
               children: [
                 ImageAssetCustom(imagePath: icon, size: 24.w, color: color ?? appTheme.blackColor),
                 SizedBox(width: 12.w),
-                Text(title, style: StyleThemeData.size14Weight400(color: color)),
+                Flexible(
+                  child: Text(
+                    title,
+                    style: StyleThemeData.size14Weight400(color: color),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ],
             ),
             child ?? const SizedBox(),

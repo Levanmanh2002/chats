@@ -30,28 +30,31 @@ class ReplyMessageView extends GetView<MessageController> {
                     children: [
                       AttachFileWidget(item: controller.messageReply.value!.files!.first, size: 32.w, borderRadius: 2),
                       SizedBox(width: 8.w),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            controller.messageReply.value?.sender?.name ?? '',
-                            style: StyleThemeData.size12Weight600(),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          SizedBox(height: 2.h),
-                          Text(
-                            controller.messageReply.value?.files?.first.fileType?.getFileCategory == FileCategory.IMAGE
-                                ? 'image_line'.tr
-                                : controller.messageReply.value?.files?.first.fileType?.getFileCategory ==
-                                        FileCategory.VIDEO
-                                    ? 'video_line'.tr
-                                    : 'attachment_line'.tr,
-                            style: StyleThemeData.size8Weight400(color: appTheme.grayColor),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              controller.messageReply.value?.sender?.name ?? '',
+                              style: StyleThemeData.size12Weight600(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 2.h),
+                            Text(
+                              controller.messageReply.value?.files?.first.fileType?.getFileCategory ==
+                                      FileCategory.IMAGE
+                                  ? 'image_line'.tr
+                                  : controller.messageReply.value?.files?.first.fileType?.getFileCategory ==
+                                          FileCategory.VIDEO
+                                      ? 'video_line'.tr
+                                      : 'attachment_line'.tr,
+                              style: StyleThemeData.size8Weight400(color: appTheme.grayColor),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -61,23 +64,25 @@ class ReplyMessageView extends GetView<MessageController> {
                     children: [
                       const ImageAssetCustom(imagePath: IconsAssets.replyIcon),
                       SizedBox(width: 8.w),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            controller.messageReply.value?.sender?.name ?? '',
-                            style: StyleThemeData.size12Weight600(),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          SizedBox(height: 2.h),
-                          Text(
-                            controller.messageReply.value?.message ?? '',
-                            style: StyleThemeData.size8Weight400(color: appTheme.grayColor),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
+                      Flexible(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              controller.messageReply.value?.sender?.name ?? '',
+                              style: StyleThemeData.size12Weight600(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 2.h),
+                            Text(
+                              controller.messageReply.value?.message ?? '',
+                              style: StyleThemeData.size8Weight400(color: appTheme.grayColor),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),

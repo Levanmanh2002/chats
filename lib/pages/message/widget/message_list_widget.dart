@@ -92,14 +92,18 @@ class MessageListWidget extends StatelessWidget {
                                         children: [
                                           Text(
                                             replyMessage?.sender?.name ?? '',
-                                            style: StyleThemeData.size10Weight600(color: appTheme.whiteColor),
+                                            style: StyleThemeData.size10Weight600(
+                                              color: isCurrentUser ? appTheme.whiteColor : appTheme.blackColor,
+                                            ),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                           SizedBox(height: 2.h),
                                           Text(
                                             replyMessage?.message ?? '',
-                                            style: StyleThemeData.size10Weight400(color: appTheme.blueBFFColor),
+                                            style: StyleThemeData.size10Weight400(
+                                              color: isCurrentUser ? appTheme.blueBFFColor : appTheme.grayColor,
+                                            ),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                           ),

@@ -179,6 +179,7 @@ class GroupOptionPage extends GetWidget<GroupOptionController> {
                       () => (controller.mediaImageModel.value != null &&
                               (controller.mediaImageModel.value?.items ?? []).isNotEmpty)
                           ? Container(
+                              margin: padding(top: 12),
                               padding: padding(all: 10),
                               decoration: BoxDecoration(
                                 border: Border.all(width: 1.w, color: appTheme.allSidesColor),

@@ -44,6 +44,53 @@ Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
         "user_avatar": message.data['user_avatar'] ?? '',
       },
     );
+
+    FlutterCallkitIncoming.onEvent.listen((event) {
+      log((event?.body ?? {}).toString(), name: 'CallKitEvent');
+      switch (event?.event) {
+        case Event.actionCallAccept:
+          if (!Get.isRegistered<CallController>()) {
+            final extraData = event?.body?['extra'];
+
+            if (extraData != null) {
+              Get.toNamed(
+                Routes.CALL,
+                arguments: CallCallParameter(
+                  id: int.tryParse(extraData['user_id'] ?? '') ?? 0,
+                  messageId: int.tryParse(extraData['id'] ?? '') ?? 0,
+                  callId: int.tryParse(extraData['call_id'] ?? '') ?? 0,
+                  name: extraData['user_name'] ?? '',
+                  avatar: extraData['user_avatar'] ?? '',
+                  channel: extraData['channel_name'] ?? '',
+                  token: extraData['call_token'] ?? '',
+                  type: CallType.incomingCall,
+                ),
+              );
+            }
+          }
+          break;
+        case Event.actionCallDecline:
+          // final extraData = event?.body?['extra'];
+          // sendCallDeclinedToServer(messageId: extraData['call_id']);
+
+          break;
+        case Event.actionCallEnded:
+          log("Cuộc gọi đã kết thúc");
+          break;
+        case Event.actionCallIncoming:
+          log("Cuộc gọi đến");
+          break;
+        case Event.actionCallTimeout:
+          log("Cuộc gọi đã hết hạn");
+          break;
+        case Event.actionCallCallback:
+          log("Bắt đầu cuộc gọi");
+          break;
+        default:
+          log("Sự kiện không xác định: ${event?.event}");
+          break;
+      }
+    });
   }
 
   if (kDebugMode) {
@@ -59,7 +106,6 @@ Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
     }
   }
 }
-
 
 class NotificationHelper {
   static Future<void> initialize() async {
@@ -260,12 +306,9 @@ class NotificationHelper {
   }
 }
 
-
 void handleIncomingCall(Map<String, dynamic> data) {
   log(data.toString());
-  if (data['type'] == 'chat' &&
-      data['call_token'] != null &&
-      data['call_action'] == 'init_call') {
+  if (data['type'] == 'chat' && data['call_token'] != null && data['call_action'] == 'init_call') {
     _showCallKitIncomingCall(
       id: data['user_id'] ?? '',
       token: data['call_token'] ?? '',
