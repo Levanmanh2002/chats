@@ -205,4 +205,6 @@ const Map<String, String> en = {
   "request_permission": "Request permission",
   "content_permission_contact": "Contacts access is not granted. Please open Settings to enable this permission.",
   "leader_member_info": "Leader member info",
+  "personal": "Personal",
+  "reply": "Reply",
 };

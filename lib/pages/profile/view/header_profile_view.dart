@@ -1,6 +1,7 @@
 import 'package:chats/main.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/theme/style/style_theme.dart';
+import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/utils/images_assets.dart';
 import 'package:chats/widget/custom_image_widget.dart';
 import 'package:chats/widget/image_asset_custom.dart';
@@ -38,7 +39,7 @@ class HeaderProfileView extends GetView<ProfileController> {
                       right: 0,
                       child: InkWell(
                         onTap: controller.pickImageAvatar,
-                        child: ImageAssetCustom(imagePath: ImagesAssets.cameraBorderImage, size: 32.w),
+                        child: ImageAssetCustom(imagePath: IconsAssets.cameraBorderImage, size: 32.w),
                       ),
                     ),
                   ],

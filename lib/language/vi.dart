@@ -204,4 +204,6 @@ const Map<String, String> vi = {
   "request_permission": "Yêu cầu quyền truy cập",
   "content_permission_contact": "Quyền truy cập danh bạ không được cấp. Vui lòng mở Cài đặt để bật quyền này.",
   "leader_member_info": "Thông tin trưởng nhóm",
+  "personal": "Cá nhân",
+  "reply": "Trả lời",
 };

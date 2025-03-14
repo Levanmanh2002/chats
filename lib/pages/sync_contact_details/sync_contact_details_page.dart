@@ -123,7 +123,7 @@ class SyncContactDetailsPage extends GetWidget<SyncContactDetailsController> {
       onTap: () => Get.toNamed(
         Routes.MAKE_FRIENDS,
         arguments: MakeFriendsParameter(
-          id: e.id!,
+          id: e.userContact!.id!,
           contact: e.userContact,
           type: MakeFriendsType.friend,
         ),

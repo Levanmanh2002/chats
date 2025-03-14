@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:chats/models/contact/contact_model.dart';
+import 'package:chats/models/contact/friend_request.dart';
 import 'package:chats/models/profile/user_model.dart';
 import 'package:chats/pages/call/call_parameter.dart';
 import 'package:chats/pages/message/message_parameter.dart';
@@ -22,6 +23,7 @@ class ContactsController extends GetxController with GetSingleTickerProviderStat
   var isLoading = false.obs;
 
   Rx<ContactModelData?> contactModel = Rx<ContactModelData?>(null);
+  Rx<FriendRequestData?> friendRequest = Rx<FriendRequestData?>(null);
 
   @override
   void onInit() async {
@@ -56,7 +58,25 @@ class ContactsController extends GetxController with GetSingleTickerProviderStat
     } catch (e) {
       print(e);
     } finally {
-      if (isRefresh) isLoading.value = false;
+      if (isRefresh) {
+        isLoading.value = false;
+        _fetchOnReceived();
+      }
+    }
+  }
+
+  Future<void> _fetchOnReceived({bool isRefresh = true}) async {
+    try {
+      final response = await contactRepository.getReceived(
+        page: isRefresh ? 1 : (friendRequest.value?.totalPage ?? 1) + 1,
+        limit: 10,
+      );
+
+      if (response.statusCode == 200) {
+        friendRequest.value = FriendRequestData.fromJson(response.body['data']);
+      }
+    } catch (e) {
+      print(e);
     }
   }
 

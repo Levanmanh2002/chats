@@ -119,7 +119,7 @@ class OtpController extends GetxController {
           );
         }
       } else {
-        DialogUtils.showSuccessDialog(response?.body['message']);
+        DialogUtils.showErrorDialog(response?.body['message']);
       }
     } catch (e) {
       print(e);

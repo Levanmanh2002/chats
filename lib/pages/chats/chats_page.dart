@@ -19,6 +19,9 @@ class ChatsPage extends GetWidget<ChatsController> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: SearchAppbar(
+          isShowBack: true,
+          isOffSearch: true,
+          leftTitle: 16,
           backgroundColor: appTheme.appColor,
           title: 'chat'.tr,
           onSubmitted: controller.onSearchChat,

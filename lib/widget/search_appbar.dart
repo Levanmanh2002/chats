@@ -24,6 +24,7 @@ class SearchAppbar extends StatefulWidget implements PreferredSizeWidget {
     this.isOffSearch = false,
     this.sizeAction = 0,
     this.toggleNotifier = true,
+    this.leftTitle = 0,
   });
 
   final String title;
@@ -40,6 +41,7 @@ class SearchAppbar extends StatefulWidget implements PreferredSizeWidget {
   final bool isOffSearch;
   final double sizeAction;
   final bool toggleNotifier;
+  final double leftTitle;
 
   @override
   State<SearchAppbar> createState() => _SearchAppbarState();
@@ -116,11 +118,14 @@ class _SearchAppbarState extends State<SearchAppbar> {
           return Padding(
             padding: padding(vertical: 16, left: widget.isShowBack ? 0 : 16, right: 16),
             child: toggle
-                ? widget.widgetTitle ??
-                    Text(
-                      widget.title,
-                      style: StyleThemeData.size30Weight600(color: appTheme.whiteColor),
-                    )
+                ? Padding(
+                    padding: padding(left: widget.leftTitle),
+                    child: widget.widgetTitle ??
+                        Text(
+                          widget.title,
+                          style: StyleThemeData.size30Weight600(color: appTheme.whiteColor),
+                        ),
+                  )
                 : Row(
                     children: [
                       (widget.isShowBack == true)

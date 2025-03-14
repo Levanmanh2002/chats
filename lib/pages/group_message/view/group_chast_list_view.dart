@@ -135,6 +135,9 @@ class GroupChastListView extends GetView<GroupMessageController> {
                                               onRevoke: item.sender?.id == Get.find<ProfileController>().user.value?.id
                                                   ? () => controller.onRevokeMessageLocal(item.id)
                                                   : null,
+                                              onReply: item.sender?.id == Get.find<ProfileController>().user.value?.id
+                                                  ? () => controller.onReplyMessage(item)
+                                                  : null,
                                               onHeart: () => controller.onHeartMessageLocal(item.id),
                                             );
                                           },
@@ -166,6 +169,7 @@ class GroupChastListView extends GetView<GroupMessageController> {
                                               isCurrentUser:
                                                   item.sender?.id == Get.find<ProfileController>().user.value?.id,
                                               onRevoke: () => controller.onRevokeMessageLocal(item.id),
+                                              onReply: () => controller.onReplyMessage(item),
                                               onHeart: () => controller.onHeartMessageLocal(item.id),
                                             );
                                           },
@@ -238,7 +242,7 @@ class GroupChastListView extends GetView<GroupMessageController> {
                                             margin: padding(bottom: 6),
                                             child: CustomImageWidget(
                                               imageUrl: item.sticker?.url ?? '',
-                                              size: 60.w,
+                                              size: 100.w,
                                               borderRadius: 0,
                                               showBoder: false,
                                               sizeBorder: 0,

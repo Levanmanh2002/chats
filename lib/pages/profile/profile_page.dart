@@ -112,7 +112,7 @@ class ProfilePage extends GetWidget<ProfileController> {
           ),
           child: Row(
             children: [
-              ImageAssetCustom(imagePath: icon, size: 24.w, color: colorIcon),
+              ImageAssetCustom(imagePath: icon, size: 24.w, color: colorIcon ?? appTheme.blackColor),
               SizedBox(width: 12.w),
               Text(title, style: StyleThemeData.size14Weight400(color: colorTitle)),
             ],

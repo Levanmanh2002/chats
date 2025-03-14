@@ -60,4 +60,7 @@ class IconsAssets {
   static const String audioBorderImage = '${_basePath}audio_border.svg';
   static const String audioOffBorderImage = '${_basePath}audio_off_border.svg';
   static const String callCancelImage = '${_basePath}call_cancel.svg';
+  static const String cameraBorderImage = '${_basePath}camera_border.svg';
+  static const String replyLineIcon = '${_basePath}reply_line.svg';
+  static const String unreadIcon = '${_basePath}unread.svg';
 }

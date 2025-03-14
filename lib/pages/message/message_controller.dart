@@ -504,6 +504,10 @@ class MessageController extends GetxController {
     if (isRollback == true) onRevokeMessage(messageId);
   }
 
+  void onReplyMessage(MessageDataModel message) {
+    messageReply.value = message;
+  }
+
   void onRevokeMessage(int? messageId) async {
     try {
       if (messageId == null) return;

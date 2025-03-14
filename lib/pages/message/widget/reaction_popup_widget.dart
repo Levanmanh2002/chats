@@ -7,60 +7,57 @@ import 'package:chats/widget/reponsive/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-void showReactionPopup(String message, {required bool isCurrentUser, VoidCallback? onRevoke, VoidCallback? onHeart}) {
+void showReactionPopup(
+  String message, {
+  required bool isCurrentUser,
+  VoidCallback? onRevoke,
+  VoidCallback? onHeart,
+  VoidCallback? onReply,
+}) {
   showModalBottomSheet(
     context: Get.context!,
+    isScrollControlled: true,
+    isDismissible: true,
+    enableDrag: true,
     barrierColor: Colors.black.withOpacity(0.7),
     backgroundColor: appTheme.transparentColor,
     builder: (context) {
-      return Padding(
-        padding: padding(horizontal: 16, bottom: 45),
-        child: Align(
-          alignment: isCurrentUser ? Alignment.bottomRight : Alignment.bottomLeft,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-            children: [
-              Flexible(
-                child: SingleChildScrollView(
-                  child: Container(
-                    constraints: BoxConstraints(maxWidth: 300.w),
-                    padding: padding(all: 8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: isCurrentUser ? appTheme.appColor : appTheme.whiteColor,
-                    ),
-                    child: MessageTextView(
-                      message: message,
-                      textStyle: StyleThemeData.size14Weight400(
+      return GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          Navigator.of(context).pop();
+        },
+        child: Padding(
+          padding: padding(horizontal: 16, bottom: 45),
+          child: Align(
+            alignment: isCurrentUser ? Alignment.bottomRight : Alignment.bottomLeft,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+              children: [
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Container(
+                      constraints: BoxConstraints(maxWidth: 300.w),
+                      padding: padding(all: 8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: isCurrentUser ? appTheme.appColor : appTheme.whiteColor,
+                      ),
+                      child: MessageTextView(
+                        message: message,
+                        textStyle: StyleThemeData.size14Weight400(
+                          color: isCurrentUser ? appTheme.whiteColor : appTheme.blackColor,
+                        ),
                         color: isCurrentUser ? appTheme.whiteColor : appTheme.blackColor,
                       ),
-                      color: isCurrentUser ? appTheme.whiteColor : appTheme.blackColor,
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: 4.h),
-              InkWell(
-                onTap: () {
-                  onHeart!();
-                  Get.back();
-                },
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  padding: padding(all: 12),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: appTheme.whiteColor,
-                  ),
-                  child: const ImageAssetCustom(imagePath: IconsAssets.heartColorIcon),
-                ),
-              ),
-              if (onRevoke != null) ...[
                 SizedBox(height: 4.h),
                 InkWell(
                   onTap: () {
-                    onRevoke();
+                    onHeart!();
                     Get.back();
                   },
                   borderRadius: BorderRadius.circular(12),
@@ -70,17 +67,57 @@ void showReactionPopup(String message, {required bool isCurrentUser, VoidCallbac
                       borderRadius: BorderRadius.circular(12),
                       color: appTheme.whiteColor,
                     ),
-                    child: Column(
-                      children: [
-                        ImageAssetCustom(imagePath: IconsAssets.trashBinIcon, color: appTheme.errorColor),
-                        SizedBox(height: 4.h),
-                        Text('revoke'.tr, style: StyleThemeData.size12Weight400()),
-                      ],
-                    ),
+                    child: const ImageAssetCustom(imagePath: IconsAssets.heartColorIcon),
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: appTheme.whiteColor,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (onReply != null)
+                        InkWell(
+                          onTap: () {
+                            onReply();
+                            Get.back();
+                          },
+                          child: Padding(
+                            padding: padding(all: 12),
+                            child: Column(
+                              children: [
+                                ImageAssetCustom(imagePath: IconsAssets.replyLineIcon, size: 24.w),
+                                SizedBox(height: 4.h),
+                                Text('reply'.tr, style: StyleThemeData.size12Weight400()),
+                              ],
+                            ),
+                          ),
+                        ),
+                      if (onRevoke != null)
+                        InkWell(
+                          onTap: () {
+                            onRevoke();
+                            Get.back();
+                          },
+                          child: Padding(
+                            padding: padding(all: 12),
+                            child: Column(
+                              children: [
+                                ImageAssetCustom(imagePath: IconsAssets.unreadIcon, size: 24.w),
+                                SizedBox(height: 4.h),
+                                Text('revoke'.tr, style: StyleThemeData.size12Weight400()),
+                              ],
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ],
-            ],
+            ),
           ),
         ),
       );

@@ -266,7 +266,11 @@ class CustomTextFieldState extends State<CustomTextField> {
                                     )
                                   : widget.isStatus
                                       ? IconButton(
-                                          onPressed: null,
+                                          onPressed: (widget.errorText.isEmpty && validateValue.isNotEmpty)
+                                              ? widget.controller!.clear
+                                              : widget.errorText.isNotEmpty
+                                                  ? widget.controller!.clear
+                                                  : null,
                                           icon: (widget.errorText.isEmpty && validateValue.isNotEmpty)
                                               ? SvgPicture.asset(IconsAssets.clearErrorIcon)
                                               : widget.errorText.isNotEmpty

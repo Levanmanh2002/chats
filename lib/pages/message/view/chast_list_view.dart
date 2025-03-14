@@ -114,6 +114,9 @@ class ChastListView extends GetView<MessageController> {
                                               ? () => controller.onRevokeMessageLocal(item.id)
                                               : null,
                                           onHeart: () => controller.onHeartMessageLocal(item.id),
+                                          onReply: item.sender?.id == Get.find<ProfileController>().user.value?.id
+                                              ? () => controller.onReplyMessage(item)
+                                              : null,
                                         );
                                       },
                                       child: AnimationReplyMessage(
@@ -142,6 +145,7 @@ class ChastListView extends GetView<MessageController> {
                                           isCurrentUser:
                                               item.sender?.id == Get.find<ProfileController>().user.value?.id,
                                           onRevoke: () => controller.onRevokeMessageLocal(item.id),
+                                          onReply: () => controller.onReplyMessage(item),
                                           onHeart: () => controller.onHeartMessageLocal(item.id),
                                         );
                                       },
@@ -213,7 +217,7 @@ class ChastListView extends GetView<MessageController> {
                                         margin: padding(bottom: 6),
                                         child: CustomImageWidget(
                                           imageUrl: item.sticker?.url ?? '',
-                                          size: 60.w,
+                                          size: 100.w,
                                           borderRadius: 0,
                                           showBoder: false,
                                           sizeBorder: 0,

@@ -89,7 +89,7 @@ class ContactsPage extends GetWidget<ContactsController> {
               }
             },
             tabs: [
-              Tab(text: 'friends'.tr),
+              Tab(text: 'friends'.tr + ' (${controller.contactModel.value?.data?.length ?? '0'})'.tr),
               Tab(text: 'contacts'.tr),
             ],
           ),
@@ -99,18 +99,41 @@ class ContactsPage extends GetWidget<ContactsController> {
               padding: padding(vertical: 12, horizontal: 16),
               child: Row(
                 children: [
-                  ImageAssetCustom(imagePath: ImagesAssets.contactBorderImage, size: 32.w),
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      ImageAssetCustom(imagePath: ImagesAssets.contactBorderImage, size: 32.w),
+                      Obx(() {
+                        if ((controller.friendRequest.value?.data ?? []).isNotEmpty) {
+                          return Positioned(
+                            top: -2,
+                            right: -2,
+                            child: Container(
+                              width: 8.w,
+                              height: 8.w,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: appTheme.errorColor,
+                              ),
+                            ),
+                          );
+                        }
+
+                        return const SizedBox();
+                      }),
+                    ],
+                  ),
                   SizedBox(width: 12.w),
                   Row(
                     children: [
                       Text('friend_requests'.tr, style: StyleThemeData.size14Weight400()),
-                      SizedBox(width: 2.w),
-                      Obx(
-                        () => Text(
-                          '(${controller.contactModel.value?.data?.length ?? '0'})'.tr,
-                          style: StyleThemeData.size14Weight400(color: appTheme.grayColor),
-                        ),
-                      ),
+                      // SizedBox(width: 2.w),
+                      // Obx(
+                      //   () => Text(
+                      //     '(${controller.contactModel.value?.data?.length ?? '0'})'.tr,
+                      //     style: StyleThemeData.size14Weight400(color: appTheme.grayColor),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ],
