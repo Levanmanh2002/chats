@@ -2,10 +2,12 @@ import 'package:chats/extension/string_extension.dart';
 import 'package:chats/main.dart';
 import 'package:chats/models/sync_contact/sync_contact_model.dart';
 import 'package:chats/pages/make_friends/make_friends_parameter.dart';
+import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/pages/sync_contact_details/sync_contact_details_controller.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/icons_assets.dart';
+import 'package:chats/utils/launch_url.dart';
 import 'package:chats/widget/custom_image_widget.dart';
 import 'package:chats/widget/custom_text_field.dart';
 import 'package:chats/widget/default_app_bar.dart';
@@ -120,14 +122,26 @@ class SyncContactDetailsPage extends GetWidget<SyncContactDetailsController> {
 
   Widget _buildContactItem(SyncContact e) {
     return InkWell(
-      onTap: () => Get.toNamed(
-        Routes.MAKE_FRIENDS,
-        arguments: MakeFriendsParameter(
-          id: e.userContact!.id!,
-          contact: e.userContact,
-          type: MakeFriendsType.friend,
-        ),
-      ),
+      onTap: () {
+        if (e.userContact != null) {
+          Get.toNamed(
+            Routes.MAKE_FRIENDS,
+            arguments: MakeFriendsParameter(
+              id: e.userContact!.id!,
+              contact: e.userContact,
+              type: MakeFriendsType.friend,
+            ),
+          );
+        } else {
+          final androidUrl = Get.find<ProfileController>().systemSetting.value?.androidUrl ?? '';
+          final iosUrl = Get.find<ProfileController>().systemSetting.value?.iosUlr ?? '';
+          final smsContent = 'Link tải app Nhà Táo:\n'
+              'iOS: $iosUrl'
+              '\n'
+              'Android: $androidUrl';
+          makeSmsContent(e.phone ?? '', smsContent);
+        }
+      },
       child: Padding(
         padding: padding(horizontal: 16, vertical: 8),
         child: Row(
@@ -137,7 +151,6 @@ class SyncContactDetailsPage extends GetWidget<SyncContactDetailsController> {
               size: 41.w,
               noImage: false,
               name: e.userContact?.name ?? '',
-              isShowNameAvatar: true,
             ),
             SizedBox(width: 8.w),
             Expanded(
@@ -147,7 +160,12 @@ class SyncContactDetailsPage extends GetWidget<SyncContactDetailsController> {
                   Text(e.contactName ?? '', style: StyleThemeData.size14Weight600()),
                   SizedBox(height: 2.h),
                   Text(
-                    e.userContact?.lastOnline?.timeAgo ?? '',
+                    e.userContact?.phone ?? e.phone ?? '',
+                    style: StyleThemeData.size10Weight400(color: appTheme.grayColor),
+                  ),
+                  SizedBox(height: 2.h),
+                  Text(
+                    e.userContact?.lastOnline?.timeAgo ?? 'this_user_has_not_registered_an_account'.tr,
                     style: StyleThemeData.size10Weight400(color: appTheme.grayColor),
                   ),
                 ],

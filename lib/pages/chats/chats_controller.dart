@@ -42,7 +42,7 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
   }
 
   void _permissionRequest() async {
-    await [Permission.microphone].request();
+    await Permission.microphone.request();
   }
 
   Future<void> fetchChatList({bool isRefresh = true, String search = '', bool isShowLoad = true}) async {

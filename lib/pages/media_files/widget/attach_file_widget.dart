@@ -1,9 +1,11 @@
 import 'package:chats/extension/data/file_extension.dart';
 import 'package:chats/models/messages/files_models.dart';
+import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/app/file_content_type.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/images/selectable_image_widget.dart';
+import 'package:chats/widget/reponsive/extension.dart';
 import 'package:chats/widget/video/video_player_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -35,6 +37,21 @@ class AttachFileWidget extends StatelessWidget {
         children: [
           VideoPlayerWidget(videoPath: item.fileUrl ?? ''),
           const ImageAssetCustom(imagePath: IconsAssets.playVideoIcon),
+        ],
+      );
+    } else if (category == FileCategory.DOCUMENT) {
+      return Row(
+        children: [
+          ImageAssetCustom(imagePath: IconsAssets.paperclipIcon, size: 24.w),
+          SizedBox(width: 8.w),
+          Flexible(
+            child: Text(
+              item.fileUrl?.split('/').last ?? '',
+              style: StyleThemeData.size12Weight400(),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
         ],
       );
     } else {

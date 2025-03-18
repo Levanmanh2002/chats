@@ -67,6 +67,16 @@ class ProfilePage extends GetWidget<ProfileController> {
                     },
                   ),
                   SizedBox(height: 8.h),
+                  if ((controller.systemSetting.value?.documentUrl ?? '').isNotEmpty) ...[
+                    _buildProfile(
+                      icon: IconsAssets.keyholeIcon,
+                      title: 'instructions_for_use'.tr,
+                      onTap: () {
+                        launchUrlLink(controller.systemSetting.value?.documentUrl ?? '');
+                      },
+                    ),
+                    SizedBox(height: 8.h),
+                  ],
                   _buildProfile(
                     icon: IconsAssets.trashBinIcon,
                     title: 'delete_account'.tr,

@@ -16,6 +16,13 @@ class BottomSendMessView extends GetView<MessageController> {
       color: appTheme.whiteColor,
       child: Row(
         children: [
+          InkWell(
+            onTap: controller.toggleTickers,
+            child: Padding(
+              padding: padding(left: 12),
+              child: const ImageAssetCustom(imagePath: IconsAssets.emojiIcon),
+            ),
+          ),
           Flexible(
             child: TextFormField(
               controller: controller.messageController,
@@ -50,8 +57,8 @@ class BottomSendMessView extends GetView<MessageController> {
                         child: Row(
                           children: [
                             IconButton(
-                              onPressed: controller.toggleTickers,
-                              icon: const ImageAssetCustom(imagePath: IconsAssets.emojiIcon),
+                              onPressed: controller.pickedFile,
+                              icon: ImageAssetCustom(imagePath: IconsAssets.paperclipIcon, color: appTheme.grayColor),
                             ),
                             IconButton(
                               onPressed: controller.pickImages,

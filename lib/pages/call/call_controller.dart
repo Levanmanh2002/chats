@@ -99,6 +99,10 @@ class CallController extends GetxController {
       appId: appId,
       channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
     ));
+    await engine.setAudioProfile(
+      profile: AudioProfileType.audioProfileSpeechStandard,
+      scenario: AudioScenarioType.audioScenarioGameStreaming,
+    );
 
     engine.registerEventHandler(
       RtcEngineEventHandler(

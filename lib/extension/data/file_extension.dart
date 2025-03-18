@@ -39,12 +39,21 @@ extension FileExtension on String {
   }
 
   FileCategory get getFileCategory {
+    if (toLowerCase().contains('pdf') ||
+        toLowerCase().contains('doc') || // doc, docx
+        toLowerCase().contains('xls') || // xls, xlsx
+        toLowerCase().contains('ppt') || // ppt, pptx
+        toLowerCase().contains('sheet') ||
+        toLowerCase().contains('text')) {
+      return FileCategory.DOCUMENT;
+    }
+
     final ext = toLowerCase().split('/').last;
 
     const imageExts = {'png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp'};
     const videoExts = {'mp4', 'mov', 'avi', 'mkv'};
     const audioExts = {'mp3', 'wav', 'aac', 'flac'};
-    const docExts = {'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt'};
+    const docExts = {'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'sheet'};
     const zipExts = {'zip', 'rar'};
 
     if (imageExts.contains(ext)) return FileCategory.IMAGE;

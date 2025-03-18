@@ -63,4 +63,5 @@ class IconsAssets {
   static const String cameraBorderImage = '${_basePath}camera_border.svg';
   static const String replyLineIcon = '${_basePath}reply_line.svg';
   static const String unreadIcon = '${_basePath}unread.svg';
+  static const String paperclipIcon = '${_basePath}paperclip.svg';
 }

@@ -70,8 +70,8 @@ Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
           }
           break;
         case Event.actionCallDecline:
-          // final extraData = event?.body?['extra'];
-          // sendCallDeclinedToServer(messageId: extraData['call_id']);
+          final extraData = event?.body?['extra'];
+          sendCallDeclinedToServer(messageId: extraData['call_id']);
 
           break;
         case Event.actionCallEnded:
@@ -168,11 +168,11 @@ class NotificationHelper {
     }
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      // if (message.data['type'] == 'chat' && message.data['call_token'] != null) {
-      handleIncomingCall(message.data);
-      // } else {
-      //   showLocalNotification(message);
-      // }
+      if (message.data['type'] == 'chat' && message.data['call_token'] != null) {
+        handleIncomingCall(message.data);
+      } else {
+        showLocalNotification(message);
+      }
 
       if (kDebugMode) {
         print(
@@ -226,8 +226,8 @@ class NotificationHelper {
           }
           break;
         case Event.actionCallDecline:
-          // final extraData = event?.body?['extra'];
-          // sendCallDeclinedToServer(messageId: extraData['call_id']);
+          final extraData = event?.body?['extra'];
+          sendCallDeclinedToServer(messageId: extraData['call_id']);
 
           break;
         case Event.actionCallEnded:

@@ -77,6 +77,11 @@ class OptionsPage extends GetWidget<OptionsController> {
                     ),
                     textAlign: TextAlign.center,
                   ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    controller.parameter.user?.phone ?? '',
+                    style: StyleThemeData.size14Weight400(),
+                  ),
                   SizedBox(height: 24.h),
                   InkWell(
                     onTap: controller.onShowSearchMessage,

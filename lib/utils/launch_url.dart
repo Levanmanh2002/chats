@@ -10,6 +10,22 @@ Future<void> makePhoneCall(String phoneNumber) async {
   }
 }
 
+Future<void> makeSmsContent(String phoneNumber, String content) async {
+  // Android
+  final uri = 'sms:$phoneNumber?body=$content';
+  if (await canLaunch(uri)) {
+    await launch(uri);
+  } else {
+    // iOS
+    final uri = 'sms:$phoneNumber?body=$content';
+    if (await canLaunch(uri)) {
+      await launch(uri);
+    } else {
+      throw 'Could not launch $uri';
+    }
+  }
+}
+
 Future<void> makeSms(String phoneNumber) async {
   final Uri uri = Uri(scheme: 'sms', path: phoneNumber);
 
@@ -34,5 +50,12 @@ Future<void> launchUrlLink(
       uri,
       mode: (isOpenBrowser ?? false) ? LaunchMode.externalApplication : LaunchMode.platformDefault,
     );
+  }
+}
+
+Future<void> openUrlInBrowser(String url) async {
+  final Uri uri = Uri.parse(url);
+  if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+    throw 'Không thể mở URL: $url';
   }
 }

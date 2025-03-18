@@ -25,6 +25,7 @@ import 'package:chats/resourese/service/pusher_service.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/app/pusher_type.dart';
 import 'package:chats/utils/dialog_utils.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -72,6 +73,7 @@ class MessageController extends GetxController {
   final ItemPositionsListener itemPositionsListener = ItemPositionsListener.create();
 
   Rx<TickersModel?> selectedTickers = Rx<TickersModel?>(null);
+  Rx<XFile?> selectedFile = Rx<XFile?>(null);
 
   @override
   void onInit() async {
@@ -328,6 +330,28 @@ class MessageController extends GetxController {
     FocusScope.of(Get.context!).unfocus();
   }
 
+  Future<void> pickedFile() async {
+    isTickers.value = false;
+    FocusScope.of(Get.context!).unfocus();
+
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowMultiple: false,
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt'],
+    );
+
+    if (result != null && result.files.isNotEmpty) {
+      PlatformFile platformFile = result.files.first;
+      XFile file = XFile(platformFile.path!);
+      log("File selected: ${platformFile.name}");
+
+      selectedFile.value = file;
+      if (selectedFile.value != null) {
+        onSendMessage();
+      }
+    }
+  }
+
   void sendTicker(TickersModel ticker) {
     selectedTickers.value = ticker;
     isTickers.value = false;
@@ -344,14 +368,25 @@ class MessageController extends GetxController {
       final imageFile = this.imageFile.toList();
       final replyMessageLocal = messageReply.value;
 
-      final tempFiles = imageFile
-          .map((file) => FilesModels(
-                id: DateTime.now().millisecondsSinceEpoch,
-                fileUrl: file.path,
-                fileType: file.path.resolveMimeType,
-                isLocal: true,
-              ))
-          .toList();
+      final tempFiles = imageFile.isNotEmpty
+          ? imageFile
+              .map((file) => FilesModels(
+                    id: DateTime.now().millisecondsSinceEpoch,
+                    fileUrl: file.path,
+                    fileType: file.path.resolveMimeType,
+                    isLocal: true,
+                  ))
+              .toList()
+          : selectedFile.value != null
+              ? [
+                  FilesModels(
+                    id: DateTime.now().millisecondsSinceEpoch,
+                    fileUrl: selectedFile.value?.path ?? '',
+                    fileType: selectedFile.value?.name,
+                    isLocal: true,
+                  )
+                ]
+              : null;
 
       final tempSticker = selectedTickers.value != null
           ? TickersModel(
@@ -411,6 +446,7 @@ class MessageController extends GetxController {
 
       List<MultipartBody> multipartBody = [
         if (imageFile.isNotEmpty) ...imageFile.map((file) => MultipartBody('files[]', file)),
+        if (selectedFile.value != null) MultipartBody('files[]', selectedFile.value),
       ];
 
       final response = await messagesRepository.sendMessage(params, multipartBody);

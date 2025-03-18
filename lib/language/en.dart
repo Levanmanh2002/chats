@@ -207,4 +207,9 @@ const Map<String, String> en = {
   "leader_member_info": "Leader member info",
   "personal": "Personal",
   "reply": "Reply",
+  "instructions_for_use": "Instructions for use",
+  'update_desc': 'A new update @version is available, please update to continue using',
+  'this_user_has_not_registered_an_account': 'This user has not registered an account',
+  'today': 'Today',
+  'document': 'Document',
 };

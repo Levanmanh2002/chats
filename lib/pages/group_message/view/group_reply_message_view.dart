@@ -28,7 +28,16 @@ class GroupReplyMessageView extends GetView<GroupMessageController> {
               ? Expanded(
                   child: Row(
                     children: [
-                      AttachFileWidget(item: controller.messageReply.value!.files!.first, size: 32.w, borderRadius: 2),
+                      if (controller.messageReply.value?.files?.first.fileType?.getFileCategory ==
+                          FileCategory.DOCUMENT) ...[
+                        ImageAssetCustom(imagePath: IconsAssets.paperclipIcon, size: 24.w),
+                      ] else ...[
+                        AttachFileWidget(
+                          item: controller.messageReply.value!.files!.first,
+                          size: 32.w,
+                          borderRadius: 2,
+                        ),
+                      ],
                       SizedBox(width: 8.w),
                       Flexible(
                         child: Column(

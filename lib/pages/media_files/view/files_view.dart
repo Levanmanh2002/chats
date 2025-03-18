@@ -1,11 +1,9 @@
 import 'package:chats/main.dart';
-import 'package:chats/models/messages/files_models.dart';
 import 'package:chats/models/messages/media_file_model.dart';
-import 'package:chats/pages/attachment_fullscreen/attachment_fullscreen_parameter.dart';
 import 'package:chats/pages/media_files/media_files_controller.dart';
 import 'package:chats/pages/media_files/widget/attach_file_widget.dart';
-import 'package:chats/routes/pages.dart';
-import 'package:chats/widget/dynamic_grid_item_view.dart';
+import 'package:chats/theme/style/style_theme.dart';
+import 'package:chats/utils/launch_url.dart';
 import 'package:chats/widget/list_loader.dart';
 import 'package:chats/widget/no_data_widget.dart';
 import 'package:chats/widget/reponsive/extension.dart';
@@ -24,27 +22,29 @@ class FilesView extends GetView<MediaFilesController> {
               hasNext: controller.mediaFileModel.value?.hasNext ?? false,
               child: SingleChildScrollView(
                 child: (controller.mediaFileModel.value?.items ?? []).isNotEmpty
-                    ? DynamicGridItemView<FilesModels>(
-                        items: controller.mediaFileModel.value?.items ?? [],
-                        borderRadius: 8,
-                        itemBuilder: (file, index) {
-                          return LayoutBuilder(
-                            builder: (context, constraint) => Padding(
-                              padding: padding(all: 4),
-                              child: InkWell(
-                                onTap: () => Get.toNamed(
-                                  Routes.ATTACHMENT_FULLSCREEN,
-                                  arguments: AttachmentFullscreenParameter(
-                                    files: controller.mediaFileModel.value?.items ?? [],
-                                    index: index,
-                                  ),
-                                ),
-                                borderRadius: BorderRadius.circular(8),
-                                child: AttachFileWidget(item: file, size: constraint.maxWidth.w),
+                    ? Column(
+                        children: (controller.mediaFileModel.value?.items ?? []).groupByMonth().entries.map((entry) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: padding(horizontal: 16, vertical: 8),
+                                child: Text(entry.key, style: StyleThemeData.size12Weight600()),
                               ),
-                            ),
+                              ...entry.value.map((e) {
+                                return InkWell(
+                                  onTap: () {
+                                    openUrlInBrowser(e.fileUrl ?? '');
+                                  },
+                                  child: Padding(
+                                    padding: padding(vertical: 8, horizontal: 16),
+                                    child: AttachFileWidget(item: e, size: 24.w),
+                                  ),
+                                );
+                              }),
+                            ],
                           );
-                        },
+                        }).toList(),
                       )
                     : Center(child: NoDataWidget(height: 200.h)),
               ),

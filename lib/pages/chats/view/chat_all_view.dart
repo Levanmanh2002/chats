@@ -1,3 +1,4 @@
+import 'package:chats/extension/data/file_extension.dart';
 import 'package:chats/extension/string_extension.dart';
 import 'package:chats/main.dart';
 import 'package:chats/models/chats/chat_data_model.dart';
@@ -8,6 +9,7 @@ import 'package:chats/pages/message/message_parameter.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
+import 'package:chats/utils/app/file_content_type.dart';
 import 'package:chats/utils/gif_utils.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/custom_image_widget.dart';
@@ -152,7 +154,10 @@ class ChatAllView extends GetView<ChatsController> {
                                         (e.latestMessage?.sticker != null
                                             ? 'Sticker'
                                             : (e.latestMessage?.files ?? []).isNotEmpty
-                                                ? 'images'.tr
+                                                ? (e.latestMessage?.files?.first.fileType?.getFileCategory ==
+                                                        FileCategory.IMAGE)
+                                                    ? '[${'images'.tr}]'
+                                                    : '[${'document'.tr}]'
                                                 : ''),
                                 style: e.isRead == false
                                     ? StyleThemeData.size12Weight600()

@@ -206,4 +206,9 @@ const Map<String, String> vi = {
   "leader_member_info": "Thông tin trưởng nhóm",
   "personal": "Cá nhân",
   "reply": "Trả lời",
+  "instructions_for_use": "Hướng dẫn sử dụng",
+  'update_desc': 'Đã có phiên bản cập nhật mới @version, vui lòng cập nhật để tiếp tục sử dụng',
+  'this_user_has_not_registered_an_account': 'Người dùng này chưa đăng ký tài khoản',
+  'today': 'Hôm nay',
+  'document': 'Tài liệu',
 };

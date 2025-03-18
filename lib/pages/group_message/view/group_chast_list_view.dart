@@ -135,9 +135,7 @@ class GroupChastListView extends GetView<GroupMessageController> {
                                               onRevoke: item.sender?.id == Get.find<ProfileController>().user.value?.id
                                                   ? () => controller.onRevokeMessageLocal(item.id)
                                                   : null,
-                                              onReply: item.sender?.id == Get.find<ProfileController>().user.value?.id
-                                                  ? () => controller.onReplyMessage(item)
-                                                  : null,
+                                              onReply: () => controller.onReplyMessage(item),
                                               onHeart: () => controller.onHeartMessageLocal(item.id),
                                             );
                                           },
@@ -212,6 +210,8 @@ class GroupChastListView extends GetView<GroupMessageController> {
                                                               child: AttachFileWidget(
                                                                 item: file,
                                                                 size: constraint.maxWidth.w,
+                                                                isCurrentUser: item.sender?.id ==
+                                                                    Get.find<ProfileController>().user.value?.id,
                                                               ),
                                                             ),
                                                           ),
