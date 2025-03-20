@@ -15,11 +15,6 @@ import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-const appId = "5b5c09358c194f21ac343634a5621bfc";
-// const token =
-//     "007eJxTYDiw8vgzj7+nDLf/Zj0YyZuw1Df5s6l1Lb/foVIWj1upAuUKDKZJpskGlsamFsmGliZpRoaJycYmxmbGJommZkaGSWnJDx/vTRfgY2B4NkGdlZGBkYEFiD9+3JvOBCaZwSQLlCxJLS5hZDAAAG4yKsw=";
-// const channel = "test";
-
 class CallController extends GetxController {
   final IMessagesRepository messagesRepository;
   final CallCallParameter parameter;
@@ -95,8 +90,8 @@ class CallController extends GetxController {
     ].request();
 
     engine = createAgoraRtcEngine();
-    await engine.initialize(const RtcEngineContext(
-      appId: appId,
+    await engine.initialize(RtcEngineContext(
+      appId: AppConstants.callAppId,
       channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
     ));
     await engine.setAudioProfile(

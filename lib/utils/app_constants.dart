@@ -16,6 +16,7 @@ class AppConstants {
 
   static String baseUrl = dotenv.get('BASE_URL');
   static String get pusherApiKey => LocalStorage.getString(SharedKey.PUSHER_API_KEY);
+  static String get callAppId => LocalStorage.getString(SharedKey.CALL_APP_ID);
   static String pusherApiCluster = dotenv.get('PUSHER_API_CLUSTER');
   static String pusherChannel = dotenv.get('PUSHER_CHANNEL');
   static String userType = 'client';

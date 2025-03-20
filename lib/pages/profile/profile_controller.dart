@@ -156,6 +156,7 @@ class ProfileController extends GetxController {
         phoneSupport.value = response.body['data']['page']['contact_phone'];
         systemSetting.value = SystemSetting.fromJson(response.body['data']);
         await LocalStorage.setString(SharedKey.PUSHER_API_KEY, response.body['data']['pusher']['key']);
+        await LocalStorage.setString(SharedKey.CALL_APP_ID, response.body['data']['call_app_id']);
         Get.find<ChatsController>().initStreamPusher();
         _checkAppVersion();
       }
