@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:chats/constant/date_format_constants.dart';
+import 'package:chats/extension/date_time_extension.dart';
 import 'package:chats/models/chats/chat_data_model.dart';
 import 'package:chats/models/messages/media_file_model.dart';
 import 'package:chats/models/profile/user_model.dart';
@@ -7,8 +11,12 @@ import 'package:chats/pages/group_option/group_option_parameter.dart';
 import 'package:chats/resourese/groups/igroups_repository.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
 import 'package:chats/utils/dialog_utils.dart';
+import 'package:chats/utils/download_file.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class GroupOptionController extends GetxController {
   final IGroupsRepository groupsRepository;
@@ -21,6 +29,7 @@ class GroupOptionController extends GetxController {
   Rx<MediaFileModel?> mediaImageModel = Rx<MediaFileModel?>(null);
 
   var isHideMessage = false.obs;
+  final earningRangeDate = DateTimeRange(start: DateTime.now(), end: DateTime.now()).obs;
 
   @override
   void onInit() {
@@ -100,6 +109,40 @@ class GroupOptionController extends GetxController {
       print(e);
     } finally {
       EasyLoading.dismiss();
+    }
+  }
+
+  void changeRangeDate(DateTimeRange range) {
+    earningRangeDate.value = range;
+    _fetchExportMessage();
+  }
+
+  void _fetchExportMessage() async {
+    try {
+      if (Platform.isAndroid) {
+        var status = await Permission.manageExternalStorage.request();
+        if (!status.isGranted) {
+          print("Quyền truy cập bộ nhớ bị từ chối!");
+          return;
+        }
+      }
+
+      final response = await messagesRepository.exportMessage(
+        parameter.chat!.id!,
+        startDate: earningRangeDate.value.start.toyyyyMMdd,
+        endDate: earningRangeDate.value.end.toyyyyMMdd,
+      );
+
+      if (response.statusCode == 200) {
+        await downloadPdfToPublicDirectory(
+          response.body['download_url'],
+          'export_message_${DateFormat(DateConstants.yyyyMMddMMmmss).format(DateTime.now())}.pdf',
+        );
+      } else {
+        DialogUtils.showErrorDialog(response.body['message']);
+      }
+    } catch (e) {
+      print(e);
     }
   }
 

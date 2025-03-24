@@ -212,4 +212,7 @@ const Map<String, String> en = {
   'this_user_has_not_registered_an_account': 'This user has not registered an account',
   'today': 'Today',
   'document': 'Document',
+  'password_cannot_be_empty': 'Password cannot be empty',
+  'password_must_contain_at_least_4_characters': 'Password must contain at least 4 characters',
+  'security_code_is_invalid': 'Security code is invalid',
 };

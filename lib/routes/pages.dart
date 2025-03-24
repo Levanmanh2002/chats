@@ -6,6 +6,8 @@ import 'package:chats/pages/call/call_binding.dart';
 import 'package:chats/pages/call/call_page.dart';
 import 'package:chats/pages/change_password/change_password_binding.dart';
 import 'package:chats/pages/change_password/change_password_page.dart';
+import 'package:chats/pages/confirm_security_code/confirm_security_code_binding.dart';
+import 'package:chats/pages/confirm_security_code/confirm_security_code_page.dart';
 import 'package:chats/pages/create_group/create_group_binding.dart';
 import 'package:chats/pages/create_group/create_group_page.dart';
 import 'package:chats/pages/dashboard/dashboard_binding.dart';
@@ -213,6 +215,11 @@ abstract class AppPages {
       name: Routes.CALL,
       page: () => CallPage(),
       binding: CallBinding(),
+    ),
+    GetPage(
+      name: Routes.CONFIRM_SECURITY_CODE,
+      page: () => ConfirmSecurityCodePage(),
+      binding: ConfirmSecurityCodeBinding(),
     ),
   ];
 }

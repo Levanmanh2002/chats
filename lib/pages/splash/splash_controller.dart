@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 class SplashController extends GetxController {
   final isLoggedIn = LocalStorage.getBool(SharedKey.isLoggedIn);
+  final isSecurity = LocalStorage.getBool(SharedKey.IS_SHOW_SECURITY);
 
   @override
   void onInit() {
@@ -14,7 +15,9 @@ class SplashController extends GetxController {
   }
 
   void init() async {
-    if (isLoggedIn) {
+    if (isSecurity) {
+      Get.offAllNamed(Routes.CONFIRM_SECURITY_CODE);
+    } else if (isLoggedIn) {
       Get.offAllNamed(Routes.DASHBOARD);
     } else {
       Get.offAllNamed(Routes.SIGN_IN);

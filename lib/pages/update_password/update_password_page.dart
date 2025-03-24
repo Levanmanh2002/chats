@@ -1,5 +1,4 @@
 import 'package:chats/pages/update_password/update_password_controller.dart';
-import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/custom_validator.dart';
 import 'package:chats/utils/formatter_util.dart';
 import 'package:chats/widget/custom_button.dart';
@@ -35,20 +34,20 @@ class UpdatePasswordPage extends GetWidget<UpdatePasswordController> {
                   return CustomValidator.validatePassword(value);
                 },
               ),
-              Obx(() {
-                if (CustomValidator.validatePassword(controller.showPassword.value).isEmpty) {
-                  return Padding(
-                    padding: padding(top: 8),
-                    child: Text('validate_password'.tr, style: StyleThemeData.size12Weight400()),
-                  );
-                } else if (controller.isHidePassword.isTrue) {
-                  return Padding(
-                    padding: padding(top: 8),
-                    child: Text('validate_password'.tr, style: StyleThemeData.size12Weight400()),
-                  );
-                }
-                return const SizedBox();
-              }),
+              // Obx(() {
+              //   if (CustomValidator.validatePassword(controller.showPassword.value).isEmpty) {
+              //     return Padding(
+              //       padding: padding(top: 8),
+              //       child: Text('validate_password'.tr, style: StyleThemeData.size12Weight400()),
+              //     );
+              //   } else if (controller.isHidePassword.isTrue) {
+              //     return Padding(
+              //       padding: padding(top: 8),
+              //       child: Text('validate_password'.tr, style: StyleThemeData.size12Weight400()),
+              //     );
+              //   }
+              //   return const SizedBox();
+              // }),
               SizedBox(height: 24.h),
               CustomTextField(
                 controller: controller.confirmNewPasswordController,

@@ -15,7 +15,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 Future<void> downloadPdfToPublicDirectory(String url, String fileName) async {
-  var status = await Permission.storage.request();
+  // var status = await Permission.storage.request();
+  var status = await Permission.manageExternalStorage.request();
 
   if (status.isGranted) {
     try {
@@ -95,7 +96,7 @@ void showPermissionDialog(String title) {
                     Flexible(
                       child: CustomBorderButtonWidget(
                         buttonText: 'open_settings'.tr,
-                        color: appTheme.grayColor,
+                        color: appTheme.appColor,
                         textColor: appTheme.appColor,
                         onPressed: () {
                           Navigator.of(context).pop();

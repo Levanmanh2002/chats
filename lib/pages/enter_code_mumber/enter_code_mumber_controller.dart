@@ -4,6 +4,8 @@ import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/pages/security_code/security_code_controller.dart';
 import 'package:chats/resourese/profile/iprofile_repository.dart';
 import 'package:chats/utils/dialog_utils.dart';
+import 'package:chats/utils/local_storage.dart';
+import 'package:chats/utils/shared_key.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
@@ -98,6 +100,15 @@ class EnterCodeMumberController extends GetxController {
 
         Get.find<SecurityCodeController>().updateProfile(UserModel.fromJson(response.body['data']));
         Get.find<ProfileController>().updateProfile(UserModel.fromJson(response.body['data']));
+
+        if (parameter.action == EnterCodeMumberAction.enable) {
+          updateLocalCode();
+        } else if (parameter.action == EnterCodeMumberAction.change) {
+          updateLocalCode();
+        } else if (parameter.action == EnterCodeMumberAction.disable) {
+          removeLocalCode();
+        }
+
         Get.back();
       } else {
         DialogUtils.showErrorDialog(response?.body['message']);
@@ -109,5 +120,16 @@ class EnterCodeMumberController extends GetxController {
     } finally {
       EasyLoading.dismiss();
     }
+  }
+
+  void updateLocalCode() async {
+    await LocalStorage.setBool(SharedKey.IS_SHOW_SECURITY, true);
+    await LocalStorage.setString(SharedKey.SECURITY_CODE, inputNumber.value);
+  }
+
+  void removeLocalCode() async {
+    await LocalStorage.setBool(SharedKey.IS_SHOW_SECURITY, false);
+    await LocalStorage.remove(SharedKey.IS_SHOW_SECURITY);
+    await LocalStorage.remove(SharedKey.SECURITY_CODE);
   }
 }

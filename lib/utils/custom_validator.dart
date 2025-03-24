@@ -44,10 +44,13 @@ class CustomValidator {
 
   static String validatePassword(String password) {
     if (password.isEmpty) {
-      return 'validate_password'.tr;
-    } else if (!passwordRegex.hasMatch(password)) {
-      return 'validate_password'.tr;
+      return 'password_cannot_be_empty'.tr;
+    } else if (password.length < 4) {
+      return 'password_must_contain_at_least_4_characters'.tr;
     }
+    // else if (!passwordRegex.hasMatch(password)) {
+    //   return 'validate_password'.tr;
+    // }
     return '';
   }
 

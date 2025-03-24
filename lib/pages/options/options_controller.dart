@@ -92,7 +92,7 @@ class OptionsController extends GetxController {
   void _fetchExportMessage() async {
     try {
       if (Platform.isAndroid) {
-        var status = await Permission.storage.request();
+        var status = await Permission.manageExternalStorage.request();
         if (!status.isGranted) {
           print("Quyền truy cập bộ nhớ bị từ chối!");
           return;
