@@ -2,7 +2,7 @@ name: chats
 description: "A new Flutter project."
 
 publish_to: "none"
-version: 7.0.0
+version: 8.0.0
 
 environment:
   sdk: ">=3.4.3 <4.0.0"
@@ -53,6 +53,7 @@ dependencies:
   version: ^3.0.2
   package_info_plus: ^8.3.0
   file_picker: ^8.3.2
+  open_filex: ^4.7.0
 
 dev_dependencies:
   flutter_test:

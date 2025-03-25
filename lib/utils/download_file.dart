@@ -11,12 +11,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 Future<void> downloadPdfToPublicDirectory(String url, String fileName) async {
-  // var status = await Permission.storage.request();
-  var status = await Permission.manageExternalStorage.request();
+  var status = await Permission.storage.request();
+  // var status = await Permission.manageExternalStorage.request();
 
   if (status.isGranted) {
     try {
@@ -42,8 +43,10 @@ Future<void> downloadPdfToPublicDirectory(String url, String fileName) async {
         await file.writeAsBytes(response.bodyBytes);
 
         log('PDF downloaded to: $filePath');
+        print('PDF downloaded to: $filePath');
 
         DialogUtils.showSuccessDialog('document_downloaded_successfully'.tr);
+        OpenFilex.open(filePath);
       } else {
         DialogUtils.showErrorDialog('error_downloading_document'.tr);
       }
