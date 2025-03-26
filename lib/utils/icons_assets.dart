@@ -64,4 +64,5 @@ class IconsAssets {
   static const String replyLineIcon = '${_basePath}reply_line.svg';
   static const String unreadIcon = '${_basePath}unread.svg';
   static const String paperclipIcon = '${_basePath}paperclip.svg';
+  static const String documentIcon = '${_basePath}document.svg';
 }

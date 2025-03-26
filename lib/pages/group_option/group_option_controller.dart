@@ -35,6 +35,7 @@ class GroupOptionController extends GetxController {
   void onInit() {
     chatDataModel.value = parameter.chat;
     _fetchImages();
+    isHideMessage.value = parameter.isHideMessage;
     super.onInit();
   }
 

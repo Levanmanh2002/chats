@@ -69,7 +69,7 @@ class ProfilePage extends GetWidget<ProfileController> {
                   SizedBox(height: 8.h),
                   if ((controller.systemSetting.value?.documentUrl ?? '').isNotEmpty) ...[
                     _buildProfile(
-                      icon: IconsAssets.keyholeIcon,
+                      icon: IconsAssets.documentIcon,
                       title: 'instructions_for_use'.tr,
                       onTap: () {
                         launchUrlLink(controller.systemSetting.value?.documentUrl ?? '');

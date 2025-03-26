@@ -123,7 +123,7 @@ class _SearchAppbarState extends State<SearchAppbar> {
                     child: widget.widgetTitle ??
                         Text(
                           widget.title,
-                          style: StyleThemeData.size30Weight600(color: appTheme.whiteColor),
+                          style: StyleThemeData.size24Weight600(color: appTheme.whiteColor),
                         ),
                   )
                 : Row(
@@ -146,7 +146,11 @@ class _SearchAppbarState extends State<SearchAppbar> {
                           showLine: false,
                           prefixIcon: IconButton(
                             onPressed: null,
-                            icon: ImageAssetCustom(imagePath: IconsAssets.searchIcon, color: appTheme.grayColor),
+                            icon: ImageAssetCustom(
+                              imagePath: IconsAssets.searchIcon,
+                              color: appTheme.grayColor,
+                              size: 24.w,
+                            ),
                           ),
                           onChanged: (value) => _searchValueNotifier.value = value,
                           suffixIcon: ValueListenableBuilder<String>(
@@ -169,7 +173,7 @@ class _SearchAppbarState extends State<SearchAppbar> {
                                     if (widget.isOffSearch == false) _doToggle();
                                     widget.onSubmitted?.call('');
                                   },
-                                  icon: const ImageAssetCustom(imagePath: IconsAssets.closeCircleIcon),
+                                  icon: ImageAssetCustom(imagePath: IconsAssets.closeCircleIcon, size: 24.w),
                                 );
                               } else {
                                 return const SizedBox();

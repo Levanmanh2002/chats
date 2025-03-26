@@ -44,7 +44,7 @@ class GroupMessagePage extends GetWidget<GroupMessageController> {
                       ? () => Get.toNamed(
                             Routes.GROUP_OPTION,
                             arguments: GroupOptionParameter(
-                              chat: controller.messageModel.value?.chat,
+                              chat: controller.messageModel.value?.chat, 
                               isHideMessage: controller.messageModel.value?.chat?.isHide ?? false,
                             ),
                           )

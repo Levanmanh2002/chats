@@ -9,7 +9,6 @@ import 'package:chats/utils/app_constants.dart';
 import 'package:chats/utils/app_enums.dart';
 import 'package:chats/utils/local_storage.dart';
 import 'package:chats/widget/reponsive/size_config.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,7 +29,7 @@ void main() async {
   await LocalStorage.init();
   await AppService.initAppService();
   await PusherService.initPusher();
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
