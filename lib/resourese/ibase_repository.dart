@@ -154,6 +154,8 @@ class IBaseRepository {
     // DialogUtils.showErrorDialog('Phiên đăng nhập hết hạn, vui lòng đăng nhập lại!');
 
     String? savedLanguage = LocalStorage.getString(SharedKey.language);
+    // bool? isShowSecurityScreen = LocalStorage.getBool(SharedKey.IS_SHOW_SECURITY_SCREEN);
+    // String? securityCodeScreen = LocalStorage.getString(SharedKey.SECURITY_CODE_SCREEN);
 
     await LocalStorage.clearAll();
     await FirebaseMessaging.instance.deleteToken();
@@ -161,6 +163,13 @@ class IBaseRepository {
     if (savedLanguage.isNotEmpty) {
       await LocalStorage.setString(SharedKey.language, savedLanguage);
     }
+    // if (isShowSecurityScreen != false) {
+    //   await LocalStorage.setBool(SharedKey.IS_SHOW_SECURITY_SCREEN, isShowSecurityScreen);
+    // }
+    // if (securityCodeScreen.isNotEmpty) {
+    //   await LocalStorage.setString(SharedKey.SECURITY_CODE_SCREEN, securityCodeScreen);
+    // }
+
     if (Get.currentRoute != Routes.SIGN_IN) {
       Get.offAllNamed(Routes.SIGN_IN);
     }

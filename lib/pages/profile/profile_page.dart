@@ -1,6 +1,7 @@
 import 'package:chats/main.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/pages/profile/view/header_profile_view.dart';
+import 'package:chats/pages/screen_security_code/screen_security_code_parameter.dart';
 import 'package:chats/pages/security_code/security_code_parameter.dart';
 import 'package:chats/pages/update_profile/update_profile_parameter.dart';
 import 'package:chats/routes/pages.dart';
@@ -56,6 +57,15 @@ class ProfilePage extends GetWidget<ProfileController> {
                     onTap: () => Get.toNamed(
                       Routes.SECURITY_CODE,
                       arguments: SecurityCodeParameter(user: controller.user.value),
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  _buildProfile(
+                    icon: IconsAssets.keyholeIcon,
+                    title: 'screen_lock_code_configuration'.tr,
+                    onTap: () => Get.toNamed(
+                      Routes.SCREEN_SECURITY_CODE,
+                      arguments: ScreenSecurityCodeParameter(user: controller.user.value),
                     ),
                   ),
                   SizedBox(height: 8.h),

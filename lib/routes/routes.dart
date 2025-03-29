@@ -34,4 +34,6 @@ abstract class Routes {
   static const GROUP_MESSAGE_SEARCH_RESULT = '/group_message_search_result';
   static const CALL = '/call';
   static const CONFIRM_SECURITY_CODE = '/confirm_security_code';
+  static const ENTER_CODE_MUMBER_SCREEN = '/enter_code_mumbe';
+  static const SCREEN_SECURITY_CODE = '/security_code_screen';
 }

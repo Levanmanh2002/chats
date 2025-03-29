@@ -38,6 +38,10 @@ import 'package:chats/pages/options/options_binding.dart';
 import 'package:chats/pages/options/options_page.dart';
 import 'package:chats/pages/otp/otp_binding.dart';
 import 'package:chats/pages/otp/otp_page.dart';
+import 'package:chats/pages/screen_enter_code_mumber/screen_enter_code_mumber_binding.dart';
+import 'package:chats/pages/screen_enter_code_mumber/screen_enter_code_mumber_page.dart';
+import 'package:chats/pages/screen_security_code/screen_security_code_binding.dart';
+import 'package:chats/pages/screen_security_code/screen_security_code_page.dart';
 import 'package:chats/pages/security_code/security_code_binding.dart';
 import 'package:chats/pages/security_code/security_code_page.dart';
 import 'package:chats/pages/sent_request_contact/sent_request_contact_binding.dart';
@@ -220,6 +224,16 @@ abstract class AppPages {
       name: Routes.CONFIRM_SECURITY_CODE,
       page: () => ConfirmSecurityCodePage(),
       binding: ConfirmSecurityCodeBinding(),
+    ),
+    GetPage(
+      name: Routes.ENTER_CODE_MUMBER_SCREEN,
+      page: () => ScreenEnterCodeMumberPage(),
+      binding: ScreenEnterCodeMumberBinding(),
+    ),
+    GetPage(
+      name: Routes.SCREEN_SECURITY_CODE,
+      page: () => ScreenSecurityCodePage(),
+      binding: ScreenSecurityCodeBinding(),
     ),
   ];
 }

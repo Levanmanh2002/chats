@@ -33,6 +33,12 @@ class UserModel {
   @JsonKey(name: 'auto_message')
   String? autoMessage;
 
+  @JsonKey(name: 'security_code_screen')
+  String? securityCodeScreen;
+
+  @JsonKey(name: 'is_enavle_security_screen')
+  bool? isEnableSecurityScreen;
+
   UserModel({
     this.id,
     this.name,
@@ -48,6 +54,8 @@ class UserModel {
     this.isReceiverIdRequestFriend,
     this.lastOnline,
     this.autoMessage,
+    this.securityCodeScreen,
+    this.isEnableSecurityScreen,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);

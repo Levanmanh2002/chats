@@ -215,4 +215,5 @@ const Map<String, String> en = {
   'password_cannot_be_empty': 'Password cannot be empty',
   'password_must_contain_at_least_4_characters': 'Password must contain at least 4 characters',
   'security_code_is_invalid': 'Security code is invalid',
+  'screen_lock_code_configuration': 'Screen lock code configuration',
 };

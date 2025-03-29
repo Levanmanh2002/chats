@@ -214,4 +214,5 @@ const Map<String, String> vi = {
   'password_cannot_be_empty': 'Mật khẩu không được để trống',
   'password_must_contain_at_least_4_characters': 'Mật khẩu phải chứa ít nhất 4 ký tự',
   'security_code_is_invalid': 'Mã bảo mật không hợp lệ',
+  'screen_lock_code_configuration': 'Cấu hình mã khóa màn hình',
 };

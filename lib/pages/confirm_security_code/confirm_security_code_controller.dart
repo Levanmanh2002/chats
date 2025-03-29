@@ -38,7 +38,7 @@ class ConfirmSecurityCodeController extends GetxController {
   }
 
   void confirmCode() async {
-    final securityCode = LocalStorage.getString(SharedKey.SECURITY_CODE);
+    final securityCode = LocalStorage.getString(SharedKey.SECURITY_CODE_SCREEN);
 
     if (inputNumber.value == securityCode) {
       Get.offAllNamed(Routes.DASHBOARD);

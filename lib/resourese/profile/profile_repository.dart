@@ -129,4 +129,46 @@ class ProfileRepository extends IProfileRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<Response> screenChangeSecurity(String securityPass) async {
+    try {
+      final result = await clientPostData(AppConstants.screenChangeSecurityUri, {
+        'security_pass': securityPass,
+      });
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> screenDisableSecurity(String securityPass) async {
+    try {
+      final result = await clientPostData(AppConstants.screenDisableSecurityUri, {
+        'security_pass': securityPass,
+      });
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> screenEndableSecurity(String securityPass) async {
+    try {
+      final result = clientPostData(AppConstants.screenEndableSecurityUri, {
+        'security_pass': securityPass,
+      });
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
 }

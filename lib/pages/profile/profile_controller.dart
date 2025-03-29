@@ -62,6 +62,10 @@ class ProfileController extends GetxController {
 
       if (response.statusCode == 200) {
         user.value = UserModel.fromJson(response.body['data']);
+        if (user.value?.isEnableSecurityScreen == true) {
+          LocalStorage.setBool(SharedKey.IS_SHOW_SECURITY_SCREEN, true);
+          LocalStorage.setString(SharedKey.SECURITY_CODE_SCREEN, user.value?.securityCodeScreen ?? '');
+        }
         PusherService().connect();
       }
     } catch (e) {
@@ -112,13 +116,25 @@ class ProfileController extends GetxController {
 
       final response = await profileRepository.logout();
       String? savedLanguage = LocalStorage.getString(SharedKey.language);
+      // bool? isShowSecurityScreen = LocalStorage.getBool(SharedKey.IS_SHOW_SECURITY_SCREEN);
+      // String? securityCodeScreen = LocalStorage.getString(SharedKey.SECURITY_CODE_SCREEN);
 
       await LocalStorage.clearAll();
-      await FirebaseMessaging.instance.deleteToken();
+      try {
+        await FirebaseMessaging.instance.deleteToken();
+      } catch (e) {
+        log("Firebase deleteToken failed: $e", name: 'logout');
+      }
 
       if (savedLanguage.isNotEmpty) {
         await LocalStorage.setString(SharedKey.language, savedLanguage);
       }
+      // if (isShowSecurityScreen != false) {
+      //   await LocalStorage.setBool(SharedKey.IS_SHOW_SECURITY_SCREEN, isShowSecurityScreen);
+      // }
+      // if (securityCodeScreen.isNotEmpty) {
+      //   await LocalStorage.setString(SharedKey.SECURITY_CODE_SCREEN, securityCodeScreen);
+      // }
 
       if (isShowTitle) DialogUtils.showSuccessDialog(response.body['message']);
       Get.offAllNamed(Routes.SIGN_IN);

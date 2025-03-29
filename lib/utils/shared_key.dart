@@ -6,8 +6,8 @@ class SharedKey {
   static const String CALL_CHAT_EVENT = "CALL_CHAT_EVENT";
   static const String CALL_APP_ID = "CALL_APP_ID";
 
-  static const String IS_SHOW_SECURITY = "is_show_security";
-  static const String SECURITY_CODE = "security_code";
+  static const String IS_SHOW_SECURITY_SCREEN = "is_show_security_screen";
+  static const String SECURITY_CODE_SCREEN = "security_code_screen";
 
   /// NO CLEAR
   static const String language = "language";

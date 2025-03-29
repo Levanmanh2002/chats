@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 class SplashController extends GetxController {
   final isLoggedIn = LocalStorage.getBool(SharedKey.isLoggedIn);
-  final isSecurity = LocalStorage.getBool(SharedKey.IS_SHOW_SECURITY);
+  final isSecurity = LocalStorage.getBool(SharedKey.IS_SHOW_SECURITY_SCREEN);
 
   @override
   void onInit() {
