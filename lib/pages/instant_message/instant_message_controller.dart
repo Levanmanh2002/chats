@@ -44,9 +44,11 @@ class InstantMessageController extends GetxController {
   void updateQuickMessage(List<QuickMessage> quickMessage) {
     quickMessages.value = quickMessage;
     if (parameter.type == InstantMessageType.chat) {
-      Get.find<MessageController>().updateNewDataQuickMessage(quickMessage);
+      if (Get.isRegistered<MessageController>()) Get.find<MessageController>().updateNewDataQuickMessage(quickMessage);
     } else if (parameter.type == InstantMessageType.group) {
-      Get.find<GroupMessageController>().updateNewDataQuickMessage(quickMessage);
+      if (Get.isRegistered<GroupMessageController>()) {
+        Get.find<GroupMessageController>().updateNewDataQuickMessage(quickMessage);
+      }
     }
   }
 }

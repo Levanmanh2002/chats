@@ -168,7 +168,7 @@ class MessagePage extends GetWidget<MessageController> {
               (controller.messageReply.value != null) ? ReplyMessageView() : const SizedBox(),
               SelectedImagesList(),
               (controller.quickMessage.value != null) ? QuickMessageView() : const SizedBox(),
-              (controller.messageModel.value?.isFriend == true) ? BottomSendMessView() : const SizedBox(),
+              BottomSendMessView(),
               controller.isTickers.isTrue ? TickersView() : const SizedBox(),
             ],
           ),

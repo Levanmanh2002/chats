@@ -4,8 +4,8 @@ enum UpsertInstantMessType { create, update }
 
 class UpsertInstantMessParameter {
   final UpsertInstantMessType type;
-  final int chatId;
+  final int? chatId;
   final QuickMessage? quickMessage;
 
-  UpsertInstantMessParameter({required this.type, required this.chatId, this.quickMessage});
+  UpsertInstantMessParameter({required this.type, this.chatId, this.quickMessage});
 }

@@ -2,7 +2,6 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:chats/main.dart';
 import 'package:chats/pages/create_group/create_group_parameter.dart';
 import 'package:chats/pages/group_option/group_option_controller.dart';
-import 'package:chats/pages/instant_message/instant_message_parameter.dart';
 import 'package:chats/pages/media_files/media_files_parameter.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/pages/view_group_members/view_group_members_parameter.dart';
@@ -205,18 +204,18 @@ class GroupOptionPage extends GetWidget<GroupOptionController> {
                     ),
                   ),
                   SizedBox(height: 8.h),
-                  BorderTitleIconWidget(
-                    icon: IconsAssets.chatRoundLineIcon,
-                    title: 'manage_instant_messages'.tr,
-                    onTap: () => Get.toNamed(
-                      Routes.INSTANT_MESSAGE,
-                      arguments: InstantMessageParameter(
-                        chatId: controller.parameter.chat!.id!,
-                        type: InstantMessageType.group,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
+                  // BorderTitleIconWidget(
+                  //   icon: IconsAssets.chatRoundLineIcon,
+                  //   title: 'manage_instant_messages'.tr,
+                  //   onTap: () => Get.toNamed(
+                  //     Routes.INSTANT_MESSAGE,
+                  //     arguments: InstantMessageParameter(
+                  //       chatId: controller.parameter.chat!.id!,
+                  //       type: InstantMessageType.group,
+                  //     ),
+                  //   ),
+                  // ),
+                  // SizedBox(height: 8.h),
                   BorderTitleIconWidget(
                     icon: IconsAssets.galleryBorderIcon,
                     title: 'images_files'.tr,

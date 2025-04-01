@@ -8,7 +8,7 @@ abstract class IMessagesRepository extends IBaseRepository {
   Future<Response> revokeMessage(int messageId);
   Future<Response> heartMessage(int messageId);
   Future<Response> addInstantMess(Map<String, dynamic> params);
-  Future<Response> getInstantMess(int chatId);
+  Future<Response> getInstantMess(int? chatId);
   Future<Response> updateInstantMess(Map<String, dynamic> params);
   Future<Response> deleteInstantMess(int id);
   Future<Response> getImageFileByChatId(int chatId, String type, {int page = 1, int limit = 10});

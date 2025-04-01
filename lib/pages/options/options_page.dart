@@ -1,7 +1,6 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:chats/main.dart';
 import 'package:chats/pages/create_group/create_group_parameter.dart';
-import 'package:chats/pages/instant_message/instant_message_parameter.dart';
 import 'package:chats/pages/media_files/media_files_parameter.dart';
 import 'package:chats/pages/options/options_controller.dart';
 import 'package:chats/routes/pages.dart';
@@ -150,18 +149,18 @@ class OptionsPage extends GetWidget<OptionsController> {
                     ),
                   ),
                   SizedBox(height: 8.h),
-                  BorderTitleIconWidget(
-                    icon: IconsAssets.chatRoundLineIcon,
-                    title: 'manage_instant_messages'.tr,
-                    onTap: () => Get.toNamed(
-                      Routes.INSTANT_MESSAGE,
-                      arguments: InstantMessageParameter(
-                        chatId: controller.parameter.chatId,
-                        type: InstantMessageType.chat,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
+                  // BorderTitleIconWidget(
+                  //   icon: IconsAssets.chatRoundLineIcon,
+                  //   title: 'manage_instant_messages'.tr,
+                  //   onTap: () => Get.toNamed(
+                  //     Routes.INSTANT_MESSAGE,
+                  //     arguments: InstantMessageParameter(
+                  //       chatId: controller.parameter.chatId,
+                  //       type: InstantMessageType.chat,
+                  //     ),
+                  //   ),
+                  // ),
+                  // SizedBox(height: 8.h),
                   BorderTitleIconWidget(
                     icon: IconsAssets.galleryBorderIcon,
                     title: 'images_files'.tr,

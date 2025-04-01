@@ -1,8 +1,8 @@
-enum InstantMessageType { chat, group }
+enum InstantMessageType { chat, group, noChatId }
 
 class InstantMessageParameter {
-  final int chatId;
+  final int? chatId;
   final InstantMessageType type;
 
-  InstantMessageParameter({required this.chatId, required this.type});
+  InstantMessageParameter({this.chatId, required this.type});
 }

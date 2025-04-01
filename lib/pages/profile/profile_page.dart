@@ -1,4 +1,5 @@
 import 'package:chats/main.dart';
+import 'package:chats/pages/instant_message/instant_message_parameter.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/pages/profile/view/header_profile_view.dart';
 import 'package:chats/pages/screen_security_code/screen_security_code_parameter.dart';
@@ -49,6 +50,17 @@ class ProfilePage extends GetWidget<ProfileController> {
                     icon: IconsAssets.lockPasswordIcon,
                     title: 'update_password'.tr,
                     onTap: () => Get.toNamed(Routes.UPDATE_PASSWORD),
+                  ),
+                  SizedBox(height: 8.h),
+                  _buildProfile(
+                    icon: IconsAssets.chatRoundLineIcon,
+                    title: 'manage_instant_messages'.tr,
+                    onTap: () => Get.toNamed(
+                      Routes.INSTANT_MESSAGE,
+                      arguments: InstantMessageParameter(
+                        type: InstantMessageType.noChatId,
+                      ),
+                    ),
                   ),
                   SizedBox(height: 8.h),
                   _buildProfile(

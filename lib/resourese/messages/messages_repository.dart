@@ -77,9 +77,14 @@ class MessagesRepository extends IMessagesRepository {
   }
 
   @override
-  Future<Response> getInstantMess(int chatId) async {
+  Future<Response> getInstantMess(int? chatId) async {
     try {
-      final result = await clientGetData('${AppConstants.getQuickMessageUri}$chatId');
+      Response<dynamic> result;
+      if (chatId != null) {
+        result = await clientGetData('${AppConstants.getQuickMessageUri}?chat_id=$chatId');
+      } else {
+        result = await clientGetData(AppConstants.getQuickMessageUri);
+      }
 
       return result;
     } catch (error) {

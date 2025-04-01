@@ -61,7 +61,7 @@ class AppConstants {
   static const String sendMessageGroupUri = '/api/v1/message/send-message-to-group';
   static const String renameGroupUri = '/api/v1/message/rename-group';
   static const String addInstantMessUri = '/api/v1/message/instant/add';
-  static const String getQuickMessageUri = '/api/v1/message/instant/list?chat_id=';
+  static const String getQuickMessageUri = '/api/v1/message/instant/list';
   static const String updateInstantMessUri = '/api/v1/message/instant/edit';
   static const String deleteInstantMessUri = '/api/v1/message/instant/delete';
   static const String addUserToGroupUri = '/api/v1/message/add-user-to-group';

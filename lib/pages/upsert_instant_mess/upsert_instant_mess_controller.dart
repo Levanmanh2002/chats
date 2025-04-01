@@ -44,7 +44,7 @@ class UpsertInstantMessController extends GetxController {
       isLoading.value = true;
 
       Map<String, String> params = {
-        "chat_id": parameter.chatId.toString(),
+        if (parameter.chatId != null) "chat_id": parameter.chatId.toString(),
         'short_key': shortcutController.text.trim(),
         'content': contentController.text.trim(),
       };
