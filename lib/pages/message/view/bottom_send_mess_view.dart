@@ -26,6 +26,7 @@ class BottomSendMessView extends GetView<MessageController> {
           Flexible(
             child: TextFormField(
               controller: controller.messageController,
+              textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
                 hintText: 'message'.tr,
                 border: InputBorder.none,
