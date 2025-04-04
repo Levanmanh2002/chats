@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
 
@@ -503,6 +504,7 @@ class MessageController extends GetxController {
     messageValue.value = '';
     messageReply.value = null;
     selectedTickers.value = null;
+    selectedFile.value = null;
   }
 
   void scrollToBottom() {
@@ -749,37 +751,86 @@ class MessageController extends GetxController {
       (event) {
         if (event is PusherEvent) {
           try {
-            final json = jsonDecode(event.data) as Map<String, dynamic>;
-            if (json['payload']['data']['chat_id'] == parameter.chatId) {
-              final message = PusherMesageModel.fromJson(json);
-              if (message.payload == null) return;
+            if (event.data is Map<String, dynamic>) {
+              final jsons = event.data as Map<String, dynamic>;
+              _processEventData(jsons);
+            }
+            // Kiểm tra nếu event.data là String, nếu đúng thì giải mã nó thành Map<String, dynamic>
+            else if (event.data is String) {
+              final jsons = json.decode(event.data) as Map<String, dynamic>;
+              _processEventData(jsons);
+            }
+            // Nếu không phải Map hoặc String, log lại để kiểm tra
+            else {
+              // Map<dynamic, dynamic> x = jsonDecode(event.data);
 
-              switch (message.payload?.type) {
-                case PusherType.NEW_MESSAGE_EVENT:
-                  onInsertMessage(message.payload!.data!);
-                  break;
-                case PusherType.ROLLBACK_EVENT:
-                  int index =
-                      messageModel.value?.listMessages?.indexWhere((msg) => msg.id == message.payload!.data!.id) ?? -1;
-                  if (index != -1) {
-                    messageModel.value?.listMessages![index] =
-                        messageModel.value!.listMessages![index].copyWith(isRollback: true);
-                    messageModel.refresh();
-                  }
-                  break;
+              // final myMap = x.map(
+              //   (key, value) => MapEntry(
+              //     key,
+              //     value.toString(),
+              //   ),
+              // );
+              // final jsons = Map<String, dynamic>.from(event.data);
+              // _processEventData(jsons);
 
-                case PusherType.LIKE_MESSAGE_EVENT:
-                  onHeartMessageLocal(message.payload!.data!.id, isCallServer: false);
-                  break;
-                default:
-              }
+              Map<String, dynamic> jsons = jsonDecode(jsonEncode(event.data)) as Map<String, dynamic>;
+              _processEventData(jsons);
+
+              // final linkedMap = event.data as LinkedHashMap<Object?, Object?>;
+              // final jsons = _convertLinkedHashMapToMap(linkedMap);
+              // _processEventData(jsons);
+
+              log('Received data is not Map or String: ${event.data.runtimeType}',
+                  name: 'ERROR_STREAM_EVENT_MESSAGE_TYPE_NOT_MAP_OR_STRING');
             }
           } catch (e) {
-            log(e.toString(), name: 'ERROR_STREAM_EVENT_MESSAGE');
+            log('Error while processing event: $e', name: 'ERROR_STREAM_EVENT_MESSAGE');
           }
         }
       },
     );
+  }
+
+  Map<String, dynamic> _convertLinkedHashMapToMap(LinkedHashMap<Object?, Object?> linkedMap) {
+    Map<String, dynamic> result = {};
+    linkedMap.forEach((key, value) {
+      // Ensure the key is a String, and value is dynamic
+      if (key is String) {
+        result[key] = value;
+      }
+    });
+    return result;
+  }
+
+  void _processEventData(Map<String, dynamic> jsons) {
+    try {
+      if (jsons['payload']['data']['chat_id'] == parameter.chatId) {
+        final message = PusherMesageModel.fromJson(jsons);
+        if (message.payload == null) return;
+
+        switch (message.payload?.type) {
+          case PusherType.NEW_MESSAGE_EVENT:
+            onInsertMessage(message.payload!.data!);
+            break;
+          case PusherType.ROLLBACK_EVENT:
+            int index =
+                messageModel.value?.listMessages?.indexWhere((msg) => msg.id == message.payload!.data!.id) ?? -1;
+            if (index != -1) {
+              messageModel.value?.listMessages![index] =
+                  messageModel.value!.listMessages![index].copyWith(isRollback: true);
+              messageModel.refresh();
+            }
+            break;
+
+          case PusherType.LIKE_MESSAGE_EVENT:
+            onHeartMessageLocal(message.payload!.data!.id, isCallServer: false);
+            break;
+          default:
+        }
+      }
+    } catch (e) {
+      log('Error while processing event data: $e', name: 'ERROR_STREAM_EVENT_MESSAGE_PROCESSING_DATA');
+    }
   }
 
   @override

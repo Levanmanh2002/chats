@@ -34,7 +34,13 @@ dependencies:
   url_launcher: ^6.3.1
   contacts_service: ^0.6.3
   permission_handler: ^11.3.1
-  pusher_channels_flutter: 2.2.1
+  # pusher_channels_flutter: 2.2.1
+
+  pusher_channels_flutter:
+    git:
+      url: https://github.com/Levanmanh2002/pusher-channels-flutter.git
+      ref: check_toString
+
   shimmer_animation:
     git:
       url: https://github.com/Levanmanh2002/shimmer_animation.git

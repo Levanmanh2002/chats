@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:chats/helper/notification_helper.dart';
 import 'package:chats/resourese/service/app_service.dart';
 import 'package:chats/resourese/service/localization_service.dart';
@@ -30,6 +32,7 @@ void main() async {
   await AppService.initAppService();
   await PusherService.initPusher();
   // await Firebase.initializeApp();
+  HttpOverrides.global = MyHttpOverrides();
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
@@ -38,7 +41,10 @@ void main() async {
   } catch (_) {}
 
   runApp(LayoutBuilder(builder: (context, constraints) {
-    SizeConfig.instance.init(constraints: constraints, screenHeight: 812, screenWidth: 375);
+    double screenWidth = constraints.maxWidth;
+    double screenHeight = constraints.maxHeight;
+
+    SizeConfig.instance.init(constraints: constraints, screenWidth: screenWidth, screenHeight: screenHeight);
 
     return const MyApp();
   }));
@@ -94,5 +100,13 @@ class _MyAppState extends State<MyApp> {
       getPages: AppPages.pages,
       builder: EasyLoading.init(),
     );
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
   }
 }
