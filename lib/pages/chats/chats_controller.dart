@@ -19,7 +19,6 @@ import 'package:chats/utils/app/pusher_type.dart';
 import 'package:chats/utils/dialog_utils.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
 class ChatsController extends GetxController with GetSingleTickerProviderStateMixin {
@@ -38,11 +37,6 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
   void onInit() {
     super.onInit();
     fetchChatList();
-    _permissionRequest();
-  }
-
-  void _permissionRequest() async {
-    await Permission.microphone.request();
   }
 
   Future<void> fetchChatList({bool isRefresh = true, String search = '', bool isShowLoad = true}) async {
