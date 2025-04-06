@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:chats/constant/date_format_constants.dart';
 import 'package:chats/extension/date_time_extension.dart';
 import 'package:chats/models/messages/media_file_model.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
@@ -9,12 +6,10 @@ import 'package:chats/pages/options/options_parameter.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/dialog_utils.dart';
-import 'package:chats/utils/download_file.dart';
+import 'package:chats/utils/launch_url.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class OptionsController extends GetxController {
   final IMessagesRepository messagesRepository;
@@ -91,13 +86,13 @@ class OptionsController extends GetxController {
 
   void _fetchExportMessage() async {
     try {
-      if (Platform.isAndroid) {
-        var status = await Permission.storage.request();
-        if (!status.isGranted) {
-          print("Quyền truy cập bộ nhớ bị từ chối!");
-          return;
-        }
-      }
+      // if (Platform.isAndroid) {
+      //   var status = await Permission.storage.request();
+      //   if (!status.isGranted) {
+      //     print("Quyền truy cập bộ nhớ bị từ chối!");
+      //     return;
+      //   }
+      // }
 
       final response = await messagesRepository.exportMessage(
         parameter.chatId,
@@ -106,10 +101,12 @@ class OptionsController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        await downloadPdfToPublicDirectory(
-          response.body['download_url'],
-          'export_message_${DateFormat(DateConstants.yyyyMMddMMmmss).format(DateTime.now())}.pdf',
-        );
+        launchUrlLink(response.body['download_url'] ?? '');
+
+        // await downloadPdfToPublicDirectory(
+        //   response.body['download_url'],
+        //   'export_message_${DateFormat(DateConstants.yyyyMMddMMmmss).format(DateTime.now())}.pdf',
+        // );
       } else {
         DialogUtils.showErrorDialog(response.body['message']);
       }

@@ -658,7 +658,7 @@ class GroupMessageController extends GetxController {
       (event) {
         if (event is PusherEvent) {
           try {
-            final json = jsonDecode(event.data) as Map<String, dynamic>;
+            final json = jsonDecode(jsonEncode(event.data)) as Map<String, dynamic>;
 
             if (json['payload']['data']['chat_id'] == parameter.chatId) {
               final message = PusherMesageModel.fromJson(json);

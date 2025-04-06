@@ -40,12 +40,12 @@ class ProfilePage extends GetWidget<ProfileController> {
                     ),
                   ),
                   SizedBox(height: 8.h),
-                  _buildProfile(
-                    icon: IconsAssets.smartPhoneIcon,
-                    title: 'sync_contacts'.tr,
-                    onTap: () => Get.toNamed(Routes.SYNC_CONTACT),
-                  ),
-                  SizedBox(height: 8.h),
+                  // _buildProfile(
+                  //   icon: IconsAssets.smartPhoneIcon,
+                  //   title: 'sync_contacts'.tr,
+                  //   onTap: () => Get.toNamed(Routes.SYNC_CONTACT),
+                  // ),
+                  // SizedBox(height: 8.h),
                   _buildProfile(
                     icon: IconsAssets.lockPasswordIcon,
                     title: 'update_password'.tr,
@@ -81,14 +81,14 @@ class ProfilePage extends GetWidget<ProfileController> {
                     ),
                   ),
                   SizedBox(height: 8.h),
-                  _buildProfile(
-                    icon: IconsAssets.phoneIcon,
-                    title: 'contact_support'.tr,
-                    onTap: () {
-                      makePhoneCall(controller.phoneSupport.value);
-                    },
-                  ),
-                  SizedBox(height: 8.h),
+                  // _buildProfile(
+                  //   icon: IconsAssets.phoneIcon,
+                  //   title: 'contact_support'.tr,
+                  //   onTap: () {
+                  //     makePhoneCall(controller.phoneSupport.value);
+                  //   },
+                  // ),
+                  // SizedBox(height: 8.h),
                   if ((controller.systemSetting.value?.documentUrl ?? '').isNotEmpty) ...[
                     _buildProfile(
                       icon: IconsAssets.documentIcon,

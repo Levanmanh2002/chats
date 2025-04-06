@@ -70,29 +70,29 @@ class ContactsPage extends GetWidget<ContactsController> {
       ),
       body: Column(
         children: [
-          TabBar(
-            controller: controller.tabController,
-            indicatorColor: appTheme.blackColor,
-            dividerColor: appTheme.allSidesColor,
-            labelColor: appTheme.blackColor,
-            unselectedLabelColor: appTheme.grayColor,
-            labelStyle: StyleThemeData.size14Weight600(),
-            unselectedLabelStyle: StyleThemeData.size14Weight600(color: appTheme.grayColor),
-            indicator: BoxDecoration(
-              border: Border(bottom: BorderSide(color: appTheme.blackColor, width: 1.w)),
-            ),
-            indicatorSize: TabBarIndicatorSize.tab,
-            onTap: (value) {
-              if (value == 1) {
-                Get.toNamed(Routes.SYNC_CONTACT_DETAILS);
-                controller.tabController.index = 0;
-              }
-            },
-            tabs: [
-              Tab(text: 'friends'.tr + ' (${controller.contactModel.value?.data?.length ?? '0'})'.tr),
-              Tab(text: 'contacts'.tr),
-            ],
-          ),
+          // TabBar(
+          //   controller: controller.tabController,
+          //   indicatorColor: appTheme.blackColor,
+          //   dividerColor: appTheme.allSidesColor,
+          //   labelColor: appTheme.blackColor,
+          //   unselectedLabelColor: appTheme.grayColor,
+          //   labelStyle: StyleThemeData.size14Weight600(),
+          //   unselectedLabelStyle: StyleThemeData.size14Weight600(color: appTheme.grayColor),
+          //   indicator: BoxDecoration(
+          //     border: Border(bottom: BorderSide(color: appTheme.blackColor, width: 1.w)),
+          //   ),
+          //   indicatorSize: TabBarIndicatorSize.tab,
+          //   onTap: (value) {
+          //     if (value == 1) {
+          //       Get.toNamed(Routes.SYNC_CONTACT_DETAILS);
+          //       controller.tabController.index = 0;
+          //     }
+          //   },
+          //   tabs: [
+          //     Tab(text: 'friends'.tr + ' (${controller.contactModel.value?.data?.length ?? '0'})'.tr),
+          //     Tab(text: 'contacts'.tr),
+          //   ],
+          // ),
           InkWell(
             onTap: () => Get.toNamed(Routes.SENT_REQUEST_CONTACT),
             child: Padding(

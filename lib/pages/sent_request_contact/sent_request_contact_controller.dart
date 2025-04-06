@@ -172,7 +172,7 @@ class SentRequestContactController extends GetxController with GetSingleTickerPr
     _chatSubscription = PusherService().stream.listen(
       (event) {
         if (event is PusherEvent) {
-          final json = jsonDecode(event.data) as Map<String, dynamic>;
+          final json = jsonDecode(jsonEncode(event.data)) as Map<String, dynamic>;
 
           final pusherModel = PusherModel.fromJson(
             json,

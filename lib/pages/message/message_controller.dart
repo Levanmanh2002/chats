@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
 import 'dart:convert';
 import 'dart:developer';
 
@@ -789,17 +788,6 @@ class MessageController extends GetxController {
         }
       },
     );
-  }
-
-  Map<String, dynamic> _convertLinkedHashMapToMap(LinkedHashMap<Object?, Object?> linkedMap) {
-    Map<String, dynamic> result = {};
-    linkedMap.forEach((key, value) {
-      // Ensure the key is a String, and value is dynamic
-      if (key is String) {
-        result[key] = value;
-      }
-    });
-    return result;
   }
 
   void _processEventData(Map<String, dynamic> jsons) {

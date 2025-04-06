@@ -177,7 +177,7 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
     _chatSubscription = PusherService().stream.listen(
       (event) {
         if (event is PusherEvent) {
-          final json = jsonDecode(event.data) as Map<String, dynamic>;
+          final json = jsonDecode(jsonEncode(event.data)) as Map<String, dynamic>;
 
           try {
             if (json['payload']['data']['chat_id'] != null) {

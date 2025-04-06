@@ -5,9 +5,7 @@ import 'package:chats/pages/contacts/contacts_controller.dart';
 import 'package:chats/pages/make_friends/make_friends_parameter.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
-import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/custom_image_widget.dart';
-import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/list_loader.dart';
 import 'package:chats/widget/no_data_widget.dart';
 import 'package:chats/widget/reponsive/extension.dart';
@@ -83,11 +81,11 @@ class ContactsView extends GetView<ContactsController> {
                 ],
               ),
             ),
-            SizedBox(width: 8.w),
-            IconButton(
-              onPressed: () => controller.onMessage(e.friend!.id!, contact: e),
-              icon: const ImageAssetCustom(imagePath: IconsAssets.phoneIcon),
-            ),
+            // SizedBox(width: 8.w),
+            // IconButton(
+            //   onPressed: () => controller.onMessage(e.friend!.id!, contact: e),
+            //   icon: const ImageAssetCustom(imagePath: IconsAssets.phoneIcon),
+            // ),
           ],
         ),
       ),
