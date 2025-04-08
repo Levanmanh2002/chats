@@ -137,6 +137,9 @@ class GroupChastListView extends GetView<GroupMessageController> {
                                                   : null,
                                               onReply: () => controller.onReplyMessage(item),
                                               onHeart: () => controller.onHeartMessageLocal(item.id),
+                                              onForward: item.id != null
+                                                  ? () => controller.onForward(item.id, files: item.files ?? [])
+                                                  : null,
                                             );
                                           },
                                           child: AnimationReplyMessage(
@@ -169,6 +172,9 @@ class GroupChastListView extends GetView<GroupMessageController> {
                                               onRevoke: () => controller.onRevokeMessageLocal(item.id),
                                               onReply: () => controller.onReplyMessage(item),
                                               onHeart: () => controller.onHeartMessageLocal(item.id),
+                                              onForward: item.id != null
+                                                  ? () => controller.onForward(item.id, files: item.files ?? [])
+                                                  : null,
                                             );
                                           },
                                           child: AnimationReplyMessage(

@@ -14,4 +14,34 @@ class ChatsRepository extends IChatsRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<Response> sendForwardMessage({required int chatId, required int messageId}) async {
+    try {
+      final result = await clientPostData(
+        AppConstants.sendForwardMessageUri,
+        {'receiver_id': chatId, 'message_id': messageId},
+      );
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Response> sendForwardGroupMessage({required int chatId, required int messageId}) async {
+    try {
+      final result = await clientPostData(
+        AppConstants.sendForwardGroupMessageUri,
+        {'chat_id': chatId, 'message_id': messageId},
+      );
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
 }

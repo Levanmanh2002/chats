@@ -15,6 +15,7 @@ import 'package:chats/models/pusher/pusher_group_message.dart';
 import 'package:chats/models/pusher/pusher_message_model.dart';
 import 'package:chats/models/tickers/tickers_model.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
+import 'package:chats/pages/forward/forward_parameter.dart';
 import 'package:chats/pages/group_message/group_message_parameter.dart';
 import 'package:chats/pages/group_message_search/group_message_search_parameter.dart';
 import 'package:chats/pages/group_option/group_option_controller.dart';
@@ -651,6 +652,18 @@ class GroupMessageController extends GetxController {
         messageModel.refresh();
       }
     }
+  }
+
+  void onForward(int? messageId, {String? message, List<FilesModels>? files}) async {
+    if (messageId == null) return;
+    Get.toNamed(
+      Routes.FORWARD,
+      arguments: ForwardParameter(
+        messageId: messageId,
+        message: message,
+        files: files,
+      ),
+    );
   }
 
   void _initStream() {

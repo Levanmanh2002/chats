@@ -216,4 +216,6 @@ const Map<String, String> en = {
   'password_must_contain_at_least_4_characters': 'Password must contain at least 4 characters',
   'security_code_is_invalid': 'Security code is invalid',
   'screen_lock_code_configuration': 'Screen lock code configuration',
+  'forward': 'Forward',
+  'forward_success': 'Forward success',
 };
