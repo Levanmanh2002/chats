@@ -36,4 +36,5 @@ abstract class Routes {
   static const CONFIRM_SECURITY_CODE = '/confirm_security_code';
   static const ENTER_CODE_MUMBER_SCREEN = '/enter_code_mumbe';
   static const SCREEN_SECURITY_CODE = '/security_code_screen';
+  static const FORWARD = '/forward';
 }

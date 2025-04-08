@@ -16,6 +16,8 @@ import 'package:chats/pages/enter_code_mumber/enter_code_mumber_binding.dart';
 import 'package:chats/pages/enter_code_mumber/enter_code_mumber_page.dart';
 import 'package:chats/pages/forgot_password/forgot_password_binding.dart';
 import 'package:chats/pages/forgot_password/forgot_password_page.dart';
+import 'package:chats/pages/forward/forward_binding.dart';
+import 'package:chats/pages/forward/forward_page.dart';
 import 'package:chats/pages/group_message/group_message_binding.dart';
 import 'package:chats/pages/group_message/group_message_page.dart';
 import 'package:chats/pages/group_message_search/group_message_search_binding.dart';
@@ -234,6 +236,11 @@ abstract class AppPages {
       name: Routes.SCREEN_SECURITY_CODE,
       page: () => ScreenSecurityCodePage(),
       binding: ScreenSecurityCodeBinding(),
+    ),
+    GetPage(
+      name: Routes.FORWARD,
+      page: () => ForwardPage(),
+      binding: ForwardBinding(),
     ),
   ];
 }

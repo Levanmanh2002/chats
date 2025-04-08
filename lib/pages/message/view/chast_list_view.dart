@@ -115,6 +115,9 @@ class ChastListView extends GetView<MessageController> {
                                               : null,
                                           onHeart: () => controller.onHeartMessageLocal(item.id),
                                           onReply: () => controller.onReplyMessage(item),
+                                          onForward: item.id != null
+                                              ? () => controller.onForward(item.id, message: item.message ?? '')
+                                              : null,
                                         );
                                       },
                                       child: AnimationReplyMessage(
@@ -145,6 +148,9 @@ class ChastListView extends GetView<MessageController> {
                                           onRevoke: () => controller.onRevokeMessageLocal(item.id),
                                           onReply: () => controller.onReplyMessage(item),
                                           onHeart: () => controller.onHeartMessageLocal(item.id),
+                                          onForward: item.id != null
+                                              ? () => controller.onForward(item.id, files: item.files ?? [])
+                                              : null,
                                         );
                                       },
                                       child: AnimationReplyMessage(

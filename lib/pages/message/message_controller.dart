@@ -15,6 +15,7 @@ import 'package:chats/models/profile/user_model.dart';
 import 'package:chats/models/pusher/pusher_message_model.dart';
 import 'package:chats/models/tickers/tickers_model.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
+import 'package:chats/pages/forward/forward_parameter.dart';
 import 'package:chats/pages/message/message_parameter.dart';
 import 'package:chats/pages/message_search/message_search_parameter.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
@@ -723,6 +724,18 @@ class MessageController extends GetxController {
     } finally {
       isLoadingAcceptFriend.value = false;
     }
+  }
+
+  void onForward(int? messageId, {String? message, List<FilesModels>? files}) async {
+    if (messageId == null) return;
+    Get.toNamed(
+      Routes.FORWARD,
+      arguments: ForwardParameter(
+        messageId: messageId,
+        message: message,
+        files: files,
+      ),
+    );
   }
 
   String calculateCallDuration(String startTime, String endTime) {

@@ -92,4 +92,7 @@ class AppConstants {
   static const String exportMessageUri = '/api/v1/message/export';
 
   static const String changePrimaryNameUri = '/api/v1/contact/change-primary-name';
+
+  static const String sendForwardMessageUri = '/api/v1/message/forward-message-to-user';
+  static const String sendForwardGroupMessageUri = '/api/v1/message/forward-message-to-group';
 }

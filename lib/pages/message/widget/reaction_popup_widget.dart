@@ -13,6 +13,7 @@ void showReactionPopup(
   VoidCallback? onRevoke,
   VoidCallback? onHeart,
   VoidCallback? onReply,
+  VoidCallback? onForward,
 }) {
   showModalBottomSheet(
     context: Get.context!,
@@ -92,6 +93,27 @@ void showReactionPopup(
                                 ImageAssetCustom(imagePath: IconsAssets.replyLineIcon, size: 24.w),
                                 SizedBox(height: 4.h),
                                 Text('reply'.tr, style: StyleThemeData.size12Weight400()),
+                              ],
+                            ),
+                          ),
+                        ),
+                      if (onForward != null)
+                        InkWell(
+                          onTap: () {
+                            Get.back();
+                            onForward();
+                          },
+                          child: Padding(
+                            padding: padding(all: 12),
+                            child: Column(
+                              children: [
+                                Transform(
+                                  alignment: Alignment.center,
+                                  transform: Matrix4.identity()..scale(-1.0, 1.0),
+                                  child: ImageAssetCustom(imagePath: IconsAssets.replyLineIcon, size: 24.w),
+                                ),
+                                SizedBox(height: 4.h),
+                                Text('forward'.tr, style: StyleThemeData.size12Weight400()),
                               ],
                             ),
                           ),

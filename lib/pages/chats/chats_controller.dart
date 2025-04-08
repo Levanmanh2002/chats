@@ -37,7 +37,7 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
   @override
   void onInit() {
     super.onInit();
-    fetchChatList();
+    fetchChatList(); 
     _permissionRequest();
   }
 
