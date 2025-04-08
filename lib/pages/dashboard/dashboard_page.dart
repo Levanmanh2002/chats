@@ -30,7 +30,7 @@ class DashboardPage extends GetWidget<DashboardController> {
                 border: Border(top: BorderSide(color: appTheme.allSidesColor, width: 1.w)),
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   _bottomAppBarItem(
                     context,
@@ -39,6 +39,7 @@ class DashboardPage extends GetWidget<DashboardController> {
                     page: 0,
                     label: 'message'.tr,
                   ),
+                  SizedBox(width: 24.w),
                   _bottomAppBarItem(
                     context,
                     icon: IconsAssets.contacsIcon,
@@ -46,6 +47,7 @@ class DashboardPage extends GetWidget<DashboardController> {
                     page: 1,
                     label: 'contacts'.tr,
                   ),
+                  SizedBox(width: 24.w),
                   _bottomAppBarItem(
                     context,
                     icon: IconsAssets.userIcon,

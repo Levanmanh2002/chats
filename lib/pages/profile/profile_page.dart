@@ -25,99 +25,105 @@ class ProfilePage extends GetWidget<ProfileController> {
         onRefresh: controller.onRefresh,
         forceScrollable: true,
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              HeaderProfileView(),
-              SizedBox(height: 24.h),
-              Column(
+          child: Center(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: Column(
                 children: [
-                  _buildProfile(
-                    icon: IconsAssets.userEmptyIcon,
-                    title: 'personal_information'.tr,
-                    onTap: () => Get.toNamed(
-                      Routes.UPDATE_PROFILE,
-                      arguments: UpdateProfileParameter(user: controller.user.value),
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
-                  // _buildProfile(
-                  //   icon: IconsAssets.smartPhoneIcon,
-                  //   title: 'sync_contacts'.tr,
-                  //   onTap: () => Get.toNamed(Routes.SYNC_CONTACT),
-                  // ),
-                  // SizedBox(height: 8.h),
-                  _buildProfile(
-                    icon: IconsAssets.lockPasswordIcon,
-                    title: 'update_password'.tr,
-                    onTap: () => Get.toNamed(Routes.UPDATE_PASSWORD),
-                  ),
-                  SizedBox(height: 8.h),
-                  _buildProfile(
-                    icon: IconsAssets.chatRoundLineIcon,
-                    title: 'manage_instant_messages'.tr,
-                    onTap: () => Get.toNamed(
-                      Routes.INSTANT_MESSAGE,
-                      arguments: InstantMessageParameter(
-                        type: InstantMessageType.noChatId,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
-                  _buildProfile(
-                    icon: IconsAssets.keyholeIcon,
-                    title: 'security_code_configuration'.tr,
-                    onTap: () => Get.toNamed(
-                      Routes.SECURITY_CODE,
-                      arguments: SecurityCodeParameter(user: controller.user.value),
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
-                  _buildProfile(
-                    icon: IconsAssets.keyholeIcon,
-                    title: 'screen_lock_code_configuration'.tr,
-                    onTap: () => Get.toNamed(
-                      Routes.SCREEN_SECURITY_CODE,
-                      arguments: ScreenSecurityCodeParameter(user: controller.user.value),
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
-                  // _buildProfile(
-                  //   icon: IconsAssets.phoneIcon,
-                  //   title: 'contact_support'.tr,
-                  //   onTap: () {
-                  //     makePhoneCall(controller.phoneSupport.value);
-                  //   },
-                  // ),
-                  // SizedBox(height: 8.h),
-                  if ((controller.systemSetting.value?.documentUrl ?? '').isNotEmpty) ...[
-                    _buildProfile(
-                      icon: IconsAssets.documentIcon,
-                      title: 'instructions_for_use'.tr,
-                      onTap: () {
-                        launchUrlLink(controller.systemSetting.value?.documentUrl ?? '');
-                      },
-                    ),
-                    SizedBox(height: 8.h),
-                  ],
-                  _buildProfile(
-                    icon: IconsAssets.trashBinIcon,
-                    title: 'delete_account'.tr,
-                    onTap: () {
-                      showDeleteAccountDialog(controller.deleteAccount);
-                    },
-                  ),
-                  SizedBox(height: 8.h),
-                  _buildProfile(
-                    icon: IconsAssets.logoutIcon,
-                    title: 'log_out'.tr,
-                    colorIcon: appTheme.errorColor,
-                    colorTitle: appTheme.errorColor,
-                    onTap: () => controller.logout(isShowTitle: true),
-                  ),
                   SizedBox(height: 24.h),
+                  HeaderProfileView(),
+                  SizedBox(height: 24.h),
+                  Column(
+                    children: [
+                      _buildProfile(
+                        icon: IconsAssets.userEmptyIcon,
+                        title: 'personal_information'.tr,
+                        onTap: () => Get.toNamed(
+                          Routes.UPDATE_PROFILE,
+                          arguments: UpdateProfileParameter(user: controller.user.value),
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      // _buildProfile(
+                      //   icon: IconsAssets.smartPhoneIcon,
+                      //   title: 'sync_contacts'.tr,
+                      //   onTap: () => Get.toNamed(Routes.SYNC_CONTACT),
+                      // ),
+                      // SizedBox(height: 8.h),
+                      _buildProfile(
+                        icon: IconsAssets.lockPasswordIcon,
+                        title: 'update_password'.tr,
+                        onTap: () => Get.toNamed(Routes.UPDATE_PASSWORD),
+                      ),
+                      SizedBox(height: 8.h),
+                      _buildProfile(
+                        icon: IconsAssets.chatRoundLineIcon,
+                        title: 'manage_instant_messages'.tr,
+                        onTap: () => Get.toNamed(
+                          Routes.INSTANT_MESSAGE,
+                          arguments: InstantMessageParameter(
+                            type: InstantMessageType.noChatId,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      _buildProfile(
+                        icon: IconsAssets.keyholeIcon,
+                        title: 'security_code_configuration'.tr,
+                        onTap: () => Get.toNamed(
+                          Routes.SECURITY_CODE,
+                          arguments: SecurityCodeParameter(user: controller.user.value),
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      _buildProfile(
+                        icon: IconsAssets.keyholeIcon,
+                        title: 'screen_lock_code_configuration'.tr,
+                        onTap: () => Get.toNamed(
+                          Routes.SCREEN_SECURITY_CODE,
+                          arguments: ScreenSecurityCodeParameter(user: controller.user.value),
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      // _buildProfile(
+                      //   icon: IconsAssets.phoneIcon,
+                      //   title: 'contact_support'.tr,
+                      //   onTap: () {
+                      //     makePhoneCall(controller.phoneSupport.value);
+                      //   },
+                      // ),
+                      // SizedBox(height: 8.h),
+                      if ((controller.systemSetting.value?.documentUrl ?? '').isNotEmpty) ...[
+                        _buildProfile(
+                          icon: IconsAssets.documentIcon,
+                          title: 'instructions_for_use'.tr,
+                          onTap: () {
+                            launchUrlLink(controller.systemSetting.value?.documentUrl ?? '');
+                          },
+                        ),
+                        SizedBox(height: 8.h),
+                      ],
+                      _buildProfile(
+                        icon: IconsAssets.trashBinIcon,
+                        title: 'delete_account'.tr,
+                        onTap: () {
+                          showDeleteAccountDialog(controller.deleteAccount);
+                        },
+                      ),
+                      SizedBox(height: 8.h),
+                      _buildProfile(
+                        icon: IconsAssets.logoutIcon,
+                        title: 'log_out'.tr,
+                        colorIcon: appTheme.errorColor,
+                        colorTitle: appTheme.errorColor,
+                        onTap: () => controller.logout(isShowTitle: true),
+                      ),
+                      SizedBox(height: 24.h),
+                    ],
+                  ),
                 ],
               ),
-            ],
+            ),
           ),
         ),
       ),
