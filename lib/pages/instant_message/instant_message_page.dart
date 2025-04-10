@@ -32,57 +32,62 @@ class InstantMessagePage extends GetWidget<InstantMessageController> {
           ),
         ],
       ),
-      body: Obx(
-        () => controller.isLoading.isTrue
-            ? Center(child: CircularProgressIndicator(color: appTheme.appColor))
-            : ListLoader(
-                onRefresh: controller.fetchQuickMessage,
-                forceScrollable: true,
-                child: Padding(
-                  padding: padding(top: 12),
-                  child: controller.quickMessages.isNotEmpty
-                      ? SingleChildScrollView(
-                          child: Column(
-                            children: controller.quickMessages.map((e) {
-                              return Padding(
-                                padding: padding(bottom: 12),
-                                child: InkWell(
-                                  onTap: () => Get.toNamed(
-                                    Routes.UPSERT_INSTANT_MESS,
-                                    arguments: UpsertInstantMessParameter(
-                                      type: UpsertInstantMessType.update,
-                                      chatId: controller.parameter.chatId,
-                                      quickMessage: e,
-                                    ),
-                                  ),
-                                  child: Container(
-                                    padding: padding(horizontal: 16, vertical: 12),
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(color: appTheme.whiteColor),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Container(
-                                          padding: padding(all: 4),
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(4),
-                                            color: appTheme.allSidesColor,
-                                          ),
-                                          child: Text('/${e.shortKey}', style: StyleThemeData.size12Weight400()),
+      body: Center(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 400),
+          child: Obx(
+            () => controller.isLoading.isTrue
+                ? Center(child: CircularProgressIndicator(color: appTheme.appColor))
+                : ListLoader(
+                    onRefresh: controller.fetchQuickMessage,
+                    forceScrollable: true,
+                    child: Padding(
+                      padding: padding(top: 12),
+                      child: controller.quickMessages.isNotEmpty
+                          ? SingleChildScrollView(
+                              child: Column(
+                                children: controller.quickMessages.map((e) {
+                                  return Padding(
+                                    padding: padding(bottom: 12),
+                                    child: InkWell(
+                                      onTap: () => Get.toNamed(
+                                        Routes.UPSERT_INSTANT_MESS,
+                                        arguments: UpsertInstantMessParameter(
+                                          type: UpsertInstantMessType.update,
+                                          chatId: controller.parameter.chatId,
+                                          quickMessage: e,
                                         ),
-                                        Text(e.content ?? '', style: StyleThemeData.size14Weight400()),
-                                      ],
+                                      ),
+                                      child: Container(
+                                        padding: padding(horizontal: 16, vertical: 12),
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(color: appTheme.whiteColor),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Container(
+                                              padding: padding(all: 4),
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(4),
+                                                color: appTheme.allSidesColor,
+                                              ),
+                                              child: Text('/${e.shortKey}', style: StyleThemeData.size12Weight400()),
+                                            ),
+                                            Text(e.content ?? '', style: StyleThemeData.size14Weight400()),
+                                          ],
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        )
-                      : const Center(child: NoDataWidget(isSearch: false)),
-                ),
-              ),
+                                  );
+                                }).toList(),
+                              ),
+                            )
+                          : const Center(child: NoDataWidget(isSearch: false)),
+                    ),
+                  ),
+          ),
+        ),
       ),
     );
   }

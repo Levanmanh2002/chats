@@ -6,7 +6,6 @@ import 'package:chats/pages/create_group/create_group_parameter.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/formatter_util.dart';
 import 'package:chats/utils/icons_assets.dart';
-import 'package:chats/utils/images_assets.dart';
 import 'package:chats/widget/check_circle_widget.dart';
 import 'package:chats/widget/custom_image_widget.dart';
 import 'package:chats/widget/custom_text_field.dart';
@@ -25,41 +24,29 @@ class CreateGroupPage extends GetWidget<CreateGroupController> {
       child: Scaffold(
         body: Column(
           children: [
-            Stack(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const ImageAssetCustom(imagePath: ImagesAssets.topBgChatImage),
-                Positioned(
-                  bottom: 12,
-                  left: 8,
-                  right: 12,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        onPressed: Get.back,
-                        icon: ImageAssetCustom(imagePath: IconsAssets.arrowLeftIcon, color: appTheme.whiteColor),
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            controller.parameter.type == CreateGroupType.createGroup
-                                ? 'new_group'.tr
-                                : 'add_to_group'.tr,
-                            style: StyleThemeData.size16Weight600(color: appTheme.whiteColor),
-                          ),
-                          SizedBox(height: 4.h),
-                          Obx(
-                            () => Text(
-                              'selected_field'.trParams({'field': controller.selectedContacts.length.toString()}),
-                              style: StyleThemeData.size12Weight400(color: appTheme.whiteColor),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const IconButton(onPressed: null, icon: SizedBox()),
-                    ],
-                  ),
+                IconButton(
+                  onPressed: Get.back,
+                  icon: const ImageAssetCustom(imagePath: IconsAssets.arrowLeftIcon),
                 ),
+                Column(
+                  children: [
+                    Text(
+                      controller.parameter.type == CreateGroupType.createGroup ? 'new_group'.tr : 'add_to_group'.tr,
+                      style: StyleThemeData.size40Weight600(),
+                    ),
+                    SizedBox(height: 4.h),
+                    Obx(
+                      () => Text(
+                        'selected_field'.trParams({'field': controller.selectedContacts.length.toString()}),
+                        style: StyleThemeData.size16Weight600(),
+                      ),
+                    ),
+                  ],
+                ),
+                const IconButton(onPressed: null, icon: SizedBox()),
               ],
             ),
             if (controller.parameter.type == CreateGroupType.createGroup)

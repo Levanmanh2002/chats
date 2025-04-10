@@ -24,6 +24,10 @@ import 'package:get/get.dart';
 class GroupOptionPage extends GetWidget<GroupOptionController> {
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final double dialogWidth = screenSize.width * 0.5;
+    final double dialogHeight = screenSize.height * 0.5;
+
     return Scaffold(
       appBar: DefaultAppBar(
         title: 'options'.tr,
@@ -160,7 +164,7 @@ class GroupOptionPage extends GetWidget<GroupOptionController> {
                       final ranges = await showCalendarDatePicker2Dialog(
                         context: context,
                         config: CalendarConfigUtil.getDefaultConfig(context),
-                        dialogSize: Size(Get.width, Get.width),
+                        dialogSize: Size(dialogWidth, dialogHeight),
                         borderRadius: BorderRadius.circular(15),
                         value: [
                           controller.earningRangeDate.value.start,

@@ -21,67 +21,70 @@ void showCommonDialog({
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: padding(all: 16),
-                child: Text(
-                  title,
-                  style: StyleThemeData.size16Weight600(),
-                  textAlign: TextAlign.center,
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: padding(all: 16),
+                  child: Text(
+                    title,
+                    style: StyleThemeData.size16Weight600(),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-              ),
-              Row(
-                children: [
-                  Flexible(
-                    child: InkWell(
-                      onTap: Get.back,
-                      borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(16)),
-                      child: Container(
-                        padding: padding(vertical: 12, horizontal: 8),
-                        width: double.infinity,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          border: Border(
-                            top: BorderSide(color: appTheme.allSidesColor),
-                            right: BorderSide(color: appTheme.allSidesColor, width: 0.5),
+                Row(
+                  children: [
+                    Flexible(
+                      child: InkWell(
+                        onTap: Get.back,
+                        borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(16)),
+                        child: Container(
+                          padding: padding(vertical: 12, horizontal: 8),
+                          width: double.infinity,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            border: Border(
+                              top: BorderSide(color: appTheme.allSidesColor),
+                              right: BorderSide(color: appTheme.allSidesColor, width: 0.5),
+                            ),
                           ),
-                        ),
-                        child: Text(
-                          buttonCancelTitle ?? 'cancel'.tr,
-                          style: StyleThemeData.size14Weight600(color: appTheme.appColor),
+                          child: Text(
+                            buttonCancelTitle ?? 'cancel'.tr,
+                            style: StyleThemeData.size14Weight600(color: appTheme.appColor),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Flexible(
-                    child: InkWell(
-                      onTap: () {
-                        Get.back();
-                        onSubmit!();
-                      },
-                      borderRadius: const BorderRadius.only(bottomRight: Radius.circular(16)),
-                      child: Container(
-                        padding: padding(vertical: 12, horizontal: 8),
-                        width: double.infinity,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          border: Border(
-                            top: BorderSide(color: appTheme.allSidesColor),
-                            left: BorderSide(color: appTheme.allSidesColor, width: 0.5),
+                    Flexible(
+                      child: InkWell(
+                        onTap: () {
+                          Get.back();
+                          onSubmit!();
+                        },
+                        borderRadius: const BorderRadius.only(bottomRight: Radius.circular(16)),
+                        child: Container(
+                          padding: padding(vertical: 12, horizontal: 8),
+                          width: double.infinity,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            border: Border(
+                              top: BorderSide(color: appTheme.allSidesColor),
+                              left: BorderSide(color: appTheme.allSidesColor, width: 0.5),
+                            ),
                           ),
-                        ),
-                        child: Text(
-                          buttonTitle ?? 'confirm'.tr,
-                          style: StyleThemeData.size14Weight600(color: appTheme.errorColor),
+                          child: Text(
+                            buttonTitle ?? 'confirm'.tr,
+                            style: StyleThemeData.size14Weight600(color: appTheme.errorColor),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       );

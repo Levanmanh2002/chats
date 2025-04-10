@@ -3,6 +3,7 @@ import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/pages/screen_enter_code_mumber/screen_enter_code_mumber_parameter.dart';
 import 'package:chats/pages/screen_security_code/screen_security_code_controller.dart';
 import 'package:chats/resourese/profile/iprofile_repository.dart';
+import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/dialog_utils.dart';
 import 'package:chats/utils/local_storage.dart';
 import 'package:chats/utils/shared_key.dart';
@@ -103,8 +104,10 @@ class ScreenEnterCodeMumberController extends GetxController {
 
         if (parameter.action == ScreenEnterCodeMumberAction.enable) {
           updateLocalCode();
+          Get.offAllNamed(Routes.CONFIRM_SECURITY_CODE);
         } else if (parameter.action == ScreenEnterCodeMumberAction.change) {
           updateLocalCode();
+          Get.offAllNamed(Routes.CONFIRM_SECURITY_CODE);
         } else if (parameter.action == ScreenEnterCodeMumberAction.disable) {
           removeLocalCode();
         }

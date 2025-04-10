@@ -17,63 +17,68 @@ class ScreenSecurityCodePage extends GetWidget<ScreenSecurityCodeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: DefaultAppBar(title: 'security_code_configuration'.tr),
-      body: Column(
-        children: [
-          Padding(
-            padding: padding(vertical: 12, horizontal: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('set_passcode'.tr, style: StyleThemeData.size14Weight400()),
-                SizedBox(width: 12.w),
-                Obx(
-                  () => AppSwitch(
-                    isActive: controller.user.value?.isEnableSecurityScreen ?? false,
-                    onChange: () => Get.toNamed(
-                      Routes.ENTER_CODE_MUMBER_SCREEN,
-                      arguments: ScreenEnterCodeMumberParameter(
-                        user: controller.user.value,
-                        action: controller.user.value?.isEnableSecurityScreen == true
-                            ? ScreenEnterCodeMumberAction.disable
-                            : ScreenEnterCodeMumberAction.enable,
+      body: Center(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 400),
+          child: Column(
+            children: [
+              Padding(
+                padding: padding(vertical: 12, horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('set_passcode'.tr, style: StyleThemeData.size14Weight400()),
+                    SizedBox(width: 12.w),
+                    Obx(
+                      () => AppSwitch(
+                        isActive: controller.user.value?.isEnableSecurityScreen ?? false,
+                        onChange: () => Get.toNamed(
+                          Routes.ENTER_CODE_MUMBER_SCREEN,
+                          arguments: ScreenEnterCodeMumberParameter(
+                            user: controller.user.value,
+                            action: controller.user.value?.isEnableSecurityScreen == true
+                                ? ScreenEnterCodeMumberAction.disable
+                                : ScreenEnterCodeMumberAction.enable,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              Obx(() {
+                if ((controller.user.value?.isEnableSecurityScreen ?? false) == true) {
+                  return Column(
+                    children: [
+                      LineWidget(color: appTheme.allSidesColor),
+                      InkWell(
+                        onTap: () => Get.toNamed(
+                          Routes.ENTER_CODE_MUMBER_SCREEN,
+                          arguments: ScreenEnterCodeMumberParameter(
+                            user: controller.user.value,
+                            action: ScreenEnterCodeMumberAction.change,
+                          ),
+                        ),
+                        child: Padding(
+                          padding: padding(vertical: 12, horizontal: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('change_passcode'.tr, style: StyleThemeData.size14Weight400()),
+                              SizedBox(width: 12.w),
+                              const ImageAssetCustom(imagePath: IconsAssets.altArrowRightImage),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+                return const SizedBox();
+              }),
+            ],
           ),
-          Obx(() {
-            if ((controller.user.value?.isEnableSecurityScreen ?? false) == true) {
-              return Column(
-                children: [
-                  LineWidget(color: appTheme.allSidesColor),
-                  InkWell(
-                    onTap: () => Get.toNamed(
-                      Routes.ENTER_CODE_MUMBER_SCREEN,
-                      arguments: ScreenEnterCodeMumberParameter(
-                        user: controller.user.value,
-                        action: ScreenEnterCodeMumberAction.change,
-                      ),
-                    ),
-                    child: Padding(
-                      padding: padding(vertical: 12, horizontal: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('change_passcode'.tr, style: StyleThemeData.size14Weight400()),
-                          SizedBox(width: 12.w),
-                          const ImageAssetCustom(imagePath: IconsAssets.altArrowRightImage),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            }
-            return const SizedBox();
-          }),
-        ],
+        ),
       ),
     );
   }

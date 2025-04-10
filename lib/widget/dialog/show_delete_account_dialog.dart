@@ -21,44 +21,47 @@ void showDeleteAccountDialog(VoidCallback onDeleteAccount) {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Padding(
-            padding: padding(top: 16, left: 16, right: 16, bottom: 12),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('delete_account'.tr, style: StyleThemeData.size16Weight600()),
-                SizedBox(height: 12.h),
-                const LineWidget(),
-                SizedBox(height: 8.h),
-                const ImageAssetCustom(imagePath: IconsAssets.trashBinIcon),
-                SizedBox(height: 8.h),
-                Text(
-                  'conform_delete_account'.tr,
-                  style: StyleThemeData.size14Weight400(),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 20.h),
-                Row(
-                  children: [
-                    Flexible(
-                      child: CustomBorderButtonWidget(
-                        buttonText: 'cancel'.tr,
-                        color: appTheme.silverColor,
-                        textColor: appTheme.blackColor,
-                        onPressed: Get.back,
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: Padding(
+              padding: padding(top: 16, left: 16, right: 16, bottom: 12),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('delete_account'.tr, style: StyleThemeData.size16Weight600()),
+                  SizedBox(height: 12.h),
+                  const LineWidget(),
+                  SizedBox(height: 8.h),
+                  const ImageAssetCustom(imagePath: IconsAssets.trashBinIcon),
+                  SizedBox(height: 8.h),
+                  Text(
+                    'conform_delete_account'.tr,
+                    style: StyleThemeData.size14Weight400(),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 20.h),
+                  Row(
+                    children: [
+                      Flexible(
+                        child: CustomBorderButtonWidget(
+                          buttonText: 'cancel'.tr,
+                          color: appTheme.silverColor,
+                          textColor: appTheme.blackColor,
+                          onPressed: Get.back,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 12.w),
-                    Flexible(
-                      child: CustomButton(
-                        buttonText: 'confirm'.tr,
-                        color: appTheme.redColor,
-                        onPressed: onDeleteAccount,
+                      SizedBox(width: 12.w),
+                      Flexible(
+                        child: CustomButton(
+                          buttonText: 'confirm'.tr,
+                          color: appTheme.redColor,
+                          onPressed: onDeleteAccount,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

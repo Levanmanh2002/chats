@@ -17,63 +17,68 @@ class SecurityCodePage extends GetWidget<SecurityCodeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: DefaultAppBar(title: 'security_code_configuration'.tr),
-      body: Column(
-        children: [
-          Padding(
-            padding: padding(vertical: 12, horizontal: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('set_passcode'.tr, style: StyleThemeData.size14Weight400()),
-                SizedBox(width: 12.w),
-                Obx(
-                  () => AppSwitch(
-                    isActive: controller.user.value?.isEnableSecurity ?? false,
-                    onChange: () => Get.toNamed(
-                      Routes.ENTER_CODE_MUMBER,
-                      arguments: EnterCodeMumberParameter(
-                        user: controller.user.value,
-                        action: controller.user.value?.isEnableSecurity == true
-                            ? EnterCodeMumberAction.disable
-                            : EnterCodeMumberAction.enable,
+      body: Center(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 400),
+          child: Column(
+            children: [
+              Padding(
+                padding: padding(vertical: 12, horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('set_passcode'.tr, style: StyleThemeData.size14Weight400()),
+                    SizedBox(width: 12.w),
+                    Obx(
+                      () => AppSwitch(
+                        isActive: controller.user.value?.isEnableSecurity ?? false,
+                        onChange: () => Get.toNamed(
+                          Routes.ENTER_CODE_MUMBER,
+                          arguments: EnterCodeMumberParameter(
+                            user: controller.user.value,
+                            action: controller.user.value?.isEnableSecurity == true
+                                ? EnterCodeMumberAction.disable
+                                : EnterCodeMumberAction.enable,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              Obx(() {
+                if ((controller.user.value?.isEnableSecurity ?? false) == true) {
+                  return Column(
+                    children: [
+                      LineWidget(color: appTheme.allSidesColor),
+                      InkWell(
+                        onTap: () => Get.toNamed(
+                          Routes.ENTER_CODE_MUMBER,
+                          arguments: EnterCodeMumberParameter(
+                            user: controller.user.value,
+                            action: EnterCodeMumberAction.change,
+                          ),
+                        ),
+                        child: Padding(
+                          padding: padding(vertical: 12, horizontal: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('change_passcode'.tr, style: StyleThemeData.size14Weight400()),
+                              SizedBox(width: 12.w),
+                              const ImageAssetCustom(imagePath: IconsAssets.altArrowRightImage),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+                return const SizedBox();
+              }),
+            ],
           ),
-          Obx(() {
-            if ((controller.user.value?.isEnableSecurity ?? false) == true) {
-              return Column(
-                children: [
-                  LineWidget(color: appTheme.allSidesColor),
-                  InkWell(
-                    onTap: () => Get.toNamed(
-                      Routes.ENTER_CODE_MUMBER,
-                      arguments: EnterCodeMumberParameter(
-                        user: controller.user.value,
-                        action: EnterCodeMumberAction.change,
-                      ),
-                    ),
-                    child: Padding(
-                      padding: padding(vertical: 12, horizontal: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('change_passcode'.tr, style: StyleThemeData.size14Weight400()),
-                          SizedBox(width: 12.w),
-                          const ImageAssetCustom(imagePath: IconsAssets.altArrowRightImage),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            }
-            return const SizedBox();
-          }),
-        ],
+        ),
       ),
     );
   }
