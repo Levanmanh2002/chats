@@ -8,7 +8,12 @@ class DashboardBinding implements Bindings {
   @override
   void dependencies() {
     Get.put(DashboardController(dashboardRepository: Get.find()));
-    Get.put(ChatsController(chatsRepository: Get.find(), messagesRepository: Get.find()));
+    Get.put(ChatsController(
+      chatsRepository: Get.find(),
+      messagesRepository: Get.find(),
+      contactRepository: Get.find(),
+      groupsRepository: Get.find(),
+    ));
     Get.put(ContactsController(contactRepository: Get.find(), messagesRepository: Get.find()));
     Get.put(ProfileController(profileRepository: Get.find(), dashboardRepository: Get.find()));
   }

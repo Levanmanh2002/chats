@@ -1,22 +1,25 @@
 import 'package:chats/utils/dialog_utils.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart' as path;
 
 class ImageUtils {
   static Future<XFile?> pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
 
     if (pickedFile != null) {
-      final fileExtension = path.extension(pickedFile.path).toLowerCase();
+      final name = pickedFile.name;
+      final extension = name.split('.').last.toLowerCase();
 
-      if (['.jpeg', '.jpg', '.png', '.gif', '.svg'].contains(fileExtension)) {
+      if (['jpeg', 'jpg', 'png', 'gif', 'svg'].contains(extension)) {
         return pickedFile;
       } else {
         DialogUtils.showErrorDialog('invalid_file_format'.tr);
         return null;
       }
     }
+
     return null;
   }
 }

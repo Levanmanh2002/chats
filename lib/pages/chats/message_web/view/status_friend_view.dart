@@ -9,7 +9,7 @@ import 'package:chats/widget/reponsive/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class StatusFriendView extends GetView<ChatsController> {
+class StatusFriendWebView extends GetView<ChatsController> {
   @override
   Widget build(BuildContext context) {
     return Obx(

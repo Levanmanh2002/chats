@@ -4,13 +4,9 @@ import 'package:chats/main.dart';
 import 'package:chats/models/chats/chat_data_model.dart';
 import 'package:chats/models/chats/chats_models.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
-import 'package:chats/pages/group_message/group_message_parameter.dart';
-import 'package:chats/pages/message/message_parameter.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
-import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/app/file_content_type.dart';
-import 'package:chats/utils/gif_utils.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/custom_image_widget.dart';
 import 'package:chats/widget/dialog/show_common_dialog.dart';
@@ -27,26 +23,24 @@ class ChatAllView extends GetView<ChatsController> {
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => controller.isLoading.isTrue
-          ? Center(child: Image.asset(GifUtils.noDataImageGif))
-          : ListLoader(
-              onRefresh: () => controller.fetchChatList(isShowLoad: false),
-              onLoad: () => controller.fetchChatList(isRefresh: false),
-              hasNext: controller.chatsModels.value?.hasNext ?? false,
-              forceScrollable: true,
-              child: (controller.chatsModels.value?.chat ?? []).isNotEmpty
-                  ? SingleChildScrollView(
-                      child: Column(
-                        children: List.generate((controller.chatsModels.value?.chat ?? []).length, (index) {
-                          return _buildChatItem(
-                            (controller.chatsModels.value?.chat ?? [])[index],
-                            isShowLine: index != (controller.chatsModels.value?.chat ?? []).length - 1,
-                          );
-                        }),
-                      ),
-                    )
-                  : const Center(child: NoDataWidget()),
-            ),
+      () => ListLoader(
+        onRefresh: () => controller.fetchChatList(isShowLoad: false),
+        onLoad: () => controller.fetchChatList(isRefresh: false),
+        hasNext: controller.chatsModels.value?.hasNext ?? false,
+        forceScrollable: true,
+        child: (controller.chatsModels.value?.chat ?? []).isNotEmpty
+            ? SingleChildScrollView(
+                child: Column(
+                  children: List.generate((controller.chatsModels.value?.chat ?? []).length, (index) {
+                    return _buildChatItem(
+                      (controller.chatsModels.value?.chat ?? [])[index],
+                      isShowLine: index != (controller.chatsModels.value?.chat ?? []).length - 1,
+                    );
+                  }),
+                ),
+              )
+            : const Center(child: NoDataWidget()),
+      ),
     );
   }
 
@@ -75,16 +69,24 @@ class ChatAllView extends GetView<ChatsController> {
           child: InkWell(
             onTap: () {
               if (e.isGroup == 1) {
-                Get.toNamed(
-                  Routes.GROUP_MESSAGE,
-                  arguments: GroupMessageParameter(chatId: e.latestMessage?.chatId),
-                );
+                controller.isGroup.value = true;
               } else {
-                Get.toNamed(
-                  Routes.MESSAGE,
-                  arguments: MessageParameter(chatId: e.latestMessage?.chatId, contact: otherUsers),
-                );
+                controller.isGroup.value = false;
               }
+              // if (e.isGroup == 1) {
+              //   // Get.toNamed(
+              //   //   Routes.GROUP_MESSAGE,
+              //   //   arguments: GroupMessageParameter(chatId: e.latestMessage?.chatId),
+              //   // );
+              //   controller.getMessageList(e.latestMessage!.chatId!);
+              // } else {
+              //   // Get.toNamed(
+              //   //   Routes.MESSAGE,
+              //   //   arguments: MessageParameter(chatId: e.latestMessage?.chatId, contact: otherUsers),
+              //   // );
+              //   controller.getMessageList(e.latestMessage!.chatId!);
+              // }
+              controller.getMessageList(e.latestMessage!.chatId!);
               controller.updateReadStatus(e.latestMessage!.chatId!);
             },
             child: Container(

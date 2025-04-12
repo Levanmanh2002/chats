@@ -1,7 +1,6 @@
 import 'package:chats/extension/date_time_extension.dart';
 import 'package:chats/models/messages/media_file_model.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
-import 'package:chats/pages/message/message_controller.dart';
 import 'package:chats/pages/options/options_parameter.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
 import 'package:chats/routes/pages.dart';
@@ -69,8 +68,9 @@ class OptionsController extends GetxController {
 
       if (response.statusCode == 200) {
         isHideMessage.value = !isHideMessage.value;
-        Get.find<MessageController>().messageModel.value?.chat?.isHide = isHideMessage.value;
+        // Get.find<MessageController>().messageModel.value?.chat?.isHide = isHideMessage.value;
         Get.find<ChatsController>().fetchChatList();
+        Get.find<ChatsController>().clearHideMessage();
       }
     } catch (e) {
       print(e);
@@ -138,7 +138,7 @@ class OptionsController extends GetxController {
   }
 
   void onShowSearchMessage() {
-    Get.find<MessageController>().isShowSearch.value = false;
+    // Get.find<MessageController>().isShowSearch.value = false;
     Get.back();
   }
 }

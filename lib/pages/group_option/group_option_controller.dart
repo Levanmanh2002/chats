@@ -3,7 +3,6 @@ import 'package:chats/models/chats/chat_data_model.dart';
 import 'package:chats/models/messages/media_file_model.dart';
 import 'package:chats/models/profile/user_model.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
-import 'package:chats/pages/group_message/group_message_controller.dart';
 import 'package:chats/pages/group_option/group_option_parameter.dart';
 import 'package:chats/resourese/groups/igroups_repository.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
@@ -44,7 +43,8 @@ class GroupOptionController extends GetxController {
       if (response.statusCode == 200) {
         chatDataModel.value?.name = groupName;
         chatDataModel.refresh();
-        Get.find<GroupMessageController>().updateGroupName(groupName);
+        // Get.find<GroupMessageController>().updateGroupName(groupName);
+        Get.find<ChatsController>().clearHideMessage();
         Get.find<ChatsController>().updateGroupName(parameter.chat!.id!, groupName);
       } else {
         DialogUtils.showErrorDialog(response.body['message']);
@@ -98,8 +98,9 @@ class GroupOptionController extends GetxController {
 
       if (response.statusCode == 200) {
         isHideMessage.value = !isHideMessage.value;
-        Get.find<GroupMessageController>().messageModel.value?.chat?.isHide = isHideMessage.value;
+        // Get.find<GroupMessageController>().messageModel.value?.chat?.isHide = isHideMessage.value;
         Get.find<ChatsController>().fetchChatList();
+        Get.find<ChatsController>().clearHideMessage();
       }
     } catch (e) {
       print(e);
@@ -159,7 +160,7 @@ class GroupOptionController extends GetxController {
   }
 
   void onShowSearchMessage() {
-    Get.find<GroupMessageController>().isShowSearch.value = false;
+    // Get.find<GroupMessageController>().isShowSearch.value = false;
     Get.back();
   }
 }

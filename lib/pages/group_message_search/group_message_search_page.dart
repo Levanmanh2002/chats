@@ -1,6 +1,6 @@
 import 'package:chats/extension/date_time_extension.dart';
 import 'package:chats/main.dart';
-import 'package:chats/pages/group_message/group_message_controller.dart';
+import 'package:chats/pages/chats/chats_controller.dart';
 import 'package:chats/pages/group_message_search/group_message_search_controller.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/theme/style/style_theme.dart';
@@ -30,7 +30,7 @@ class GroupMessageSearchPage extends GetWidget<GroupMessageSearchController> {
 
             return InkWell(
               onTap: () {
-                Get.find<GroupMessageController>().fetchChatListUntilPage(
+                Get.find<ChatsController>().fetchChatListMessageUntilPage(
                   chatId: controller.searchMessage.chat!.id!,
                   targetPage: page,
                   messageId: message.id!,

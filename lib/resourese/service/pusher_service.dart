@@ -115,7 +115,7 @@ class PusherService {
         channelName: '${AppConstants.pusherChannel}-$userId',
         onEvent: (event) {
           log(event.toString(), name: 'Pusher Event');
-          // streamController.add(event);
+          streamController.add(event);
         },
       );
       await _pusher.connect();

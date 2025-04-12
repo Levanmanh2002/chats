@@ -1,11 +1,15 @@
 import 'package:chats/main.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
+import 'package:chats/pages/chats/group_message_web/group_message_page.dart';
+import 'package:chats/pages/chats/message_web/message_page.dart';
 import 'package:chats/pages/chats/view/chat_all_view.dart';
 import 'package:chats/pages/create_group/create_group_parameter.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
+import 'package:chats/utils/gif_utils.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/image_asset_custom.dart';
+import 'package:chats/widget/no_data_widget.dart';
 import 'package:chats/widget/popup/popup.dart';
 import 'package:chats/widget/reponsive/extension.dart';
 import 'package:chats/widget/search_appbar.dart';
@@ -71,11 +75,28 @@ class ChatsPage extends GetWidget<ChatsController> {
             ),
           ),
         ),
-        body: Column(
-          children: [
-            // HeaderChatView(),
-            Expanded(child: ChatAllView()),
-          ],
+        body: Obx(
+          () => Column(
+            children: [
+              Expanded(
+                child: controller.isLoading.isTrue
+                    ? Center(child: Image.asset(GifUtils.noDataImageGif))
+                    : Row(
+                        children: [
+                          Flexible(flex: 3, child: ChatAllView()),
+                          Flexible(
+                            flex: 8,
+                            child: controller.messageModel.value != null
+                                ? controller.isGroup.isTrue
+                                    ? GroupMessageWebPage()
+                                    : MessageWebPage()
+                                : const Center(child: NoDataWidget()),
+                          ),
+                        ],
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
     );

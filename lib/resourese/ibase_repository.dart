@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:chats/resourese/service/localization_service.dart';
 import 'package:chats/routes/pages.dart';
@@ -9,7 +8,7 @@ import 'package:chats/utils/app_enums.dart';
 import 'package:chats/utils/local_storage.dart';
 import 'package:chats/utils/shared_key.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -87,14 +86,15 @@ class IBaseRepository {
       request.headers.addAll(headers ?? getAuthorizationHeader());
 
       for (MultipartBody multipart in multipartBody) {
-        if (multipart.file != null) {
-          File file = File(multipart.file!.path);
-          request.files.add(http.MultipartFile(
+        if (multipart.fileBytes != null && multipart.fileName != null) {
+          log('🧾 Adding file: ${multipart.fileName} (${multipart.fileBytes!.length} bytes)', name: 'Upload');
+          request.files.add(http.MultipartFile.fromBytes(
             multipart.key,
-            file.readAsBytes().asStream(),
-            file.lengthSync(),
-            filename: file.path.split('/').last,
+            multipart.fileBytes!,
+            filename: multipart.fileName!,
           ));
+        } else {
+          log('⚠️ Skipped null fileBytes or fileName: ${multipart.file}', name: 'Upload');
         }
       }
 
@@ -102,6 +102,7 @@ class IBaseRepository {
       http.Response response = await http.Response.fromStream(await request.send());
       return handleResponse(response, uri);
     } catch (e) {
+      debugPrint('====> Upload error: $e');
       return Response(statusCode: 1, statusText: 'connection_to_api_server_failed'.tr);
     }
   }
@@ -177,8 +178,14 @@ class IBaseRepository {
 }
 
 class MultipartBody {
-  String key;
-  XFile? file;
+  final String key;
+  final XFile? file;
+  final Uint8List? fileBytes;
+  final String? fileName;
 
-  MultipartBody(this.key, this.file);
+  MultipartBody(this.key, this.file)
+      : fileBytes = null,
+        fileName = null;
+
+  MultipartBody.web(this.key, this.fileBytes, this.fileName) : file = null;
 }

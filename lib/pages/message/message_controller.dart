@@ -230,7 +230,7 @@ class MessageController extends GetxController {
       if (response.statusCode == 200) {
         messageSearchModel.value = MessageModels.fromJson(response.body['data']);
         if (messageSearchModel.value != null) {
-          Get.toNamed(
+          Get.toNamed( 
             Routes.MESSAGE_SEARCH_RESULT,
             arguments: MessageSearchParameter(searchMessage: messageSearchModel.value!),
           );

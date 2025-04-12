@@ -1,6 +1,6 @@
 import 'package:chats/extension/date_time_extension.dart';
 import 'package:chats/main.dart';
-import 'package:chats/pages/message/message_controller.dart';
+import 'package:chats/pages/chats/chats_controller.dart';
 import 'package:chats/pages/message_search/message_search_controller.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/theme/style/style_theme.dart';
@@ -30,7 +30,7 @@ class MessageSearchPage extends GetWidget<MessageSearchController> {
 
             return InkWell(
               onTap: () {
-                Get.find<MessageController>().fetchChatListUntilPage(
+                Get.find<ChatsController>().fetchChatListMessageUntilPage(
                   chatId: controller.searchMessage.chat!.id!,
                   targetPage: page,
                   messageId: message.id!,

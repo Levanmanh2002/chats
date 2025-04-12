@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:chats/models/profile/user_model.dart';
 import 'package:chats/models/response/phone_code_model.dart';
@@ -43,6 +44,9 @@ class ProfileController extends GetxController {
 
   Timer? _timer;
 
+  Rx<Uint8List?> fileBytes = Rx<Uint8List?>(null);
+  var fileName = ''.obs;
+
   @override
   void onInit() async {
     await _getProfile();
@@ -82,6 +86,8 @@ class ProfileController extends GetxController {
     avatarFile.value = await ImageUtils.pickImage();
 
     if (avatarFile.value != null) {
+      fileBytes.value = await avatarFile.value!.readAsBytes();
+      fileName.value = avatarFile.value!.name;
       updateAvatar();
     }
   }
@@ -91,7 +97,8 @@ class ProfileController extends GetxController {
       EasyLoading.show(dismissOnTap: false, maskType: EasyLoadingMaskType.clear);
 
       List<MultipartBody> multipartBody = [
-        MultipartBody('avatar', avatarFile.value),
+        // MultipartBody('avatar', avatarFile.value),
+        MultipartBody.web('avatar', fileBytes.value!, fileName.value),
       ];
 
       final response = await profileRepository.updateAvatar(multipartBody);
