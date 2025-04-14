@@ -56,6 +56,10 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
     required this.groupsRepository,
   });
 
+  final TextEditingController searchController = TextEditingController();
+
+  var searchValue = ''.obs;
+
   Rx<ChatsModels?> chatsModels = Rx<ChatsModels?>(null);
   RxList<QuickMessage> quickMessagesList = <QuickMessage>[].obs;
   Rx<QuickMessage?> quickMessage = Rx<QuickMessage?>(null);
@@ -1208,5 +1212,6 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
     super.dispose();
     _chatSubscription?.cancel();
     _chatSubscriptionMessage?.cancel();
+    searchController.dispose();
   }
 }

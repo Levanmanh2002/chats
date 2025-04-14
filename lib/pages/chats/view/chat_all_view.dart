@@ -9,6 +9,7 @@ import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/app/file_content_type.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/custom_image_widget.dart';
+import 'package:chats/widget/custom_text_field.dart';
 import 'package:chats/widget/dialog/show_common_dialog.dart';
 import 'package:chats/widget/group_avatar_widget.dart';
 import 'package:chats/widget/image_asset_custom.dart';
@@ -28,18 +29,57 @@ class ChatAllView extends GetView<ChatsController> {
         onLoad: () => controller.fetchChatList(isRefresh: false),
         hasNext: controller.chatsModels.value?.hasNext ?? false,
         forceScrollable: true,
-        child: (controller.chatsModels.value?.chat ?? []).isNotEmpty
-            ? SingleChildScrollView(
-                child: Column(
-                  children: List.generate((controller.chatsModels.value?.chat ?? []).length, (index) {
-                    return _buildChatItem(
-                      (controller.chatsModels.value?.chat ?? [])[index],
-                      isShowLine: index != (controller.chatsModels.value?.chat ?? []).length - 1,
-                    );
-                  }),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: double.infinity,
+              padding: padding(all: 16),
+              decoration: BoxDecoration(
+                color: appTheme.appColor,
+              ),
+              child: Text(
+                'chat'.tr,
+                style: StyleThemeData.size24Weight600(color: appTheme.whiteColor),
+              ),
+            ),
+            Padding(
+              padding: padding(all: 12),
+              child: CustomTextField(
+                controller: controller.searchController,
+                hintText: 'search'.tr,
+                onSubmit: controller.onSearchChat,
+                showLine: false,
+                colorBorder: appTheme.hintColor,
+                onChanged: (value) {
+                  controller.searchValue.value = value;
+                },
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    controller.onSearchChat(controller.searchController.text);
+                  },
+                  icon: ImageAssetCustom(
+                    imagePath: IconsAssets.searchIcon,
+                    size: 24.w,
+                    color: appTheme.appColor,
+                  ),
                 ),
-              )
-            : const Center(child: NoDataWidget()),
+              ),
+            ),
+            (controller.chatsModels.value?.chat ?? []).isNotEmpty
+                ? SingleChildScrollView(
+                    child: Column(
+                      children: List.generate((controller.chatsModels.value?.chat ?? []).length, (index) {
+                        return _buildChatItem(
+                          (controller.chatsModels.value?.chat ?? [])[index],
+                          isShowLine: index != (controller.chatsModels.value?.chat ?? []).length - 1,
+                        );
+                      }),
+                    ),
+                  )
+                : const Center(child: NoDataWidget()),
+          ],
+        ),
       ),
     );
   }

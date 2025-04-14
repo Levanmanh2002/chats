@@ -7,7 +7,6 @@ import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/formatter_util.dart';
 import 'package:chats/utils/icons_assets.dart';
-import 'package:chats/utils/images_assets.dart';
 import 'package:chats/widget/bottom_sheet/show_asign_owner_boottom_sheet.dart';
 import 'package:chats/widget/bottom_sheet/show_info_memeber_bottom_sheet.dart';
 import 'package:chats/widget/custom_image_widget.dart';
@@ -24,99 +23,93 @@ class ViewGroupMembersPage extends GetWidget<ViewGroupMembersController> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        body: Center(
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 400),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Stack(
-                  children: [
-                    const ImageAssetCustom(imagePath: ImagesAssets.topBgChatImage),
-                    Positioned(
-                      bottom: 12,
-                      left: 8,
-                      right: 12,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            onPressed: Get.back,
-                            icon: ImageAssetCustom(imagePath: IconsAssets.arrowLeftIcon, color: appTheme.whiteColor),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: padding(all: 16),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: appTheme.appColor,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    onPressed: Get.back,
+                    icon: ImageAssetCustom(imagePath: IconsAssets.arrowLeftIcon, color: appTheme.whiteColor),
+                  ),
+                  Text('manage_members'.tr, style: StyleThemeData.size24Weight600(color: appTheme.whiteColor)),
+                  Obx(() {
+                    if (controller.chatGroupData.value?.owner?.id == Get.find<ProfileController>().user.value?.id) {
+                      return IconButton(
+                        onPressed: () => Get.toNamed(
+                          Routes.CREATE_GROUP,
+                          arguments: CreateGroupParameter(
+                            type: CreateGroupType.joinGroup,
+                            users: controller.chatGroupData.value?.users,
+                            groupId: controller.chatGroupData.value?.id,
+                            updateAddMemberLocal: true,
                           ),
-                          Text('manage_members'.tr, style: StyleThemeData.size16Weight600(color: appTheme.whiteColor)),
-                          Obx(() {
-                            if (controller.chatGroupData.value?.owner?.id ==
-                                Get.find<ProfileController>().user.value?.id) {
-                              return IconButton(
-                                onPressed: () => Get.toNamed(
-                                  Routes.CREATE_GROUP,
-                                  arguments: CreateGroupParameter(
-                                    type: CreateGroupType.joinGroup,
-                                    users: controller.chatGroupData.value?.users,
-                                    groupId: controller.chatGroupData.value?.id,
-                                    updateAddMemberLocal: true,
-                                  ),
-                                ),
-                                icon: ImageAssetCustom(imagePath: IconsAssets.addGroupIcon, color: appTheme.whiteColor),
-                              );
-                            } else {
-                              return const IconButton(onPressed: null, icon: SizedBox());
-                            }
-                          }),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: padding(all: 16),
-                  child: CustomTextField(
-                    controller: controller.searchController,
-                    hintText: 'search_members'.tr,
-                    colorBorder: appTheme.allSidesColor,
-                    fillColor: appTheme.allSidesColor,
-                    showLine: false,
-                    formatter: FormatterUtil.createGroupFormatter,
-                    prefixIcon: IconButton(
-                      onPressed: null,
-                      icon: ImageAssetCustom(imagePath: IconsAssets.searchIcon, color: appTheme.grayColor),
-                    ),
-                    onChanged: (value) {
-                      controller.chatValue.value = value;
-                    },
-                    suffixIcon: controller.chatValue.value.isNotEmpty
-                        ? IconButton(
-                            onPressed: controller.clearSearch,
-                            icon: const ImageAssetCustom(imagePath: IconsAssets.closeCircleIcon),
-                          )
-                        : null,
-                  ),
-                ),
-                Obx(
-                  () => Padding(
-                    padding: padding(vertical: 12, horizontal: 16),
-                    child: Text(
-                      'manage_members_field'
-                          .trParams({'field': '${controller.chatGroupData.value?.users?.length ?? '0'}'}),
-                      style: StyleThemeData.size12Weight600(),
-                    ),
-                  ),
-                ),
-                // ...(controller.chatGroup?.users ?? []).map((e) {
-                //   return _buildContactItem(e, owner: controller.chatGroup?.owner);
-                // }),
-                Obx(() {
-                  final usersToDisplay = controller.filteredUsers;
-                  return Column(
-                    children: usersToDisplay.map((e) {
-                      return _buildContactItem(e, owner: controller.chatGroupData.value?.owner);
-                    }).toList(),
-                  );
-                }),
-              ],
+                        ),
+                        icon: ImageAssetCustom(
+                          imagePath: IconsAssets.addGroupIcon,
+                          color: appTheme.whiteColor,
+                          size: 24.w,
+                        ),
+                      );
+                    } else {
+                      return const IconButton(onPressed: null, icon: SizedBox());
+                    }
+                  }),
+                ],
+              ),
             ),
-          ),
+            Padding(
+              padding: padding(all: 16),
+              child: CustomTextField(
+                controller: controller.searchController,
+                hintText: 'search_members'.tr,
+                colorBorder: appTheme.allSidesColor,
+                fillColor: appTheme.allSidesColor,
+                showLine: false,
+                formatter: FormatterUtil.createGroupFormatter,
+                prefixIcon: IconButton(
+                  onPressed: null,
+                  icon: ImageAssetCustom(imagePath: IconsAssets.searchIcon, color: appTheme.grayColor),
+                ),
+                onChanged: (value) {
+                  controller.chatValue.value = value;
+                },
+                suffixIcon: controller.chatValue.value.isNotEmpty
+                    ? IconButton(
+                        onPressed: controller.clearSearch,
+                        icon: const ImageAssetCustom(imagePath: IconsAssets.closeCircleIcon),
+                      )
+                    : null,
+              ),
+            ),
+            Obx(
+              () => Padding(
+                padding: padding(vertical: 12, horizontal: 16),
+                child: Text(
+                  'manage_members_field'.trParams({'field': '${controller.chatGroupData.value?.users?.length ?? '0'}'}),
+                  style: StyleThemeData.size12Weight600(),
+                ),
+              ),
+            ),
+            // ...(controller.chatGroup?.users ?? []).map((e) {
+            //   return _buildContactItem(e, owner: controller.chatGroup?.owner);
+            // }),
+            Obx(() {
+              final usersToDisplay = controller.filteredUsers;
+              return Column(
+                children: usersToDisplay.map((e) {
+                  return _buildContactItem(e, owner: controller.chatGroupData.value?.owner);
+                }).toList(),
+              );
+            }),
+          ],
         ),
       ),
     );

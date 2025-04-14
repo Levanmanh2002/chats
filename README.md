@@ -91,3 +91,8 @@ This project uses Flutter's built-in testing framework. To run tests, use the fo
   ```bash
   flutter run -d chrome --web-renderer html
   ```
+
+## Deploy web
+  ```bash
+  flutter build web
+  ```
