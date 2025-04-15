@@ -35,7 +35,7 @@ class CreateGroupPage extends GetWidget<CreateGroupController> {
                   children: [
                     Text(
                       controller.parameter.type == CreateGroupType.createGroup ? 'new_group'.tr : 'add_to_group'.tr,
-                      style: StyleThemeData.size40Weight600(),
+                      style: StyleThemeData.size24Weight600(),
                     ),
                     SizedBox(height: 4.h),
                     Obx(

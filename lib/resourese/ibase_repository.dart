@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:html' as html;
 
 import 'package:chats/resourese/service/localization_service.dart';
 import 'package:chats/routes/pages.dart';
@@ -143,6 +144,7 @@ class IBaseRepository {
     );
 
     if (response0.statusCode == 401) {
+      html.window.location.reload();
       await _logout();
     }
 
@@ -153,7 +155,6 @@ class IBaseRepository {
 
   Future<void> _logout() async {
     // DialogUtils.showErrorDialog('Phiên đăng nhập hết hạn, vui lòng đăng nhập lại!');
-
     String? savedLanguage = LocalStorage.getString(SharedKey.language);
     // bool? isShowSecurityScreen = LocalStorage.getBool(SharedKey.IS_SHOW_SECURITY_SCREEN);
     // String? securityCodeScreen = LocalStorage.getString(SharedKey.SECURITY_CODE_SCREEN);
@@ -170,6 +171,10 @@ class IBaseRepository {
     // if (securityCodeScreen.isNotEmpty) {
     //   await LocalStorage.setString(SharedKey.SECURITY_CODE_SCREEN, securityCodeScreen);
     // }
+
+    if (kIsWeb) {
+      html.window.location.reload();
+    }
 
     if (Get.currentRoute != Routes.SIGN_IN) {
       Get.offAllNamed(Routes.SIGN_IN);

@@ -27,6 +27,8 @@ class ImagesView extends GetView<MediaFilesController> {
                     ? DynamicGridItemView<FilesModels>(
                         items: controller.mediaImageModel.value?.items ?? [],
                         borderRadius: 8,
+                        minItemInLine: 10,
+                        maxItemInLine: 10,
                         itemBuilder: (file, index) {
                           return LayoutBuilder(
                             builder: (context, constraint) => Padding(

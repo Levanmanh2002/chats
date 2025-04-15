@@ -113,24 +113,24 @@ class AttachmentFullscreenPage extends GetWidget<AttachmentFullscreenController>
                           ),
                         ),
                         SizedBox(width: 8.w),
-                        IconButton(
-                          style: IconButton.styleFrom(
-                            minimumSize: Size.zero,
-                            fixedSize: Size(36.w, 36.w),
-                            padding: EdgeInsets.zero,
-                            alignment: Alignment.center,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            maximumSize: Size(36.w, 36.w),
-                          ),
-                          icon: ImageAssetCustom(imagePath: IconsAssets.downloadIcon, color: appTheme.whiteColor),
-                          onPressed: () {
-                            final attachment =
-                                controller.parameter.files?[controller.pageController.page?.toInt() ?? 0];
-                            if (attachment?.fileUrl != null) {
-                              controller.saveImage(attachment?.fileUrl ?? '');
-                            }
-                          },
-                        ),
+                        // IconButton(
+                        //   style: IconButton.styleFrom(
+                        //     minimumSize: Size.zero,
+                        //     fixedSize: Size(36.w, 36.w),
+                        //     padding: EdgeInsets.zero,
+                        //     alignment: Alignment.center,
+                        //     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        //     maximumSize: Size(36.w, 36.w),
+                        //   ),
+                        //   icon: ImageAssetCustom(imagePath: IconsAssets.downloadIcon, color: appTheme.whiteColor),
+                        //   onPressed: () {
+                        //     final attachment =
+                        //         controller.parameter.files?[controller.pageController.page?.toInt() ?? 0];
+                        //     if (attachment?.fileUrl != null) {
+                        //       controller.saveImage(attachment?.fileUrl ?? '');
+                        //     }
+                        //   },
+                        // ),
                       ],
                     ),
                   ),

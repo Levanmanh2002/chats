@@ -34,6 +34,7 @@ class ChatAllView extends GetView<ChatsController> {
           children: [
             Container(
               width: double.infinity,
+              height: kToolbarHeight + 20.h,
               padding: padding(all: 16),
               decoration: BoxDecoration(
                 color: appTheme.appColor,
