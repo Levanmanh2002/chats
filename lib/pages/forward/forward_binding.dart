@@ -7,6 +7,7 @@ class ForwardBinding implements Bindings {
     Get.lazyPut(
       () => ForwardController(
         chatsRepository: Get.find(),
+        contactRepository: Get.find(),
         parameter: Get.arguments,
       ),
     );
