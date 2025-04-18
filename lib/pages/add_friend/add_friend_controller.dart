@@ -4,7 +4,6 @@ import 'package:chats/pages/make_friends/make_friends_parameter.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/resourese/contact/icontact_repository.dart';
 import 'package:chats/routes/pages.dart';
-import 'package:chats/utils/custom_validator.dart';
 import 'package:chats/widget/dialog/noti_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -38,9 +37,8 @@ class AddFriendController extends GetxController {
       EasyLoading.show(dismissOnTap: false, maskType: EasyLoadingMaskType.clear);
 
       String phone = phoneController.text.trim();
-      String numberWithCountryCode = phoneCode.value.getCodeAsString() + phone;
-      PhoneValid phoneValid = await CustomValidator.isPhoneValid(numberWithCountryCode);
-      numberWithCountryCode = phoneValid.phone;
+      String numberWithCountryCode =
+          PhoneCodeModel().getCodeAsString() + (phone.startsWith('0') ? phone.substring(1) : phone);
 
       final response = await contactRepository.searchContactPhone(numberWithCountryCode);
 

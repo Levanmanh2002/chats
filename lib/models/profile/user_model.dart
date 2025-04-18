@@ -39,6 +39,9 @@ class UserModel {
   @JsonKey(name: 'is_enavle_security_screen')
   bool? isEnableSecurityScreen;
 
+  @JsonKey(name: 'is_checked')
+  bool? isChecked;
+
   UserModel({
     this.id,
     this.name,
@@ -56,6 +59,7 @@ class UserModel {
     this.autoMessage,
     this.securityCodeScreen,
     this.isEnableSecurityScreen,
+    this.isChecked,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);

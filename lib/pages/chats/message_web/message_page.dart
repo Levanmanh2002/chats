@@ -56,22 +56,48 @@ class MessageWebPage extends GetWidget<ChatsController> {
                       : null,
                   child: Row(
                     children: [
-                      CustomImageWidget(
-                        imageUrl: otherUsers?.avatar ??
-                            (controller.messageModel.value?.chat?.users ?? [])
-                                .firstWhereOrNull((e) => e.id != Get.find<ProfileController>().user.value?.id)
-                                ?.avatar ??
-                            '',
-                        size: 46.w,
-                        colorBoder: appTheme.appColor,
-                        showBoder: true,
-                        noImage: false,
-                        name: otherUsers?.name ??
-                            (controller.messageModel.value?.chat?.users ?? [])
-                                .firstWhereOrNull((e) => e.id != Get.find<ProfileController>().user.value?.id)
-                                ?.name ??
-                            '',
-                        isShowNameAvatar: true,
+                      Stack(
+                        children: [
+                          CustomImageWidget(
+                            imageUrl: otherUsers?.avatar ??
+                                (controller.messageModel.value?.chat?.users ?? [])
+                                    .firstWhereOrNull((e) => e.id != Get.find<ProfileController>().user.value?.id)
+                                    ?.avatar ??
+                                '',
+                            size: 46.w,
+                            colorBoder: appTheme.appColor,
+                            showBoder: true,
+                            noImage: false,
+                            name: otherUsers?.name ??
+                                (controller.messageModel.value?.chat?.users ?? [])
+                                    .firstWhereOrNull((e) => e.id != Get.find<ProfileController>().user.value?.id)
+                                    ?.name ??
+                                '',
+                            isShowNameAvatar: true,
+                          ),
+                          if ((otherUsers?.isChecked ??
+                                  (controller.messageModel.value?.chat?.users ?? [])
+                                      .firstWhereOrNull((e) => e.id != Get.find<ProfileController>().user.value?.id)
+                                      ?.isChecked ??
+                                  '') ==
+                              true)
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: Container(
+                                padding: padding(all: 2),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: appTheme.greenColor,
+                                ),
+                                child: Icon(
+                                  Icons.check,
+                                  size: 10.w,
+                                  color: appTheme.whiteColor,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                       SizedBox(width: 8.w),
                       Flexible(

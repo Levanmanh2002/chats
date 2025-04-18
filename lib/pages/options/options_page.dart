@@ -40,13 +40,34 @@ class OptionsPage extends GetWidget<OptionsController> {
               padding: padding(horizontal: 16),
               child: Column(
                 children: [
-                  CustomImageWidget(
-                    imageUrl: controller.parameter.user?.avatar ?? '',
-                    size: 100,
-                    showBoder: true,
-                    colorBoder: appTheme.allSidesColor,
-                    name: controller.parameter.user?.name ?? '',
-                    isShowNameAvatar: true,
+                  Stack(
+                    children: [
+                      CustomImageWidget(
+                        imageUrl: controller.parameter.user?.avatar ?? '',
+                        size: 100,
+                        showBoder: true,
+                        colorBoder: appTheme.allSidesColor,
+                        name: controller.parameter.user?.name ?? '',
+                        isShowNameAvatar: true,
+                      ),
+                      if (controller.parameter.user?.isChecked == true)
+                        Positioned(
+                          bottom: 5,
+                          right: 5,
+                          child: Container(
+                            padding: padding(all: 4),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: appTheme.greenColor,
+                            ),
+                            child: Icon(
+                              Icons.check,
+                              size: 14.w,
+                              color: appTheme.whiteColor,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                   SizedBox(height: 8.h),
                   RichText(

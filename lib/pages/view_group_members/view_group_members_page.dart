@@ -144,6 +144,23 @@ class ViewGroupMembersPage extends GetWidget<ViewGroupMembersController> {
                     child: ImageAssetCustom(imagePath: IconsAssets.keyIcon, size: 10.w),
                   ),
                 ),
+              if (e.isChecked == true && !isLeader)
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Container(
+                    padding: padding(all: 2),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: appTheme.greenColor,
+                    ),
+                    child: Icon(
+                      Icons.check,
+                      size: 10.w,
+                      color: appTheme.whiteColor,
+                    ),
+                  ),
+                ),
             ],
           ),
           SizedBox(width: 8.w),
