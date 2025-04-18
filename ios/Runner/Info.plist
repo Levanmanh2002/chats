@@ -33,7 +33,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Ứng dụng cần truy cập camera để chụp ảnh và gửi trong cuộc trò chuyện.</string>
 	<key>NSContactsUsageDescription</key>
-	<string>Ứng dụng này yêu cầu quyền truy cập vào danh bạ để cho phép bạn chọn và tương tác với danh bạ của mình.</string>
+	<string>Chúng tôi sử dụng quyền truy cập vào danh bạ để bạn có thể mời bạn bè, chia sẻ nội dung hoặc kết nối với những người có trong danh bạ của bạn. Ví dụ: bạn có thể chọn một liên hệ để gửi lời mời tham gia ứng dụng.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Ứng dụng cần sử dụng Microphone để gọi thoại</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>

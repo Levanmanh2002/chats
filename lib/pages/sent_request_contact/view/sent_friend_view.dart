@@ -64,11 +64,32 @@ class SentFriendView extends GetView<SentRequestContactController> {
         padding: padding(vertical: 12, horizontal: 16),
         child: Row(
           children: [
-            CustomImageWidget(
-              imageUrl: e.receiver?.avatar ?? '',
-              size: 41,
-              colorBoder: appTheme.allSidesColor,
-              showBoder: true,
+            Stack(
+              children: [
+                CustomImageWidget(
+                  imageUrl: e.receiver?.avatar ?? '',
+                  size: 41,
+                  colorBoder: appTheme.allSidesColor,
+                  showBoder: true,
+                ),
+                if (e.receiver?.isChecked == true)
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Container(
+                      padding: padding(all: 2),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: appTheme.greenColor,
+                      ),
+                      child: Icon(
+                        Icons.check,
+                        size: 10.w,
+                        color: appTheme.whiteColor,
+                      ),
+                    ),
+                  ),
+              ],
             ),
             SizedBox(width: 8.w),
             Flexible(

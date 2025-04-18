@@ -62,12 +62,33 @@ class ContactsView extends GetView<ContactsController> {
         padding: padding(horizontal: 16, vertical: 8),
         child: Row(
           children: [
-            CustomImageWidget(
-              imageUrl: e.friend?.avatar ?? '',
-              size: 41.w,
-              noImage: false,
-              name: e.friend?.name ?? '',
-              isShowNameAvatar: true,
+            Stack(
+              children: [
+                CustomImageWidget(
+                  imageUrl: e.friend?.avatar ?? '',
+                  size: 41.w,
+                  noImage: false,
+                  name: e.friend?.name ?? '',
+                  isShowNameAvatar: true,
+                ),
+                if (e.friend?.isChecked == true)
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Container(
+                      padding: padding(all: 2),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: appTheme.greenColor,
+                      ),
+                      child: Icon(
+                        Icons.check,
+                        size: 10.w,
+                        color: appTheme.whiteColor,
+                      ),
+                    ),
+                  ),
+              ],
             ),
             SizedBox(width: 8.w),
             Expanded(

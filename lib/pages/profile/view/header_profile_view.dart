@@ -42,6 +42,23 @@ class HeaderProfileView extends GetView<ProfileController> {
                         child: ImageAssetCustom(imagePath: IconsAssets.cameraBorderImage, size: 32.w),
                       ),
                     ),
+                    if (controller.user.value?.isChecked == true)
+                      Positioned(
+                        top: 0,
+                        right: 10,
+                        child: Container(
+                          padding: padding(all: 4),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: appTheme.greenColor,
+                          ),
+                          child: Icon(
+                            Icons.check,
+                            size: 10.w,
+                            color: appTheme.whiteColor,
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),

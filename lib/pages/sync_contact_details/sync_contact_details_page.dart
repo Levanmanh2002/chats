@@ -146,11 +146,32 @@ class SyncContactDetailsPage extends GetWidget<SyncContactDetailsController> {
         padding: padding(horizontal: 16, vertical: 8),
         child: Row(
           children: [
-            CustomImageWidget(
-              imageUrl: e.userContact?.avatar ?? '',
-              size: 41.w,
-              noImage: false,
-              name: e.userContact?.name ?? '',
+            Stack(
+              children: [
+                CustomImageWidget(
+                  imageUrl: e.userContact?.avatar ?? '',
+                  size: 41.w,
+                  noImage: false,
+                  name: e.userContact?.name ?? '',
+                ),
+                if (e.userContact?.isChecked == true)
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Container(
+                      padding: padding(all: 2),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: appTheme.greenColor,
+                      ),
+                      child: Icon(
+                        Icons.check,
+                        size: 10.w,
+                        color: appTheme.whiteColor,
+                      ),
+                    ),
+                  ),
+              ],
             ),
             SizedBox(width: 8.w),
             Expanded(

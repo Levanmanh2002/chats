@@ -125,10 +125,31 @@ class ViewGroupMembersPage extends GetWidget<ViewGroupMembersController> {
           Stack(
             clipBehavior: Clip.none,
             children: [
-              CustomImageWidget(
-                imageUrl: e.avatar ?? '',
-                size: 41.w,
-                noImage: false,
+              Stack(
+                children: [
+                  CustomImageWidget(
+                    imageUrl: e.avatar ?? '',
+                    size: 41.w,
+                    noImage: false,
+                  ),
+                  if (e.isChecked == true)
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Container(
+                        padding: padding(all: 2),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: appTheme.greenColor,
+                        ),
+                        child: Icon(
+                          Icons.check,
+                          size: 10.w,
+                          color: appTheme.whiteColor,
+                        ),
+                      ),
+                    ),
+                ],
               ),
               if (isLeader)
                 Positioned(

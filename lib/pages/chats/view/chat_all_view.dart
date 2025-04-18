@@ -98,14 +98,35 @@ class ChatAllView extends GetView<ChatsController> {
                           showBoder: true,
                           colorBoder: appTheme.allSidesColor,
                         )
-                      : CustomImageWidget(
-                          imageUrl: otherUsers?.avatar ?? '',
-                          size: 54.w,
-                          noImage: false,
-                          showBoder: true,
-                          colorBoder: appTheme.allSidesColor,
-                          name: otherUsers?.name ?? '',
-                          isShowNameAvatar: true,
+                      : Stack(
+                          children: [
+                            CustomImageWidget(
+                              imageUrl: otherUsers?.avatar ?? '',
+                              size: 54.w,
+                              noImage: false,
+                              showBoder: true,
+                              colorBoder: appTheme.allSidesColor,
+                              name: otherUsers?.name ?? '',
+                              isShowNameAvatar: true,
+                            ),
+                            if (otherUsers?.isChecked == true)
+                              Positioned(
+                                bottom: 2,
+                                right: 0,
+                                child: Container(
+                                  padding: padding(all: 2),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: appTheme.greenColor,
+                                  ),
+                                  child: Icon(
+                                    Icons.check,
+                                    size: 10.w,
+                                    color: appTheme.whiteColor,
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
                   SizedBox(width: 8.w),
                   Expanded(

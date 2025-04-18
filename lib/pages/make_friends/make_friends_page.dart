@@ -35,11 +35,32 @@ class MakeFriendsPage extends GetWidget<MakeFriendsController> {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              CustomImageWidget(
-                imageUrl: controller.contact?.avatar ?? '',
-                size: 101.w,
-                colorBoder: appTheme.appColor,
-                showBoder: true,
+              Stack(
+                children: [
+                  CustomImageWidget(
+                    imageUrl: controller.contact?.avatar ?? '',
+                    size: 101.w,
+                    colorBoder: appTheme.appColor,
+                    showBoder: true,
+                  ),
+                  if (controller.contact?.isChecked == true)
+                    Positioned(
+                      bottom: 5,
+                      right: 5,
+                      child: Container(
+                        padding: padding(all: 4),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: appTheme.greenColor,
+                        ),
+                        child: Icon(
+                          Icons.check,
+                          size: 12.w,
+                          color: appTheme.whiteColor,
+                        ),
+                      ),
+                    ),
+                ],
               ),
               SizedBox(height: 8.h),
               Text(controller.contact?.name ?? '', style: StyleThemeData.size16Weight600(color: appTheme.whiteColor)),

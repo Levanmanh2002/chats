@@ -57,22 +57,43 @@ class MessagePage extends GetWidget<MessageController> {
                       : null,
                   child: Row(
                     children: [
-                      CustomImageWidget(
-                        imageUrl: controller.parameter.contact?.avatar ??
-                            (controller.messageModel.value?.chat?.users ?? [])
-                                .firstWhereOrNull((e) => e.id != Get.find<ProfileController>().user.value?.id)
-                                ?.avatar ??
-                            '',
-                        size: 46.w,
-                        colorBoder: appTheme.appColor,
-                        showBoder: true,
-                        noImage: false,
-                        name: controller.parameter.contact?.name ??
-                            (controller.messageModel.value?.chat?.users ?? [])
-                                .firstWhereOrNull((e) => e.id != Get.find<ProfileController>().user.value?.id)
-                                ?.name ??
-                            '',
-                        isShowNameAvatar: true,
+                      Stack(
+                        children: [
+                          CustomImageWidget(
+                            imageUrl: controller.parameter.contact?.avatar ??
+                                (controller.messageModel.value?.chat?.users ?? [])
+                                    .firstWhereOrNull((e) => e.id != Get.find<ProfileController>().user.value?.id)
+                                    ?.avatar ??
+                                '',
+                            size: 46.w,
+                            colorBoder: appTheme.appColor,
+                            showBoder: true,
+                            noImage: false,
+                            name: controller.parameter.contact?.name ??
+                                (controller.messageModel.value?.chat?.users ?? [])
+                                    .firstWhereOrNull((e) => e.id != Get.find<ProfileController>().user.value?.id)
+                                    ?.name ??
+                                '',
+                            isShowNameAvatar: true,
+                          ),
+                          if (controller.parameter.contact?.isChecked == true)
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: Container(
+                                padding: padding(all: 2),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: appTheme.greenColor,
+                                ),
+                                child: Icon(
+                                  Icons.check,
+                                  size: 10.w,
+                                  color: appTheme.whiteColor,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                       SizedBox(width: 8.w),
                       Flexible(
