@@ -12,7 +12,6 @@ import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/app_constants.dart';
 import 'package:chats/utils/local_storage.dart';
 import 'package:chats/utils/shared_key.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_callkit_incoming/entities/android_params.dart';
@@ -27,10 +26,12 @@ import 'package:uuid/uuid.dart';
 
 @pragma('vm:entry-point')
 Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
   handleIncomingCall(message.data);
 
   if (message.data['type'] == 'chat' && message.data['call_token'] != null) {
+    log('handleIncomingCall: ${message.data.toString()}', name: 'handleIncomingCall');
+    print('handleIncomingCall: ${message.data.toString()}');
     await LocalStorage.init();
     LocalStorage.setJSON(
       SharedKey.CALL_CHAT_EVENT,
@@ -363,8 +364,6 @@ void _showCallKitIncomingCall({
       // iconName: 'CallKitLogo',
       handleType: 'generic',
       supportsVideo: true,
-      maximumCallGroups: 2,
-      maximumCallsPerCallGroup: 1,
       audioSessionMode: 'default',
       audioSessionActive: true,
       audioSessionPreferredSampleRate: 44100.0,

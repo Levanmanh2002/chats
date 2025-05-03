@@ -15,6 +15,17 @@ import flutter_callkit_incoming
     ) -> Bool {
         GeneratedPluginRegistrant.register(with: self)
         
+        // ✅ FIX: Kích hoạt audio session ngay từ đầu
+        do {
+            let session = AVAudioSession.sharedInstance()
+            try session.setCategory(.playAndRecord, options: [.defaultToSpeaker, .allowBluetooth])
+            try session.setMode(.voiceChat)
+            try session.setActive(true)
+            print("✅ AVAudioSession configured successfully.")
+        } catch {
+            print("❌ Failed to set AVAudioSession: \(error)")
+        }
+
         //Setup VOIP
         let mainQueue = DispatchQueue.main
         let voipRegistry: PKPushRegistry = PKPushRegistry(queue: mainQueue)

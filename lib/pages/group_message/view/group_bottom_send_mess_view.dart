@@ -26,6 +26,7 @@ class GroupBottomSendMessView extends GetView<GroupMessageController> {
           Flexible(
             child: TextFormField(
               controller: controller.messageController,
+              textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
                 hintText: 'message'.tr,
                 border: InputBorder.none,

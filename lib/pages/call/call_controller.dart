@@ -9,9 +9,7 @@ import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/app_constants.dart';
-import 'package:chats/utils/audio_utils.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -83,76 +81,81 @@ class CallController extends GetxController {
   }
 
   Future<void> initAgora({required String token, required String channel}) async {
-    // retrieve permissions
-    await [
-      Permission.microphone,
-      // Permission.camera,
-    ].request();
+    try {
+      // retrieve permissions
+      await [
+        Permission.microphone,
+        // Permission.camera,
+      ].request();
 
-    engine = createAgoraRtcEngine();
-    await engine.initialize(RtcEngineContext(
-      appId: AppConstants.callAppId,
-      channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
-    ));
-    await engine.setAudioProfile(
-      profile: AudioProfileType.audioProfileSpeechStandard,
-      scenario: AudioScenarioType.audioScenarioGameStreaming,
-    );
+      engine = createAgoraRtcEngine();
+      await engine.initialize(RtcEngineContext(
+        appId: AppConstants.callAppId,
+        channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
+      ));
+      await engine.setAudioProfile(
+        profile: AudioProfileType.audioProfileSpeechStandard,
+        scenario: AudioScenarioType.audioScenarioGameStreaming,
+      );
 
-    engine.registerEventHandler(
-      RtcEngineEventHandler(
-        onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
-          log("local user ${connection.localUid} joined");
-          localUserJoined.value = true;
-          if (parameter.type == CallType.call) {
-            startRingtone();
-          }
+      engine.registerEventHandler(
+        RtcEngineEventHandler(
+          onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
+            log("local user ${connection.localUid} joined");
+            localUserJoined.value = true;
+            // stopRingtone();
+            // if (parameter.type == CallType.call) {
+            //   startRingtone();
+            // }
 
-          Future.delayed(const Duration(seconds: 60), () {
-            if (remoteUidValue.value == 0) {
-              log("Không có ai nhận cuộc gọi, tự động kết thúc.");
-              endCall();
+            Future.delayed(const Duration(seconds: 60), () {
+              if (remoteUidValue.value == 0) {
+                log("Không có ai nhận cuộc gọi, tự động kết thúc.");
+                endCall();
+              }
+            });
+          },
+          onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
+            log("remote user $remoteUid joined");
+            remoteUidValue.value = remoteUid;
+            // stopRingtone();
+            startTimer();
+            _fetchJoinCall();
+            engine.muteLocalAudioStream(true);
+          },
+          onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) async {
+            log("remote user $remoteUid left channel");
+            remoteUidValue.value = 0;
+            engine.leaveChannel();
+            await _fetchEndCall();
+            if (Get.currentRoute == Routes.CALL) {
+              Get.back();
             }
-          });
-        },
-        onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
-          log("remote user $remoteUid joined");
-          remoteUidValue.value = remoteUid;
-          stopRingtone();
-          startTimer();
-          _fetchJoinCall();
-        },
-        onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) async {
-          log("remote user $remoteUid left channel");
-          remoteUidValue.value = 0;
-          engine.leaveChannel();
-          await _fetchEndCall();
-          if (Get.currentRoute == Routes.CALL) {
-            Get.back();
-          }
-        },
-        onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
-          log('[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
-        },
-        onError: (err, msg) {
-          log('onError: $err, $msg');
-        },
-      ),
-    );
+          },
+          onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
+            log('[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
+          },
+          onError: (err, msg) {
+            log('onError: $err, $msg');
+          },
+        ),
+      );
 
-    await engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
-    await engine.enableVideo();
-    await engine.startPreview();
-
-    await engine.joinChannel(
-      token: token,
-      channelId: channel,
-      uid: parameter.id,
-      options: const ChannelMediaOptions(
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: false,
-      ),
-    );
+      await engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
+      await engine.enableAudio();
+      await engine.startPreview();
+      await engine.joinChannel(
+        token: token,
+        channelId: channel,
+        uid: parameter.id,
+        options: const ChannelMediaOptions(
+          autoSubscribeAudio: true,
+          autoSubscribeVideo: false,
+        ),
+      );
+    } catch (e) {
+      print(e);
+    }
   }
 
   void _fetchJoinCall() async {
@@ -188,19 +191,19 @@ class CallController extends GetxController {
   }
 
   // Gọi khi bắt đầu cuộc gọi
-  void startRingtone() {
-    FlutterRingtonePlayer().play(
-      fromAsset: AudioUtils.outgoingCallRingtone,
-      // android: AndroidSounds.notification,
-      ios: IosSounds.glass,
-      looping: true,
-    );
-  }
+  // void startRingtone() {
+  //   FlutterRingtonePlayer().play(
+  //     fromAsset: AudioUtils.outgoingCallRingtone,
+  //     // android: AndroidSounds.notification,
+  //     ios: IosSounds.glass,
+  //     looping: true,
+  //   );
+  // }
 
-  // Dừng khi người nhận nghe máy hoặc hủy cuộc gọi
-  void stopRingtone() {
-    FlutterRingtonePlayer().stop();
-  }
+  // // Dừng khi người nhận nghe máy hoặc hủy cuộc gọi
+  // void stopRingtone() {
+  //   FlutterRingtonePlayer().stop();
+  // }
 
   // Bật/tắt loa ngoài
   void toggleSpeaker() {
@@ -217,7 +220,7 @@ class CallController extends GetxController {
   // Kết thúc cuộc gọi
   Future<void> endCall() async {
     await engine.leaveChannel();
-    stopRingtone();
+    // stopRingtone();
     await _endCall();
     Get.back();
   }
@@ -252,7 +255,7 @@ class CallController extends GetxController {
   Future<void> _dispose() async {
     await engine.leaveChannel();
     await engine.release();
-    stopRingtone();
+    // stopRingtone();
   }
 
   void _setupIsolated() async {
@@ -281,7 +284,7 @@ class CallController extends GetxController {
   void onClose() {
     _timer?.cancel();
     engine.leaveChannel();
-    stopRingtone();
+    // stopRingtone();
     super.onClose();
   }
 
