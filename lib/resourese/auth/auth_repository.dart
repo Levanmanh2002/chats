@@ -1,13 +1,30 @@
+import 'dart:io';
+
 import 'package:chats/models/request/sign_up_request.dart';
 import 'package:chats/resourese/auth/iauth_repository.dart';
 import 'package:chats/utils/app_constants.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:get/get_connect/http/src/response/response.dart';
 
 class AuthRepository extends IAuthRepository {
   @override
   Future<Response> signIn(Map<String, String> params) async {
     try {
-      final result = await clientPostData(AppConstants.signInUri, params);
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      String? deviceId;
+
+      if (Platform.isIOS) {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        deviceId = iosInfo.identifierForVendor;
+      } else if (Platform.isAndroid) {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        deviceId = androidInfo.id;
+      }
+
+      final result = await clientPostData(AppConstants.signInUri, {
+        ...params,
+        'device_id': deviceId.toString(),
+      });
 
       return result;
     } catch (error) {

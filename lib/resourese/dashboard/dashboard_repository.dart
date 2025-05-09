@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:chats/resourese/dashboard/idashboard_repository.dart';
 import 'package:chats/utils/app_constants.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get_connect/http/src/response/response.dart';
 
@@ -9,8 +12,20 @@ class DashboardRepository extends IDashboardRepository {
     try {
       final fcmToken = await FirebaseMessaging.instance.getToken();
 
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      String? deviceId;
+
+      if (Platform.isIOS) {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        deviceId = iosInfo.identifierForVendor;
+      } else if (Platform.isAndroid) {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        deviceId = androidInfo.id;
+      }
+
       final result = await clientPostData(AppConstants.updateFcmTokenUri, {
         'fcm_token': fcmToken.toString(),
+        'device_id': deviceId.toString(),
       });
 
       return result;
