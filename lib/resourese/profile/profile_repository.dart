@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:chats/resourese/ibase_repository.dart';
 import 'package:chats/resourese/profile/iprofile_repository.dart';
 import 'package:chats/utils/app_constants.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:get/get_connect/http/src/response/response.dart';
 
 class ProfileRepository extends IProfileRepository {
@@ -19,7 +22,23 @@ class ProfileRepository extends IProfileRepository {
   @override
   Future<Response> logout() async {
     try {
-      final result = await clientPostData(AppConstants.logoutUri, {});
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      String? deviceId;
+
+      if (Platform.isIOS) {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        deviceId = iosInfo.identifierForVendor;
+      } else if (Platform.isAndroid) {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        deviceId = androidInfo.id;
+      } else {
+        WebBrowserInfo webInfo = await deviceInfo.webBrowserInfo;
+        deviceId = "${webInfo.vendor}-${webInfo.userAgent}-${webInfo.hardwareConcurrency}";
+      }
+
+      final result = await clientPostData(AppConstants.logoutUri, {
+        'device_id': deviceId.toString(),
+      });
 
       return result;
     } catch (error) {
