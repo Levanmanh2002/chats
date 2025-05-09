@@ -218,4 +218,8 @@ const Map<String, String> en = {
   'screen_lock_code_configuration': 'Screen lock code configuration',
   'forward': 'Forward',
   'forward_success': 'Forward success',
+  'download': 'Download',
+  'android': 'Android',
+  'ios': 'IOS',
+  'please_download_the_app_to_use_this_feature': 'Please download the app to use this feature',
 };

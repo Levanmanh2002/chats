@@ -217,4 +217,8 @@ const Map<String, String> vi = {
   'screen_lock_code_configuration': 'Cấu hình mã khóa màn hình',
   'forward': 'Chuyển tiếp',
   'forward_success': 'Chuyển tiếp thành công',
+  'download': 'Tải xuống',
+  'android': 'Android',
+  'ios': 'IOS',
+  'please_download_the_app_to_use_this_feature': 'Please download the app to use this feature',
 };

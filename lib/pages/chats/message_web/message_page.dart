@@ -13,9 +13,11 @@ import 'package:chats/pages/options/options_parameter.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
+import 'package:chats/utils/dialog_utils.dart';
 import 'package:chats/utils/gif_utils.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/custom_image_widget.dart';
+import 'package:chats/widget/dialog/show_confirm_call_dialog.dart';
 import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/reponsive/extension.dart';
 import 'package:chats/widget/search_appbar.dart';
@@ -134,6 +136,21 @@ class MessageWebPage extends GetWidget<ChatsController> {
                 ),
               ),
             ],
+          ),
+          action: IconButton(
+            style: IconButton.styleFrom(
+              minimumSize: Size.zero,
+              fixedSize: Size(36.w, 36.w),
+              padding: EdgeInsets.zero,
+              alignment: Alignment.center,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              maximumSize: Size(36.w, 36.w),
+            ),
+            icon: ImageAssetCustom(imagePath: IconsAssets.phoneIcon, color: appTheme.whiteColor),
+            onPressed: () {
+              DialogUtils.showWarningDialog('please_download_the_app_to_use_this_feature'.tr);
+              showConfirmCallDialog();
+            },
           ),
         ),
         body: Column(
