@@ -243,4 +243,16 @@ class MessagesRepository extends IMessagesRepository {
       rethrow;
     }
   }
+  
+  @override
+  Future<Response> checkCall(Map<String, String> params) async{
+    try {
+      final result = await clientPostData(AppConstants.checkCallUri, params);
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
 }

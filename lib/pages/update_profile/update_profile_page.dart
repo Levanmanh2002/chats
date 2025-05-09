@@ -139,7 +139,7 @@ class UpdateProfilePage extends GetWidget<UpdateProfileController> {
                   showBorder: false,
                   isStatus: true,
                   showStar: false,
-                  formatter: FormatterUtil.addressFormatter,
+                  formatter: FormatterUtil.chatMessageFormatter,
                 ),
                 SizedBox(height: 24.h),
                 Obx(

@@ -16,7 +16,7 @@ class ScreenSecurityCodePage extends GetWidget<ScreenSecurityCodeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: DefaultAppBar(title: 'security_code_configuration'.tr),
+      appBar: DefaultAppBar(title: 'screen_lock_code_configuration'.tr),
       body: Column(
         children: [
           Padding(

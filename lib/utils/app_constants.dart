@@ -95,4 +95,6 @@ class AppConstants {
 
   static const String sendForwardMessageUri = '/api/v1/message/forward-message-to-user';
   static const String sendForwardGroupMessageUri = '/api/v1/message/forward-message-to-group';
+
+  static const String checkCallUri = '/api/v1/call/check-call';
 }

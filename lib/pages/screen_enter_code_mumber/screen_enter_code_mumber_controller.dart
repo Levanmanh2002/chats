@@ -38,30 +38,36 @@ class ScreenEnterCodeMumberController extends GetxController {
       selectionStates[index] = true;
       selectionStates.refresh();
 
-      if (inputNumber.value.length == maxDigits) {
-        if (statusCode.value == ScreenStatusCode.none) {
-          inputNumberLocal.value = inputNumber.value;
-          resetCode();
-          statusCode.value = ScreenStatusCode.confirm;
-        } else if (statusCode.value == ScreenStatusCode.confirm) {
-          if (inputNumberLocal.value == inputNumber.value) {
-            onSubmitSecurity();
-          } else {
-            DialogUtils.showErrorDialog('passcodes_do_not_match'.tr);
+      if (parameter.action == ScreenEnterCodeMumberAction.change) {
+        if (inputNumber.value.length == maxDigits) {
+          if (statusCode.value == ScreenStatusCode.none) {
+            inputNumberLocal.value = inputNumber.value;
             resetCode();
-            statusCode.value = ScreenStatusCode.none;
-          }
-        } else if (statusCode.value == ScreenStatusCode.change) {
-          if (parameter.user?.securityCodeScreen != inputNumber.value) {
-            DialogUtils.showErrorDialog('the_old_code_is_incorrect_please_try_again'.tr);
-            resetCode();
-            statusCode.value = ScreenStatusCode.change;
-          } else {
-            DialogUtils.showSuccessDialog('enter_new_passcode'.tr);
+            statusCode.value = ScreenStatusCode.confirm;
+          } else if (statusCode.value == ScreenStatusCode.confirm) {
+            if (inputNumberLocal.value == inputNumber.value) {
+              onSubmitSecurity();
+            } else {
+              DialogUtils.showErrorDialog('passcodes_do_not_match'.tr);
+              resetCode();
+              statusCode.value = ScreenStatusCode.none;
+            }
+          } else if (statusCode.value == ScreenStatusCode.change) {
+            if (parameter.user?.securityCodeScreen != inputNumber.value) {
+              DialogUtils.showErrorDialog('the_old_code_is_incorrect_please_try_again'.tr);
+              resetCode();
+              statusCode.value = ScreenStatusCode.change;
+            } else {
+              DialogUtils.showSuccessDialog('enter_new_passcode'.tr);
 
-            resetCode();
-            statusCode.value = ScreenStatusCode.none;
+              resetCode();
+              statusCode.value = ScreenStatusCode.none;
+            }
           }
+        }
+      } else {
+        if (inputNumber.value.length == maxDigits) {
+          onSubmitSecurity();
         }
       }
     }

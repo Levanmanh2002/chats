@@ -217,4 +217,5 @@ const Map<String, String> vi = {
   'screen_lock_code_configuration': 'Cấu hình mã khóa màn hình',
   'forward': 'Chuyển tiếp',
   'forward_success': 'Chuyển tiếp thành công',
+  'call_ended': 'Cuộc gọi đã kết thúc',
 };

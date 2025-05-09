@@ -218,4 +218,5 @@ const Map<String, String> en = {
   'screen_lock_code_configuration': 'Screen lock code configuration',
   'forward': 'Forward',
   'forward_success': 'Forward success',
+  'call_ended': 'Call ended',
 };
