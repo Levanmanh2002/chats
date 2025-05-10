@@ -41,7 +41,7 @@ class PusherService {
     try {
       int? userId;
 
-      if (_pusher.connectionState == 'CONNECTED') return;
+      // if (_pusher.connectionState == 'CONNECTED') return;
       if (Get.isRegistered<ProfileController>()) {
         userId = Get.find<ProfileController>().user.value?.id;
         await initPusher();
