@@ -66,7 +66,6 @@ class PusherService {
   static void subscribeToChannel(String channelName, String eventName) async {
     int? userId;
 
-    if (_pusher.connectionState == 'CONNECTED') return;
     if (Get.isRegistered<ProfileController>()) {
       userId = Get.find<ProfileController>().user.value?.id;
       await initPusher();
@@ -101,7 +100,6 @@ class PusherService {
     try {
       int? userId;
 
-      if (_pusher.connectionState == 'CONNECTED') return;
       if (Get.isRegistered<ProfileController>()) {
         userId = Get.find<ProfileController>().user.value?.id;
         await initPusher();
