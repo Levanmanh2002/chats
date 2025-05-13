@@ -78,7 +78,7 @@ class DashboardController extends GetxController {
   }
 
   void _updateFcmToken() async {
-    await dashboardRepository.updateFcmToken();
+    // await dashboardRepository.updateFcmToken();
   }
 
   void _fetchTickers() async {

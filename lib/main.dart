@@ -1,7 +1,5 @@
-import 'dart:html' as html;
 import 'dart:io';
 
-import 'package:chats/helper/notification_helper.dart';
 import 'package:chats/resourese/service/app_service.dart';
 import 'package:chats/resourese/service/localization_service.dart';
 import 'package:chats/resourese/service/pusher_service.dart';
@@ -12,8 +10,6 @@ import 'package:chats/utils/app_constants.dart';
 import 'package:chats/utils/app_enums.dart';
 import 'package:chats/utils/local_storage.dart';
 import 'package:chats/widget/reponsive/size_config.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -36,20 +32,10 @@ void main() async {
   HttpOverrides.global = MyHttpOverrides();
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
-  try {
-    await NotificationHelper.initialize();
-  } catch (_) {}
-
-  if (kIsWeb) {
-    final uri = Uri.base;
-    final path = uri.path;
-    final fragment = uri.fragment;
-
-    if (fragment != 'splash') {
-      html.window.location.replace('$path#/splash');
-    }
-  }
+  // FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
+  // try {
+  //   await NotificationHelper.initialize();
+  // } catch (_) {}
 
   runApp(LayoutBuilder(builder: (context, constraints) {
     double screenWidth = constraints.maxWidth;

@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:js' as js;
 
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/utils/app_constants.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
@@ -22,9 +20,6 @@ class PusherService {
 
   static Future<void> initPusher() async {
     try {
-      if (kIsWeb) {
-        initPusherWeb();
-      }
       await _pusher.init(
         apiKey: AppConstants.pusherApiKey,
         cluster: AppConstants.pusherApiCluster,
@@ -36,31 +31,11 @@ class PusherService {
         onDecryptionFailure: onDecryptionFailure,
         onMemberAdded: onMemberAdded,
         onMemberRemoved: onMemberRemoved,
-        // logToConsole: true,
+        logToConsole: true,
       );
     } catch (e) {
       log("error in initialization: $e");
     }
-  }
-
-  static void initPusherWeb() {
-    js.context.callMethod('eval', [
-      """
-      try {
-        if (!window.pusher) {
-          window.pusher = new Pusher('${AppConstants.pusherApiKey}', {
-            cluster: '${AppConstants.pusherApiCluster}',
-            forceTLS: true
-          });
-          console.log("✅ Pusher Web initialized!");
-        } else {
-          console.log("ℹ️ Pusher Web already initialized.");
-        }
-      } catch (error) {
-        console.error("❌ Pusher initialization failed:", error);
-      }
-      """
-    ]);
   }
 
   static void subscribeToChannel(String channelName, String eventName) async {
@@ -71,29 +46,6 @@ class PusherService {
       await initPusher();
     }
     if (userId == null || userId == 0) return;
-
-    js.context.callMethod('eval', [
-      """
-      try {
-        if (window.pusher) {
-          var channel = window.pusher.subscribe('${AppConstants.pusherChannel}-$userId');
-          console.log("📡 Subscribing to channel: '${AppConstants.pusherChannel}-$userId');
-
-          channel.bind('$eventName', function(data) {
-            console.log("📩 Received event '$eventName':", data);
-            window.flutter_inbox.receiveMessage(data);
-          });
-
-          console.log("✅ Successfully subscribed to '$channelName' and listening for '$eventName'");
-
-        } else {
-          console.error("❌ Pusher is not initialized yet!");
-        }
-      } catch (error) {
-        console.error("❌ Failed to subscribe:", error);
-      }
-      """
-    ]);
   }
 
   Future<void> connect() async {
@@ -106,9 +58,7 @@ class PusherService {
       }
       if (userId == null || userId == 0) return;
 
-      if (kIsWeb) {
-        PusherService.subscribeToChannel('${AppConstants.pusherChannel}-$userId', AppConstants.pusherChannel);
-      }
+      PusherService.subscribeToChannel('${AppConstants.pusherChannel}-$userId', AppConstants.pusherChannel);
       await _pusher.subscribe(
         channelName: '${AppConstants.pusherChannel}-$userId',
         onEvent: (event) {

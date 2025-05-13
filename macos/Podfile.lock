@@ -1,0 +1,145 @@
+PODS:
+  - agora_rtc_engine (0.0.1):
+    - AgoraIrisRTC_macOS (= 4.5.0-build.1)
+    - AgoraRtcEngine_macOS (= 4.5.0)
+    - FlutterMacOS
+  - AgoraInfra_macOS (1.2.13)
+  - AgoraIrisRTC_macOS (4.5.0-build.1)
+  - AgoraRtcEngine_macOS (4.5.0):
+    - AgoraRtcEngine_macOS/AIAEC (= 4.5.0)
+    - AgoraRtcEngine_macOS/AIAECLL (= 4.5.0)
+    - AgoraRtcEngine_macOS/AINS (= 4.5.0)
+    - AgoraRtcEngine_macOS/AINSLL (= 4.5.0)
+    - AgoraRtcEngine_macOS/AudioBeauty (= 4.5.0)
+    - AgoraRtcEngine_macOS/ClearVision (= 4.5.0)
+    - AgoraRtcEngine_macOS/ContentInspect (= 4.5.0)
+    - AgoraRtcEngine_macOS/FaceCapture (= 4.5.0)
+    - AgoraRtcEngine_macOS/FaceDetection (= 4.5.0)
+    - AgoraRtcEngine_macOS/LipSync (= 4.5.0)
+    - AgoraRtcEngine_macOS/RtcBasic (= 4.5.0)
+    - AgoraRtcEngine_macOS/ScreenCapture (= 4.5.0)
+    - AgoraRtcEngine_macOS/SpatialAudio (= 4.5.0)
+    - AgoraRtcEngine_macOS/VideoAv1CodecDec (= 4.5.0)
+    - AgoraRtcEngine_macOS/VideoAv1CodecEnc (= 4.5.0)
+    - AgoraRtcEngine_macOS/VideoCodecDec (= 4.5.0)
+    - AgoraRtcEngine_macOS/VideoCodecEnc (= 4.5.0)
+    - AgoraRtcEngine_macOS/VirtualBackground (= 4.5.0)
+    - AgoraRtcEngine_macOS/VQA (= 4.5.0)
+  - AgoraRtcEngine_macOS/AIAEC (4.5.0)
+  - AgoraRtcEngine_macOS/AIAECLL (4.5.0)
+  - AgoraRtcEngine_macOS/AINS (4.5.0)
+  - AgoraRtcEngine_macOS/AINSLL (4.5.0)
+  - AgoraRtcEngine_macOS/AudioBeauty (4.5.0)
+  - AgoraRtcEngine_macOS/ClearVision (4.5.0)
+  - AgoraRtcEngine_macOS/ContentInspect (4.5.0)
+  - AgoraRtcEngine_macOS/FaceCapture (4.5.0)
+  - AgoraRtcEngine_macOS/FaceDetection (4.5.0)
+  - AgoraRtcEngine_macOS/LipSync (4.5.0)
+  - AgoraRtcEngine_macOS/RtcBasic (4.5.0):
+    - AgoraInfra_macOS (= 1.2.13)
+  - AgoraRtcEngine_macOS/ScreenCapture (4.5.0)
+  - AgoraRtcEngine_macOS/SpatialAudio (4.5.0)
+  - AgoraRtcEngine_macOS/VideoAv1CodecDec (4.5.0)
+  - AgoraRtcEngine_macOS/VideoAv1CodecEnc (4.5.0)
+  - AgoraRtcEngine_macOS/VideoCodecDec (4.5.0)
+  - AgoraRtcEngine_macOS/VideoCodecEnc (4.5.0)
+  - AgoraRtcEngine_macOS/VirtualBackground (4.5.0)
+  - AgoraRtcEngine_macOS/VQA (4.5.0)
+  - file_picker (0.0.1):
+    - FlutterMacOS
+  - file_selector_macos (0.0.1):
+    - FlutterMacOS
+  - flutter_local_notifications (0.0.1):
+    - FlutterMacOS
+  - FlutterMacOS (1.0.0)
+  - iris_method_channel (0.0.1):
+    - FlutterMacOS
+  - package_info_plus (0.0.1):
+    - FlutterMacOS
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - shared_preferences_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - sqflite (0.0.3):
+    - Flutter
+    - FlutterMacOS
+  - url_launcher_macos (0.0.1):
+    - FlutterMacOS
+  - video_player_avfoundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - wakelock_plus (0.0.1):
+    - FlutterMacOS
+
+DEPENDENCIES:
+  - agora_rtc_engine (from `Flutter/ephemeral/.symlinks/plugins/agora_rtc_engine/macos`)
+  - file_picker (from `Flutter/ephemeral/.symlinks/plugins/file_picker/macos`)
+  - file_selector_macos (from `Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos`)
+  - flutter_local_notifications (from `Flutter/ephemeral/.symlinks/plugins/flutter_local_notifications/macos`)
+  - FlutterMacOS (from `Flutter/ephemeral`)
+  - iris_method_channel (from `Flutter/ephemeral/.symlinks/plugins/iris_method_channel/macos`)
+  - package_info_plus (from `Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos`)
+  - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
+  - shared_preferences_foundation (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin`)
+  - sqflite (from `Flutter/ephemeral/.symlinks/plugins/sqflite/darwin`)
+  - url_launcher_macos (from `Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos`)
+  - video_player_avfoundation (from `Flutter/ephemeral/.symlinks/plugins/video_player_avfoundation/darwin`)
+  - wakelock_plus (from `Flutter/ephemeral/.symlinks/plugins/wakelock_plus/macos`)
+
+SPEC REPOS:
+  trunk:
+    - AgoraInfra_macOS
+    - AgoraIrisRTC_macOS
+    - AgoraRtcEngine_macOS
+
+EXTERNAL SOURCES:
+  agora_rtc_engine:
+    :path: Flutter/ephemeral/.symlinks/plugins/agora_rtc_engine/macos
+  file_picker:
+    :path: Flutter/ephemeral/.symlinks/plugins/file_picker/macos
+  file_selector_macos:
+    :path: Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos
+  flutter_local_notifications:
+    :path: Flutter/ephemeral/.symlinks/plugins/flutter_local_notifications/macos
+  FlutterMacOS:
+    :path: Flutter/ephemeral
+  iris_method_channel:
+    :path: Flutter/ephemeral/.symlinks/plugins/iris_method_channel/macos
+  package_info_plus:
+    :path: Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos
+  path_provider_foundation:
+    :path: Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin
+  shared_preferences_foundation:
+    :path: Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin
+  sqflite:
+    :path: Flutter/ephemeral/.symlinks/plugins/sqflite/darwin
+  url_launcher_macos:
+    :path: Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos
+  video_player_avfoundation:
+    :path: Flutter/ephemeral/.symlinks/plugins/video_player_avfoundation/darwin
+  wakelock_plus:
+    :path: Flutter/ephemeral/.symlinks/plugins/wakelock_plus/macos
+
+SPEC CHECKSUMS:
+  agora_rtc_engine: 13824e5cde1ffda2b63aa3667873f7d29bb059f2
+  AgoraInfra_macOS: 65ed0889c332d398679ec5268d272b365af092f7
+  AgoraIrisRTC_macOS: d8d0b1e38ab8919cdd7a67981f8f332dcca61ffb
+  AgoraRtcEngine_macOS: cebc823327a62aae349695b1f954898e25da776b
+  file_picker: e716a70a9fe5fd9e09ebc922d7541464289443af
+  file_selector_macos: cc3858c981fe6889f364731200d6232dac1d812d
+  flutter_local_notifications: 7062189aabf7f50938a7b8b6614ffa97656eb0bf
+  FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
+  iris_method_channel: fba932d668df5b2a085f19bcd0b1f23d667a83cd
+  package_info_plus: 12f1c5c2cfe8727ca46cbd0b26677728972d9a5b
+  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
+  shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
+  sqflite: 673a0e54cc04b7d6dba8d24fb8095b31c3a99eec
+  url_launcher_macos: c82c93949963e55b228a30115bd219499a6fe404
+  video_player_avfoundation: 7c6c11d8470e1675df7397027218274b6d2360b3
+  wakelock_plus: 4783562c9a43d209c458cb9b30692134af456269
+
+PODFILE CHECKSUM: 236401fc2c932af29a9fcf0e97baeeb2d750d367
+
+COCOAPODS: 1.15.2

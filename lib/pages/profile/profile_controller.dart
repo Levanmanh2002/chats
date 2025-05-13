@@ -19,7 +19,6 @@ import 'package:chats/utils/image_utils.dart';
 import 'package:chats/utils/launch_url.dart';
 import 'package:chats/utils/local_storage.dart';
 import 'package:chats/utils/shared_key.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -128,7 +127,7 @@ class ProfileController extends GetxController {
 
       await LocalStorage.clearAll();
       try {
-        await FirebaseMessaging.instance.deleteToken();
+        // await FirebaseMessaging.instance.deleteToken();
       } catch (e) {
         log("Firebase deleteToken failed: $e", name: 'logout');
       }

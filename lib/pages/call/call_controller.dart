@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:isolate';
-import 'dart:ui';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:chats/pages/call/call_parameter.dart';
@@ -10,7 +9,6 @@ import 'package:chats/resourese/messages/imessages_repository.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/app_constants.dart';
 import 'package:chats/utils/audio_utils.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -45,7 +43,7 @@ class CallController extends GetxController {
     } else if (parameter.type == CallType.incomingCall) {
       initAgora(token: parameter.token!, channel: parameter.channel!);
     }
-    _setupIsolated();
+    // _setupIsolated();
 
     // _generateToken();
   }
@@ -255,27 +253,27 @@ class CallController extends GetxController {
     stopRingtone();
   }
 
-  void _setupIsolated() async {
-    IsolateNameServer.removePortNameMapping(AppConstants.rejectCallChannelId);
-    IsolateNameServer.registerPortWithName(_receivePortReject.sendPort, AppConstants.rejectCallChannelId);
+  // void _setupIsolated() async {
+  //   IsolateNameServer.removePortNameMapping(AppConstants.rejectCallChannelId);
+  //   IsolateNameServer.registerPortWithName(_receivePortReject.sendPort, AppConstants.rejectCallChannelId);
 
-    _receivePortReject.listen((valueData) async {
-      if (valueData is! Map<String, dynamic>) return;
-      try {
-        final message = RemoteMessage.fromMap(valueData);
-        if (message.data['type'] == 'chat' && message.data['call_action'] == 'reject_call') {
-          await _dispose();
-          if (Get.currentRoute == Routes.CALL) {
-            if (Get.currentRoute == Routes.CALL) {
-              Get.back();
-            }
-          }
-        }
-      } catch (e) {
-        // No-op
-      }
-    });
-  }
+  //   _receivePortReject.listen((valueData) async {
+  //     if (valueData is! Map<String, dynamic>) return;
+  //     try {
+  //       final message = RemoteMessage.fromMap(valueData);
+  //       if (message.data['type'] == 'chat' && message.data['call_action'] == 'reject_call') {
+  //         await _dispose();
+  //         if (Get.currentRoute == Routes.CALL) {
+  //           if (Get.currentRoute == Routes.CALL) {
+  //             Get.back();
+  //           }
+  //         }
+  //       }
+  //     } catch (e) {
+  //       // No-op
+  //     }
+  //   });
+  // }
 
   @override
   void onClose() {

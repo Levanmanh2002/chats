@@ -228,6 +228,8 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
   }
 
   void updateReadStatus(int chatId) {
+    PusherService().connect();
+
     final chat = chatsModels.value?.chat?.firstWhereOrNull((e) => e.id == chatId);
     if (chat != null) {
       chat.isRead = true;

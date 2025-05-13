@@ -45,8 +45,8 @@ dependencies:
     git:
       url: https://github.com/Levanmanh2002/shimmer_animation.git
       ref: master
-  firebase_core: ^3.12.0
-  firebase_messaging: ^15.2.3
+  # firebase_core: ^3.12.0
+  # firebase_messaging: ^15.2.3
   scrollable_positioned_list: ^0.3.8
   agora_rtc_engine: ^6.5.0
   flutter_callkit_incoming: ^2.5.0
