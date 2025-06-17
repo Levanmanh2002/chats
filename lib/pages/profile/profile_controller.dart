@@ -10,7 +10,7 @@ import 'package:chats/pages/chats/chats_controller.dart';
 import 'package:chats/resourese/dashboard/idashboard_repository.dart';
 import 'package:chats/resourese/ibase_repository.dart';
 import 'package:chats/resourese/profile/iprofile_repository.dart';
-import 'package:chats/resourese/service/pusher_service.dart';
+import 'package:chats/resourese/service/socket_service.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/app_constants.dart';
@@ -70,7 +70,7 @@ class ProfileController extends GetxController {
           LocalStorage.setBool(SharedKey.IS_SHOW_SECURITY_SCREEN, true);
           LocalStorage.setString(SharedKey.SECURITY_CODE_SCREEN, user.value?.securityCodeScreen ?? '');
         }
-        PusherService().connect();
+        await SocketService().initSocket();
       }
     } catch (e) {
       print(e);

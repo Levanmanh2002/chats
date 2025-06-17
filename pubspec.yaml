@@ -36,10 +36,10 @@ dependencies:
   permission_handler: ^11.3.1
   # pusher_channels_flutter: 2.2.1
 
-  pusher_channels_flutter:
-    git:
-      url: https://github.com/Levanmanh2002/pusher-channels-flutter.git
-      ref: check_toString
+  # pusher_channels_flutter:
+  #   git:
+  #     url: https://github.com/Levanmanh2002/pusher-channels-flutter.git
+  #     ref: check_toString
 
   shimmer_animation:
     git:
@@ -60,6 +60,7 @@ dependencies:
   package_info_plus: ^8.3.0
   file_picker: ^8.3.2
   open_filex: ^4.7.0
+  socket_io_client: ^3.1.2
 
 dev_dependencies:
   flutter_test:

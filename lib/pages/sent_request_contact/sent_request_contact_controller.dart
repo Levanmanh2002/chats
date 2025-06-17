@@ -1,17 +1,15 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:chats/models/contact/friend_request.dart';
-import 'package:chats/models/pusher/pusher_model.dart';
+import 'package:chats/models/socket/socket_model.dart';
 import 'package:chats/pages/contacts/contacts_controller.dart';
 import 'package:chats/resourese/contact/icontact_repository.dart';
-import 'package:chats/resourese/service/pusher_service.dart';
+import 'package:chats/resourese/service/socket_service.dart';
 import 'package:chats/utils/app/pusher_type.dart';
 import 'package:chats/utils/dialog_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
 class SentRequestContactController extends GetxController with GetSingleTickerProviderStateMixin {
   final IContactRepository contactRepository;
@@ -36,7 +34,7 @@ class SentRequestContactController extends GetxController with GetSingleTickerPr
     tabController = TabController(length: 2, vsync: this);
     onReceived();
     onSend();
-    await PusherService().connect();
+    // await PusherService().connect();
     _initStream();
   }
 
@@ -169,34 +167,34 @@ class SentRequestContactController extends GetxController with GetSingleTickerPr
   }
 
   void _initStream() {
-    _chatSubscription = PusherService().stream.listen(
+    _chatSubscription = SocketService().stream.listen(
       (event) {
-        if (event is PusherEvent) {
-          final json = jsonDecode(jsonEncode(event.data)) as Map<String, dynamic>;
+        if (event != null && event is Map<String, dynamic>) {
+          final json = event;
 
-          final pusherModel = PusherModel.fromJson(
+          final pusherModel = SocketModel.fromJson(
             json,
             (json) => FriendRequest.fromJson(json as Map<String, dynamic>),
           );
 
-          if (pusherModel.payload != null && pusherModel.payload?.type == PusherType.NEW_INVITE_EVENT) {
-            var newData = pusherModel.payload!.data!;
+          if (pusherModel.type == PusherType.NEW_INVITE_EVENT) {
+            var newData = pusherModel.data!;
             bool exists = friendRequest.value?.data?.any((item) => item.id == newData.id) ?? false;
 
             if (!exists) {
               friendRequest.value?.data?.insert(0, newData);
               friendRequest.refresh();
             }
-          } else if (pusherModel.payload != null && pusherModel.payload?.type == PusherType.ROLLBACK_INVITE_EVENT) {
-            friendRequest.value?.data?.removeWhere((element) => element.id == pusherModel.payload!.data?.id);
+          } else if (pusherModel.type == PusherType.ROLLBACK_INVITE_EVENT) {
+            friendRequest.value?.data?.removeWhere((element) => element.id == pusherModel.data?.id);
             friendRequest.refresh();
-          } else if (pusherModel.payload != null && pusherModel.payload?.type == PusherType.CANCEL_INVITE_EVANT) {
-            friendSendt.value?.data?.removeWhere((element) => element.id == pusherModel.payload!.data?.id);
+          } else if (pusherModel.type == PusherType.CANCEL_INVITE_EVANT) {
+            friendSendt.value?.data?.removeWhere((element) => element.id == pusherModel.data?.id);
             friendSendt.refresh();
-          } else if (pusherModel.payload != null && pusherModel.payload?.type == PusherType.ACCEPTED_INVITE_EVENT) {
-            friendSendt.value?.data?.removeWhere((element) => element.id == pusherModel.payload!.data?.id);
+          } else if (pusherModel.type == PusherType.ACCEPTED_INVITE_EVENT) {
+            friendSendt.value?.data?.removeWhere((element) => element.id == pusherModel.data?.id);
             friendSendt.refresh();
-            Get.find<ContactsController>().updateContact(pusherModel.payload!.data!.receiver!);
+            Get.find<ContactsController>().updateContact(pusherModel.data!.receiver!);
           }
         }
       },

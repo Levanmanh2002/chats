@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 
@@ -15,10 +14,10 @@ import 'package:chats/models/messages/message_models.dart';
 import 'package:chats/models/messages/quick_message.dart';
 import 'package:chats/models/messages/reply_message.dart';
 import 'package:chats/models/profile/user_model.dart';
-import 'package:chats/models/pusher/pusher_chat.dart';
-import 'package:chats/models/pusher/pusher_group_message.dart';
-import 'package:chats/models/pusher/pusher_message_model.dart';
-import 'package:chats/models/pusher/pusher_model.dart';
+import 'package:chats/models/socket/chat_socket_model.dart';
+import 'package:chats/models/socket/group_socket_model.dart';
+import 'package:chats/models/socket/message_socket_model.dart';
+import 'package:chats/models/socket/socket_model.dart';
 import 'package:chats/models/tickers/tickers_model.dart';
 import 'package:chats/pages/contacts/contacts_controller.dart';
 import 'package:chats/pages/forward/forward_parameter.dart';
@@ -30,7 +29,7 @@ import 'package:chats/resourese/contact/icontact_repository.dart';
 import 'package:chats/resourese/groups/igroups_repository.dart';
 import 'package:chats/resourese/ibase_repository.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
-import 'package:chats/resourese/service/pusher_service.dart';
+import 'package:chats/resourese/service/socket_service.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/app/pusher_type.dart';
 import 'package:chats/utils/dialog_utils.dart';
@@ -40,7 +39,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class ChatsController extends GetxController with GetSingleTickerProviderStateMixin {
@@ -240,32 +238,32 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
   }
 
   void _initStream() {
-    _chatSubscription = PusherService().stream.listen(
+    _chatSubscription = SocketService().stream.listen(
       (event) {
-        if (event is PusherEvent) {
-          final json = jsonDecode(jsonEncode(event.data)) as Map<String, dynamic>;
+        if (event != null && event is Map<String, dynamic>) {
+          final json = event;
 
           try {
-            if (json['payload']['data']['chat_id'] != null) {
-              final message = PusherMesageModel.fromJson(json);
+            if (json['data']['chat_id'] != null) {
+              final message = MessageSocketModel.fromJson(json);
 
-              if (message.payload != null && message.payload?.type == PusherType.NEW_MESSAGE_EVENT) {
-                updateChatLastMessage(message.payload!.data!);
-              } else if (message.payload != null && message.payload?.type == PusherType.GROUP_RENAME_EVENT) {
-                updateGroupName(json['payload']['data']['id'], json['payload']['data']['name']);
+              if (message.type == PusherType.NEW_MESSAGE_EVENT) {
+                updateChatLastMessage(message.data!);
+              } else if (message.type == PusherType.GROUP_RENAME_EVENT) {
+                updateGroupName(json['data']['id'], json['data']['name']);
               }
             } else {
               try {
-                final groupMessage = PusherGroupMessageModel.fromJson(json);
+                final groupMessage = GroupSocketModel.fromJson(json);
 
-                if (groupMessage.payload != null && groupMessage.payload?.type == PusherType.NEW_MESSAGE_EVENT) {
-                  if (groupMessage.payload?.type == PusherType.NEW_MESSAGE_EVENT) {
-                    updateChatLastMessage(groupMessage.payload!.data!.chat!.latestMessage!);
-                    if (groupMessage.payload?.data?.message?.hasUserRemovedFromGroup == 1 &&
-                        (groupMessage.payload?.data?.users ?? []).isNotEmpty) {
-                      removeListUser(groupMessage.payload!.data!.chat!.id!, groupMessage.payload!.data!.users!);
-                    } else if (groupMessage.payload?.data?.message?.hasUserAddedToGroup == 1) {
-                      updateListUser(groupMessage.payload!.data!.chat!.id!, groupMessage.payload!.data!.chat!.users!);
+                if (groupMessage.type == PusherType.NEW_MESSAGE_EVENT) {
+                  if (groupMessage.type == PusherType.NEW_MESSAGE_EVENT) {
+                    updateChatLastMessage(groupMessage.data!.chat!.latestMessage!);
+                    if (groupMessage.data?.message?.hasUserRemovedFromGroup == 1 &&
+                        (groupMessage.data?.users ?? []).isNotEmpty) {
+                      removeListUser(groupMessage.data!.chat!.id!, groupMessage.data!.users!);
+                    } else if (groupMessage.data?.message?.hasUserAddedToGroup == 1) {
+                      updateListUser(groupMessage.data!.chat!.id!, groupMessage.data!.chat!.users!);
                     }
                   }
                 }
@@ -277,21 +275,21 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
           }
 
           try {
-            final pusherModel = PusherModel.fromJson(
+            final pusherModel = SocketModel.fromJson(
               json,
               (json) => ChatDataModel.fromJson(json as Map<String, dynamic>),
             );
 
-            if (pusherModel.payload != null && pusherModel.payload?.type == PusherType.ADD_TO_GROUP_EVENT) {
-              addNewChat(pusherModel.payload!.data!);
+            if (pusherModel.type == PusherType.ADD_TO_GROUP_EVENT) {
+              addNewChat(pusherModel.data!);
             }
           } catch (_) {}
 
           try {
-            final chats = PusherChatModel.fromJson(json);
+            final chats = ChatSocketModel.fromJson(json);
 
-            if (chats.payload != null && chats.payload?.type == PusherType.NEW_MESSAGE_FOR_LIST_EVENT) {
-              final newChat = chats.payload!.data!;
+            if (chats.type == PusherType.NEW_MESSAGE_FOR_LIST_EVENT) {
+              final newChat = chats.data!;
               final currentChats = chatsModels.value?.chat;
               final exists = currentChats?.any((chat) => chat.id == newChat.id) ?? false;
 
@@ -305,16 +303,16 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
           }
 
           try {
-            final pusherModel = PusherModel.fromJson(
+            final pusherModel = SocketModel.fromJson(
               json,
               (json) => FriendRequest.fromJson(json as Map<String, dynamic>),
             );
 
-            if (pusherModel.payload != null && pusherModel.payload?.type == PusherType.UNFRIEND_EVENT) {
-              Get.find<ContactsController>().removeContact(json['payload']['data']['user_id']);
-            } else if (pusherModel.payload != null && pusherModel.payload?.type == PusherType.ACCEPTED_INVITE_EVENT) {
-              Get.find<ContactsController>().updateContact(pusherModel.payload!.data!.receiver!);
-            } else if (pusherModel.payload != null && pusherModel.payload?.type == PusherType.UNFRIEND_EVENT) {}
+            if (pusherModel.type == PusherType.UNFRIEND_EVENT) {
+              Get.find<ContactsController>().removeContact(json['data']['user_id']);
+            } else if (pusherModel.type == PusherType.ACCEPTED_INVITE_EVENT) {
+              Get.find<ContactsController>().updateContact(pusherModel.data!.receiver!);
+            } else if (pusherModel.type == PusherType.UNFRIEND_EVENT) {}
           } catch (_) {}
         }
       },
@@ -380,7 +378,7 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
           requestFriend: model.requestFriend,
         );
 
-        await PusherService().connect();
+        // await PusherService().connect();
         _initStreamMessage();
       }
     } catch (e) {
@@ -903,26 +901,28 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
       (chat?.users ?? []).firstWhereOrNull((u) => u.id != Get.find<ProfileController>().user.value?.id)?.avatar ?? '';
 
   void _initStreamMessage() {
-    _chatSubscriptionMessage = PusherService().stream.listen(
+    _chatSubscriptionMessage = SocketService().stream.listen(
       (event) {
-        if (event is PusherEvent) {
-          try {
-            if (event.data is Map<String, dynamic>) {
-              final jsons = event.data as Map<String, dynamic>;
-              _processEventData(jsons);
-            } else if (event.data is String) {
-              final jsons = json.decode(event.data) as Map<String, dynamic>;
-              _processEventData(jsons);
-            } else {
-              Map<String, dynamic> jsons = jsonDecode(jsonEncode(event.data)) as Map<String, dynamic>;
-              _processEventData(jsons);
+        if (event != null && event is Map<String, dynamic>) {
+          final json = event;
+          _processEventData(json);
+          // try {
+          //   if (event.data is Map<String, dynamic>) {
+          //     final jsons = event.data as Map<String, dynamic>;
+          //     _processEventData(jsons);
+          //   } else if (event.data is String) {
+          //     final jsons = json.decode(event.data) as Map<String, dynamic>;
+          //     _processEventData(jsons);
+          //   } else {
+          //     Map<String, dynamic> jsons = jsonDecode(jsonEncode(event.data)) as Map<String, dynamic>;
+          //     _processEventData(jsons);
 
-              log('Received data is not Map or String: ${event.data.runtimeType}',
-                  name: 'ERROR_STREAM_EVENT_MESSAGE_TYPE_NOT_MAP_OR_STRING');
-            }
-          } catch (e) {
-            log('Error while processing event: $e', name: 'ERROR_STREAM_EVENT_MESSAGE');
-          }
+          //     log('Received data is not Map or String: ${event.data.runtimeType}',
+          //         name: 'ERROR_STREAM_EVENT_MESSAGE_TYPE_NOT_MAP_OR_STRING');
+          //   }
+          // } catch (e) {
+          //   log('Error while processing event: $e', name: 'ERROR_STREAM_EVENT_MESSAGE');
+          // }
         }
       },
     );
@@ -930,17 +930,16 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
 
   void _processEventData(Map<String, dynamic> jsons) {
     try {
-      if (jsons['payload']['data']['chat_id'] == messageModel.value?.chat?.id) {
-        final message = PusherMesageModel.fromJson(jsons);
-        if (message.payload == null) return;
+      if (jsons['data']['chat_id'] == messageModel.value?.chat?.id) {
+        final message = MessageSocketModel.fromJson(jsons);
+        if (message.data == null) return;
 
-        switch (message.payload?.type) {
+        switch (message.type) {
           case PusherType.NEW_MESSAGE_EVENT:
-            onInsertMessage(message.payload!.data!);
+            onInsertMessage(message.data!);
             break;
           case PusherType.ROLLBACK_EVENT:
-            int index =
-                messageModel.value?.listMessages?.indexWhere((msg) => msg.id == message.payload!.data!.id) ?? -1;
+            int index = messageModel.value?.listMessages?.indexWhere((msg) => msg.id == message.data!.id) ?? -1;
             if (index != -1) {
               messageModel.value?.listMessages![index] =
                   messageModel.value!.listMessages![index].copyWith(isRollback: true);
@@ -949,7 +948,7 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
             break;
 
           case PusherType.LIKE_MESSAGE_EVENT:
-            onHeartMessageLocal(message.payload!.data!.id, isCallServer: false);
+            onHeartMessageLocal(message.data!.id, isCallServer: false);
             break;
           default:
         }
