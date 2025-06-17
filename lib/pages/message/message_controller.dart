@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:chats/constant/date_format_constants.dart';
@@ -12,7 +11,7 @@ import 'package:chats/models/messages/message_models.dart';
 import 'package:chats/models/messages/quick_message.dart';
 import 'package:chats/models/messages/reply_message.dart';
 import 'package:chats/models/profile/user_model.dart';
-import 'package:chats/models/pusher/pusher_message_model.dart';
+import 'package:chats/models/socket/message_socket_model.dart';
 import 'package:chats/models/tickers/tickers_model.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
 import 'package:chats/pages/forward/forward_parameter.dart';
@@ -22,7 +21,7 @@ import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/resourese/contact/icontact_repository.dart';
 import 'package:chats/resourese/ibase_repository.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
-import 'package:chats/resourese/service/pusher_service.dart';
+import 'package:chats/resourese/service/socket_service.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/app/pusher_type.dart';
 import 'package:chats/utils/dialog_utils.dart';
@@ -31,7 +30,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class MessageController extends GetxController {
@@ -94,7 +92,7 @@ class MessageController extends GetxController {
       }
     });
 
-    await PusherService().connect();
+    // await SocketService().initSocket();
     _initStream();
   }
 
@@ -758,22 +756,21 @@ class MessageController extends GetxController {
       (chat?.users ?? []).firstWhereOrNull((u) => u.id != Get.find<ProfileController>().user.value?.id)?.avatar ?? '';
 
   void _initStream() {
-    _chatSubscription = PusherService().stream.listen(
+    _chatSubscription = SocketService().stream.listen(
       (event) {
-        if (event is PusherEvent) {
+        if (event != null && event is Map<String, dynamic>) {
           try {
-            final json = jsonDecode(event.data) as Map<String, dynamic>;
-            if (json['payload']['data']['chat_id'] == parameter.chatId) {
-              final message = PusherMesageModel.fromJson(json);
-              if (message.payload == null) return;
+            final json = event;
+            if (json['data']['chat_id'] == parameter.chatId) {
+              final message = MessageSocketModel.fromJson(json);
+              if (message.data == null) return;
 
-              switch (message.payload?.type) {
+              switch (message.type) {
                 case PusherType.NEW_MESSAGE_EVENT:
-                  onInsertMessage(message.payload!.data!);
+                  onInsertMessage(message.data!);
                   break;
                 case PusherType.ROLLBACK_EVENT:
-                  int index =
-                      messageModel.value?.listMessages?.indexWhere((msg) => msg.id == message.payload!.data!.id) ?? -1;
+                  int index = messageModel.value?.listMessages?.indexWhere((msg) => msg.id == message.data!.id) ?? -1;
                   if (index != -1) {
                     messageModel.value?.listMessages![index] =
                         messageModel.value!.listMessages![index].copyWith(isRollback: true);
@@ -782,7 +779,7 @@ class MessageController extends GetxController {
                   break;
 
                 case PusherType.LIKE_MESSAGE_EVENT:
-                  onHeartMessageLocal(message.payload!.data!.id, isCallServer: false);
+                  onHeartMessageLocal(message.data!.id, isCallServer: false);
                   break;
                 default:
               }

@@ -1,7 +1,6 @@
 import 'package:chats/helper/notification_helper.dart';
 import 'package:chats/resourese/service/app_service.dart';
 import 'package:chats/resourese/service/localization_service.dart';
-import 'package:chats/resourese/service/pusher_service.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/app_theme_util.dart';
 import 'package:chats/theme/base_theme_data.dart';
@@ -29,7 +28,8 @@ void main() async {
   await dotenv.load(fileName: '.env');
   await LocalStorage.init();
   await AppService.initAppService();
-  await PusherService.initPusher();
+  // await PusherService.initPusher();
+  // await SocketService().initSocket();
   await Firebase.initializeApp();
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);

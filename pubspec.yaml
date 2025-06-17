@@ -34,7 +34,7 @@ dependencies:
   url_launcher: ^6.3.1
   contacts_service: ^0.6.3
   permission_handler: ^11.3.1
-  pusher_channels_flutter: 2.2.1
+  # pusher_channels_flutter: 2.2.1
   shimmer_animation:
     git:
       url: https://github.com/Levanmanh2002/shimmer_animation.git
@@ -55,6 +55,7 @@ dependencies:
   file_picker: ^8.3.2
   open_filex: ^4.7.0
   device_info_plus: ^11.3.0
+  socket_io_client: ^3.1.2
 
 dev_dependencies:
   flutter_test:
