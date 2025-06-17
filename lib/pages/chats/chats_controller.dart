@@ -184,7 +184,7 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
               if (message.type == PusherType.NEW_MESSAGE_EVENT) {
                 updateChatLastMessage(message.data!);
               } else if (message.type == PusherType.GROUP_RENAME_EVENT) {
-                updateGroupName(json['payload']['data']['id'], json['payload']['data']['name']);
+                updateGroupName(json['data']['id'], json['data']['name']);
               }
             } else {
               try {
@@ -243,7 +243,7 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
             );
 
             if (pusherModel.type == PusherType.UNFRIEND_EVENT) {
-              Get.find<ContactsController>().removeContact(json['payload']['data']['user_id']);
+              Get.find<ContactsController>().removeContact(json['data']['user_id']);
             } else if (pusherModel.type == PusherType.ACCEPTED_INVITE_EVENT) {
               Get.find<ContactsController>().updateContact(pusherModel.data!.receiver!);
             } else if (pusherModel.type == PusherType.UNFRIEND_EVENT) {}

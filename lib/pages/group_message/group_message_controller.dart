@@ -699,7 +699,7 @@ class GroupMessageController extends GetxController {
                   break;
 
                 case PusherType.GROUP_RENAME_EVENT:
-                  updateNameGroupEvent(json['payload']['data']['name']);
+                  updateNameGroupEvent(json['data']['name']);
                   break;
 
                 default:
