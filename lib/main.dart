@@ -39,7 +39,10 @@ void main() async {
   } catch (_) {}
 
   runApp(LayoutBuilder(builder: (context, constraints) {
-    SizeConfig.instance.init(constraints: constraints, screenHeight: 812, screenWidth: 375);
+    double screenWidth = constraints.maxWidth;
+    double screenHeight = constraints.maxHeight;
+
+    SizeConfig.instance.init(constraints: constraints, screenWidth: screenWidth, screenHeight: screenHeight);
 
     return const MyApp();
   }));

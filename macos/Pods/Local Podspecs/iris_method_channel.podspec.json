@@ -15,13 +15,9 @@
   },
   "source_files": "Classes/**/*",
   "dependencies": {
-    "FlutterMacOS": [
-
-    ]
+    "FlutterMacOS": []
   },
-  "requires_arc": [
-
-  ],
+  "requires_arc": [],
   "libraries": "stdc++",
   "platforms": {
     "osx": "10.11"

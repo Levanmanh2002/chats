@@ -16,9 +16,7 @@
   },
   "source_files": "Classes/**/*",
   "dependencies": {
-    "FlutterMacOS": [
-
-    ]
+    "FlutterMacOS": []
   },
   "platforms": {
     "osx": "10.14"

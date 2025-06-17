@@ -18,9 +18,7 @@
     "Classes/File.swift"
   ],
   "dependencies": {
-    "FlutterMacOS": [
-
-    ],
+    "FlutterMacOS": [],
     "AgoraRtcEngine_macOS": [
       "4.5.0"
     ],

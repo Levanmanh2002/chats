@@ -16,9 +16,7 @@
   "source_files": "package_info_plus/Sources/package_info_plus/**/*.{h,m}",
   "public_header_files": "package_info_plus/Sources/package_info_plus/include/**/*.h",
   "dependencies": {
-    "FlutterMacOS": [
-
-    ]
+    "FlutterMacOS": []
   },
   "platforms": {
     "osx": "10.14"
