@@ -4,6 +4,7 @@ import 'package:chats/pages/chats/group_message_web/group_message_page.dart';
 import 'package:chats/pages/chats/message_web/message_page.dart';
 import 'package:chats/pages/chats/view/chat_all_view.dart';
 import 'package:chats/utils/gif_utils.dart';
+import 'package:chats/utils/launch_url.dart';
 import 'package:chats/widget/no_data_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,6 +15,16 @@ class ChatsPage extends GetWidget<ChatsController> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
+        appBar: AppBar(
+          actions: [
+            IconButton(
+              onPressed: () async {
+                openMicSettings();
+              },
+              icon: const Icon(Icons.mic, color: Colors.white, size: 24),
+            )
+          ],
+        ),
         // appBar: SearchAppbar(
         //   isShowBack: true,
         //   isOffSearch: true,

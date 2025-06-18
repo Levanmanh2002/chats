@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:html' as html;
 
 import 'package:chats/resourese/service/localization_service.dart';
 import 'package:chats/routes/pages.dart';
@@ -8,7 +7,6 @@ import 'package:chats/utils/app_constants.dart';
 import 'package:chats/utils/app_enums.dart';
 import 'package:chats/utils/local_storage.dart';
 import 'package:chats/utils/shared_key.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -144,7 +142,6 @@ class IBaseRepository {
     );
 
     if (response0.statusCode == 401) {
-      html.window.location.reload();
       await _logout();
     }
 
@@ -160,7 +157,7 @@ class IBaseRepository {
     // String? securityCodeScreen = LocalStorage.getString(SharedKey.SECURITY_CODE_SCREEN);
 
     await LocalStorage.clearAll();
-    await FirebaseMessaging.instance.deleteToken();
+    // await FirebaseMessaging.instance.deleteToken();
 
     if (savedLanguage.isNotEmpty) {
       await LocalStorage.setString(SharedKey.language, savedLanguage);
@@ -171,10 +168,6 @@ class IBaseRepository {
     // if (securityCodeScreen.isNotEmpty) {
     //   await LocalStorage.setString(SharedKey.SECURITY_CODE_SCREEN, securityCodeScreen);
     // }
-
-    if (kIsWeb) {
-      html.window.location.reload();
-    }
 
     if (Get.currentRoute != Routes.SIGN_IN) {
       Get.offAllNamed(Routes.SIGN_IN);

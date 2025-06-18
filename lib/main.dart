@@ -1,4 +1,3 @@
-import 'dart:html' as html;
 import 'dart:io';
 
 import 'package:chats/helper/notification_helper.dart';
@@ -11,8 +10,8 @@ import 'package:chats/utils/app_constants.dart';
 import 'package:chats/utils/app_enums.dart';
 import 'package:chats/utils/local_storage.dart';
 import 'package:chats/widget/reponsive/size_config.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -31,6 +30,7 @@ void main() async {
   await dotenv.load(fileName: '.env');
   await LocalStorage.init();
   await AppService.initAppService();
+  await Firebase.initializeApp();
   // await PusherService.initPusher();
   HttpOverrides.global = MyHttpOverrides();
 
@@ -39,16 +39,6 @@ void main() async {
   try {
     await NotificationHelper.initialize();
   } catch (_) {}
-
-  if (kIsWeb) {
-    final uri = Uri.base;
-    final path = uri.path;
-    final fragment = uri.fragment;
-
-    if (fragment != 'splash') {
-      html.window.location.replace('$path#/splash');
-    }
-  }
 
   runApp(LayoutBuilder(builder: (context, constraints) {
     double screenWidth = constraints.maxWidth;

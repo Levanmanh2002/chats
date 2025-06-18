@@ -10,6 +10,7 @@ import 'package:chats/utils/local_storage.dart';
 import 'package:chats/utils/shared_key.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class DashboardController extends GetxController {
   final IDashboardRepository dashboardRepository;
@@ -35,6 +36,7 @@ class DashboardController extends GetxController {
     _callEvent();
     _updateFcmToken();
     _fetchTickers();
+    Permission.notification.request();
   }
 
   void _callEvent() async {

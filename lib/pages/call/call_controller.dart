@@ -84,10 +84,14 @@ class CallController extends GetxController {
 
   Future<void> initAgora({required String token, required String channel}) async {
     // retrieve permissions
-    await [
-      Permission.microphone,
-      // Permission.camera,
-    ].request();
+    try {
+      await [
+        Permission.microphone,
+        // Permission.camera,
+      ].request();
+    } catch (e) {
+      print(e);
+    }
 
     engine = createAgoraRtcEngine();
     await engine.initialize(RtcEngineContext(
@@ -216,7 +220,11 @@ class CallController extends GetxController {
 
   // Kết thúc cuộc gọi
   Future<void> endCall() async {
-    await engine.leaveChannel();
+    try {
+      await engine.leaveChannel();
+    } catch (e) {
+      print(e);
+    }
     stopRingtone();
     await _endCall();
     Get.back();

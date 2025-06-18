@@ -7,6 +7,8 @@ class DashboardRepository extends IDashboardRepository {
   @override
   Future<Response> updateFcmToken() async {
     try {
+      await FirebaseMessaging.instance.requestPermission();
+
       final fcmToken = await FirebaseMessaging.instance.getToken();
 
       final result = await clientPostData(AppConstants.updateFcmTokenUri, {
