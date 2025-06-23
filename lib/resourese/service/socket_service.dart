@@ -34,6 +34,7 @@ class SocketService {
 
     socket.on('app-chat', (data) {
       streamController.add(data);
+      log('Received data: $data', name: 'SocketService');
     });
 
     socket.on(

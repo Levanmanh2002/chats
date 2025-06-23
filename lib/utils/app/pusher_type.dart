@@ -18,4 +18,6 @@ class PusherType {
   static const CANCEL_INVITE_EVANT = 'CANCEL_INVITE'; // Phát sự kiện tới user gửi khi lời mời bị từ chốt
   static const ACCEPTED_INVITE_EVENT = 'ACCEPTED_INVITE'; // Phát sự kiện tới user lời mời kết bạn được đồng ý
   static const UNFRIEND_EVENT = 'UNFRIEND'; // Phát sự kiện khi có người dùng hủy kết bạn
+  static const NEW_CALL_EVENT = 'NEW_CALL'; // Phát sự kiện tới user khi có cuộc gọi mới
+  static const END_CALL_EVENT = 'end_call'; // Phát sự kiện tới user khi có cuộc gọi kết thúc
 }

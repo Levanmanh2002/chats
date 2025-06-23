@@ -4,6 +4,8 @@ import 'dart:typed_data';
 
 import 'package:chats/constant/date_format_constants.dart';
 import 'package:chats/extension/data/file_extension.dart';
+import 'package:chats/models/call/call_model.dart';
+import 'package:chats/models/call/end_call_model.dart';
 import 'package:chats/models/chats/chat_data_model.dart';
 import 'package:chats/models/chats/chats_models.dart';
 import 'package:chats/models/contact/friend_request.dart';
@@ -19,6 +21,7 @@ import 'package:chats/models/socket/group_socket_model.dart';
 import 'package:chats/models/socket/message_socket_model.dart';
 import 'package:chats/models/socket/socket_model.dart';
 import 'package:chats/models/tickers/tickers_model.dart';
+import 'package:chats/pages/call/call_parameter.dart';
 import 'package:chats/pages/contacts/contacts_controller.dart';
 import 'package:chats/pages/forward/forward_parameter.dart';
 import 'package:chats/pages/group_message_search/group_message_search_parameter.dart';
@@ -66,12 +69,19 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
 
   StreamSubscription? _chatSubscription;
   StreamSubscription? _chatSubscriptionMessage;
+  StreamSubscription? _chatSubscriptionCall;
+  StreamSubscription? _chatSubscriptionEndCall;
+
+  Rx<CallData?> callData = Rx<CallData?>(null);
 
   @override
   void onInit() {
     super.onInit();
     fetchChatList();
     _fetchQuickMessage();
+    _fetchSocketCallNew();
+    _fetchSocketEndCall();
+
     itemPositionsListener.itemPositions.addListener(() {
       _scrollListener();
     });
@@ -1178,6 +1188,76 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
     }
   }
 
+  void _fetchSocketCallNew() {
+    _chatSubscriptionCall = SocketService().stream.listen(
+      (event) {
+        if (event != null && event is Map<String, dynamic>) {
+          final json = event;
+
+          try {
+            final callJson = ChatModel.fromJson(json);
+            if (callJson.type == PusherType.NEW_CALL_EVENT) {
+              callData.value = callJson.data;
+            }
+          } catch (e) {
+            log(e.toString(), name: 'ERROR_STREAM_EVENT_CALL_NEW');
+          }
+        }
+      },
+    );
+  }
+
+  void _fetchSocketEndCall() {
+    _chatSubscriptionEndCall = SocketService().stream.listen(
+      (event) {
+        if (event != null && event is Map<String, dynamic>) {
+          final json = event;
+
+          try {
+            final callJson = EndCallModel.fromJson(json);
+            if (callJson.callAction == PusherType.END_CALL_EVENT) {
+              callData.value = null;
+            }
+          } catch (e) {
+            log(e.toString(), name: 'ERROR_STREAM_EVENT_CALL_END');
+          }
+        }
+      },
+    );
+  }
+
+  Future<void> onDeclineCall() async {
+    try {
+      final response = await messagesRepository.endCall({
+        "message_id": callData.value?.callId.toString() ?? '',
+      });
+
+      if (response.statusCode == 200) {
+        callData.value = null;
+      }
+    } catch (e, a) {
+      log(e.toString());
+      log(a.toString(), name: 'ERROR_DECLINE_CALL');
+    }
+  }
+
+  Future<void> onAcceptCall() async {
+    Get.toNamed(
+      Routes.CALL,
+      arguments: CallCallParameter(
+        id: callData.value?.userId ?? 0,
+        messageId: callData.value?.id ?? 0,
+        callId: callData.value?.callId ?? 0,
+        name: callData.value?.userName ?? '',
+        avatar: callData.value?.userAvatar ?? '',
+        channel: callData.value?.channelName ?? '',
+        token: callData.value?.callToken ?? '',
+        type: CallType.incomingCall,
+      ),
+    );
+    callData.value = null;
+  }
+
   void scrollToMessage(int messageId) {
     int index = (messageModel.value?.listMessages ?? []).indexWhere((msg) => msg.id == messageId);
     if (index != -1) {
@@ -1211,6 +1291,8 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
     super.dispose();
     _chatSubscription?.cancel();
     _chatSubscriptionMessage?.cancel();
+    _chatSubscriptionCall?.cancel();
+    _chatSubscriptionEndCall?.cancel();
     searchController.dispose();
   }
 }

@@ -222,4 +222,5 @@ const Map<String, String> en = {
   'android': 'Android',
   'ios': 'IOS',
   'please_download_the_app_to_use_this_feature': 'Please download the app to use this feature',
+  'accept_call': 'Accept Call',
 };

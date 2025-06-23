@@ -220,5 +220,6 @@ const Map<String, String> vi = {
   'download': 'Tải xuống',
   'android': 'Android',
   'ios': 'IOS',
-  'please_download_the_app_to_use_this_feature': 'Please download the app to use this feature',
+  'please_download_the_app_to_use_this_feature': 'Vui lòng tải ứng dụng để sử dụng tính năng này',
+  'accept_call': 'Chấp nhận',
 };
