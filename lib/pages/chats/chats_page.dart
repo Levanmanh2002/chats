@@ -7,6 +7,7 @@ import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/gif_utils.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/utils/images_assets.dart';
+import 'package:chats/utils/launch_url.dart';
 import 'package:chats/widget/custom_image_widget.dart';
 import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/no_data_widget.dart';
@@ -20,17 +21,18 @@ class ChatsPage extends GetWidget<ChatsController> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        // appBar: AppBar(
-        //   backgroundColor: appTheme.whiteColor,
-        //   actions: [
-        //     // IconButton(
-        //     //   onPressed: () async {
-        //     //     openMicSettings();
-        //     //   },
-        //     //   icon: const Icon(Icons.mic, color: Colors.white, size: 24),
-        //     // )
-        //   ],
-        // ),
+        appBar: AppBar(
+          backgroundColor: appTheme.whiteColor,
+          actions: [
+            IconButton(
+              onPressed: () async {
+                openMicSettings();
+                // await Permission.microphone.request();
+              },
+              icon: const Icon(Icons.mic, color: Colors.white, size: 24),
+            )
+          ],
+        ),
         // appBar: SearchAppbar(
         //   isShowBack: true,
         //   isOffSearch: true,
