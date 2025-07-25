@@ -13,7 +13,7 @@ abstract class BaseThemeData {
   Color dividerColor = const Color(0XFFC6C6C6);
   Color fadeTextColor = Colors.grey;
 
-  Color appColor = const Color(0xFF403BF3);
+  Color appColor = const Color(0xFFF15B24);
 
   Color successColor = Colors.green;
   Color errorColor = const Color(0xFFFF4F4F);

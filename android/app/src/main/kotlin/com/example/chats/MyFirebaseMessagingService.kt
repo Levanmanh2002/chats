@@ -1,4 +1,4 @@
-package com.admin.chats;
+package com.admin.mini.chats;
 
 import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;

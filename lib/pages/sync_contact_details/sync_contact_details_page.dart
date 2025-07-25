@@ -135,7 +135,7 @@ class SyncContactDetailsPage extends GetWidget<SyncContactDetailsController> {
         } else {
           final androidUrl = Get.find<ProfileController>().systemSetting.value?.androidUrl ?? '';
           final iosUrl = Get.find<ProfileController>().systemSetting.value?.iosUlr ?? '';
-          final smsContent = 'Link tải app Nhà Táo:\n'
+          final smsContent = 'Link tải app Mini Chat:\n'
               'iOS: $iosUrl'
               '\n'
               'Android: $androidUrl';

@@ -334,7 +334,7 @@ void _showCallKitIncomingCall({
   CallKitParams callKitParams = CallKitParams(
     id: uuidV4,
     nameCaller: callerName,
-    appName: 'Chat - Nhà Táo',
+    appName: 'Mini Chat',
     avatar: avatar,
     handle: token,
     type: 0, // 0: Audio Call, 1: Video Call
