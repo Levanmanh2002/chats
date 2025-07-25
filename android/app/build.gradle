@@ -34,7 +34,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "com.admin.chats"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 35
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -55,10 +55,10 @@ android {
         applicationId = "com.admin.chats"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdk = 21
-        targetSdk = flutter.targetSdkVersion
-        versionCode 16
-        versionName "12.0.0"
+        minSdk = 24
+        targetSdk = 35
+        versionCode 18
+        versionName "13.0.0"
         multiDexEnabled true
     }
 

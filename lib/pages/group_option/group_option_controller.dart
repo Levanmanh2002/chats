@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:chats/constant/date_format_constants.dart';
 import 'package:chats/extension/date_time_extension.dart';
 import 'package:chats/models/chats/chat_data_model.dart';
@@ -16,7 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class GroupOptionController extends GetxController {
   final IGroupsRepository groupsRepository;
@@ -120,13 +117,15 @@ class GroupOptionController extends GetxController {
 
   void _fetchExportMessage() async {
     try {
-      if (Platform.isAndroid) {
-        var status = await Permission.manageExternalStorage.request();
-        if (!status.isGranted) {
-          print("Quyền truy cập bộ nhớ bị từ chối!");
-          return;
-        }
-      }
+      // if (Platform.isAndroid) {
+      //   var status = await Permission.manageExternalStorage.request();
+      //   if (!status.isGranted) {
+      //     print("Quyền truy cập bộ nhớ bị từ chối!");
+      //     await openAppSettings();
+
+      //     return;
+      //   }
+      // }
 
       final response = await messagesRepository.exportMessage(
         parameter.chat!.id!,

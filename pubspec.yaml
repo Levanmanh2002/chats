@@ -2,7 +2,7 @@ name: chats
 description: "A new Flutter project."
 
 publish_to: "none"
-version: 12.0.0
+version: 13.0.0
 
 environment:
   sdk: ">=3.4.3 <4.0.0"
@@ -30,9 +30,13 @@ dependencies:
   phone_number: ^2.1.0
   chewie: 1.7.4
   video_player: ^2.9.2
-  flutter_file_downloader: ^2.0.0
+  flutter_file_downloader: ^2.1.0
   url_launcher: ^6.3.1
-  contacts_service: ^0.6.3
+  # contacts_service: ^0.6.3
+  contacts_service:
+    git:
+      url: https://github.com/Levanmanh2002/flutter_contacts.git
+      ref: namespace_android
   permission_handler: ^11.3.1
   # pusher_channels_flutter: 2.2.1
   shimmer_animation:

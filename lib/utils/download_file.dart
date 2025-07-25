@@ -16,50 +16,56 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 Future<void> downloadPdfToPublicDirectory(String url, String fileName) async {
-  var status = await Permission.storage.request();
-  // var status = await Permission.manageExternalStorage.request();
+  // var status = await Permission.storage.request();
+  // // var status = await Permission.manageExternalStorage.request();
 
-  if (status.isGranted) {
-    try {
-      EasyLoading.show(dismissOnTap: false, maskType: EasyLoadingMaskType.clear);
+  // if (status.isGranted) {
+  try {
+    EasyLoading.show(dismissOnTap: false, maskType: EasyLoadingMaskType.clear);
 
-      final response = await http.get(Uri.parse(url));
+    final response = await http.get(Uri.parse(url));
 
-      if (response.statusCode == 200) {
-        Directory directory;
-        String folderPath;
+    if (response.statusCode == 200) {
+      Directory directory;
+      String folderPath;
 
-        if (Platform.isAndroid) {
-          directory = await getExternalStorageDirectory() ?? await getApplicationDocumentsDirectory();
-          folderPath = '${directory.path}/Pictures';
-        } else {
-          directory = await getApplicationDocumentsDirectory();
-          folderPath = directory.path;
-        }
-
-        String filePath = '$folderPath/$fileName';
-        await Directory(folderPath).create(recursive: true);
-        File file = File(filePath);
-        await file.writeAsBytes(response.bodyBytes);
-
-        log('PDF downloaded to: $filePath');
-        print('PDF downloaded to: $filePath');
-
-        DialogUtils.showSuccessDialog('document_downloaded_successfully'.tr);
-        OpenFilex.open(filePath);
+      if (Platform.isAndroid) {
+        directory = await getExternalStorageDirectory() ?? await getApplicationDocumentsDirectory();
+        folderPath = '${directory.path}/Pictures';
       } else {
-        DialogUtils.showErrorDialog('error_downloading_document'.tr);
+        directory = await getApplicationDocumentsDirectory();
+        folderPath = directory.path;
       }
-    } catch (e) {
-      print('Error downloading PDF: $e');
-    } finally {
-      EasyLoading.dismiss();
+
+      String filePath = '$folderPath/$fileName';
+      await Directory(folderPath).create(recursive: true);
+      File file = File(filePath);
+      await file.writeAsBytes(response.bodyBytes);
+
+      log('PDF downloaded to: $filePath');
+      print('PDF downloaded to: $filePath');
+
+      DialogUtils.showSuccessDialog('document_downloaded_successfully'.tr);
+      OpenFilex.open(filePath);
+    } else {
+      DialogUtils.showErrorDialog('error_downloading_document'.tr);
     }
-  } else if (status.isDenied) {
-    showPermissionDialog('permission_denied'.tr);
-  } else if (status.isPermanentlyDenied) {
-    showPermissionDialog('storage_permission_denied_permanently'.tr);
+  } catch (e) {
+    print('Error downloading PDF: $e');
+    var status = await Permission.storage.request();
+    if (status.isDenied) {
+      showPermissionDialog('permission_denied'.tr);
+    } else if (status.isPermanentlyDenied) {
+      showPermissionDialog('storage_permission_denied_permanently'.tr);
+    }
+  } finally {
+    EasyLoading.dismiss();
   }
+  // } else if (status.isDenied) {
+  //   showPermissionDialog('permission_denied'.tr);
+  // } else if (status.isPermanentlyDenied) {
+  //   showPermissionDialog('storage_permission_denied_permanently'.tr);
+  // }
 }
 
 void showPermissionDialog(String title) {

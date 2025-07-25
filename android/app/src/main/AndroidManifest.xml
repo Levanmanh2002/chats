@@ -48,7 +48,8 @@
         android:label="Chat - Nhà Táo"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
-        android:enableOnBackInvokedCallback="true">
+        android:enableOnBackInvokedCallback="true"
+        android:requestLegacyExternalStorage="true">
 
         <service
             android:name=".MyFirebaseMessagingService"
