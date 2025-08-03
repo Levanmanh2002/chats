@@ -2,7 +2,6 @@ import 'package:chats/main.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/icons_assets.dart';
-import 'package:chats/utils/images_assets.dart';
 import 'package:chats/widget/custom_image_widget.dart';
 import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/reponsive/extension.dart';
@@ -20,7 +19,19 @@ class HeaderProfileView extends GetView<ProfileController> {
             children: [
               Padding(
                 padding: padding(bottom: 50),
-                child: const ImageAssetCustom(imagePath: ImagesAssets.bgTopProfileImage),
+                child: Container(
+                  height: 150,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        appTheme.primaryGradientStart,
+                        appTheme.primaryGradientEnd,
+                      ],
+                    ),
+                  ),
+                ),
               ),
               Positioned(
                 bottom: 0,

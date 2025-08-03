@@ -6,7 +6,6 @@ import 'package:chats/pages/create_group/create_group_parameter.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/formatter_util.dart';
 import 'package:chats/utils/icons_assets.dart';
-import 'package:chats/utils/images_assets.dart';
 import 'package:chats/widget/check_circle_widget.dart';
 import 'package:chats/widget/custom_image_widget.dart';
 import 'package:chats/widget/custom_text_field.dart';
@@ -27,7 +26,20 @@ class CreateGroupPage extends GetWidget<CreateGroupController> {
           children: [
             Stack(
               children: [
-                const ImageAssetCustom(imagePath: ImagesAssets.topBgChatImage),
+                // const ImageAssetCustom(imagePath: ImagesAssets.topBgChatImage),
+                Container(
+                  height: 120,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        appTheme.primaryGradientStart,
+                        appTheme.primaryGradientEnd,
+                      ],
+                    ),
+                  ),
+                ),
                 Positioned(
                   bottom: 12,
                   left: 8,

@@ -40,5 +40,9 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
+    if target.name == 'wakelock_plus'
+      puts "🔧 Generating messages.g.h for wakelock_plus..."
+      system("flutter pub run pigeon --input .pub-cache/hosted/pub.dev/wakelock_plus-1.3.0/pigeons/messages.dart")
+    end
   end
 end

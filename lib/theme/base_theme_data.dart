@@ -13,7 +13,7 @@ abstract class BaseThemeData {
   Color dividerColor = const Color(0XFFC6C6C6);
   Color fadeTextColor = Colors.grey;
 
-  Color appColor = const Color(0xFF403BF3);
+  Color appColor = const Color(0xFF764BA2);
 
   Color successColor = Colors.green;
   Color errorColor = const Color(0xFFFF4F4F);
@@ -64,4 +64,8 @@ abstract class BaseThemeData {
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
   );
+
+  // Trong file theme của bạn
+  Color primaryGradientStart = const Color(0xFF667EEA);
+  Color primaryGradientEnd = const Color(0xFF764BA2);
 }
