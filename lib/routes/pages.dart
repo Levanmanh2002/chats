@@ -14,6 +14,8 @@ import 'package:chats/pages/dashboard/dashboard_binding.dart';
 import 'package:chats/pages/dashboard/dashboard_page.dart';
 import 'package:chats/pages/enter_code_mumber/enter_code_mumber_binding.dart';
 import 'package:chats/pages/enter_code_mumber/enter_code_mumber_page.dart';
+import 'package:chats/pages/features/features_binding.dart';
+import 'package:chats/pages/features/features_page.dart';
 import 'package:chats/pages/forgot_password/forgot_password_binding.dart';
 import 'package:chats/pages/forgot_password/forgot_password_page.dart';
 import 'package:chats/pages/forward/forward_binding.dart';
@@ -241,6 +243,11 @@ abstract class AppPages {
       name: Routes.FORWARD,
       page: () => ForwardPage(),
       binding: ForwardBinding(),
+    ),
+    GetPage(
+      name: Routes.FEATURES,
+      page: () => FeaturesPage(),
+      binding: FeaturesBinding(),
     ),
   ];
 }

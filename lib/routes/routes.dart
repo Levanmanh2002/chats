@@ -37,4 +37,5 @@ abstract class Routes {
   static const ENTER_CODE_MUMBER_SCREEN = '/enter_code_mumbe';
   static const SCREEN_SECURITY_CODE = '/security_code_screen';
   static const FORWARD = '/forward';
+  static const FEATURES = '/features';
 }

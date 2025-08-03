@@ -55,10 +55,12 @@ class CustomButton extends StatelessWidget {
                 ? null
                 : color == null
                     ? LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [appTheme.blueFCColor, appTheme.appColor],
-                        stops: const [0.0048, 0.8952],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          appTheme.primaryGradientStart,
+                          appTheme.primaryGradientEnd,
+                        ],
                       )
                     : null,
           ),

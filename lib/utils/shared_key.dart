@@ -8,6 +8,7 @@ class SharedKey {
 
   static const String IS_SHOW_SECURITY_SCREEN = "is_show_security_screen";
   static const String SECURITY_CODE_SCREEN = "security_code_screen";
+  static const String IS_SHOW_FEATURES_SCREEN = "is_show_features_screen";
 
   /// NO CLEAR
   static const String language = "language";

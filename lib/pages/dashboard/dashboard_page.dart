@@ -22,42 +22,45 @@ class DashboardPage extends GetWidget<DashboardController> {
               children: [...controller.pages],
             ),
           ),
-          Obx(
-            () => Container(
-              padding: padding(left: 13, right: 13, top: 12, bottom: 16),
-              decoration: BoxDecoration(
-                color: appTheme.whiteColor,
-                border: Border(top: BorderSide(color: appTheme.allSidesColor, width: 1.w)),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _bottomAppBarItem(
-                    context,
-                    icon: IconsAssets.chatsIcon,
-                    iconEmpty: IconsAssets.chatEmptyIcon,
-                    page: 0,
-                    label: 'message'.tr,
-                  ),
-                  _bottomAppBarItem(
-                    context,
-                    icon: IconsAssets.contacsIcon,
-                    iconEmpty: IconsAssets.contactEmptyIcon,
-                    page: 1,
-                    label: 'contacts'.tr,
-                  ),
-                  _bottomAppBarItem(
-                    context,
-                    icon: IconsAssets.userIcon,
-                    iconEmpty: IconsAssets.userEmptyIcon,
-                    page: 2,
-                    label: 'personal'.tr,
-                  ),
-                ],
-              ),
+        ],
+      ),
+      bottomNavigationBar: Obx(
+        () => SafeArea(
+          top: false,
+          child: Container(
+            padding: padding(left: 13, right: 13, top: 12, bottom: 16),
+            decoration: BoxDecoration(
+              color: appTheme.whiteColor,
+              border: Border(top: BorderSide(color: appTheme.allSidesColor, width: 1.w)),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _bottomAppBarItem(
+                  context,
+                  icon: IconsAssets.chatsIcon,
+                  iconEmpty: IconsAssets.chatEmptyIcon,
+                  page: 0,
+                  label: 'message'.tr,
+                ),
+                _bottomAppBarItem(
+                  context,
+                  icon: IconsAssets.contacsIcon,
+                  iconEmpty: IconsAssets.contactEmptyIcon,
+                  page: 1,
+                  label: 'contacts'.tr,
+                ),
+                _bottomAppBarItem(
+                  context,
+                  icon: IconsAssets.userIcon,
+                  iconEmpty: IconsAssets.userEmptyIcon,
+                  page: 2,
+                  label: 'personal'.tr,
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -85,6 +88,7 @@ class DashboardPage extends GetWidget<DashboardController> {
                           imagePath: icon,
                           width: 24.w,
                           height: 24.w,
+                          color: appTheme.appColor,
                         )
                       : ImageAssetCustom(
                           imagePath: iconEmpty,
