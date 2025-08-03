@@ -22,6 +22,7 @@ class CreateGroupPage extends GetWidget<CreateGroupController> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
+        backgroundColor: appTheme.whiteColor,
         body: Column(
           children: [
             Stack(
@@ -151,70 +152,74 @@ class CreateGroupPage extends GetWidget<CreateGroupController> {
         ),
         bottomNavigationBar: Obx(
           () => controller.selectedContacts.isNotEmpty
-              ? Container(
-                  padding: padding(top: 12, horizontal: 16, bottom: 24),
-                  decoration: BoxDecoration(
-                    color: appTheme.whiteColor,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        offset: const Offset(0, -4),
-                        blurRadius: 12,
-                        spreadRadius: 0,
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: controller.selectedContacts.map((e) {
-                              return Stack(
-                                children: [
-                                  Padding(
-                                    padding: padding(right: 8),
-                                    child: CustomImageWidget(
-                                      imageUrl: e.friend?.avatar ?? '',
-                                      size: 41.w,
-                                      noImage: false,
-                                      showBoder: true,
-                                      colorBoder: appTheme.allSidesColor,
-                                    ),
-                                  ),
-                                  if (controller.canDeleteContact(e.friend!.id!))
-                                    Positioned(
-                                      top: 0,
-                                      right: 5,
-                                      child: InkWell(
-                                        onTap: () => controller.removeContact(e),
-                                        borderRadius: BorderRadius.circular(1000),
-                                        child: Container(
-                                          padding: padding(all: 4),
-                                          decoration: BoxDecoration(shape: BoxShape.circle, color: appTheme.errorColor),
-                                          child: Icon(Icons.clear, size: 8, color: appTheme.whiteColor),
-                                        ),
+              ? SafeArea(
+                  top: false,
+                  child: Container(
+                    padding: padding(top: 12, horizontal: 16, bottom: 12),
+                    decoration: BoxDecoration(
+                      color: appTheme.whiteColor,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          offset: const Offset(0, -4),
+                          blurRadius: 12,
+                          spreadRadius: 0,
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: controller.selectedContacts.map((e) {
+                                return Stack(
+                                  children: [
+                                    Padding(
+                                      padding: padding(right: 8),
+                                      child: CustomImageWidget(
+                                        imageUrl: e.friend?.avatar ?? '',
+                                        size: 41.w,
+                                        noImage: false,
+                                        showBoder: true,
+                                        colorBoder: appTheme.allSidesColor,
                                       ),
                                     ),
-                                ],
-                              );
-                            }).toList(),
+                                    if (controller.canDeleteContact(e.friend!.id!))
+                                      Positioned(
+                                        top: 0,
+                                        right: 5,
+                                        child: InkWell(
+                                          onTap: () => controller.removeContact(e),
+                                          borderRadius: BorderRadius.circular(1000),
+                                          child: Container(
+                                            padding: padding(all: 4),
+                                            decoration:
+                                                BoxDecoration(shape: BoxShape.circle, color: appTheme.errorColor),
+                                            child: Icon(Icons.clear, size: 8, color: appTheme.whiteColor),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                );
+                              }).toList(),
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(width: 12.w),
-                      if (controller.createGroupValue.value.isNotEmpty)
-                        IconButton(
-                          onPressed: controller.createGroup,
-                          icon: const ImageAssetCustom(imagePath: IconsAssets.sendIcon),
-                        )
-                      else if (controller.parameter.type == CreateGroupType.joinGroup)
-                        IconButton(
-                          onPressed: controller.addUserToGroup,
-                          icon: const ImageAssetCustom(imagePath: IconsAssets.sendIcon),
-                        ),
-                    ],
+                        SizedBox(width: 12.w),
+                        if (controller.createGroupValue.value.isNotEmpty)
+                          IconButton(
+                            onPressed: controller.createGroup,
+                            icon: const ImageAssetCustom(imagePath: IconsAssets.sendIcon),
+                          )
+                        else if (controller.parameter.type == CreateGroupType.joinGroup)
+                          IconButton(
+                            onPressed: controller.addUserToGroup,
+                            icon: const ImageAssetCustom(imagePath: IconsAssets.sendIcon),
+                          ),
+                      ],
+                    ),
                   ),
                 )
               : const SizedBox(),
