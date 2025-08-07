@@ -41,6 +41,9 @@ class CallController extends GetxController {
   final int _maxCheckSeconds = 30;
   int _elapsedSeconds = 0;
 
+  var isCameraOn = false.obs;
+  var isFrontCamera = true.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -48,7 +51,8 @@ class CallController extends GetxController {
     if (parameter.type == CallType.call) {
       _initCall();
     } else if (parameter.type == CallType.incomingCall) {
-      initAgora(token: parameter.token!, channel: parameter.channel!);
+      // initAgora(token: parameter.token!, channel: parameter.channel!);
+      _initCall();
     }
     _checkCall();
     _setupIsolated();
@@ -98,7 +102,7 @@ class CallController extends GetxController {
     // retrieve permissions
     await [
       Permission.microphone,
-      // Permission.camera,
+      if (parameter.type == CallType.incomingCall) Permission.camera,
     ].request();
 
     engine = createAgoraRtcEngine();
@@ -161,9 +165,9 @@ class CallController extends GetxController {
       token: token,
       channelId: channel,
       uid: parameter.id,
-      options: const ChannelMediaOptions(
+      options: ChannelMediaOptions(
         autoSubscribeAudio: true,
-        autoSubscribeVideo: false,
+        autoSubscribeVideo: parameter.type == CallType.incomingCall ? true : false,
       ),
     );
   }
@@ -307,6 +311,16 @@ class CallController extends GetxController {
 
   void stopCheckingCall() {
     _callCheckTimer?.cancel();
+  }
+
+  void toggleCamera() {
+    isCameraOn.value = !isCameraOn.value;
+    engine.enableLocalVideo(isCameraOn.value);
+  }
+
+  void switchCamera() {
+    engine.switchCamera();
+    isFrontCamera.value = !isFrontCamera.value;
   }
 
   void _setupIsolated() async {

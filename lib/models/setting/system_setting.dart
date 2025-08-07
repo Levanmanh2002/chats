@@ -24,6 +24,9 @@ class SystemSetting {
   @JsonKey(name: 'document_url')
   String? documentUrl;
 
+  @JsonKey(name: 'video_call')
+  bool videoCall;
+
   SystemSetting({
     this.pusher,
     this.page,
@@ -32,6 +35,7 @@ class SystemSetting {
     this.androidVersion,
     this.androidUrl,
     this.documentUrl,
+    this.videoCall = false,
   });
 
   factory SystemSetting.fromJson(Map<String, dynamic> json) => _$SystemSettingFromJson(json);

@@ -131,7 +131,42 @@ class MessagePage extends GetWidget<MessageController> {
               ),
             ],
           ),
-          action: IconButton(
+          actions: [
+            if (Get.find<ProfileController>().systemSetting.value?.videoCall == true) ...[
+              IconButton(
+                style: IconButton.styleFrom(
+                  minimumSize: Size.zero,
+                  fixedSize: Size(36.w, 36.w),
+                  padding: EdgeInsets.zero,
+                  alignment: Alignment.center,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  maximumSize: Size(36.w, 36.w),
+                ),
+                icon: ImageAssetCustom(imagePath: IconsAssets.cameraCallIcon, color: appTheme.whiteColor),
+                onPressed: () {
+                  final contact = controller.messageModel.value?.chat?.users?.firstWhereOrNull(
+                    (e) => e.id != Get.find<ProfileController>().user.value?.id,
+                  );
+
+                  if (contact == null) return;
+
+                  Get.toNamed(
+                    Routes.CALL,
+                    arguments: CallCallParameter(
+                      id: contact.id ?? DateTime.now().millisecondsSinceEpoch,
+                      messageId: controller.messageModel.value!.chat!.id!,
+                      callId: null,
+                      name: contact.name ?? '',
+                      avatar: contact.avatar ?? '',
+                      channel: 'channel',
+                      type: CallType.incomingCall,
+                    ),
+                  );
+                },
+              ),
+              SizedBox(width: 12.w),
+            ],
+            IconButton(
               style: IconButton.styleFrom(
                 minimumSize: Size.zero,
                 fixedSize: Size(36.w, 36.w),
@@ -160,7 +195,10 @@ class MessagePage extends GetWidget<MessageController> {
                     type: CallType.call,
                   ),
                 );
-              }),
+              },
+            ),
+            SizedBox(width: 12.w),
+          ],
         ),
         body: Obx(
           () => Column(

@@ -233,4 +233,5 @@ const Map<String, String> vi = {
   "super_clear_sound_with_technology": "Âm thanh siêu rõ ràng với công nghệ tiên tiến",
   "smart_noise_cancellation": "Chống ồn thông minh",
   "start_experience": "Bắt đầu trải nghiệm",
+  'waiting': 'Đang chờ...',
 };

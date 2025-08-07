@@ -1,5 +1,7 @@
+import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:chats/main.dart';
 import 'package:chats/pages/call/call_controller.dart';
+import 'package:chats/pages/call/call_parameter.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/utils/images_assets.dart';
@@ -23,36 +25,86 @@ class CallPage extends GetWidget<CallController> {
             children: [
               ImageAssetCustom(imagePath: ImagesAssets.logoTitileWhiteImage, size: 61.w),
               SizedBox(height: 40.h),
-              CustomImageWidget(
-                imageUrl: controller.parameter.avatar,
-                size: 160,
-                noImage: false,
-                showBoder: true,
-                colorBoder: appTheme.blueBFFColor,
-                sizeBorder: 4,
-                name: controller.parameter.name,
-                isShowNameAvatar: true,
-              ),
-              SizedBox(height: 24.h),
-              Text(
-                controller.parameter.name,
-                style: StyleThemeData.size20Weight600(color: appTheme.whiteColor),
-              ),
-              SizedBox(height: 8.h),
-              Obx(() {
-                if (controller.connectionDuration.value > 0) {
-                  final minutes = (controller.connectionDuration.value ~/ 60).toString().padLeft(2, '0');
-                  final seconds = (controller.connectionDuration.value % 60).toString().padLeft(2, '0');
+              if (controller.parameter.type == CallType.incomingCall) ...[
+                Obx(() {
+                  if (controller.connectionDuration.value > 0) {
+                    final minutes = (controller.connectionDuration.value ~/ 60).toString().padLeft(2, '0');
+                    final seconds = (controller.connectionDuration.value % 60).toString().padLeft(2, '0');
+                    return Text(
+                      '$minutes:$seconds',
+                      style: StyleThemeData.size16Weight400(color: appTheme.greenF00Color),
+                    );
+                  }
                   return Text(
-                    '$minutes:$seconds',
+                    'connecting'.tr,
                     style: StyleThemeData.size16Weight400(color: appTheme.greenF00Color),
                   );
-                }
-                return Text(
-                  'connecting'.tr,
-                  style: StyleThemeData.size16Weight400(color: appTheme.greenF00Color),
-                );
-              }),
+                }),
+                SizedBox(height: 12.h),
+                Container(
+                  width: double.infinity,
+                  height: 240.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: appTheme.blueBFFColor, width: 4),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Obx(
+                      () => controller.remoteUidValue.value != 0
+                          ? AgoraVideoView(
+                              controller: VideoViewController.remote(
+                                rtcEngine: controller.engine,
+                                canvas: VideoCanvas(uid: controller.remoteUidValue.value),
+                                connection: RtcConnection(
+                                  channelId: controller.parameter.channel,
+                                ),
+                              ),
+                            )
+                          : Container(
+                              color: appTheme.appColor,
+                              child: Center(
+                                child: Text(
+                                  'connecting'.tr,
+                                  style: StyleThemeData.size16Weight400(color: appTheme.whiteColor),
+                                ),
+                              ),
+                            ),
+                    ),
+                  ),
+                ),
+              ] else ...[
+                CustomImageWidget(
+                  imageUrl: controller.parameter.avatar,
+                  size: 160,
+                  noImage: false,
+                  showBoder: true,
+                  colorBoder: appTheme.blueBFFColor,
+                  sizeBorder: 4,
+                  name: controller.parameter.name,
+                  isShowNameAvatar: true,
+                ),
+                SizedBox(height: 24.h),
+                Text(
+                  controller.parameter.name,
+                  style: StyleThemeData.size20Weight600(color: appTheme.whiteColor),
+                ),
+                SizedBox(height: 8.h),
+                Obx(() {
+                  if (controller.connectionDuration.value > 0) {
+                    final minutes = (controller.connectionDuration.value ~/ 60).toString().padLeft(2, '0');
+                    final seconds = (controller.connectionDuration.value % 60).toString().padLeft(2, '0');
+                    return Text(
+                      '$minutes:$seconds',
+                      style: StyleThemeData.size16Weight400(color: appTheme.greenF00Color),
+                    );
+                  }
+                  return Text(
+                    'connecting'.tr,
+                    style: StyleThemeData.size16Weight400(color: appTheme.greenF00Color),
+                  );
+                }),
+              ],
             ],
           ),
         ),

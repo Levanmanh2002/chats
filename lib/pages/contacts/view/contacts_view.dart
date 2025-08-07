@@ -3,6 +3,7 @@ import 'package:chats/main.dart';
 import 'package:chats/models/contact/contact_model.dart';
 import 'package:chats/pages/contacts/contacts_controller.dart';
 import 'package:chats/pages/make_friends/make_friends_parameter.dart';
+import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/icons_assets.dart';
@@ -105,6 +106,11 @@ class ContactsView extends GetView<ContactsController> {
               ),
             ),
             SizedBox(width: 8.w),
+            if (Get.find<ProfileController>().systemSetting.value?.videoCall == true)
+              IconButton(
+                onPressed: () => controller.onCallVideo(e.friend!.id!, contact: e),
+                icon: const ImageAssetCustom(imagePath: IconsAssets.cameraCallIcon),
+              ),
             IconButton(
               onPressed: () => controller.onMessage(e.friend!.id!, contact: e),
               icon: const ImageAssetCustom(imagePath: IconsAssets.phoneIcon),

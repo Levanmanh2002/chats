@@ -234,4 +234,5 @@ const Map<String, String> en = {
   "super_clear_sound_with_technology": "Super clear sound with advanced technology",
   "smart_noise_cancellation": "Smart noise cancellation",
   "start_experience": "Start experience",
+  'waiting': 'Waiting...',
 };

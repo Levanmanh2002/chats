@@ -132,6 +132,38 @@ class ContactsController extends GetxController with GetSingleTickerProviderStat
     }
   }
 
+  void onCallVideo(int id, {required ContactModel contact}) async {
+    try {
+      EasyLoading.show(dismissOnTap: false, maskType: EasyLoadingMaskType.clear);
+
+      final response = await messagesRepository.getIdChatByUser(id);
+
+      if (response.statusCode == 200) {
+        Get.toNamed(
+          Routes.CALL,
+          arguments: CallCallParameter(
+            id: contact.friend?.id ?? DateTime.now().millisecondsSinceEpoch,
+            messageId: response.body['data']['id'],
+            callId: null,
+            name: contact.friend?.name ?? '',
+            avatar: contact.friend?.avatar ?? '',
+            channel: 'channel',
+            type: CallType.incomingCall,
+          ),
+        );
+      } else {
+        Get.toNamed(
+          Routes.MESSAGE,
+          arguments: MessageParameter(contact: contact.friend),
+        );
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
   Map<String, List<ContactModel>> get groupedContacts {
     List<ContactModel> contacts = contactModel.value?.data ?? [];
 
