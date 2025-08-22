@@ -222,4 +222,11 @@ const Map<String, String> en = {
   'android': 'Android',
   'ios': 'IOS',
   'please_download_the_app_to_use_this_feature': 'Please download the app to use this feature',
+  'skip_confirmation_title': 'Skip Security Verification?',
+  'skip_confirmation_message':
+      'You haven\'t entered your security code yet. Are you sure you want to go back to login?',
+  'skip_confirmation_warning': 'Your account security may be at risk if you skip this step.',
+  'yes_skip': 'Yes, Skip',
+  'no_continue': 'No, Continue',
+  'continue_verification': 'Continue Verification',
 };

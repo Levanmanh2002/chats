@@ -221,4 +221,10 @@ const Map<String, String> vi = {
   'android': 'Android',
   'ios': 'IOS',
   'please_download_the_app_to_use_this_feature': 'Please download the app to use this feature',
+  'skip_confirmation_title': 'Bỏ qua xác thực bảo mật?',
+  'skip_confirmation_message': 'Bạn chưa nhập mã bảo mật. Bạn có chắc chắn muốn quay về đăng nhập không?',
+  'skip_confirmation_warning': 'Tài khoản của bạn có thể không được bảo mật nếu bỏ qua bước này.',
+  'yes_skip': 'Có, bỏ qua',
+  'no_continue': 'Không, tiếp tục',
+  'continue_verification': 'Tiếp tục xác thực',
 };

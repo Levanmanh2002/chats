@@ -1,10 +1,17 @@
+import 'package:chats/models/profile/user_model.dart';
+import 'package:chats/resourese/profile/iprofile_repository.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/dialog_utils.dart';
-import 'package:chats/utils/local_storage.dart';
-import 'package:chats/utils/shared_key.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
 class ConfirmSecurityCodeController extends GetxController {
+  final IProfileRepository profileRepository;
+
+  ConfirmSecurityCodeController({required this.profileRepository});
+
+  Rx<UserModel?> user = Rx<UserModel?>(null);
+
   final int maxDigits = 4;
 
   final RxString inputNumber = ''.obs;
@@ -37,14 +44,46 @@ class ConfirmSecurityCodeController extends GetxController {
     selectionStates.fillRange(0, maxDigits, false);
   }
 
-  void confirmCode() async {
-    final securityCode = LocalStorage.getString(SharedKey.SECURITY_CODE_SCREEN);
+  // void confirmCode() async {
+  //   final securityCode = LocalStorage.getString(SharedKey.SECURITY_CODE_SCREEN);
 
-    if (inputNumber.value == securityCode) {
-      Get.offAllNamed(Routes.DASHBOARD);
-    } else {
-      DialogUtils.showErrorDialog('security_code_is_invalid'.tr);
-      resetCode();
+  //   if (inputNumber.value == securityCode) {
+  //     Get.offAllNamed(Routes.DASHBOARD);
+  //   } else {
+  //     DialogUtils.showErrorDialog('security_code_is_invalid'.tr);
+  //     resetCode();
+  //   }
+  // }
+
+  void confirmCode() async {
+    try {
+      EasyLoading.show(dismissOnTap: false, maskType: EasyLoadingMaskType.clear);
+
+      final response = await profileRepository.profile();
+
+      if (response.isOk) {
+        user.value = UserModel.fromJson(response.body['data']);
+
+        if (user.value != null && (user.value?.securityCodeScreen ?? '').isNotEmpty) {
+          if (inputNumber.value == user.value?.securityCodeScreen) {
+            Get.offAllNamed(Routes.DASHBOARD);
+          } else {
+            DialogUtils.showErrorDialog('security_code_is_invalid'.tr);
+            resetCode();
+          }
+        }
+      } else {
+        DialogUtils.showErrorDialog('security_code_is_invalid'.tr);
+        resetCode();
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      EasyLoading.dismiss();
     }
+  }
+
+  void onViewSkipToSign() async {
+    Get.offAllNamed(Routes.SIGN_IN);
   }
 }

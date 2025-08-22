@@ -104,7 +104,7 @@ class GroupChastListWebView extends GetView<ChatsController> {
                           ? Align(
                               alignment: item.sender?.id == Get.find<ProfileController>().user.value?.id
                                   ? Alignment.centerRight
-                                  : Alignment.centerLeft,
+                                  : Alignment.centerLeft, 
                               child: Container(
                                 margin: padding(left: 40, right: 16, vertical: 2),
                                 constraints: BoxConstraints(maxWidth: 300.w),

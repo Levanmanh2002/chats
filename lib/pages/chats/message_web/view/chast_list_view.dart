@@ -5,7 +5,6 @@ import 'package:chats/models/messages/files_models.dart';
 import 'package:chats/models/messages/message_data_model.dart';
 import 'package:chats/models/messages/message_models.dart';
 import 'package:chats/pages/attachment_fullscreen/attachment_fullscreen_parameter.dart';
-import 'package:chats/pages/call/call_parameter.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
 import 'package:chats/pages/message/widget/message_list_widget.dart';
 import 'package:chats/pages/message/widget/reaction_popup_widget.dart';
@@ -18,7 +17,6 @@ import 'package:chats/widget/chats/attach_file_widget.dart';
 import 'package:chats/widget/custom_image_widget.dart';
 import 'package:chats/widget/dynamic_grid_item_view.dart';
 import 'package:chats/widget/image_asset_custom.dart';
-import 'package:chats/widget/line_widget.dart';
 import 'package:chats/widget/list_loader.dart';
 import 'package:chats/widget/reponsive/extension.dart';
 import 'package:flutter/material.dart';
@@ -316,37 +314,6 @@ class ChastListWebView extends GetView<ChatsController> {
                                   style: StyleThemeData.size12Weight400(),
                                 ),
                               ],
-                            ),
-                            SizedBox(height: 4.h),
-                            const LineWidget(),
-                            SizedBox(height: 4.h),
-                            InkWell(
-                              onTap: () {
-                                final contact = controller.messageModel.value?.chat?.users?.firstWhereOrNull(
-                                  (e) => e.id != Get.find<ProfileController>().user.value?.id,
-                                );
-
-                                if (contact == null) return;
-
-                                Get.toNamed(
-                                  Routes.CALL,
-                                  arguments: CallCallParameter(
-                                    id: contact.id ?? DateTime.now().millisecondsSinceEpoch,
-                                    messageId: controller.messageModel.value!.chat!.id!,
-                                    callId: null,
-                                    name: contact.name ?? '',
-                                    avatar: contact.avatar ?? '',
-                                    channel: 'channel',
-                                    type: CallType.call,
-                                  ),
-                                );
-                              },
-                              child: Center(
-                                child: Text(
-                                  'call_back'.tr,
-                                  style: StyleThemeData.size14Weight600(color: appTheme.appColor),
-                                ),
-                              ),
                             ),
                           ],
                         ),
