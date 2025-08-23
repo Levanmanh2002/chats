@@ -44,7 +44,6 @@ class ChastListWebView extends GetView<ChatsController> {
             itemCount: data.length,
             itemScrollController: controller.itemScrollController,
             itemPositionsListener: controller.itemPositionsListener,
-
             reverse: true,
             // separatorBuilder: (context, index) => const SizedBox(),
             itemBuilder: (context, int index) {

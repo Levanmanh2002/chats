@@ -17,7 +17,8 @@ class CustomValidator {
       phone = '+${phoneNumber.countryCode}${phoneNumber.nationalNumber}';
 
       return PhoneValid(isValid: true, phone: phone);
-    } catch (_) {
+    } catch (e) {
+      print(e);
       return PhoneValid(isValid: false, phone: phone);
     }
   }

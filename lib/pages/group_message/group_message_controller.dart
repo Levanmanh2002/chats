@@ -25,6 +25,7 @@ import 'package:chats/resourese/messages/imessages_repository.dart';
 import 'package:chats/resourese/service/socket_service.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/app/pusher_type.dart';
+import 'package:chats/utils/dialog_utils.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -501,36 +502,66 @@ class GroupMessageController extends GetxController {
     messageReply.value = null;
   }
 
-  void onRevokeMessageLocal(int? messageId, {bool isRollback = true}) {
-    int index = messageModel.value?.listMessages?.indexWhere((msg) => msg.id == messageId) ?? -1;
+  void onRevokeMessageLocal(int? messageId, {bool isRollback = true}) async {
+    if (isRollback == true) {
+      final result = await onRevokeMessage(messageId);
 
-    if (index != -1) {
-      messageModel.value?.listMessages![index] = messageModel.value!.listMessages![index].copyWith(
-        isRollback: isRollback,
-      );
+      if (result == true) {
+        int index = messageModel.value?.listMessages?.indexWhere((msg) => msg.id == messageId) ?? -1;
 
-      messageModel.refresh();
+        if (index != -1) {
+          messageModel.value?.listMessages![index] = messageModel.value!.listMessages![index].copyWith(
+            isRollback: isRollback,
+          );
+
+          messageModel.refresh();
+        }
+      }
+    } else {
+      int index = messageModel.value?.listMessages?.indexWhere((msg) => msg.id == messageId) ?? -1;
+
+      if (index != -1) {
+        messageModel.value?.listMessages![index] = messageModel.value!.listMessages![index].copyWith(
+          isRollback: isRollback,
+        );
+
+        messageModel.refresh();
+      }
     }
-
-    if (isRollback == true) onRevokeMessage(messageId);
   }
 
   void onReplyMessage(MessageDataModel message) {
     messageReply.value = message;
   }
 
-  void onRevokeMessage(int? messageId) async {
+  Future<bool> onRevokeMessage(int? messageId) async {
     try {
-      if (messageId == null) return;
+      if (messageId == null) return false;
       final response = await messagesRepository.revokeMessage(messageId);
 
-      if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 500) {
-        return;
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      } else if (response.statusCode == 500) {
+        return false;
+      } else if (response.statusCode == 400) {
+        int index = messageModel.value?.listMessages?.indexWhere((msg) => msg.id == messageId) ?? -1;
+
+        if (index != -1) {
+          messageModel.value?.listMessages![index] = messageModel.value!.listMessages![index].copyWith(
+            isRollback: false,
+          );
+
+          messageModel.refresh();
+        }
+        DialogUtils.showErrorDialog(response.body['message']);
+        return false;
       } else {
         onRevokeMessageLocal(messageId, isRollback: false);
+        return false;
       }
     } catch (e) {
       print(e);
+      return false;
     }
   }
 
