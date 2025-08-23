@@ -154,32 +154,34 @@ class ChatAllView extends GetView<ChatsController> {
                           children: [
                             Expanded(
                               child: Text(
-                                e.latestMessage?.isCall == true
-                                    ? e.latestMessage?.missedCall == true
-                                        ? 'missed_call'.tr
-                                        : e.latestMessage?.isCanceldId != null &&
-                                                (e.latestMessage?.callJoinedAt ?? '').isEmpty
-                                            ? 'call_canceled'.tr
-                                            : e.latestMessage?.isRejectCallId != null
-                                                ? 'receiver_declined_the_call'.tr
-                                                : e.latestMessage?.isDontPickUp == true
-                                                    ? 'call_not_answered'.tr
-                                                    : e.latestMessage?.sender?.id ==
-                                                            Get.find<ProfileController>().user.value?.id
-                                                        ? 'outgoing_call'.tr
-                                                        : e.latestMessage?.sender?.id !=
+                                e.latestMessage?.isRollback == true
+                                    ? 'message_rollback'.tr
+                                    : e.latestMessage?.isCall == true
+                                        ? e.latestMessage?.missedCall == true
+                                            ? 'missed_call'.tr
+                                            : e.latestMessage?.isCanceldId != null &&
+                                                    (e.latestMessage?.callJoinedAt ?? '').isEmpty
+                                                ? 'call_canceled'.tr
+                                                : e.latestMessage?.isRejectCallId != null
+                                                    ? 'receiver_declined_the_call'.tr
+                                                    : e.latestMessage?.isDontPickUp == true
+                                                        ? 'call_not_answered'.tr
+                                                        : e.latestMessage?.sender?.id ==
                                                                 Get.find<ProfileController>().user.value?.id
-                                                            ? 'incoming_call'.tr
-                                                            : 'voice_call'.tr
-                                    : e.latestMessage?.message ??
-                                        (e.latestMessage?.sticker != null
-                                            ? 'Sticker'
-                                            : (e.latestMessage?.files ?? []).isNotEmpty
-                                                ? (e.latestMessage?.files?.first.fileType?.getFileCategory ==
-                                                        FileCategory.IMAGE)
-                                                    ? '[${'images'.tr}]'
-                                                    : '[${'document'.tr}]'
-                                                : ''),
+                                                            ? 'outgoing_call'.tr
+                                                            : e.latestMessage?.sender?.id !=
+                                                                    Get.find<ProfileController>().user.value?.id
+                                                                ? 'incoming_call'.tr
+                                                                : 'voice_call'.tr
+                                        : e.latestMessage?.message ??
+                                            (e.latestMessage?.sticker != null
+                                                ? 'Sticker'
+                                                : (e.latestMessage?.files ?? []).isNotEmpty
+                                                    ? (e.latestMessage?.files?.first.fileType?.getFileCategory ==
+                                                            FileCategory.IMAGE)
+                                                        ? '[${'images'.tr}]'
+                                                        : '[${'document'.tr}]'
+                                                    : ''),
                                 style: e.isRead == false
                                     ? StyleThemeData.size12Weight600()
                                     : StyleThemeData.size12Weight400(color: appTheme.grayF8Color),

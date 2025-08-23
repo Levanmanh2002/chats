@@ -1,6 +1,8 @@
 import 'package:chats/main.dart';
 import 'package:chats/pages/confirm_security_code/confirm_security_code_controller.dart';
+import 'package:chats/pages/confirm_security_code/widget/skip_verification_dialog.dart';
 import 'package:chats/theme/style/style_theme.dart';
+import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/utils/images_assets.dart';
 import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/reponsive/extension.dart';
@@ -12,7 +14,25 @@ class ConfirmSecurityCodePage extends GetWidget<ConfirmSecurityCodeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: appTheme.allSidesColor,
-      appBar: AppBar(backgroundColor: appTheme.allSidesColor),
+      appBar: AppBar(
+        backgroundColor: appTheme.allSidesColor,
+        actions: [
+          IconButton(
+            icon: const ImageAssetCustom(imagePath: IconsAssets.closeCircleIcon),
+            onPressed: () {
+              Get.dialog(
+                SkipVerificationDialog(
+                  onSkip: controller.onViewSkipToSign,
+                ),
+                barrierDismissible: true,
+              );
+            },
+            padding: EdgeInsets.zero,
+            iconSize: 24.w,
+          ),
+          SizedBox(width: 16.w),
+        ],
+      ),
       body: Padding(
         padding: padding(all: 24),
         child: Column(

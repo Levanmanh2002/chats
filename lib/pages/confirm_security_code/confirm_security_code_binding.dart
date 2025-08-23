@@ -5,7 +5,9 @@ class ConfirmSecurityCodeBinding implements Bindings {
   @override
   void dependencies() {
     Get.lazyPut(
-      () => ConfirmSecurityCodeController(),
+      () => ConfirmSecurityCodeController(
+        profileRepository: Get.find(),
+      ),
     );
   }
 }

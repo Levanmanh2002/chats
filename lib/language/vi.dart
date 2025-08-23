@@ -218,4 +218,10 @@ const Map<String, String> vi = {
   'forward': 'Chuyển tiếp',
   'forward_success': 'Chuyển tiếp thành công',
   'call_ended': 'Cuộc gọi đã kết thúc',
+  'skip_confirmation_title': 'Bỏ qua xác thực bảo mật?',
+  'skip_confirmation_message': 'Bạn chưa nhập mã bảo mật. Bạn có chắc chắn muốn quay về đăng nhập không?',
+  'skip_confirmation_warning': 'Tài khoản của bạn có thể không được bảo mật nếu bỏ qua bước này.',
+  'yes_skip': 'Có, bỏ qua',
+  'no_continue': 'Không, tiếp tục',
+  'continue_verification': 'Tiếp tục xác thực',
 };
