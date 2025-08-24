@@ -78,20 +78,20 @@ class ScreenSecurityCodePage extends GetWidget<ScreenSecurityCodeController> {
                 }
                 return const SizedBox();
               }),
+              Obx(
+                () => controller.user.value?.isEnableSecurityScreen == true
+                    ? CustomButton(
+                        margin: padding(top: 36, horizontal: 16, bottom: 16),
+                        buttonText: 'logout_reset_security'.tr,
+                        onPressed: () {
+                          showLogoutConfirmation(controller.onLogoutPasscode);
+                        },
+                      )
+                    : const SizedBox(),
+              ),
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: Obx(
-        () => controller.user.value?.isEnableSecurityScreen == true
-            ? CustomButton(
-                margin: padding(bottom: 36, horizontal: 16, top: 16),
-                buttonText: 'logout_reset_security'.tr,
-                onPressed: () {
-                  showLogoutConfirmation(controller.onLogoutPasscode);
-                },
-              )
-            : const SizedBox(),
       ),
     );
   }
