@@ -229,4 +229,7 @@ const Map<String, String> en = {
   'yes_skip': 'Yes, Skip',
   'no_continue': 'No, Continue',
   'continue_verification': 'Continue Verification',
+  'logout_reset_security': 'Logout & reset security code',
+  'logout_confirm': 'Confirm logout',
+  'logout_warning': 'If you log out here, all security codes will be deleted and reset to the default state',
 };

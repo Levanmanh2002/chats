@@ -5,7 +5,9 @@ import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/app_switch.dart';
+import 'package:chats/widget/custom_button.dart';
 import 'package:chats/widget/default_app_bar.dart';
+import 'package:chats/widget/dialog/show_logout_confirmation.dart';
 import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/line_widget.dart';
 import 'package:chats/widget/reponsive/extension.dart';
@@ -79,6 +81,17 @@ class SecurityCodePage extends GetWidget<SecurityCodeController> {
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: Obx(
+        () => controller.user.value?.isEnableSecurity == true
+            ? CustomButton(
+                margin: padding(bottom: 36, horizontal: 16, top: 16),
+                buttonText: 'logout_reset_security'.tr,
+                onPressed: () {
+                  showLogoutConfirmation(controller.onLogoutPasscode);
+                },
+              )
+            : const SizedBox(),
       ),
     );
   }

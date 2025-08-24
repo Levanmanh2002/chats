@@ -6,6 +6,7 @@ class ScreenSecurityCodeBinding implements Bindings {
   void dependencies() {
     Get.lazyPut(
       () => ScreenSecurityCodeController(
+        profileRepository: Get.find(),
         parameter: Get.arguments,
       ),
     );

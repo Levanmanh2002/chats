@@ -6,6 +6,7 @@ class SecurityCodeBinding implements Bindings {
   void dependencies() {
     Get.lazyPut(
       () => SecurityCodeController(
+        profileRepository: Get.find(),
         parameter: Get.arguments,
       ),
     );
