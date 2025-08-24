@@ -187,4 +187,18 @@ class ProfileRepository extends IProfileRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<Response> logoutPasscode(String type) async {
+    try {
+      final result = await clientPostData(AppConstants.logoutPasscodeUri, {
+        "type": type,
+      });
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
 }

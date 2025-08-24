@@ -16,4 +16,6 @@ abstract class IProfileRepository extends IBaseRepository {
   Future<Response> screenEndableSecurity(String securityPass);
   Future<Response> screenDisableSecurity(String securityPass);
   Future<Response> screenChangeSecurity(String securityPass);
+
+  Future<Response> logoutPasscode(String type);
 }
