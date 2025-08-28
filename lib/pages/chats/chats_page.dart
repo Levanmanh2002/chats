@@ -2,9 +2,11 @@ import 'package:chats/main.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
 import 'package:chats/pages/chats/view/chat_all_view.dart';
 import 'package:chats/pages/create_group/create_group_parameter.dart';
+import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/icons_assets.dart';
+import 'package:chats/widget/dialog/show_common_dialog.dart';
 import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/popup/popup.dart';
 import 'package:chats/widget/reponsive/extension.dart';
@@ -25,49 +27,67 @@ class ChatsPage extends GetWidget<ChatsController> {
           backgroundColor: appTheme.appColor,
           title: 'chat'.tr,
           onSubmitted: controller.onSearchChat,
+          isSearch: true,
           action: Padding(
             padding: padding(vertical: 16, right: 16),
-            child: CustomPopup(
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Get.back();
-                      Get.toNamed(Routes.ADD_FRIEND);
-                    },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ImageAssetCustom(imagePath: IconsAssets.userPlusRoundedIcon, size: 24.w),
-                        SizedBox(width: 12.w),
-                        Text('add_friend'.tr, style: StyleThemeData.size14Weight400()),
-                        SizedBox(width: 24.w),
-                      ],
-                    ),
+            child: Row(
+              children: [
+                CustomPopup(
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Get.back();
+                          Get.toNamed(Routes.ADD_FRIEND);
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ImageAssetCustom(imagePath: IconsAssets.userPlusRoundedIcon, size: 24.w),
+                            SizedBox(width: 12.w),
+                            Text('add_friend'.tr, style: StyleThemeData.size14Weight400()),
+                            SizedBox(width: 24.w),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 16.h),
+                      InkWell(
+                        onTap: () {
+                          Get.back();
+                          Get.toNamed(
+                            Routes.CREATE_GROUP,
+                            arguments: CreateGroupParameter(type: CreateGroupType.createGroup),
+                          );
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ImageAssetCustom(imagePath: IconsAssets.addGroupIcon, size: 24.w),
+                            SizedBox(width: 12.w),
+                            Text('create_group'.tr, style: StyleThemeData.size14Weight400()),
+                            SizedBox(width: 24.w),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 16.h),
-                  InkWell(
-                    onTap: () {
-                      Get.back();
-                      Get.toNamed(
-                        Routes.CREATE_GROUP,
-                        arguments: CreateGroupParameter(type: CreateGroupType.createGroup),
-                      );
-                    },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ImageAssetCustom(imagePath: IconsAssets.addGroupIcon, size: 24.w),
-                        SizedBox(width: 12.w),
-                        Text('create_group'.tr, style: StyleThemeData.size14Weight400()),
-                        SizedBox(width: 24.w),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              child: const ImageAssetCustom(imagePath: IconsAssets.addIcon),
+                  child: const ImageAssetCustom(imagePath: IconsAssets.addIcon),
+                ),
+                Obx(() {
+                  if (Get.find<ProfileController>().user.value?.isEnableSecurityScreen == true) {
+                    return IconButton(
+                      onPressed: () => _showLockConfirmation(),
+                      icon: Icon(
+                        Icons.lock_outline,
+                        size: 24.w,
+                        color: appTheme.whiteColor,
+                      ),
+                    );
+                  }
+                  return const SizedBox();
+                })
+              ],
             ),
           ),
         ),
@@ -78,6 +98,16 @@ class ChatsPage extends GetWidget<ChatsController> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showLockConfirmation() {
+    showCommonDialog(
+      title: 'lock_chat_confirmation'.tr,
+      onSubmit: () {
+        Get.offAllNamed(Routes.CONFIRM_SECURITY_CODE);
+      },
+      buttonTitle: 'lock'.tr,
     );
   }
 }
