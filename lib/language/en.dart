@@ -232,4 +232,6 @@ const Map<String, String> en = {
   'logout_reset_security': 'Logout & reset security code',
   'logout_confirm': 'Confirm logout',
   'logout_warning': 'If you log out here, all security codes will be deleted and reset to the default state',
+  'lock': 'Lock',
+  'lock_chat_confirmation': 'Are you sure you want to lock the screen?',
 };

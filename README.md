@@ -96,3 +96,8 @@ This project uses Flutter's built-in testing framework. To run tests, use the fo
   ```bash
   flutter build web
   ```
+
+## Build WEB release
+  ```bash
+  flutter build web --release
+  ```

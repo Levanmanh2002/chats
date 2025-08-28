@@ -33,7 +33,7 @@ class ForwardController extends GetxController {
     super.onInit();
     fetchChatList();
     fetchContacts();
-  }
+  } 
 
   Future<void> fetchChatList({bool isRefresh = true, String search = '', bool isShowLoad = true}) async {
     try {

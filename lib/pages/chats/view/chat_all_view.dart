@@ -5,6 +5,7 @@ import 'package:chats/models/chats/chat_data_model.dart';
 import 'package:chats/models/chats/chats_models.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
+import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/app/file_content_type.dart';
 import 'package:chats/utils/icons_assets.dart';
@@ -46,25 +47,47 @@ class ChatAllView extends GetView<ChatsController> {
             ),
             Padding(
               padding: padding(all: 12),
-              child: CustomTextField(
-                controller: controller.searchController,
-                hintText: 'search'.tr,
-                onSubmit: controller.onSearchChat,
-                showLine: false,
-                colorBorder: appTheme.hintColor,
-                onChanged: (value) {
-                  controller.searchValue.value = value;
-                },
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    controller.onSearchChat(controller.searchController.text);
-                  },
-                  icon: ImageAssetCustom(
-                    imagePath: IconsAssets.searchIcon,
-                    size: 24.w,
-                    color: appTheme.appColor,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: CustomTextField(
+                      controller: controller.searchController,
+                      hintText: 'search'.tr,
+                      onSubmit: controller.onSearchChat,
+                      showLine: false,
+                      colorBorder: appTheme.hintColor,
+                      onChanged: (value) {
+                        controller.searchValue.value = value;
+                      },
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          controller.onSearchChat(controller.searchController.text);
+                        },
+                        icon: ImageAssetCustom(
+                          imagePath: IconsAssets.searchIcon,
+                          size: 24.w,
+                          color: appTheme.appColor,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                  Obx(() {
+                    if (Get.find<ProfileController>().user.value?.isEnableSecurityScreen == true) {
+                      return Padding(
+                        padding: padding(left: 8),
+                        child: IconButton(
+                          onPressed: () => _showLockConfirmation(),
+                          icon: Icon(
+                            Icons.lock_outline,
+                            size: 24.w,
+                            color: appTheme.appColor,
+                          ),
+                        ),
+                      );
+                    }
+                    return const SizedBox();
+                  })
+                ],
               ),
             ),
             (controller.chatsModels.value?.chat ?? []).isNotEmpty
@@ -258,6 +281,16 @@ class ChatAllView extends GetView<ChatsController> {
             child: LineWidget(color: appTheme.allSidesColor),
           ),
       ],
+    );
+  }
+
+  void _showLockConfirmation() {
+    showCommonDialog(
+      title: 'lock_chat_confirmation'.tr,
+      onSubmit: () {
+        Get.offAllNamed(Routes.CONFIRM_SECURITY_CODE);
+      },
+      buttonTitle: 'lock'.tr,
     );
   }
 }
