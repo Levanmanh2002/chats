@@ -19,6 +19,9 @@ class UpsertInstantMessController extends GetxController {
   var isFormValid = false.obs;
   var isLoading = false.obs;
 
+  var contentValue = ''.obs;
+  var shortcutValue = ''.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -117,6 +120,16 @@ class UpsertInstantMessController extends GetxController {
     } finally {
       EasyLoading.dismiss();
     }
+  }
+
+  void validateContent(String value) {
+    contentValue.value = value;
+    _validateForm();
+  }
+
+  void validateShortcut(String value) {
+    shortcutValue.value = value;
+    _validateForm();
   }
 
   @override

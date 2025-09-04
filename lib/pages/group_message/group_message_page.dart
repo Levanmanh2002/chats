@@ -9,7 +9,6 @@ import 'package:chats/pages/group_message/view/group_tickers_view.dart';
 import 'package:chats/pages/group_option/group_option_parameter.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
-import 'package:chats/utils/gif_utils.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/group_avatar_widget.dart';
 import 'package:chats/widget/image_asset_custom.dart';
@@ -44,7 +43,7 @@ class GroupMessagePage extends GetWidget<GroupMessageController> {
                       ? () => Get.toNamed(
                             Routes.GROUP_OPTION,
                             arguments: GroupOptionParameter(
-                              chat: controller.messageModel.value?.chat, 
+                              chat: controller.messageModel.value?.chat,
                               isHideMessage: controller.messageModel.value?.chat?.isHide ?? false,
                             ),
                           )
@@ -112,7 +111,7 @@ class GroupMessagePage extends GetWidget<GroupMessageController> {
               child: Stack(
                 children: [
                   Obx(() => controller.isLoading.isTrue
-                      ? Center(child: Image.asset(GifUtils.noDataImageGif))
+                      ? Center(child: CircularProgressIndicator(color: appTheme.appColor))
                       : GroupChastListView()),
                   Obx(
                     () => controller.isShowScrollToBottom.value

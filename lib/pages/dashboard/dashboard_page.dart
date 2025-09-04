@@ -85,6 +85,7 @@ class DashboardPage extends GetWidget<DashboardController> {
                           imagePath: icon,
                           width: 24.w,
                           height: 24.w,
+                          color: appTheme.appColor,
                         )
                       : ImageAssetCustom(
                           imagePath: iconEmpty,

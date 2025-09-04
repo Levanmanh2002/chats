@@ -20,41 +20,78 @@ class ProfilePage extends GetWidget<ProfileController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: appTheme.allSidesColor,
+      backgroundColor: const Color(0xFFF8F9FA),
       body: ListLoader(
         onRefresh: controller.onRefresh,
         forceScrollable: true,
         child: SingleChildScrollView(
           child: Column(
             children: [
+              SizedBox(height: 60.h),
               HeaderProfileView(),
-              SizedBox(height: 24.h),
-              Column(
-                children: [
-                  _buildProfile(
+              SizedBox(height: 32.h),
+              _buildMenuSection(
+                title: 'account_settings'.tr,
+                items: [
+                  _buildMenuItemData(
                     icon: IconsAssets.userEmptyIcon,
                     title: 'personal_information'.tr,
+                    subtitle: 'manage_your_profile_info'.tr,
                     onTap: () => Get.toNamed(
                       Routes.UPDATE_PROFILE,
                       arguments: UpdateProfileParameter(user: controller.user.value),
                     ),
                   ),
-                  SizedBox(height: 8.h),
-                  _buildProfile(
+                  _buildMenuItemData(
                     icon: IconsAssets.smartPhoneIcon,
                     title: 'sync_contacts'.tr,
+                    subtitle: 'sync_your_phone_contacts'.tr,
                     onTap: () => Get.toNamed(Routes.SYNC_CONTACT),
                   ),
-                  SizedBox(height: 8.h),
-                  _buildProfile(
+                ],
+              ),
+
+              SizedBox(height: 24.h),
+
+              _buildMenuSection(
+                title: 'security'.tr,
+                items: [
+                  _buildMenuItemData(
                     icon: IconsAssets.lockPasswordIcon,
                     title: 'update_password'.tr,
+                    subtitle: 'change_your_password'.tr,
                     onTap: () => Get.toNamed(Routes.UPDATE_PASSWORD),
                   ),
-                  SizedBox(height: 8.h),
-                  _buildProfile(
+                  _buildMenuItemData(
+                    icon: IconsAssets.keyholeIcon,
+                    title: 'security_code_configuration'.tr,
+                    subtitle: 'setup_security_code'.tr,
+                    onTap: () => Get.toNamed(
+                      Routes.SECURITY_CODE,
+                      arguments: SecurityCodeParameter(user: controller.user.value),
+                    ),
+                  ),
+                  _buildMenuItemData(
+                    icon: IconsAssets.keyholeIcon,
+                    title: 'screen_lock_code_configuration'.tr,
+                    subtitle: 'setup_screen_lock'.tr,
+                    onTap: () => Get.toNamed(
+                      Routes.SCREEN_SECURITY_CODE,
+                      arguments: ScreenSecurityCodeParameter(user: controller.user.value),
+                    ),
+                  ),
+                ],
+              ),
+
+              SizedBox(height: 24.h),
+
+              _buildMenuSection(
+                title: 'chat_settings'.tr,
+                items: [
+                  _buildMenuItemData(
                     icon: IconsAssets.chatRoundLineIcon,
                     title: 'manage_instant_messages'.tr,
+                    subtitle: 'customize_message_settings'.tr,
                     onTap: () => Get.toNamed(
                       Routes.INSTANT_MESSAGE,
                       arguments: InstantMessageParameter(
@@ -62,60 +99,205 @@ class ProfilePage extends GetWidget<ProfileController> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 8.h),
-                  _buildProfile(
-                    icon: IconsAssets.keyholeIcon,
-                    title: 'security_code_configuration'.tr,
-                    onTap: () => Get.toNamed(
-                      Routes.SECURITY_CODE,
-                      arguments: SecurityCodeParameter(user: controller.user.value),
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
-                  _buildProfile(
-                    icon: IconsAssets.keyholeIcon,
-                    title: 'screen_lock_code_configuration'.tr,
-                    onTap: () => Get.toNamed(
-                      Routes.SCREEN_SECURITY_CODE,
-                      arguments: ScreenSecurityCodeParameter(user: controller.user.value),
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
-                  _buildProfile(
+                ],
+              ),
+
+              SizedBox(height: 24.h),
+
+              _buildMenuSection(
+                title: 'support_help'.tr,
+                items: [
+                  _buildMenuItemData(
                     icon: IconsAssets.phoneIcon,
                     title: 'contact_support'.tr,
+                    subtitle: 'get_help_support'.tr,
                     onTap: () {
                       makePhoneCall(controller.phoneSupport.value);
                     },
                   ),
-                  SizedBox(height: 8.h),
-                  if ((controller.systemSetting.value?.documentUrl ?? '').isNotEmpty) ...[
-                    _buildProfile(
+                  if ((controller.systemSetting.value?.documentUrl ?? '').isNotEmpty)
+                    _buildMenuItemData(
                       icon: IconsAssets.documentIcon,
                       title: 'instructions_for_use'.tr,
+                      subtitle: 'view_user_guide'.tr,
                       onTap: () {
                         launchUrlLink(controller.systemSetting.value?.documentUrl ?? '');
                       },
                     ),
-                    SizedBox(height: 8.h),
-                  ],
-                  _buildProfile(
+                ],
+              ),
+
+              SizedBox(height: 24.h),
+
+              // Danger zone
+              _buildMenuSection(
+                title: 'danger_zone'.tr,
+                isDangerZone: true,
+                items: [
+                  _buildMenuItemData(
                     icon: IconsAssets.trashBinIcon,
                     title: 'delete_account'.tr,
+                    subtitle: 'permanently_delete_account'.tr,
+                    isDestructive: true,
                     onTap: () {
                       showDeleteAccountDialog(controller.deleteAccount);
                     },
                   ),
-                  SizedBox(height: 8.h),
-                  _buildProfile(
+                  _buildMenuItemData(
                     icon: IconsAssets.logoutIcon,
                     title: 'log_out'.tr,
-                    colorIcon: appTheme.errorColor,
-                    colorTitle: appTheme.errorColor,
+                    subtitle: 'sign_out_of_your_account'.tr,
+                    isDestructive: true,
                     onTap: () => controller.logout(isShowTitle: true),
                   ),
-                  SizedBox(height: 24.h),
                 ],
+              ),
+
+              SizedBox(height: 40.h),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMenuSection({
+    required String title,
+    required List<MenuItemData> items,
+    bool isDangerZone = false,
+  }) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Section title
+          Padding(
+            padding: EdgeInsets.only(left: 4.w, bottom: 12.h),
+            child: Text(
+              title,
+              style: StyleThemeData.size16Weight600(
+                color: isDangerZone ? appTheme.errorColor : appTheme.greyColor,
+              ),
+            ),
+          ),
+
+          // Menu items container
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.04),
+                  blurRadius: 15,
+                  offset: const Offset(0, 4),
+                  spreadRadius: 0,
+                ),
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.02),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                  spreadRadius: 0,
+                ),
+              ],
+            ),
+            child: Column(
+              children: items.asMap().entries.map((entry) {
+                final index = entry.key;
+                final item = entry.value;
+                final isLast = index == items.length - 1;
+
+                return Column(
+                  children: [
+                    _buildMenuItem(
+                      icon: item.icon,
+                      title: item.title,
+                      subtitle: item.subtitle,
+                      onTap: item.onTap,
+                      isDestructive: item.isDestructive,
+                    ),
+                    if (!isLast)
+                      Padding(
+                        padding: EdgeInsets.only(left: 64.w),
+                        child: Divider(
+                          height: 1,
+                          thickness: 1,
+                          color: appTheme.greyColor.withOpacity(0.1),
+                        ),
+                      ),
+                  ],
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMenuItem({
+    required String icon,
+    required String title,
+    required String subtitle,
+    VoidCallback? onTap,
+    bool isDestructive = false,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: EdgeInsets.all(20.w),
+          child: Row(
+            children: [
+              // Icon container với background tròn
+              Container(
+                width: 44.w,
+                height: 44.w,
+                decoration: BoxDecoration(
+                  color: isDestructive ? appTheme.errorColor.withOpacity(0.1) : appTheme.appColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Center(
+                  child: ImageAssetCustom(
+                    imagePath: icon,
+                    size: 20.w,
+                    color: isDestructive ? appTheme.errorColor : appTheme.appColor,
+                  ),
+                ),
+              ),
+
+              SizedBox(width: 16.w),
+
+              // Text content
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: StyleThemeData.size16Weight500(
+                        color: isDestructive ? appTheme.errorColor : appTheme.blackColor,
+                      ),
+                    ),
+                    SizedBox(height: 2.h),
+                    Text(
+                      subtitle,
+                      style: StyleThemeData.size14Weight400(
+                        color: appTheme.greyColor.withOpacity(0.7),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Arrow icon
+              Icon(
+                Icons.chevron_right,
+                size: 20.w,
+                color: appTheme.greyColor.withOpacity(0.5),
               ),
             ],
           ),
@@ -124,33 +306,36 @@ class ProfilePage extends GetWidget<ProfileController> {
     );
   }
 
-  Widget _buildProfile({
+  MenuItemData _buildMenuItemData({
     required String icon,
     required String title,
+    required String subtitle,
     VoidCallback? onTap,
-    Color? colorTitle,
-    Color? colorIcon,
+    bool isDestructive = false,
   }) {
-    return Padding(
-      padding: padding(horizontal: 16),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          padding: padding(all: 16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: appTheme.whiteColor,
-          ),
-          child: Row(
-            children: [
-              ImageAssetCustom(imagePath: icon, size: 24.w, color: colorIcon ?? appTheme.blackColor),
-              SizedBox(width: 12.w),
-              Text(title, style: StyleThemeData.size14Weight400(color: colorTitle)),
-            ],
-          ),
-        ),
-      ),
+    return MenuItemData(
+      icon: icon,
+      title: title,
+      subtitle: subtitle,
+      onTap: onTap,
+      isDestructive: isDestructive,
     );
   }
+}
+
+// Data class để lưu thông tin menu item
+class MenuItemData {
+  final String icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback? onTap;
+  final bool isDestructive;
+
+  MenuItemData({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    this.onTap,
+    this.isDestructive = false,
+  });
 }

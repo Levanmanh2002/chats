@@ -10,7 +10,6 @@ import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/app/file_content_type.dart';
-import 'package:chats/utils/gif_utils.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/custom_image_widget.dart';
 import 'package:chats/widget/dialog/show_common_dialog.dart';
@@ -28,7 +27,7 @@ class ChatAllView extends GetView<ChatsController> {
   Widget build(BuildContext context) {
     return Obx(
       () => controller.isLoading.isTrue
-          ? Center(child: Image.asset(GifUtils.noDataImageGif))
+          ? Center(child: CircularProgressIndicator(color: appTheme.appColor))
           : ListLoader(
               onRefresh: () => controller.fetchChatList(isShowLoad: false),
               onLoad: () => controller.fetchChatList(isRefresh: false),

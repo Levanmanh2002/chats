@@ -14,7 +14,6 @@ import 'package:chats/pages/options/options_parameter.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
-import 'package:chats/utils/gif_utils.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/custom_image_widget.dart';
 import 'package:chats/widget/image_asset_custom.dart';
@@ -176,7 +175,7 @@ class MessagePage extends GetWidget<MessageController> {
                 child: Stack(
                   children: [
                     Obx(() => controller.isLoading.isTrue
-                        ? Center(child: Image.asset(GifUtils.noDataImageGif))
+                        ? Center(child: CircularProgressIndicator(color: appTheme.appColor))
                         : ChastListView()),
                     Obx(
                       () => controller.isShowScrollToBottom.value

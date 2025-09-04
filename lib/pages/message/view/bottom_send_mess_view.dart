@@ -33,6 +33,7 @@ class BottomSendMessView extends GetView<MessageController> {
                 contentPadding: padding(all: 12),
                 hintStyle: StyleThemeData.size14Weight400(color: appTheme.grayColor),
               ),
+              cursorColor: appTheme.appColor,
               style: StyleThemeData.size14Weight400(),
               maxLines: 5,
               minLines: 1,

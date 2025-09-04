@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 abstract class BaseThemeData {
-  Color primaryColor = const Color(0XFF403BF3);
+  Color primaryColor = const Color(0xFF1D9534);
   Color secondaryColor = const Color(0XFFFFB934);
   Color thirdColor = const Color(0x0ff00000);
-  Color primaryTextColor = const Color(0XFF403BF3);
+  Color primaryTextColor = const Color(0xFF1D9534);
   Color secondaryTextColor = const Color(0XFFFFB934);
 
   Color background = const Color(0XFFF5F5F5);
@@ -13,7 +13,7 @@ abstract class BaseThemeData {
   Color dividerColor = const Color(0XFFC6C6C6);
   Color fadeTextColor = Colors.grey;
 
-  Color appColor = const Color(0xFF403BF3);
+  Color appColor = const Color(0xFF1D9534);
 
   Color successColor = Colors.green;
   Color errorColor = const Color(0xFFFF4F4F);
@@ -48,6 +48,8 @@ abstract class BaseThemeData {
   Color oldSilverColor = const Color(0xFF828282);
 
   Color silverColor = const Color(0xFFF2F2F2);
+
+  Color greyColor = const Color(0xFF9B9B9B);
 
   Color blueColor = const Color(0xFF007AFF);
   Color blueFCColor = const Color(0xFF1DA6FC);

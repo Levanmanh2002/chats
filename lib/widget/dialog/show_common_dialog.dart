@@ -50,7 +50,7 @@ void showCommonDialog({
                         ),
                         child: Text(
                           buttonCancelTitle ?? 'cancel'.tr,
-                          style: StyleThemeData.size14Weight600(color: appTheme.appColor),
+                          style: StyleThemeData.size14Weight600(color: appTheme.grayColor),
                         ),
                       ),
                     ),

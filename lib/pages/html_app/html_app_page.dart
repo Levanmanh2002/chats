@@ -43,7 +43,7 @@ class HtmlAppPage extends GetWidget<HtmlAppController> {
                   ),
                 ),
               )
-            : CircularProgressIndicator(color: appTheme.appColor),
+            : Center(child: CircularProgressIndicator(color: appTheme.appColor)),
       ),
     );
   }

@@ -12,6 +12,14 @@ class StyleThemeData {
         fontFamily: AppConstants.fontFamilyRegular,
       );
 
+  static TextStyle size8Weight600({Color? color, double height = 1.5}) => TextStyle(
+        fontSize: 8.fontSize,
+        fontWeight: FontWeight.w600,
+        color: color ?? appTheme.blackColor,
+        height: height.h,
+        fontFamily: AppConstants.fontFamilyRegular,
+      );
+
   static TextStyle size10Weight300({Color? color, double height = 1.5}) => TextStyle(
         fontSize: 10.fontSize,
         fontWeight: FontWeight.w300,
@@ -22,6 +30,14 @@ class StyleThemeData {
   static TextStyle size10Weight400({Color? color, double height = 1.5}) => TextStyle(
         fontSize: 10.fontSize,
         fontWeight: FontWeight.w400,
+        color: color ?? appTheme.blackColor,
+        height: height.h,
+        fontFamily: AppConstants.fontFamilyRegular,
+      );
+
+  static TextStyle size10Weight500({Color? color, double height = 1.5}) => TextStyle(
+        fontSize: 10.fontSize,
+        fontWeight: FontWeight.w500,
         color: color ?? appTheme.blackColor,
         height: height.h,
         fontFamily: AppConstants.fontFamilyRegular,
@@ -43,6 +59,14 @@ class StyleThemeData {
         fontFamily: AppConstants.fontFamilyRegular,
       );
 
+  static TextStyle size12Weight500({Color? color, double height = 1.5}) => TextStyle(
+        fontSize: 12.fontSize,
+        fontWeight: FontWeight.w500,
+        color: color ?? appTheme.blackColor,
+        height: height.h,
+        fontFamily: AppConstants.fontFamilyBold,
+      );
+
   static TextStyle size12Weight600({Color? color, double height = 1.5}) => TextStyle(
         fontSize: 12.fontSize,
         fontWeight: FontWeight.w600,
@@ -57,6 +81,14 @@ class StyleThemeData {
         color: color ?? appTheme.blackColor,
         height: height.h,
         fontFamily: AppConstants.fontFamilyRegular,
+      );
+
+  static TextStyle size14Weight500({Color? color, double height = 1.5}) => TextStyle(
+        fontSize: 14.fontSize,
+        fontWeight: FontWeight.w500,
+        color: color ?? appTheme.blackColor,
+        height: height.h,
+        fontFamily: AppConstants.fontFamilyBold,
       );
 
   static TextStyle size14Weight600({Color? color, double height = 1.5}) => TextStyle(
@@ -77,6 +109,15 @@ class StyleThemeData {
   static TextStyle size16Weight400({BuildContext? context, Color? color, double height = 1.5}) => TextStyle(
         fontSize: 16.fontSize,
         fontWeight: FontWeight.w400,
+        color: color ?? appTheme.blackColor,
+        height: height.h,
+        letterSpacing: 0.2,
+        fontFamily: AppConstants.fontFamilyRegular,
+      );
+
+  static TextStyle size16Weight500({BuildContext? context, Color? color, double height = 1.5}) => TextStyle(
+        fontSize: 16.fontSize,
+        fontWeight: FontWeight.w500,
         color: color ?? appTheme.blackColor,
         height: height.h,
         letterSpacing: 0.2,
@@ -113,6 +154,14 @@ class StyleThemeData {
         fontFamily: AppConstants.fontFamilyBold,
       );
 
+  static TextStyle size18Weight700({Color? color, double height = 1.5}) => TextStyle(
+        fontSize: 18.fontSize,
+        fontWeight: FontWeight.w700,
+        color: color ?? appTheme.blackColor,
+        height: height.h,
+        fontFamily: AppConstants.fontFamilyBold,
+      );
+
   static TextStyle size20Weight600({Color? color, double height = 1.5}) => TextStyle(
         fontSize: 20.fontSize,
         fontWeight: FontWeight.w600,
@@ -131,6 +180,14 @@ class StyleThemeData {
   static TextStyle size22Weight600({Color? color, double height = 1.5}) => TextStyle(
         fontSize: 22.fontSize,
         fontWeight: FontWeight.w600,
+        color: color ?? appTheme.blackColor,
+        height: height.h,
+        fontFamily: AppConstants.fontFamilyBold,
+      );
+
+  static TextStyle size22Weight700({Color? color, double height = 1.5}) => TextStyle(
+        fontSize: 22.fontSize,
+        fontWeight: FontWeight.w700,
         color: color ?? appTheme.blackColor,
         height: height.h,
         fontFamily: AppConstants.fontFamilyBold,

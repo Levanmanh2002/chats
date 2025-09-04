@@ -8,15 +8,11 @@ import 'package:chats/pages/view_group_members/view_group_members_parameter.dart
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/calendar_config_util.dart';
-import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/app_switch.dart';
-import 'package:chats/widget/border_title_icon_widget.dart';
 import 'package:chats/widget/custom_image_widget.dart';
-import 'package:chats/widget/default_app_bar.dart';
 import 'package:chats/widget/dialog/show_common_dialog.dart';
 import 'package:chats/widget/dialog/show_update_namegroup_dialog.dart';
 import 'package:chats/widget/group_avatar_widget.dart';
-import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/reponsive/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,296 +21,717 @@ class GroupOptionPage extends GetWidget<GroupOptionController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: DefaultAppBar(
-        title: 'options'.tr,
-        backgroundColor: appTheme.appColor,
-        colorIcon: appTheme.whiteColor,
-        colorTitle: appTheme.whiteColor,
+      backgroundColor: const Color(0xFFF8F9FA),
+      appBar: _buildCustomAppBar(),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              SizedBox(height: 24.h),
+
+              // Group header section
+              _buildGroupHeader(),
+
+              SizedBox(height: 32.h),
+
+              // Quick actions
+              _buildQuickActions(),
+
+              SizedBox(height: 32.h),
+
+              // Options section
+              _buildOptionsSection(),
+
+              SizedBox(height: 40.h),
+            ],
+          ),
+        ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Stack(
-            //   children: [
-            //     const ImageAssetCustom(imagePath: ImagesAssets.topBgChatImage),
-            //     Positioned(
-            //       bottom: 12,
-            //       left: 8,
-            //       right: 12,
-            //       child: Row(
-            //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //         children: [
-            //           IconButton(
-            //             onPressed: Get.back,
-            //             icon: ImageAssetCustom(imagePath: IconsAssets.arrowLeftIcon, color: appTheme.whiteColor),
-            //           ),
-            //           Text('options'.tr, style: StyleThemeData.size16Weight600(color: appTheme.whiteColor)),
-            //           const IconButton(onPressed: null, icon: SizedBox()),
-            //         ],
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            SizedBox(height: 40.h),
-            Padding(
-              padding: padding(horizontal: 16),
-              child: Column(
+    );
+  }
+
+  PreferredSizeWidget _buildCustomAppBar() {
+    return AppBar(
+      backgroundColor: appTheme.appColor,
+      elevation: 0,
+      leading: Container(
+        margin: EdgeInsets.all(8.w),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.white,
+            size: 18.w,
+          ),
+          onPressed: () => Get.back(),
+        ),
+      ),
+      title: Text(
+        'options'.tr,
+        style: StyleThemeData.size20Weight700(color: Colors.white),
+      ),
+      centerTitle: true,
+    );
+  }
+
+  Widget _buildGroupHeader() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20.w),
+      padding: EdgeInsets.all(28.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+            spreadRadius: 0,
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.02),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+            spreadRadius: 0,
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // Group avatar với enhanced design
+          Container(
+            padding: EdgeInsets.all(6.w),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: appTheme.appColor.withOpacity(0.2),
+                width: 2,
+              ),
+            ),
+            child: GroupAvatarWidget(
+              imageUrls: controller.chatDataModel.value?.users?.map((e) => e.avatar ?? '').toList() ?? [],
+              size: 100.w,
+              showBoder: true,
+              colorBoder: Colors.white,
+            ),
+          ),
+
+          SizedBox(height: 16.h),
+
+          // Group name with edit button
+          Obx(() => Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  GroupAvatarWidget(
-                    imageUrls: controller.chatDataModel.value?.users?.map((e) => e.avatar ?? '').toList() ?? [],
-                    size: 100.w,
-                    showBoder: true,
-                    colorBoder: appTheme.allSidesColor,
-                  ),
-                  SizedBox(height: 8.h),
-                  Obx(
-                    () => RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: controller.chatDataModel.value?.name ?? '',
-                            style: StyleThemeData.size20Weight600(),
-                          ),
-                          WidgetSpan(
-                            child: InkWell(
-                              onTap: () {
-                                showUpdateNameGroupDialog(
-                                  groupName: controller.chatDataModel.value?.name ?? '',
-                                  onSubmit: controller.renameGroup,
-                                );
-                              },
-                              borderRadius: BorderRadius.circular(1000),
-                              child: Container(
-                                margin: padding(left: 8.w),
-                                padding: padding(all: 6),
-                                decoration: BoxDecoration(shape: BoxShape.circle, color: appTheme.allSidesColor),
-                                child: const ImageAssetCustom(imagePath: IconsAssets.pen2Icon),
-                              ),
-                            ),
-                            alignment: PlaceholderAlignment.middle,
-                          ),
-                        ],
-                      ),
+                  Flexible(
+                    child: Text(
+                      controller.chatDataModel.value?.name ?? '',
+                      style: StyleThemeData.size20Weight700(color: appTheme.blackColor),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  SizedBox(height: 24.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Flexible(
-                        child: GestureDetector(
-                          onTap: controller.onShowSearchMessage,
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: padding(all: 8),
-                                decoration: BoxDecoration(shape: BoxShape.circle, color: appTheme.allSidesColor),
-                                child: ImageAssetCustom(
-                                    imagePath: IconsAssets.searchIcon, color: appTheme.blackColor, size: 24.w),
-                              ),
-                              SizedBox(height: 4.h),
-                              Text('search_messages'.tr, style: StyleThemeData.size12Weight400()),
-                            ],
+                  SizedBox(width: 8.w),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: appTheme.appColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () {
+                          showUpdateNameGroupDialog(
+                            groupName: controller.chatDataModel.value?.name ?? '',
+                            onSubmit: controller.renameGroup,
+                          );
+                        },
+                        borderRadius: BorderRadius.circular(20),
+                        child: Container(
+                          padding: EdgeInsets.all(8.w),
+                          child: Icon(
+                            Icons.edit_outlined,
+                            size: 16.w,
+                            color: appTheme.appColor,
                           ),
                         ),
                       ),
-                      if (controller.chatDataModel.value?.owner?.id ==
-                          Get.find<ProfileController>().user.value?.id) ...{
-                        SizedBox(width: 24.w),
-                        Flexible(
-                          child: GestureDetector(
-                            onTap: () => Get.toNamed(
-                              Routes.CREATE_GROUP,
-                              arguments: CreateGroupParameter(
-                                type: CreateGroupType.joinGroup,
-                                users: controller.chatDataModel.value?.users,
-                                groupId: controller.chatDataModel.value?.id,
-                              ),
-                            ),
-                            child: Column(
-                              children: [
-                                Container(
-                                  padding: padding(all: 8),
-                                  decoration: BoxDecoration(shape: BoxShape.circle, color: appTheme.allSidesColor),
-                                  child: ImageAssetCustom(
-                                    imagePath: IconsAssets.addGroupIcon,
-                                    color: appTheme.blackColor,
-                                    size: 24.w,
-                                  ),
-                                ),
-                                SizedBox(height: 4.h),
-                                Text('add_member'.tr, style: StyleThemeData.size12Weight400()),
-                              ],
-                            ),
-                          ),
+                    ),
+                  ),
+                ],
+              )),
+
+          SizedBox(height: 8.h),
+
+          // Group info
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+            decoration: BoxDecoration(
+              color: appTheme.appColor.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              'group_members_count'.trParams({'count': '${controller.chatDataModel.value?.users?.length ?? 0}'}),
+              style: StyleThemeData.size12Weight500(color: appTheme.appColor),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickActions() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20.w),
+      padding: EdgeInsets.all(20.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+            spreadRadius: 0,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'quick_actions'.tr,
+            style: StyleThemeData.size16Weight600(color: appTheme.blackColor),
+          ),
+          SizedBox(height: 16.h),
+          IntrinsicHeight(
+            child: Row(
+              children: [
+                // Search messages
+                Expanded(
+                  child: _buildQuickActionItem(
+                    icon: Icons.search,
+                    title: 'search_messages'.tr,
+                    onTap: controller.onShowSearchMessage,
+                  ),
+                ),
+
+                if (controller.chatDataModel.value?.owner?.id == Get.find<ProfileController>().user.value?.id) ...[
+                  SizedBox(width: 16.w),
+                  // Add member
+                  Expanded(
+                    child: _buildQuickActionItem(
+                      icon: Icons.person_add_outlined,
+                      title: 'add_member'.tr,
+                      onTap: () => Get.toNamed(
+                        Routes.CREATE_GROUP,
+                        arguments: CreateGroupParameter(
+                          type: CreateGroupType.joinGroup,
+                          users: controller.chatDataModel.value?.users,
+                          groupId: controller.chatDataModel.value?.id,
                         ),
-                      },
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickActionItem({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: EdgeInsets.all(16.w),
+          decoration: BoxDecoration(
+            color: appTheme.appColor.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: appTheme.appColor.withOpacity(0.1),
+              width: 1,
+            ),
+          ),
+          child: Column(
+            children: [
+              Container(
+                width: 40.w,
+                height: 40.w,
+                decoration: BoxDecoration(
+                  color: appTheme.appColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  icon,
+                  color: appTheme.appColor,
+                  size: 20.w,
+                ),
+              ),
+              SizedBox(height: 8.h),
+              Text(
+                title,
+                style: StyleThemeData.size12Weight500(color: appTheme.blackColor),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOptionsSection() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'group_settings'.tr,
+            style: StyleThemeData.size16Weight600(color: appTheme.blackColor),
+          ),
+
+          SizedBox(height: 16.h),
+
+          // Export PDF
+          _buildOptionCard(
+            icon: Icons.picture_as_pdf_outlined,
+            title: 'export_pdf_file'.tr,
+            subtitle: 'export_chat_history_pdf'.tr,
+            onTap: () async {
+              final ranges = await showCalendarDatePicker2Dialog(
+                context: Get.context!,
+                config: CalendarConfigUtil.getDefaultConfig(Get.context!),
+                dialogSize: Size(Get.width, Get.width),
+                borderRadius: BorderRadius.circular(15),
+                value: [
+                  controller.earningRangeDate.value.start,
+                  controller.earningRangeDate.value.end,
+                ],
+                dialogBackgroundColor: Colors.white,
+              );
+              if (ranges?.isEmpty ?? true) return;
+              controller.changeRangeDate(
+                DateTimeRange(
+                  start: ranges![0]!,
+                  end: ranges.length == 1 ? ranges[0]! : ranges[1]!,
+                ),
+              );
+            },
+          ),
+
+          SizedBox(height: 12.h),
+
+          // Hide messages
+          _buildSwitchCard(
+            icon: Icons.visibility_off_outlined,
+            title: 'hide_message'.tr,
+            subtitle: 'hide_messages_from_preview'.tr,
+            value: controller.isHideMessage.value,
+            onChanged: controller.onHideMessage,
+          ),
+
+          SizedBox(height: 12.h),
+
+          // Media files
+          _buildMediaCard(),
+
+          SizedBox(height: 12.h),
+
+          // View members
+          _buildOptionCard(
+            icon: Icons.group_outlined,
+            title: 'view_group_members'.tr,
+            subtitle: 'manage_group_members'.tr,
+            onTap: () => Get.toNamed(
+              Routes.VIEW_GROUP_MEMBERS,
+              arguments: ViewGroupMembersParameter(chatGroup: controller.chatDataModel.value),
+            ),
+          ),
+
+          SizedBox(height: 24.h),
+
+          // Danger zone
+          _buildDangerZone(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOptionCard({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+            spreadRadius: 0,
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: EdgeInsets.all(16.w),
+            child: Row(
+              children: [
+                Container(
+                  width: 40.w,
+                  height: 40.w,
+                  decoration: BoxDecoration(
+                    color: appTheme.appColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(
+                    icon,
+                    color: appTheme.appColor,
+                    size: 20.w,
+                  ),
+                ),
+                SizedBox(width: 16.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: StyleThemeData.size14Weight600(color: appTheme.blackColor),
+                      ),
+                      SizedBox(height: 2.h),
+                      Text(
+                        subtitle,
+                        style: StyleThemeData.size12Weight400(
+                          color: appTheme.greyColor.withOpacity(0.7),
+                        ),
+                      ),
                     ],
                   ),
-                  SizedBox(height: 24.h),
-                  BorderTitleIconWidget(
-                    icon: IconsAssets.downloadIcon,
-                    title: 'export_pdf_file'.tr,
-                    onTap: () async {
-                      final ranges = await showCalendarDatePicker2Dialog(
-                        context: context,
-                        config: CalendarConfigUtil.getDefaultConfig(context),
-                        dialogSize: Size(Get.width, Get.width),
-                        borderRadius: BorderRadius.circular(15),
-                        value: [
-                          controller.earningRangeDate.value.start,
-                          controller.earningRangeDate.value.end,
-                        ],
-                        dialogBackgroundColor: appTheme.whiteColor,
-                      );
-                      if (ranges?.isEmpty ?? true) return;
-                      controller.changeRangeDate(
-                        DateTimeRange(
-                          start: ranges![0]!,
-                          end: ranges.length == 1 ? ranges[0]! : ranges[1]!,
-                        ),
-                      );
-                    },
-                  ),
-                  SizedBox(height: 8.h),
-                  Obx(
-                    () => Container(
-                      padding: padding(horizontal: 12, vertical: 16),
+                ),
+                Icon(
+                  Icons.chevron_right,
+                  color: appTheme.greyColor.withOpacity(0.5),
+                  size: 20.w,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSwitchCard({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required bool value,
+    required VoidCallback onChanged,
+  }) {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+            spreadRadius: 0,
+          ),
+        ],
+      ),
+      child: Obx(() => Row(
+            children: [
+              Container(
+                width: 40.w,
+                height: 40.w,
+                decoration: BoxDecoration(
+                  color: appTheme.appColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  icon,
+                  color: appTheme.appColor,
+                  size: 20.w,
+                ),
+              ),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: StyleThemeData.size14Weight600(color: appTheme.blackColor),
+                    ),
+                    SizedBox(height: 2.h),
+                    Text(
+                      subtitle,
+                      style: StyleThemeData.size12Weight400(
+                        color: appTheme.greyColor.withOpacity(0.7),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              AppSwitch(
+                isActive: controller.isHideMessage.value,
+                onChange: onChanged,
+              ),
+            ],
+          )),
+    );
+  }
+
+  Widget _buildMediaCard() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+            spreadRadius: 0,
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () => Get.toNamed(
+            Routes.MEDIA_FILES,
+            arguments: MediaFilesParameter(chatId: controller.parameter.chat!.id!),
+          ),
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: EdgeInsets.all(16.w),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      width: 40.w,
+                      height: 40.w,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(width: 1.w, color: appTheme.allSidesColor),
+                        color: appTheme.appColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Row(
+                      child: Icon(
+                        Icons.photo_library_outlined,
+                        color: appTheme.appColor,
+                        size: 20.w,
+                      ),
+                    ),
+                    SizedBox(width: 16.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          ImageAssetCustom(
-                            imagePath: IconsAssets.eyeSlashIcon,
-                            size: 24.w,
-                            color: appTheme.blackColor,
+                          Text(
+                            'images_files'.tr,
+                            style: StyleThemeData.size14Weight600(color: appTheme.blackColor),
                           ),
-                          SizedBox(width: 12.w),
-                          Text('hide_message'.tr, style: StyleThemeData.size14Weight400()),
-                          const Spacer(),
-                          AppSwitch(
-                            isActive: controller.isHideMessage.value,
-                            onChange: controller.onHideMessage,
+                          SizedBox(height: 2.h),
+                          Text(
+                            'view_shared_media_files'.tr,
+                            style: StyleThemeData.size12Weight400(
+                              color: appTheme.greyColor.withOpacity(0.7),
+                            ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                  SizedBox(height: 8.h),
-                  // BorderTitleIconWidget(
-                  //   icon: IconsAssets.chatRoundLineIcon,
-                  //   title: 'manage_instant_messages'.tr,
-                  //   onTap: () => Get.toNamed(
-                  //     Routes.INSTANT_MESSAGE,
-                  //     arguments: InstantMessageParameter(
-                  //       chatId: controller.parameter.chat!.id!,
-                  //       type: InstantMessageType.group,
-                  //     ),
-                  //   ),
-                  // ),
-                  // SizedBox(height: 8.h),
-                  BorderTitleIconWidget(
-                    icon: IconsAssets.galleryBorderIcon,
-                    title: 'images_files'.tr,
-                    onTap: () => Get.toNamed(
-                      Routes.MEDIA_FILES,
-                      arguments: MediaFilesParameter(chatId: controller.parameter.chat!.id!),
+                    Icon(
+                      Icons.chevron_right,
+                      color: appTheme.greyColor.withOpacity(0.5),
+                      size: 20.w,
                     ),
-                    child: Obx(
-                      () => (controller.mediaImageModel.value != null &&
-                              (controller.mediaImageModel.value?.items ?? []).isNotEmpty)
-                          ? Container(
-                              margin: padding(top: 12),
-                              padding: padding(all: 10),
-                              decoration: BoxDecoration(
-                                border: Border.all(width: 1.w, color: appTheme.allSidesColor),
-                              ),
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: [
-                                    ...(controller.mediaImageModel.value?.items ?? []).take(5).map((e) {
-                                      return Padding(
-                                        padding: padding(right: 4),
-                                        child: CustomImageWidget(
-                                          imageUrl: e.fileUrl ?? '',
-                                          size: 47,
-                                          colorBoder: appTheme.allSidesColor,
-                                          showBoder: true,
-                                          borderRadius: 4,
-                                        ),
-                                      );
-                                    }),
-                                    if ((controller.mediaImageModel.value?.items ?? []).length > 5) ...[
-                                      Container(
-                                        padding: padding(all: 16),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(4),
-                                          border: Border.all(width: 1.w, color: appTheme.allSidesColor),
-                                          color: appTheme.blueFFColor,
-                                        ),
-                                        child: ImageAssetCustom(
-                                          imagePath: IconsAssets.arrowRightWhiteIcon,
-                                          color: appTheme.appColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ],
-                                ),
-                              ),
-                            )
-                          : Container(
-                              margin: padding(top: 12),
-                              padding: padding(horizontal: 6, vertical: 16),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                color: appTheme.allSidesColor,
-                              ),
-                              child: Row(
-                                children: [
-                                  const ImageAssetCustom(imagePath: IconsAssets.borderAlbumIcon),
-                                  SizedBox(width: 8.w),
-                                  Flexible(
-                                    child: Text(
-                                      'media_files_in_the_conversation_will_appear_here'.tr,
-                                      style: StyleThemeData.size12Weight400(color: appTheme.grayColor),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                    ),
+                  ],
+                ),
+
+                // Media preview
+                Obx(() => _buildMediaPreview()),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMediaPreview() {
+    if (controller.mediaImageModel.value != null && (controller.mediaImageModel.value?.items ?? []).isNotEmpty) {
+      return Container(
+        margin: EdgeInsets.only(top: 12.h),
+        height: 60.h,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: (controller.mediaImageModel.value?.items ?? []).take(6).length,
+          itemBuilder: (context, index) {
+            if (index == 5 && (controller.mediaImageModel.value?.items ?? []).length > 6) {
+              return Container(
+                width: 60.w,
+                margin: EdgeInsets.only(right: 8.w),
+                decoration: BoxDecoration(
+                  color: appTheme.appColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Center(
+                  child: Text(
+                    '+${(controller.mediaImageModel.value?.items ?? []).length - 5}',
+                    style: StyleThemeData.size12Weight600(color: appTheme.appColor),
                   ),
-                  SizedBox(height: 8.h),
-                  BorderTitleIconWidget(
-                    icon: IconsAssets.userGroupIcon,
-                    title: 'view_group_members'.tr,
-                    onTap: () => Get.toNamed(
-                      Routes.VIEW_GROUP_MEMBERS,
-                      arguments: ViewGroupMembersParameter(chatGroup: controller.chatDataModel.value),
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
-                  BorderTitleIconWidget(
-                    icon: IconsAssets.trashBinIcon,
-                    title: 'delete_conversation'.tr,
-                    color: appTheme.errorColor,
-                    onTap: () {
-                      showCommonDialog(
-                        title: 'are_you_sure_you_want_to_delete_the_conversation'.tr,
-                        onSubmit: controller.deleteChat,
-                      );
-                    },
-                  ),
-                  SizedBox(height: 24.h),
-                ],
+                ),
+              );
+            }
+
+            final item = (controller.mediaImageModel.value?.items ?? [])[index];
+            return Container(
+              margin: EdgeInsets.only(right: 8.w),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: CustomImageWidget(
+                  imageUrl: item.fileUrl ?? '',
+                  size: 60,
+                  borderRadius: 8,
+                ),
+              ),
+            );
+          },
+        ),
+      );
+    }
+
+    return Container(
+      margin: EdgeInsets.only(top: 12.h),
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: appTheme.appColor.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.photo_outlined,
+            color: appTheme.greyColor.withOpacity(0.5),
+            size: 20.w,
+          ),
+          SizedBox(width: 8.w),
+          Expanded(
+            child: Text(
+              'media_files_in_the_conversation_will_appear_here'.tr,
+              style: StyleThemeData.size12Weight400(
+                color: appTheme.greyColor.withOpacity(0.7),
               ),
             ),
-          ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDangerZone() {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: Colors.red.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Colors.red.withOpacity(0.1),
+          width: 1,
         ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                Icons.warning_outlined,
+                color: Colors.red,
+                size: 20.w,
+              ),
+              SizedBox(width: 8.w),
+              Text(
+                'danger_zone'.tr,
+                style: StyleThemeData.size14Weight600(color: Colors.red),
+              ),
+            ],
+          ),
+          SizedBox(height: 12.h),
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {
+                showCommonDialog(
+                  title: 'are_you_sure_you_want_to_delete_the_conversation'.tr,
+                  onSubmit: controller.deleteChat,
+                );
+              },
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                padding: EdgeInsets.all(12.w),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.red.withOpacity(0.3)),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.delete_outline,
+                      color: Colors.red,
+                      size: 20.w,
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'delete_conversation'.tr,
+                            style: StyleThemeData.size14Weight600(color: Colors.red),
+                          ),
+                          Text(
+                            'permanently_delete_group_chat'.tr,
+                            style: StyleThemeData.size12Weight400(
+                              color: Colors.red.withOpacity(0.7),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

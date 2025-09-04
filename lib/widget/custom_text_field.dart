@@ -260,30 +260,15 @@ class CustomTextFieldState extends State<CustomTextField> {
                               prefixIcon: (widget.prefixIcon != null) ? widget.prefixIcon : null,
                               suffixIcon: widget.isPassword
                                   ? IconButton(
-                                      icon:
-                                          SvgPicture.asset(isObscured ? IconsAssets.eyeSlashIcon : IconsAssets.eyeIcon),
+                                      icon: SvgPicture.asset(
+                                        isObscured ? IconsAssets.eyeSlashIcon : IconsAssets.eyeIcon,
+                                        color: appTheme.appColor,
+                                      ),
                                       onPressed: _toggle,
                                     )
-                                  : widget.isStatus
-                                      ? IconButton(
-                                          onPressed: (widget.errorText.isEmpty && validateValue.isNotEmpty)
-                                              ? widget.controller!.clear
-                                              : widget.errorText.isNotEmpty
-                                                  ? widget.controller!.clear
-                                                  : null,
-                                          icon: (widget.errorText.isEmpty && validateValue.isNotEmpty)
-                                              ? SvgPicture.asset(IconsAssets.clearErrorIcon)
-                                              : widget.errorText.isNotEmpty
-                                                  ? SvgPicture.asset(IconsAssets.clearErrorIcon)
-                                                  : (widget.errorText.isEmpty &&
-                                                          validateValue.isEmpty &&
-                                                          statusSalue == true)
-                                                      ? SvgPicture.asset(IconsAssets.checkSuccessIcon)
-                                                      : const SizedBox(),
-                                        )
-                                      : (widget.suffixIcon != null)
-                                          ? widget.suffixIcon
-                                          : null,
+                                  : (widget.suffixIcon != null)
+                                      ? widget.suffixIcon
+                                      : null,
                             ),
                             onSubmitted: (text) => widget.nextFocus != null
                                 ? FocusScope.of(context).requestFocus(widget.nextFocus)

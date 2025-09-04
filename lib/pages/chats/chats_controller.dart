@@ -16,6 +16,7 @@ import 'package:chats/resourese/messages/imessages_repository.dart';
 import 'package:chats/resourese/service/socket_service.dart';
 import 'package:chats/utils/app/pusher_type.dart';
 import 'package:chats/utils/dialog_utils.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -26,9 +27,12 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
 
   ChatsController({required this.chatsRepository, required this.messagesRepository});
 
+  final TextEditingController searchController = TextEditingController();
+
   Rx<ChatsModels?> chatsModels = Rx<ChatsModels?>(null);
 
   var isLoading = false.obs;
+  var isSearch = false.obs;
 
   StreamSubscription? _chatSubscription;
 
@@ -91,6 +95,10 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
     } finally {
       EasyLoading.dismiss();
     }
+  }
+
+  void toggleSearch() {
+    isSearch.value = !isSearch.value;
   }
 
   void onSearchChat(String value) async {
@@ -257,5 +265,6 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
   void dispose() {
     super.dispose();
     _chatSubscription?.cancel();
+    searchController.dispose();
   }
 }

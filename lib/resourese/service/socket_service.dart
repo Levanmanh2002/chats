@@ -21,7 +21,7 @@ class SocketService {
     if (userId == null || userId == 0) return;
 
     socket = IO.io(
-      'https://socket-server.nhattao.tech',
+      'https://socket-server.minichat.asia',
       IO.OptionBuilder().setTransports(['websocket']).disableAutoConnect().build(),
     );
 

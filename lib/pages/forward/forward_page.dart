@@ -7,7 +7,6 @@ import 'package:chats/models/messages/files_models.dart';
 import 'package:chats/pages/forward/forward_controller.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/theme/style/style_theme.dart';
-import 'package:chats/utils/gif_utils.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/chats/attach_file_widget.dart';
 import 'package:chats/widget/check_circle_widget.dart';
@@ -29,7 +28,7 @@ class ForwardPage extends GetWidget<ForwardController> {
       appBar: DefaultAppBar(title: 'forward'.tr),
       body: Obx(
         () => controller.isLoading.isTrue
-            ? Center(child: Image.asset(GifUtils.noDataImageGif))
+            ? Center(child: CircularProgressIndicator(color: appTheme.appColor))
             : Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
