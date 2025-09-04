@@ -88,7 +88,7 @@ class ChastListView extends GetView<MessageController> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
                               color: item.sender?.id == Get.find<ProfileController>().user.value?.id
-                                  ? appTheme.appColor
+                                  ? appTheme.appColor.withOpacity(0.5)
                                   : appTheme.whiteColor,
                             ),
                             child: Text(
