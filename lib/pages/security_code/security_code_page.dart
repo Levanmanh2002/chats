@@ -362,7 +362,7 @@ class SecurityCodePage extends GetWidget<SecurityCodeController> {
 
   Widget _buildLogoutButton() {
     return Obx(
-      () => controller.user.value?.isEnableSecurity == true
+      () => (controller.user.value?.securityCode ?? '').isNotEmpty
           ? Container(
               padding: EdgeInsets.all(20.w),
               decoration: BoxDecoration(
