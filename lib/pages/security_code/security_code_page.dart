@@ -78,7 +78,7 @@ class SecurityCodePage extends GetWidget<SecurityCodeController> {
         ],
       ),
       bottomNavigationBar: Obx(
-        () => controller.user.value?.isEnableSecurity == true
+        () => (controller.user.value?.securityCode ?? '').isNotEmpty
             ? CustomButton(
                 margin: padding(bottom: 36, horizontal: 16, top: 16),
                 buttonText: 'logout_reset_security'.tr,
