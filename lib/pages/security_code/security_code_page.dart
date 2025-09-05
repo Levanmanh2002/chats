@@ -79,7 +79,7 @@ class SecurityCodePage extends GetWidget<SecurityCodeController> {
                 return const SizedBox();
               }),
               Obx(
-                () => controller.user.value?.isEnableSecurity == true
+                () => (controller.user.value?.securityCode ?? '').isNotEmpty
                     ? CustomButton(
                         margin: padding(top: 36, horizontal: 16, bottom: 16),
                         buttonText: 'logout_reset_security'.tr,

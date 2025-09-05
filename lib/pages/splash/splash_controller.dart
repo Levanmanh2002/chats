@@ -31,7 +31,7 @@ class SplashController extends GetxController {
 
         if (response.isOk) {
           user.value = UserModel.fromJson(response.body['data']);
-          if (user.value != null && (user.value?.securityCodeScreen ?? '').isNotEmpty) {
+          if (user.value != null && user.value?.isEnableSecurityScreen == true) {
             Get.offAllNamed(Routes.CONFIRM_SECURITY_CODE);
           } else {
             onToPage();
