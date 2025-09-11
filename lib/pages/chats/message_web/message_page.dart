@@ -46,12 +46,12 @@ class MessageWebPage extends GetWidget<ChatsController> {
               SizedBox(width: 24.w),
               Flexible(
                 child: GestureDetector(
-                  onTap: controller.chatsModels.value?.chat != null
+                  onTap: controller.messageModel.value != null
                       ? () => Get.toNamed(
                             Routes.OPTIONS,
                             arguments: OptionsParameter(
                               user: otherUsers,
-                              chatId: controller.chatsModels.value!.chat!.firstOrNull!.id!,
+                              chatId: controller.messageModel.value!.chat!.id!,
                               isHideMessage: controller.messageModel.value?.chat?.isHide ?? false,
                             ),
                           )
