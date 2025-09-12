@@ -2,6 +2,7 @@ import 'package:chats/main.dart';
 import 'package:chats/pages/dashboard/dashboard_controller.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/icons_assets.dart';
+import 'package:chats/utils/images_assets.dart';
 import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/reponsive/extension.dart';
 import 'package:flutter/material.dart';
@@ -41,16 +42,58 @@ class DashboardPage extends GetWidget<DashboardController> {
                   ),
                   _bottomAppBarItem(
                     context,
+                    icon: IconsAssets.noteIcon,
+                    iconEmpty: IconsAssets.noteIcon,
+                    page: 1,
+                    label: 'notes'.tr,
+                  ),
+                  _bottomAppBarItem(
+                    context,
                     icon: IconsAssets.contacsIcon,
                     iconEmpty: IconsAssets.contactEmptyIcon,
-                    page: 1,
+                    page: 2,
                     label: 'contacts'.tr,
                   ),
+                  // _bottomAppBarItem(
+                  //   context,
+                  //   icon: IconsAssets.chatsIcon,
+                  //   iconEmpty: IconsAssets.chatEmptyIcon,
+                  //   page: 3,
+                  //   label: 'Cloud'.tr,
+                  // ),
+                  InkWell(
+                    onTap: () => controller.goToTab(3),
+                    borderRadius: BorderRadius.circular(999),
+                    child: Container(
+                      padding: padding(all: 8),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: appTheme.appColor,
+                        border: Border.all(color: appTheme.appColor.withOpacity(0.3), width: 2),
+                        boxShadow: [
+                          BoxShadow(
+                            color: appTheme.appColor.withOpacity(0.3),
+                            blurRadius: 8,
+                            spreadRadius: 2,
+                          )
+                        ],
+                      ),
+                      child: Center(
+                        child: ImageAssetCustom(
+                          imagePath: ImagesAssets.cloudImage,
+                          width: 24.w,
+                          height: 24.w,
+                          color: appTheme.whiteColor,
+                        ),
+                      ),
+                    ),
+                  ),
+
                   _bottomAppBarItem(
                     context,
                     icon: IconsAssets.userIcon,
                     iconEmpty: IconsAssets.userEmptyIcon,
-                    page: 2,
+                    page: 4,
                     label: 'personal'.tr,
                   ),
                 ],
@@ -91,6 +134,7 @@ class DashboardPage extends GetWidget<DashboardController> {
                           imagePath: iconEmpty,
                           width: 24.w,
                           height: 24.w,
+                          color: appTheme.grayColor,
                         )
                   : const SizedBox(),
               widget ?? Container(),

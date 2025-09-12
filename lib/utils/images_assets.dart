@@ -19,4 +19,5 @@ class ImagesAssets {
   static const String searchEmptyImage = '${_basePath}search_empty.png';
   static const String underDevelopmentImage = '${_basePath}under_development.png';
   static const String logoTitileWhiteImage = '${_basePath}logo_titile_white.png';
+  static const String cloudImage = '${_basePath}cloud.png';
 }

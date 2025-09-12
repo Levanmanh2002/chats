@@ -229,14 +229,6 @@ class ContactsPage extends GetWidget<ContactsController> {
               value: '${(controller.friendRequest.value?.data ?? []).length}',
               color: Colors.orange,
             ),
-            SizedBox(width: 12.w),
-            _buildStatCard(
-              icon: Icons.online_prediction,
-              label: 'online_now'.tr,
-              value:
-                  '${(controller.contactModel.value?.data ?? []).where((contact) => contact.friend?.isChecked == true).length}',
-              color: Colors.green,
-            ),
           ],
         ));
   }

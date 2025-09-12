@@ -5,13 +5,16 @@ import 'package:flutter/material.dart';
 
 class CalendarConfigUtil {
   static CalendarDatePicker2WithActionButtonsConfig getDefaultConfig(
-    BuildContext context,
-  ) {
+    BuildContext context, {
+    bool singleMode = false,
+    DateTime? firstDate,
+    DateTime? lastDate,
+  }) {
     final dayTextStyle = StyleThemeData.size14Weight400();
     return CalendarDatePicker2WithActionButtonsConfig(
       calendarViewScrollPhysics: const NeverScrollableScrollPhysics(),
       dayTextStyle: dayTextStyle,
-      calendarType: CalendarDatePicker2Type.range,
+      calendarType: singleMode ? CalendarDatePicker2Type.single : CalendarDatePicker2Type.range,
       selectedDayHighlightColor: appTheme.appColor,
       closeDialogOnCancelTapped: true,
       firstDayOfWeek: 1,
@@ -29,6 +32,8 @@ class CalendarConfigUtil {
         }
         return textStyle;
       },
+      firstDate: firstDate,
+      lastDate: lastDate,
     );
   }
 }

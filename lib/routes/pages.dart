@@ -36,6 +36,8 @@ import 'package:chats/pages/message/message_binding.dart';
 import 'package:chats/pages/message/message_page.dart';
 import 'package:chats/pages/message_search/message_search_binding.dart';
 import 'package:chats/pages/message_search/message_search_page.dart';
+import 'package:chats/pages/notes_detail/notes_detail_binding.dart';
+import 'package:chats/pages/notes_detail/notes_detail_page.dart';
 import 'package:chats/pages/options/options_binding.dart';
 import 'package:chats/pages/options/options_page.dart';
 import 'package:chats/pages/otp/otp_binding.dart';
@@ -241,6 +243,11 @@ abstract class AppPages {
       name: Routes.FORWARD,
       page: () => ForwardPage(),
       binding: ForwardBinding(),
+    ),
+    GetPage(
+      name: Routes.NOTES_DETAIL,
+      page: () => NotesDetailPage(),
+      binding: NotesDetailBinding(),
     ),
   ];
 }

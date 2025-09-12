@@ -14,10 +14,12 @@ import 'package:chats/models/socket/group_socket_model.dart';
 import 'package:chats/models/socket/message_socket_model.dart';
 import 'package:chats/models/tickers/tickers_model.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
+import 'package:chats/pages/dashboard/dashboard_controller.dart';
 import 'package:chats/pages/forward/forward_parameter.dart';
 import 'package:chats/pages/group_message/group_message_parameter.dart';
 import 'package:chats/pages/group_message_search/group_message_search_parameter.dart';
 import 'package:chats/pages/group_option/group_option_controller.dart';
+import 'package:chats/pages/message/message_parameter.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/resourese/groups/igroups_repository.dart';
 import 'package:chats/resourese/ibase_repository.dart';
@@ -28,6 +30,7 @@ import 'package:chats/utils/app/pusher_type.dart';
 import 'package:chats/utils/dialog_utils.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -53,6 +56,7 @@ class GroupMessageController extends GetxController {
   var isLoadingSearch = false.obs;
 
   var isTickers = false.obs;
+  var isMoreOptions = false.obs;
 
   Rx<MessageModels?> messageModel = Rx<MessageModels?>(null);
   Rx<MessageModels?> messageSearchModel = Rx<MessageModels?>(null);
@@ -293,6 +297,7 @@ class GroupMessageController extends GetxController {
 
   void pickImages() async {
     isTickers.value = false;
+    isMoreOptions.value = false;
 
     List<XFile>? pickedFiles = await ImagePicker().pickMultiImage();
 
@@ -315,6 +320,7 @@ class GroupMessageController extends GetxController {
 
   void toggleTickers() {
     isTickers.value = !isTickers.value;
+    isMoreOptions.value = false;
     FocusScope.of(Get.context!).unfocus();
   }
 
@@ -785,6 +791,45 @@ class GroupMessageController extends GetxController {
         }
       },
     );
+  }
+
+  void toggleMoreOptions() {
+    isMoreOptions.value = !isMoreOptions.value;
+    isTickers.value = false;
+    FocusScope.of(Get.context!).unfocus();
+  }
+
+  void addQuickMessage() {
+    Get.until((route) => Get.currentRoute == Routes.DASHBOARD);
+    Get.find<DashboardController>().backQuickMessage();
+  }
+
+  void onClound() async {
+    Get.back();
+
+    try {
+      EasyLoading.show(dismissOnTap: false, maskType: EasyLoadingMaskType.clear);
+
+      final profile = Get.find<ProfileController>().user.value;
+      if (profile == null) return;
+      final response = await messagesRepository.getIdChatByUser(profile.id!);
+
+      if (response.statusCode == 200) {
+        Get.toNamed(
+          Routes.MESSAGE,
+          arguments: MessageParameter(chatId: response.body['data']['id'], contact: profile),
+        );
+      } else {
+        Get.toNamed(
+          Routes.MESSAGE,
+          arguments: MessageParameter(contact: profile),
+        );
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      EasyLoading.dismiss();
+    }
   }
 
   @override

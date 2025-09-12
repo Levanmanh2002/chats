@@ -14,6 +14,7 @@ import 'package:chats/models/profile/user_model.dart';
 import 'package:chats/models/socket/message_socket_model.dart';
 import 'package:chats/models/tickers/tickers_model.dart';
 import 'package:chats/pages/chats/chats_controller.dart';
+import 'package:chats/pages/dashboard/dashboard_controller.dart';
 import 'package:chats/pages/forward/forward_parameter.dart';
 import 'package:chats/pages/message/message_parameter.dart';
 import 'package:chats/pages/message_search/message_search_parameter.dart';
@@ -27,6 +28,7 @@ import 'package:chats/utils/app/pusher_type.dart';
 import 'package:chats/utils/dialog_utils.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -57,6 +59,7 @@ class MessageController extends GetxController {
   var isShowSearch = true.obs;
 
   var isTickers = false.obs;
+  var isMoreOptions = false.obs;
 
   Rx<MessageModels?> messageModel = Rx<MessageModels?>(null);
   Rx<MessageModels?> messageSearchModel = Rx<MessageModels?>(null);
@@ -302,6 +305,7 @@ class MessageController extends GetxController {
 
   void pickImages() async {
     isTickers.value = false;
+    isMoreOptions.value = false;
     List<XFile>? pickedFiles = await ImagePicker().pickMultiImage();
 
     if (pickedFiles.isEmpty) return;
@@ -326,11 +330,19 @@ class MessageController extends GetxController {
 
   void toggleTickers() {
     isTickers.value = !isTickers.value;
+    isMoreOptions.value = false;
+    FocusScope.of(Get.context!).unfocus();
+  }
+
+  void toggleMoreOptions() {
+    isMoreOptions.value = !isMoreOptions.value;
+    isTickers.value = false;
     FocusScope.of(Get.context!).unfocus();
   }
 
   Future<void> pickedFile() async {
     isTickers.value = false;
+    isMoreOptions.value = false;
     FocusScope.of(Get.context!).unfocus();
 
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -848,6 +860,47 @@ class MessageController extends GetxController {
         }
       },
     );
+  }
+
+  void addQuickMessage() {
+    Get.until((route) => Get.currentRoute == Routes.DASHBOARD);
+    Get.find<DashboardController>().backQuickMessage();
+  }
+
+  void onClound() async {
+    Get.back();
+
+    try {
+      EasyLoading.show(dismissOnTap: false, maskType: EasyLoadingMaskType.clear);
+
+      final profile = Get.find<ProfileController>().user.value;
+      if (profile == null) return;
+      final response = await messagesRepository.getIdChatByUser(profile.id!);
+
+      if (response.statusCode == 200) {
+        Get.toNamed(
+          Routes.MESSAGE,
+          arguments: MessageParameter(chatId: response.body['data']['id'], contact: profile),
+        );
+      } else {
+        Get.toNamed(
+          Routes.MESSAGE,
+          arguments: MessageParameter(contact: profile),
+        );
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  bool get isCheckUserLocal {
+    final contact = messageModel.value?.chat?.users?.firstWhereOrNull(
+      (e) => e.id != Get.find<ProfileController>().user.value?.id,
+    );
+
+    return contact == null;
   }
 
   @override

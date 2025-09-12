@@ -21,6 +21,8 @@ class AppConstants {
   static String pusherChannel = dotenv.get('PUSHER_CHANNEL');
   static String userType = 'client';
 
+  static const int LIMIT = 10;
+
   static const String notificationChannelId = 'CHATS-NOTIFICATION-CHANNEL-ID';
   static const String rejectCallChannelId = 'CHATS-REJECT-CALL-CHANNEL-ID';
 
@@ -98,4 +100,12 @@ class AppConstants {
 
   static const String checkCallUri = '/api/v1/call/check-call';
   static const String logoutPasscodeUri = '/api/v1/account/logout-passcode';
+
+  static const String noteCategorieUri = '/api/v1/notes/categories';
+  static const String noteListUri = '/api/v1/notes/list';
+  static const String noteUpcomingUri = '/api/v1/notes/upcoming';
+  static String noteDetail(int id) => '/api/v1/notes/$id/show';
+  static const String createNotesUri = '/api/v1/notes/create';
+  static String updateNotesUri(int id) => '/api/v1/notes/$id/update';
+  static String deleteNotesUri(int id) => '/api/v1/notes/$id/delete';
 }

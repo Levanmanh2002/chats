@@ -54,20 +54,22 @@ class BottomSendMessView extends GetView<MessageController> {
                     ),
                   )
                 : controller.messageValue.value.isEmpty
-                    ? Padding(
-                        padding: padding(horizontal: 12),
-                        child: Row(
-                          children: [
+                    ? Row(
+                        children: [
+                          if (controller.isCheckUserLocal != true)
                             IconButton(
-                              onPressed: controller.pickedFile,
-                              icon: ImageAssetCustom(imagePath: IconsAssets.paperclipIcon, color: appTheme.grayColor),
+                              onPressed: controller.toggleMoreOptions,
+                              icon: ImageAssetCustom(imagePath: IconsAssets.menuDotsIcon, color: appTheme.grayColor),
                             ),
-                            IconButton(
-                              onPressed: controller.pickImages,
-                              icon: const ImageAssetCustom(imagePath: IconsAssets.galleryIcon),
-                            ),
-                          ],
-                        ),
+                          IconButton(
+                            onPressed: controller.pickedFile,
+                            icon: ImageAssetCustom(imagePath: IconsAssets.paperclipIcon, color: appTheme.grayColor),
+                          ),
+                          IconButton(
+                            onPressed: controller.pickImages,
+                            icon: const ImageAssetCustom(imagePath: IconsAssets.galleryIcon),
+                          ),
+                        ],
                       )
                     : IconButton(
                         onPressed: controller.onSendMessage,

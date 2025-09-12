@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:chats/constant/date_format_constants.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -187,5 +189,12 @@ extension TimeAgoExtension on String {
       String format = now.year == dateTime.year ? DateConstants.ddMM : DateConstants.ddMMyyyy;
       return DateFormat(format).format(dateTime);
     }
+  }
+}
+
+extension HexColorExtension on String {
+  Color get toColor {
+    final hex = replaceAll('#', '');
+    return Color(int.parse('0xFF$hex'));
   }
 }

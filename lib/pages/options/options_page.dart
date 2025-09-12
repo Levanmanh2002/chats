@@ -3,6 +3,7 @@ import 'package:chats/main.dart';
 import 'package:chats/pages/create_group/create_group_parameter.dart';
 import 'package:chats/pages/media_files/media_files_parameter.dart';
 import 'package:chats/pages/options/options_controller.dart';
+import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/calendar_config_util.dart';
@@ -76,6 +77,8 @@ class OptionsPage extends GetWidget<OptionsController> {
   }
 
   Widget _buildContactHeader() {
+    final profile = Get.find<ProfileController>().user.value;
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20.w),
       padding: EdgeInsets.all(28.w),
@@ -159,34 +162,35 @@ class OptionsPage extends GetWidget<OptionsController> {
                 ),
               ),
               SizedBox(width: 8.w),
-              Container(
-                decoration: BoxDecoration(
-                  color: appTheme.appColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      showUpdateNameGroupDialog(
-                        groupName: controller.parameter.user?.name ?? '',
-                        title: 'change_quick_name'.tr,
-                        content: 'enter_new_name'.tr,
-                        onSubmit: controller.changePrimaryName,
-                      );
-                    },
+              if (controller.parameter.user?.id != profile?.id)
+                Container(
+                  decoration: BoxDecoration(
+                    color: appTheme.appColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                      padding: EdgeInsets.all(8.w),
-                      child: Icon(
-                        Icons.edit_outlined,
-                        size: 16.w,
-                        color: appTheme.appColor,
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        showUpdateNameGroupDialog(
+                          groupName: controller.parameter.user?.name ?? '',
+                          title: 'change_quick_name'.tr,
+                          content: 'enter_new_name'.tr,
+                          onSubmit: controller.changePrimaryName,
+                        );
+                      },
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        padding: EdgeInsets.all(8.w),
+                        child: Icon(
+                          Icons.edit_outlined,
+                          size: 16.w,
+                          color: appTheme.appColor,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
             ],
           ),
 
@@ -232,6 +236,8 @@ class OptionsPage extends GetWidget<OptionsController> {
   }
 
   Widget _buildOptionsSection() {
+    final profile = Get.find<ProfileController>().user.value;
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
@@ -272,37 +278,37 @@ class OptionsPage extends GetWidget<OptionsController> {
           ),
 
           SizedBox(height: 12.h),
+          if (controller.parameter.user?.id != profile?.id) ...[
+            // Hide messages
+            _buildSwitchCard(
+              icon: Icons.visibility_off_outlined,
+              title: 'hide_message'.tr,
+              subtitle: 'hide_messages_from_preview'.tr,
+              value: controller.isHideMessage.value,
+              onChanged: controller.onHideMessage,
+            ),
 
-          // Hide messages
-          _buildSwitchCard(
-            icon: Icons.visibility_off_outlined,
-            title: 'hide_message'.tr,
-            subtitle: 'hide_messages_from_preview'.tr,
-            value: controller.isHideMessage.value,
-            onChanged: controller.onHideMessage,
-          ),
-
-          SizedBox(height: 12.h),
-
+            SizedBox(height: 12.h),
+          ],
           // Media files
           _buildMediaCard(),
+          if (controller.parameter.user?.id != profile?.id) ...[
+            SizedBox(height: 12.h),
 
-          SizedBox(height: 12.h),
-
-          // Create group
-          _buildOptionCard(
-            icon: Icons.group_add_outlined,
-            title: 'create_a_group_with'.trParams({'field': controller.parameter.user?.name ?? ''}),
-            subtitle: 'start_group_with_contact'.tr,
-            onTap: () => Get.toNamed(
-              Routes.CREATE_GROUP,
-              arguments: CreateGroupParameter(
-                type: CreateGroupType.createGroup,
-                user: controller.parameter.user,
+            // Create group
+            _buildOptionCard(
+              icon: Icons.group_add_outlined,
+              title: 'create_a_group_with'.trParams({'field': controller.parameter.user?.name ?? ''}),
+              subtitle: 'start_group_with_contact'.tr,
+              onTap: () => Get.toNamed(
+                Routes.CREATE_GROUP,
+                arguments: CreateGroupParameter(
+                  type: CreateGroupType.createGroup,
+                  user: controller.parameter.user,
+                ),
               ),
             ),
-          ),
-
+          ],
           SizedBox(height: 24.h),
 
           // Danger zone

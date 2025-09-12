@@ -58,6 +58,10 @@ class GroupBottomSendMessView extends GetView<GroupMessageController> {
                         child: Row(
                           children: [
                             IconButton(
+                              onPressed: controller.toggleMoreOptions,
+                              icon: ImageAssetCustom(imagePath: IconsAssets.menuDotsIcon, color: appTheme.grayColor),
+                            ),
+                            IconButton(
                               onPressed: controller.pickedFile,
                               icon: ImageAssetCustom(imagePath: IconsAssets.paperclipIcon, color: appTheme.grayColor),
                             ),
