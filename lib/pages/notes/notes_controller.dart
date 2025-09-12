@@ -122,6 +122,7 @@ class NotesController extends GetxController {
   }
 
   void updateNote({
+    required int id,
     String title = '',
     String content = '',
     required int categoryId,
@@ -130,6 +131,7 @@ class NotesController extends GetxController {
       EasyLoading.show(dismissOnTap: false, maskType: EasyLoadingMaskType.clear);
 
       final response = await notesRepository.updateNotes(
+        id: id,
         title: title,
         content: content,
         categoryId: categoryId,

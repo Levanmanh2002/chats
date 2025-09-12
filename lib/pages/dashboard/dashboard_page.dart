@@ -69,20 +69,12 @@ class DashboardPage extends GetWidget<DashboardController> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: appTheme.appColor,
-                        border: Border.all(color: appTheme.appColor.withOpacity(0.3), width: 2),
-                        boxShadow: [
-                          BoxShadow(
-                            color: appTheme.appColor.withOpacity(0.3),
-                            blurRadius: 8,
-                            spreadRadius: 2,
-                          )
-                        ],
                       ),
                       child: Center(
                         child: ImageAssetCustom(
                           imagePath: ImagesAssets.cloudImage,
-                          width: 24.w,
-                          height: 24.w,
+                          width: 30.w,
+                          height: 30.w,
                           color: appTheme.whiteColor,
                         ),
                       ),

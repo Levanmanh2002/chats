@@ -55,78 +55,87 @@ class MessagePage extends GetWidget<MessageController> {
                             ),
                           )
                       : null,
-                  child: Row(
-                    children: [
-                      Stack(
-                        children: [
-                          CustomImageWidget(
-                            imageUrl: controller.parameter.contact?.avatar ??
-                                (controller.messageModel.value?.chat?.users ?? [])
-                                    .firstWhereOrNull((e) => e.id != Get.find<ProfileController>().user.value?.id)
-                                    ?.avatar ??
-                                '',
-                            size: 46.w,
-                            colorBoder: appTheme.appColor,
-                            showBoder: true,
-                            noImage: false,
-                            name: controller.parameter.contact?.name ??
-                                (controller.messageModel.value?.chat?.users ?? [])
-                                    .firstWhereOrNull((e) => e.id != Get.find<ProfileController>().user.value?.id)
-                                    ?.name ??
-                                '',
-                            isShowNameAvatar: true,
-                          ),
-                          if (controller.parameter.contact?.isChecked == true)
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: Container(
-                                padding: padding(all: 2),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: appTheme.greenColor,
-                                ),
-                                child: Icon(
-                                  Icons.check,
-                                  size: 10.w,
-                                  color: appTheme.whiteColor,
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                      SizedBox(width: 8.w),
-                      Flexible(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                  child: controller.isCheckUserLocal == true
+                      ? Text(
+                          'Cloud của tôi'.tr,
+                          style: StyleThemeData.size18Weight600(color: appTheme.whiteColor),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        )
+                      : Row(
                           children: [
-                            Text(
-                              controller.parameter.contact?.name ??
-                                  (controller.messageModel.value?.chat?.users ?? [])
-                                      .firstWhereOrNull((e) => e.id != Get.find<ProfileController>().user.value?.id)
-                                      ?.name ??
-                                  'not_updated_yet'.tr,
-                              style: StyleThemeData.size14Weight600(color: appTheme.whiteColor),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                            Stack(
+                              children: [
+                                CustomImageWidget(
+                                  imageUrl: controller.parameter.contact?.avatar ??
+                                      (controller.messageModel.value?.chat?.users ?? [])
+                                          .firstWhereOrNull((e) => e.id != Get.find<ProfileController>().user.value?.id)
+                                          ?.avatar ??
+                                      '',
+                                  size: 46.w,
+                                  colorBoder: appTheme.appColor,
+                                  showBoder: true,
+                                  noImage: false,
+                                  name: controller.parameter.contact?.name ??
+                                      (controller.messageModel.value?.chat?.users ?? [])
+                                          .firstWhereOrNull((e) => e.id != Get.find<ProfileController>().user.value?.id)
+                                          ?.name ??
+                                      '',
+                                  isShowNameAvatar: true,
+                                ),
+                                if (controller.parameter.contact?.isChecked == true)
+                                  Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: Container(
+                                      padding: padding(all: 2),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: appTheme.greenColor,
+                                      ),
+                                      child: Icon(
+                                        Icons.check,
+                                        size: 10.w,
+                                        color: appTheme.whiteColor,
+                                      ),
+                                    ),
+                                  ),
+                              ],
                             ),
-                            SizedBox(height: 2.h),
-                            Text(
-                              controller.parameter.contact?.lastOnline?.timeAgo ??
-                                  (controller.messageModel.value?.chat?.users ?? [])
-                                      .firstWhereOrNull((e) => e.id != Get.find<ProfileController>().user.value?.id)
-                                      ?.lastOnline
-                                      ?.timeAgo ??
-                                  '',
-                              style: StyleThemeData.size10Weight400(color: appTheme.whiteColor),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                            SizedBox(width: 8.w),
+                            Flexible(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    controller.parameter.contact?.name ??
+                                        (controller.messageModel.value?.chat?.users ?? [])
+                                            .firstWhereOrNull(
+                                                (e) => e.id != Get.find<ProfileController>().user.value?.id)
+                                            ?.name ??
+                                        'not_updated_yet'.tr,
+                                    style: StyleThemeData.size14Weight600(color: appTheme.whiteColor),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(height: 2.h),
+                                  Text(
+                                    controller.parameter.contact?.lastOnline?.timeAgo ??
+                                        (controller.messageModel.value?.chat?.users ?? [])
+                                            .firstWhereOrNull(
+                                                (e) => e.id != Get.find<ProfileController>().user.value?.id)
+                                            ?.lastOnline
+                                            ?.timeAgo ??
+                                        '',
+                                    style: StyleThemeData.size10Weight400(color: appTheme.whiteColor),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
                 ),
               ),
             ],

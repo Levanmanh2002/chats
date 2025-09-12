@@ -208,6 +208,7 @@ void showNotesDialog(NotesController controller, {NoteItem? note}) {
                               onPressed: isValid
                                   ? () => note != null
                                       ? controller.updateNote(
+                                          id: note.id!,
                                           title: titleValue.value,
                                           content: contentValue.value,
                                           categoryId: selectedCategoryLocal.value!.id!,

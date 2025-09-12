@@ -90,6 +90,7 @@ class NotesRepository extends INotesRepository {
 
   @override
   Future<Response> updateNotes({
+    required int id,
     String title = '',
     String content = '',
     required int categoryId,
@@ -102,7 +103,7 @@ class NotesRepository extends INotesRepository {
         'category_id': categoryId,
         'reminder_at': reminderAt,
       };
-      final result = await clientPostData(AppConstants.updateNotesUri(categoryId), body);
+      final result = await clientPostData(AppConstants.updateNotesUri(id), body);
 
       return result;
     } catch (error) {

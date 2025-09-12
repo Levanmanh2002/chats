@@ -14,6 +14,7 @@ abstract class INotesRepository extends IBaseRepository {
     String reminderAt = '',
   });
   Future<Response> updateNotes({
+    required int id,
     String title = '',
     String content = '',
     required int categoryId,
