@@ -55,7 +55,7 @@ app.*.map.json
 pubspec.lock
 
 # Flutter generated files
-*.g.dart
+# *.g.dart
 
 
 # Large media files

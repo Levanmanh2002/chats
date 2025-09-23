@@ -4,14 +4,14 @@
 <dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>com.admin.chats</string>
+		<string>com.chat.app.tamnc</string>
 	</array>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>MiniChat</string>
+	<string>WorkHub</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -31,15 +31,15 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Ứng dụng cần truy cập camera để chụp ảnh và gửi trong cuộc trò chuyện.</string>
+	<string>Ứng dụng cần truy cập camera để chụp ảnh và gửi ảnh.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Chúng tôi sử dụng quyền truy cập vào danh bạ để bạn có thể mời bạn bè, chia sẻ nội dung hoặc kết nối với những người có trong danh bạ của bạn. Ví dụ: bạn có thể chọn một liên hệ để gửi lời mời tham gia ứng dụng.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Ứng dụng cần sử dụng Microphone để gọi thoại</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Ứng dụng cần truy cập thư viện ảnh để chọn ảnh và gửi trong cuộc trò chuyện.</string>
+	<string>Ứng dụng cần truy cập thư viện ảnh để chọn ảnh và gửi ảnh.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Ứng dụng cần truy cập thư viện ảnh để chọn ảnh và gửi trong cuộc trò chuyện.</string>
+	<string>Ứng dụng cần truy cập thư viện ảnh để chọn ảnh và gửi ảnh.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

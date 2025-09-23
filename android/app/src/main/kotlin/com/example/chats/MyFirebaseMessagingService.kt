@@ -1,4 +1,4 @@
-package com.admin.chats;
+package com.chat.app.tamnc;
 
 import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
