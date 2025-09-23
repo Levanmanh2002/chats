@@ -337,7 +337,7 @@ class HomePage extends GetWidget<HomeController> {
                   ),
                 ),
                 Text(
-                  data.currentMonth,
+                  'Tháng ${controller.currentMonth.value}/${controller.currentYear.value}',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,

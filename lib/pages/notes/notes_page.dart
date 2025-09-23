@@ -22,7 +22,7 @@ class NotesPage extends GetWidget<NotesController> {
         backgroundColor: appTheme.appColor,
         elevation: 0,
         title: Text(
-          'notes'.tr,
+          'work'.tr,
           style: StyleThemeData.size20Weight700(color: appTheme.whiteColor),
         ),
         centerTitle: false,
