@@ -2,6 +2,7 @@ import 'package:chats/models/tickers/tickers_model.dart';
 import 'package:chats/pages/call/call_parameter.dart';
 import 'package:chats/pages/chats/chats_page.dart';
 import 'package:chats/pages/contacts/contacts_page.dart';
+import 'package:chats/pages/home/home_page.dart';
 import 'package:chats/pages/message/message_parameter.dart';
 import 'package:chats/pages/notes/notes_page.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
@@ -27,10 +28,11 @@ class DashboardController extends GetxController {
   RxInt unreadcount = 0.obs;
 
   List<Widget> pages = [
-    ChatsPage(),
+    HomePage(),
     NotesPage(),
-    ContactsPage(),
     const SizedBox(),
+    ChatsPage(),
+    ContactsPage(),
     ProfilePage(),
   ];
 
@@ -81,8 +83,8 @@ class DashboardController extends GetxController {
   }
 
   void goToTab(int page) {
-    if (page == 3) {
-      onClound();
+    if (page == 2) {
+      onClound(); 
       return;
     }
     currentPage.value = page;

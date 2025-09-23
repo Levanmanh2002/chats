@@ -4,6 +4,7 @@ import 'package:chats/models/notes/note_model.dart';
 import 'package:chats/resourese/notes/inotes_repository.dart';
 import 'package:chats/utils/dialog_utils.dart';
 import 'package:chats/widget/dialog/show_notes_dialog.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
@@ -18,7 +19,10 @@ class NotesController extends GetxController {
   Rx<NoteModels?> notes = Rx<NoteModels?>(null);
   Rx<NoteModels?> upcomingNotes = Rx<NoteModels?>(null);
 
-  Rx<DateTime?> selectedReminder = Rx<DateTime?>(null);
+  Rx<DateTime?> selectedStartReminder = Rx<DateTime?>(null);
+  Rx<DateTime?> selectedEndReminder = Rx<DateTime?>(null);
+
+  Rx<DateTimeRange?> filterDate = Rx<DateTimeRange?>(null);
 
   @override
   void onInit() {
@@ -46,6 +50,8 @@ class NotesController extends GetxController {
       final response = await notesRepository.getNotesList(
         page: isRefresh ? 1 : (notes.value?.page ?? 1) + 1,
         categoryId: selectedCategory.value?.id ?? categories.first.id!,
+        startDate: filterDate.value?.start.toyyyyMMdd ?? '',
+        endDate: filterDate.value?.end.toyyyyMMdd ?? '',
       );
 
       if (response.statusCode == 200) {
@@ -104,12 +110,15 @@ class NotesController extends GetxController {
         title: title,
         content: content,
         categoryId: categoryId,
-        reminderAt: selectedReminder.value?.toyyyyMMdd ?? '',
+        startDate: selectedStartReminder.value?.toyyyyMMdd ?? '',
+        endDate: selectedEndReminder.value?.toyyyyMMdd ?? '',
       );
 
       if (response.isOk) {
         DialogUtils.showSuccessDialog(response.body['message']);
         await fetchNotes();
+        selectedStartReminder.value = null;
+        selectedEndReminder.value = null;
         Get.back();
       } else {
         DialogUtils.showErrorDialog(response.body['message']);
@@ -135,12 +144,15 @@ class NotesController extends GetxController {
         title: title,
         content: content,
         categoryId: categoryId,
-        reminderAt: selectedReminder.value?.toyyyyMMdd ?? '',
+        startDate: selectedStartReminder.value?.toyyyyMMdd ?? '',
+        endDate: selectedEndReminder.value?.toyyyyMMdd ?? '',
       );
 
       if (response.statusCode == 200) {
         DialogUtils.showSuccessDialog(response.body['message']);
         await fetchNotes();
+        selectedStartReminder.value = null;
+        selectedEndReminder.value = null;
         Get.back();
       } else {
         DialogUtils.showErrorDialog(response.body['message']);
@@ -169,16 +181,27 @@ class NotesController extends GetxController {
     selectedCategory.value = category;
   }
 
-  void selectReminder(DateTime? date) {
-    selectedReminder.value = date;
+  void selectStartReminder(DateTime? date) {
+    selectedStartReminder.value = date;
+  }
+
+  void selectEndReminder(DateTime? date) {
+    selectedEndReminder.value = date;
   }
 
   void showAddNote() {
+    selectedStartReminder.value = null;
+    selectedEndReminder.value = null;
     showNotesDialog(this);
   }
 
   void showEditNote(NoteItem? note) {
     showNotesDialog(this, note: note);
+  }
+
+  void selectFilterDate(DateTimeRange? range) {
+    filterDate.value = range;
+    fetchNotes();
   }
 
   void removeNote(int noteId) {

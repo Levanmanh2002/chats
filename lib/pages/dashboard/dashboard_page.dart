@@ -35,34 +35,21 @@ class DashboardPage extends GetWidget<DashboardController> {
                 children: [
                   _bottomAppBarItem(
                     context,
-                    icon: IconsAssets.chatsIcon,
-                    iconEmpty: IconsAssets.chatEmptyIcon,
+                    icon: IconsAssets.documentIcon,
+                    iconEmpty: IconsAssets.documentIcon,
                     page: 0,
-                    label: 'message'.tr,
+                    label: 'Dashboard'.tr,
                   ),
+                  
                   _bottomAppBarItem(
                     context,
                     icon: IconsAssets.noteIcon,
                     iconEmpty: IconsAssets.noteIcon,
                     page: 1,
-                    label: 'notes'.tr,
+                    label: 'work'.tr,
                   ),
-                  _bottomAppBarItem(
-                    context,
-                    icon: IconsAssets.contacsIcon,
-                    iconEmpty: IconsAssets.contactEmptyIcon,
-                    page: 2,
-                    label: 'contacts'.tr,
-                  ),
-                  // _bottomAppBarItem(
-                  //   context,
-                  //   icon: IconsAssets.chatsIcon,
-                  //   iconEmpty: IconsAssets.chatEmptyIcon,
-                  //   page: 3,
-                  //   label: 'Cloud'.tr,
-                  // ),
                   InkWell(
-                    onTap: () => controller.goToTab(3),
+                    onTap: () => controller.goToTab(2),
                     borderRadius: BorderRadius.circular(999),
                     child: Container(
                       padding: padding(all: 8),
@@ -80,12 +67,34 @@ class DashboardPage extends GetWidget<DashboardController> {
                       ),
                     ),
                   ),
+                  _bottomAppBarItem(
+                    context,
+                    icon: IconsAssets.chatsIcon,
+                    iconEmpty: IconsAssets.chatEmptyIcon,
+                    page: 3,
+                    label: 'Trò chuyện'.tr,
+                  ),
+                  _bottomAppBarItem(
+                    context,
+                    icon: IconsAssets.contacsIcon,
+                    iconEmpty: IconsAssets.contactEmptyIcon,
+                    page: 4,
+                    label: 'contacts'.tr,
+                  ),
+                  // _bottomAppBarItem(
+                  //   context,
+                  //   icon: IconsAssets.chatsIcon,
+                  //   iconEmpty: IconsAssets.chatEmptyIcon,
+                  //   page: 3,
+                  //   label: 'Cloud'.tr,
+                  // ),
+                  
 
                   _bottomAppBarItem(
                     context,
                     icon: IconsAssets.userIcon,
                     iconEmpty: IconsAssets.userEmptyIcon,
-                    page: 4,
+                    page: 5,
                     label: 'personal'.tr,
                   ),
                 ],

@@ -51,6 +51,15 @@ class NoteItem {
 
   NoteCategoryModel? category;
 
+  @JsonKey(name: "start_date")
+  String startDate;
+
+  @JsonKey(name: "end_date")
+  String endDate;
+
+  @JsonKey(name: "created_at")
+  String createdAt;
+
   NoteItem({
     this.id,
     this.title = '',
@@ -58,6 +67,9 @@ class NoteItem {
     this.reminderAt = '',
     this.description,
     this.category,
+    this.startDate = '',
+    this.endDate = '',
+    this.createdAt = '',
   });
 
   factory NoteItem.fromJson(Map<String, dynamic> json) => _$NoteItemFromJson(json);

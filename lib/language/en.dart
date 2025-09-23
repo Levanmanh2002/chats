@@ -388,4 +388,9 @@ const Map<String, String> en = {
   "time": "Time",
   "edit": "Edit",
   "quick_and_message": "Quick\nmessage",
+  "work": "Work",
+  "start_date": "Start Date",
+  "end_date": "End Date",
+  "select_start_date": "Select start date",
+  "select_end_date": "Select end date",
 };

@@ -1,3 +1,4 @@
+import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:chats/extension/date_time_extension.dart';
 import 'package:chats/extension/string_extension.dart';
 import 'package:chats/main.dart';
@@ -7,6 +8,7 @@ import 'package:chats/pages/notes/view/tab_note_view.dart';
 import 'package:chats/pages/notes_detail/notes_detail_parameter.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
+import 'package:chats/utils/calendar_config_util.dart';
 import 'package:chats/widget/line_widget.dart';
 import 'package:chats/widget/reponsive/extension.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +27,69 @@ class NotesPage extends GetWidget<NotesController> {
         ),
         centerTitle: false,
         actions: [
+          Obx(
+            () => Stack(
+              children: [
+                InkWell(
+                  onTap: () async {
+                    final ranges = await showCalendarDatePicker2Dialog(
+                      context: Get.context!,
+                      config: CalendarConfigUtil.getDefaultConfig(Get.context!),
+                      dialogSize: Size(Get.width, Get.width),
+                      borderRadius: BorderRadius.circular(15),
+                      value: [
+                        controller.filterDate.value?.start,
+                        controller.filterDate.value?.end,
+                      ],
+                      dialogBackgroundColor: appTheme.whiteColor,
+                    );
+                    if (ranges != null) {
+                      controller.selectFilterDate(
+                        DateTimeRange(
+                          start: ranges[0]!,
+                          end: ranges.length == 1 ? ranges[0]! : ranges[1]!,
+                        ),
+                      );
+                    }
+                  },
+                  splashColor: appTheme.transparentColor,
+                  hoverColor: appTheme.transparentColor,
+                  highlightColor: appTheme.transparentColor,
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    margin: padding(right: 8.w, top: 8.h, bottom: 8.h),
+                    decoration: BoxDecoration(
+                      color: appTheme.whiteColor.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.filter_list,
+                        color: appTheme.whiteColor,
+                        size: 20.w,
+                      ),
+                      onPressed: null,
+                    ),
+                  ),
+                ),
+                if (controller.filterDate.value != null)
+                  Positioned(
+                    right: 4.w,
+                    top: 4.h,
+                    child: Container(
+                      width: 16.w,
+                      height: 16.w,
+                      decoration: BoxDecoration(
+                        color: appTheme.redColor,
+                        borderRadius: BorderRadius.circular(50),
+                        border: Border.all(color: appTheme.whiteColor, width: 2),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          SizedBox(width: 8.w),
           Container(
             margin: padding(right: 8.w, top: 8.h, bottom: 8.h),
             decoration: BoxDecoration(
@@ -116,7 +181,7 @@ class NotesPage extends GetWidget<NotesController> {
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            e.reminderAt.toddMMyyyyDash,
+                            '${e.startDate.toDayMonthYear} - ${e.endDate.toDayMonthYear}',
                             style: StyleThemeData.size14Weight400(color: appTheme.greyColor),
                           ),
                         ],

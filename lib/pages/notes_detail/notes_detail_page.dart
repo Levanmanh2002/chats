@@ -60,13 +60,21 @@ class NotesDetailPage extends GetWidget<NotesDetailController> {
                             style: StyleThemeData.size14Weight400(color: appTheme.appColor),
                           ),
                         ),
-                        const Spacer(),
-                        SizedBox(width: 12.w),
-                        Icon(Icons.access_time, size: 16.w, color: appTheme.greyColor),
-                        SizedBox(width: 4.w),
-                        Text(
-                          controller.noteDetail.value?.reminderAt.toddMMyyyyDash ?? '',
-                          style: StyleThemeData.size14Weight400(color: appTheme.greyColor),
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              SizedBox(width: 12.w),
+                              Icon(Icons.access_time, size: 16.w, color: appTheme.greyColor),
+                              SizedBox(width: 4.w),
+                              Flexible(
+                                child: Text(
+                                  '${controller.noteDetail.value?.startDate.toDayMonthYear} - ${controller.noteDetail.value?.endDate.toDayMonthYear}',
+                                  style: StyleThemeData.size14Weight400(color: appTheme.greyColor),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),

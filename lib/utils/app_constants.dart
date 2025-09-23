@@ -108,4 +108,8 @@ class AppConstants {
   static const String createNotesUri = '/api/v1/notes/create';
   static String updateNotesUri(int id) => '/api/v1/notes/$id/update';
   static String deleteNotesUri(int id) => '/api/v1/notes/$id/delete';
+
+  static const String dashboardOverviewUri = '/api/v1/dashboard/overview';
+  static const String workStatusChartUri = '/api/v1/dashboard/work-status-chart';
+  static String calendarDataUri(int month, int year) => '/api/v1/dashboard/calendar?month=$month&year=$year';
 }

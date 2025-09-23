@@ -8,6 +8,8 @@ import 'package:chats/resourese/dashboard/dashboard_repository.dart';
 import 'package:chats/resourese/dashboard/idashboard_repository.dart';
 import 'package:chats/resourese/groups/groups_repository.dart';
 import 'package:chats/resourese/groups/igroups_repository.dart';
+import 'package:chats/resourese/home/home_repository.dart';
+import 'package:chats/resourese/home/ihome_repository.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
 import 'package:chats/resourese/messages/messages_repository.dart';
 import 'package:chats/resourese/notes/inotes_repository.dart';
@@ -27,6 +29,7 @@ class AppService {
     Get.put<IChatsRepository>(ChatsRepository());
     Get.put<IGroupsRepository>(GroupsRepository());
     Get.put<INotesRepository>(NotesRepository());
+    Get.put<IHomeRepository>(HomeRepository());
     Get.put(SocketService());
   }
 }

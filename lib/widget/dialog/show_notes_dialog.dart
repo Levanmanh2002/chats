@@ -31,7 +31,12 @@ void showNotesDialog(NotesController controller, {NoteItem? note}) {
     // controller.selectCategory(controller.categories.firstWhere((element) => element.id == note.id));
     selectedCategoryLocal.value = controller.categories
         .firstWhere((element) => element.id == note.category?.id, orElse: () => controller.categories.first);
-    controller.selectReminder(note.reminderAt.toDateTime);
+    if (note.startDate.isNotEmpty) {
+      controller.selectStartReminder(note.startDate.toDateTime);
+    }
+    if (note.endDate.isNotEmpty) {
+      controller.selectEndReminder(note.endDate.toDateTime);
+    }
   }
 
   showDialog(
@@ -106,6 +111,10 @@ void showNotesDialog(NotesController controller, {NoteItem? note}) {
                       ),
                       style: StyleThemeData.size14Weight400(),
                       borderRadius: BorderRadius.circular(12),
+                      hint: Text(
+                        'select_category'.tr,
+                        style: StyleThemeData.size14Weight400(color: appTheme.hintColor),
+                      ),
                       items: controller.categories.map((NoteCategoryModel category) {
                         return DropdownMenuItem(
                           value: category,
@@ -129,12 +138,46 @@ void showNotesDialog(NotesController controller, {NoteItem? note}) {
                     // ),
                     CustomTextField(
                       controller: TextEditingController(
-                        text: controller.selectedReminder.value != null
-                            ? controller.selectedReminder.value.toddMMyyyyDash
+                        text: controller.selectedStartReminder.value != null
+                            ? controller.selectedStartReminder.value.toddMMyyyyDash
                             : '',
                       ),
-                      titleText: 'time'.tr,
-                      hintText: 'choose_reminder_time'.tr,
+                      titleText: 'start_date'.tr,
+                      hintText: 'select_start_date'.tr,
+                      showLine: false,
+                      colorBorder: appTheme.silverColor,
+                      readOnly: true,
+                      showBorder: true,
+                      onTap: () async {
+                        final ranges = await showCalendarDatePicker2Dialog(
+                          context: Get.context!,
+                          config: CalendarConfigUtil.getDefaultConfig(
+                            Get.context!,
+                            singleMode: true,
+                            firstDate: DateTime.now().add(const Duration(days: 1)),
+                            lastDate: controller.selectedEndReminder.value,
+                          ),
+                          dialogSize: Size(Get.width, Get.width),
+                          borderRadius: BorderRadius.circular(15),
+                          value: [
+                            controller.selectedStartReminder.value ?? DateTime.now().add(const Duration(days: 1)),
+                          ],
+                          dialogBackgroundColor: appTheme.whiteColor,
+                        );
+                        if (ranges != null) {
+                          controller.selectStartReminder(ranges.isNotEmpty ? ranges.first : null);
+                        }
+                      },
+                    ),
+                    SizedBox(height: 12.w),
+                    CustomTextField(
+                      controller: TextEditingController(
+                        text: controller.selectedEndReminder.value != null
+                            ? controller.selectedEndReminder.value.toddMMyyyyDash
+                            : '',
+                      ),
+                      titleText: 'end_date'.tr,
+                      hintText: 'select_end_date'.tr,
                       showLine: false,
                       colorBorder: appTheme.silverColor,
                       readOnly: true,
@@ -150,12 +193,12 @@ void showNotesDialog(NotesController controller, {NoteItem? note}) {
                           dialogSize: Size(Get.width, Get.width),
                           borderRadius: BorderRadius.circular(15),
                           value: [
-                            controller.selectedReminder.value ?? DateTime.now(),
+                            controller.selectedEndReminder.value ?? DateTime.now().add(const Duration(days: 1)),
                           ],
                           dialogBackgroundColor: appTheme.whiteColor,
                         );
                         if (ranges != null) {
-                          controller.selectReminder(ranges.first);
+                          controller.selectEndReminder(ranges.isNotEmpty ? ranges.first : null);
                         }
                       },
                     ),
@@ -201,7 +244,8 @@ void showNotesDialog(NotesController controller, {NoteItem? note}) {
                             final isValid = titleValue.value.isNotEmpty &&
                                 contentValue.value.isNotEmpty &&
                                 selectedCategoryLocal.value != null &&
-                                controller.selectedReminder.value != null;
+                                controller.selectedStartReminder.value != null &&
+                                controller.selectedEndReminder.value != null;
 
                             return CustomButton(
                               buttonText: note != null ? 'edit'.tr : 'create'.tr,

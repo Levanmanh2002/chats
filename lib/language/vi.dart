@@ -233,7 +233,7 @@ const Map<String, String> vi = {
   "security": "Bảo mật",
   "chat_settings": "Cài đặt chat",
   "support_help": "Hỗ trợ & Trợ giúp",
-  "danger_zone": "Vùng nguy hiểm",
+  "danger_zone": "Cảnh báo",
   "manage_your_profile_info": "Quản lý thông tin hồ sơ của bạn",
   "sync_your_phone_contacts": "Đồng bộ danh bạ điện thoại",
   "change_your_password": "Thay đổi mật khẩu tài khoản",
@@ -386,4 +386,9 @@ const Map<String, String> vi = {
   "time": "Thời gian",
   "edit": "Chỉnh sửa",
   "quick_and_message": "Tin nhắn\nnhanh",
+  "work": "Công việc",
+  "start_date": "Ngày bắt đầu",
+  "end_date": "Ngày kết thúc",
+  "select_start_date": "Chọn ngày bắt đầu",
+  "select_end_date": "Chọn ngày kết thúc",
 };

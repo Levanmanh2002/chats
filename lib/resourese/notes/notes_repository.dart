@@ -16,11 +16,24 @@ class NotesRepository extends INotesRepository {
   }
 
   @override
-  Future<Response> getNotesList({int page = 1, required int categoryId}) async {
+  Future<Response> getNotesList({
+    int page = 1,
+    required int categoryId,
+    String startDate = '',
+    String endDate = '',
+  }) async {
     try {
-      final result = await clientGetData(
-        '${AppConstants.noteListUri}?page=$page&limit=${AppConstants.LIMIT}&category_id=$categoryId',
-      );
+      Response<dynamic> result;
+
+      if (startDate.isNotEmpty && endDate.isNotEmpty) {
+        result = await clientGetData(
+          '${AppConstants.noteListUri}?page=$page&limit=${AppConstants.LIMIT}&category_id=$categoryId&date_to=$startDate&date_from=$endDate',
+        );
+      } else {
+        result = await clientGetData(
+          '${AppConstants.noteListUri}?page=$page&limit=${AppConstants.LIMIT}&category_id=$categoryId',
+        );
+      }
 
       return result;
     } catch (error) {
@@ -58,14 +71,16 @@ class NotesRepository extends INotesRepository {
     String title = '',
     String content = '',
     required int categoryId,
-    String reminderAt = '',
+    String startDate = '',
+    String endDate = '',
   }) async {
     try {
       final body = {
         'title': title,
         'content': content,
         'category_id': categoryId,
-        'reminder_at': reminderAt,
+        "start_date": startDate,
+        "end_date": endDate,
       };
       final result = await clientPostData(AppConstants.createNotesUri, body);
 
@@ -94,14 +109,16 @@ class NotesRepository extends INotesRepository {
     String title = '',
     String content = '',
     required int categoryId,
-    String reminderAt = '',
+    String startDate = '',
+    String endDate = '',
   }) async {
     try {
       final body = {
         'title': title,
         'content': content,
         'category_id': categoryId,
-        'reminder_at': reminderAt,
+        "start_date": startDate,
+        "end_date": endDate,
       };
       final result = await clientPostData(AppConstants.updateNotesUri(id), body);
 
