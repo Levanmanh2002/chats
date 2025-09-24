@@ -1,5 +1,6 @@
 import 'package:chats/main.dart';
 import 'package:chats/pages/dashboard/dashboard_controller.dart';
+import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/utils/images_assets.dart';
@@ -40,7 +41,7 @@ class DashboardPage extends GetWidget<DashboardController> {
                     page: 0,
                     label: 'Dashboard'.tr,
                   ),
-                  
+
                   _bottomAppBarItem(
                     context,
                     icon: IconsAssets.noteIcon,
@@ -67,13 +68,14 @@ class DashboardPage extends GetWidget<DashboardController> {
                       ),
                     ),
                   ),
-                  _bottomAppBarItem(
-                    context,
-                    icon: IconsAssets.chatsIcon,
-                    iconEmpty: IconsAssets.chatEmptyIcon,
-                    page: 3,
-                    label: 'Trò chuyện'.tr,
-                  ),
+                  if (Get.find<ProfileController>().systemSetting.value?.hideChat == true)
+                    _bottomAppBarItem(
+                      context,
+                      icon: IconsAssets.chatsIcon,
+                      iconEmpty: IconsAssets.chatEmptyIcon,
+                      page: 3,
+                      label: 'Trò chuyện'.tr,
+                    ),
                   _bottomAppBarItem(
                     context,
                     icon: IconsAssets.contacsIcon,
@@ -88,7 +90,6 @@ class DashboardPage extends GetWidget<DashboardController> {
                   //   page: 3,
                   //   label: 'Cloud'.tr,
                   // ),
-                  
 
                   _bottomAppBarItem(
                     context,

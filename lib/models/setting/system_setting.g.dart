@@ -19,6 +19,7 @@ SystemSetting _$SystemSettingFromJson(Map<String, dynamic> json) =>
       androidVersion: json['android_version'] as String?,
       androidUrl: json['android_url'] as String?,
       documentUrl: json['document_url'] as String?,
+      hideChat: json['hide_chat'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$SystemSettingToJson(SystemSetting instance) =>
@@ -30,6 +31,7 @@ Map<String, dynamic> _$SystemSettingToJson(SystemSetting instance) =>
       'android_version': instance.androidVersion,
       'android_url': instance.androidUrl,
       'document_url': instance.documentUrl,
+      'hide_chat': instance.hideChat,
     };
 
 Pusher _$PusherFromJson(Map<String, dynamic> json) => Pusher(
