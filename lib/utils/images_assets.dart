@@ -20,4 +20,5 @@ class ImagesAssets {
   static const String underDevelopmentImage = '${_basePath}under_development.png';
   static const String logoTitileWhiteImage = '${_basePath}logo_titile_white.png';
   static const String cloudImage = '${_basePath}cloud.png';
+  static const String imageBotIcon = '${_basePath}image_bot.png';
 }

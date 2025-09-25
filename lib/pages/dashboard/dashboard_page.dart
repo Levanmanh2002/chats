@@ -2,6 +2,7 @@ import 'package:chats/main.dart';
 import 'package:chats/pages/dashboard/dashboard_controller.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/theme/style/style_theme.dart';
+import 'package:chats/utils/app_constants.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/utils/images_assets.dart';
 import 'package:chats/widget/image_asset_custom.dart';
@@ -68,7 +69,8 @@ class DashboardPage extends GetWidget<DashboardController> {
                       ),
                     ),
                   ),
-                  if (Get.find<ProfileController>().systemSetting.value?.hideChat == true)
+                  if (AppConstants.isHideFeatureApp == true &&
+                      Get.find<ProfileController>().systemSetting.value?.hideChat == true)
                     _bottomAppBarItem(
                       context,
                       icon: IconsAssets.chatsIcon,
@@ -76,13 +78,14 @@ class DashboardPage extends GetWidget<DashboardController> {
                       page: 3,
                       label: 'Trò chuyện'.tr,
                     ),
-                  _bottomAppBarItem(
-                    context,
-                    icon: IconsAssets.contacsIcon,
-                    iconEmpty: IconsAssets.contactEmptyIcon,
-                    page: 4,
-                    label: 'contacts'.tr,
-                  ),
+                  if (AppConstants.isHideFeatureApp == true)
+                    _bottomAppBarItem(
+                      context,
+                      icon: IconsAssets.contacsIcon,
+                      iconEmpty: IconsAssets.contactEmptyIcon,
+                      page: 4,
+                      label: 'contacts'.tr,
+                    ),
                   // _bottomAppBarItem(
                   //   context,
                   //   icon: IconsAssets.chatsIcon,
@@ -91,6 +94,14 @@ class DashboardPage extends GetWidget<DashboardController> {
                   //   label: 'Cloud'.tr,
                   // ),
 
+                  if (AppConstants.isHideFeatureApp == false)
+                    _bottomAppBarItem(
+                      context,
+                      icon: IconsAssets.userGroupTwoIcon,
+                      iconEmpty: IconsAssets.userGroupTwoIcon,
+                      page: 6,
+                      label: 'AI BOT'.tr,
+                    ),
                   _bottomAppBarItem(
                     context,
                     icon: IconsAssets.userIcon,

@@ -36,6 +36,9 @@ NoteItem _$NoteItemFromJson(Map<String, dynamic> json) => NoteItem(
           : NoteCategoryModel.fromJson(
               json['category'] as Map<String, dynamic>),
       startDate: json['start_date'] as String? ?? '',
+      noteStatus: json['status'] == null
+          ? null
+          : NoteStatus.fromJson(json['status'] as Map<String, dynamic>),
       endDate: json['end_date'] as String? ?? '',
       createdAt: json['created_at'] as String? ?? '',
     );
@@ -48,6 +51,18 @@ Map<String, dynamic> _$NoteItemToJson(NoteItem instance) => <String, dynamic>{
       'description': instance.description,
       'category': instance.category,
       'start_date': instance.startDate,
+      'status': instance.noteStatus,
       'end_date': instance.endDate,
       'created_at': instance.createdAt,
+    };
+
+NoteStatus _$NoteStatusFromJson(Map<String, dynamic> json) => NoteStatus(
+      key: json['key'] as String?,
+      name: json['name'] as String?,
+    );
+
+Map<String, dynamic> _$NoteStatusToJson(NoteStatus instance) =>
+    <String, dynamic>{
+      'key': instance.key,
+      'name': instance.name,
     };

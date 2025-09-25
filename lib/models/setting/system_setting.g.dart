@@ -20,6 +20,9 @@ SystemSetting _$SystemSettingFromJson(Map<String, dynamic> json) =>
       androidUrl: json['android_url'] as String?,
       documentUrl: json['document_url'] as String?,
       hideChat: json['hide_chat'] as bool? ?? false,
+      bot: json['bot'] == null
+          ? null
+          : BotModel.fromJson(json['bot'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$SystemSettingToJson(SystemSetting instance) =>
@@ -32,6 +35,7 @@ Map<String, dynamic> _$SystemSettingToJson(SystemSetting instance) =>
       'android_url': instance.androidUrl,
       'document_url': instance.documentUrl,
       'hide_chat': instance.hideChat,
+      'bot': instance.bot,
     };
 
 Pusher _$PusherFromJson(Map<String, dynamic> json) => Pusher(
@@ -56,4 +60,16 @@ PageData _$PageDataFromJson(Map<String, dynamic> json) => PageData(
 Map<String, dynamic> _$PageDataToJson(PageData instance) => <String, dynamic>{
       'policy': instance.policy,
       'contact_phone': instance.contactPhone,
+    };
+
+BotModel _$BotModelFromJson(Map<String, dynamic> json) => BotModel(
+      id: (json['id'] as num?)?.toInt(),
+      name: json['name'] as String?,
+      avatar: json['avatar'] as String?,
+    );
+
+Map<String, dynamic> _$BotModelToJson(BotModel instance) => <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'avatar': instance.avatar,
     };

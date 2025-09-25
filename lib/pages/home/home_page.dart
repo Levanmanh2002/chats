@@ -39,10 +39,10 @@ class HomePage extends GetWidget<HomeController> {
           colors: [Color(0xFF4CAF50), Color(0xFF66BB6A)],
         ),
       ),
-      child: const SafeArea(
+      child: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
+          padding: padding(vertical: 12, horizontal: 16),
+          child: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -135,7 +135,7 @@ class HomePage extends GetWidget<HomeController> {
         width: double.infinity,
         decoration: BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(4),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),

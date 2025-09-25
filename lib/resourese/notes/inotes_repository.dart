@@ -26,5 +26,6 @@ abstract class INotesRepository extends IBaseRepository {
     required int categoryId,
     String startDate = '',
     String endDate = '',
+    String status = '',
   });
 }

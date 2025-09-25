@@ -77,9 +77,12 @@ class MessageController extends GetxController {
   Rx<TickersModel?> selectedTickers = Rx<TickersModel?>(null);
   Rx<XFile?> selectedFile = Rx<XFile?>(null);
 
+  var isChatBOT = false.obs;
+
   @override
   void onInit() async {
     super.onInit();
+    isChatBOT.value = parameter.isChatBOT == true;
     if (parameter.chatId != null) {
       fetchChatList(parameter.chatId!);
     }
@@ -449,7 +452,9 @@ class MessageController extends GetxController {
   ) async {
     try {
       Map<String, String> params = {
-        "receiver_id": parameter.contact?.id.toString() ?? '',
+        "receiver_id": parameter.isChatBOT == true
+            ? Get.find<ProfileController>().systemSetting.value?.bot?.id.toString() ?? ''
+            : parameter.contact?.id.toString() ?? '',
         if (messageText.isNotEmpty) "message": messageText,
         if (reply != null) "reply_message_id": reply.id.toString(),
         if (sticker != null) "sticker_id": sticker.id.toString(),

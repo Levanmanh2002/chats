@@ -1,6 +1,5 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:chats/extension/date_time_extension.dart';
-import 'package:chats/extension/string_extension.dart';
 import 'package:chats/main.dart';
 import 'package:chats/models/notes/note_model.dart';
 import 'package:chats/pages/notes/notes_controller.dart';
@@ -8,6 +7,7 @@ import 'package:chats/pages/notes/view/tab_note_view.dart';
 import 'package:chats/pages/notes_detail/notes_detail_parameter.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
+import 'package:chats/utils/app/note_status.dart';
 import 'package:chats/utils/calendar_config_util.dart';
 import 'package:chats/widget/line_widget.dart';
 import 'package:chats/widget/reponsive/extension.dart';
@@ -128,10 +128,12 @@ class NotesPage extends GetWidget<NotesController> {
               ),
             ),
             Expanded(
-              child: Column(
-                children: (controller.notes.value?.notes ?? []).map((e) {
-                  return _itemNoteWidget(e);
-                }).toList(),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: (controller.notes.value?.notes ?? []).map((e) {
+                    return _itemNoteWidget(e);
+                  }).toList(),
+                ),
               ),
             ),
           ],
@@ -153,20 +155,20 @@ class NotesPage extends GetWidget<NotesController> {
             padding: padding(horizontal: 16, vertical: 8),
             child: Row(
               children: [
-                Container(
-                  width: 48.w,
-                  height: 48.w,
-                  decoration: BoxDecoration(
-                    color: (e.category?.color ?? '').toColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    Icons.note,
-                    color: (e.category?.color ?? '').toColor,
-                    size: 24.w,
-                  ),
-                ),
-                SizedBox(width: 12.w),
+                // Container(
+                //   width: 48.w,
+                //   height: 48.w,
+                //   decoration: BoxDecoration(
+                //     color: (e.category?.color ?? '').toColor.withOpacity(0.1),
+                //     borderRadius: BorderRadius.circular(12),
+                //   ),
+                //   child: Icon(
+                //     Icons.note,
+                //     color: (e.category?.color ?? '').toColor,
+                //     size: 24.w,
+                //   ),
+                // ),
+                // SizedBox(width: 12.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,6 +207,18 @@ class NotesPage extends GetWidget<NotesController> {
                             child: Text(
                               e.category?.name ?? '',
                               style: StyleThemeData.size14Weight400(color: appTheme.appColor),
+                            ),
+                          ),
+                          SizedBox(width: 8.w),
+                          Container(
+                            padding: padding(vertical: 4, horizontal: 8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              color: e.noteStatus?.key?.backgroundColor,
+                            ),
+                            child: Text(
+                              e.noteStatus?.name ?? '',
+                              style: StyleThemeData.size14Weight400(color: e.noteStatus?.key?.color),
                             ),
                           ),
                           const Spacer(),

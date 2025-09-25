@@ -7,6 +7,7 @@ import 'package:chats/pages/security_code/security_code_parameter.dart';
 import 'package:chats/pages/update_profile/update_profile_parameter.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
+import 'package:chats/utils/app_constants.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/utils/launch_url.dart';
 import 'package:chats/widget/dialog/show_delete_account_dialog.dart';
@@ -42,17 +43,17 @@ class ProfilePage extends GetWidget<ProfileController> {
                       arguments: UpdateProfileParameter(user: controller.user.value),
                     ),
                   ),
-                  _buildMenuItemData(
-                    icon: IconsAssets.smartPhoneIcon,
-                    title: 'sync_contacts'.tr,
-                    subtitle: 'sync_your_phone_contacts'.tr,
-                    onTap: () => Get.toNamed(Routes.SYNC_CONTACT),
-                  ),
+                  if (AppConstants.isHideFeatureApp == true)
+                    _buildMenuItemData(
+                      icon: IconsAssets.smartPhoneIcon,
+                      title: 'sync_contacts'.tr,
+                      subtitle: 'sync_your_phone_contacts'.tr,
+                      onTap: () => Get.toNamed(Routes.SYNC_CONTACT),
+                    ),
                 ],
               ),
 
               SizedBox(height: 24.h),
-
               _buildMenuSection(
                 title: 'security'.tr,
                 items: [
@@ -62,15 +63,16 @@ class ProfilePage extends GetWidget<ProfileController> {
                     subtitle: 'change_your_password'.tr,
                     onTap: () => Get.toNamed(Routes.UPDATE_PASSWORD),
                   ),
-                  _buildMenuItemData(
-                    icon: IconsAssets.keyholeIcon,
-                    title: 'security_code_configuration'.tr,
-                    subtitle: 'setup_security_code'.tr,
-                    onTap: () => Get.toNamed(
-                      Routes.SECURITY_CODE,
-                      arguments: SecurityCodeParameter(user: controller.user.value),
+                  if (AppConstants.isHideFeatureApp == true)
+                    _buildMenuItemData(
+                      icon: IconsAssets.keyholeIcon,
+                      title: 'security_code_configuration'.tr,
+                      subtitle: 'setup_security_code'.tr,
+                      onTap: () => Get.toNamed(
+                        Routes.SECURITY_CODE,
+                        arguments: SecurityCodeParameter(user: controller.user.value),
+                      ),
                     ),
-                  ),
                   _buildMenuItemData(
                     icon: IconsAssets.keyholeIcon,
                     title: 'screen_lock_code_configuration'.tr,
@@ -85,24 +87,25 @@ class ProfilePage extends GetWidget<ProfileController> {
 
               SizedBox(height: 24.h),
 
-              _buildMenuSection(
-                title: 'chat_settings'.tr,
-                items: [
-                  _buildMenuItemData(
-                    icon: IconsAssets.chatRoundLineIcon,
-                    title: 'manage_instant_messages'.tr,
-                    subtitle: 'customize_message_settings'.tr,
-                    onTap: () => Get.toNamed(
-                      Routes.INSTANT_MESSAGE,
-                      arguments: InstantMessageParameter(
-                        type: InstantMessageType.noChatId,
+              if (AppConstants.isHideFeatureApp == true) ...[
+                _buildMenuSection(
+                  title: 'chat_settings'.tr,
+                  items: [
+                    _buildMenuItemData(
+                      icon: IconsAssets.chatRoundLineIcon,
+                      title: 'manage_instant_messages'.tr,
+                      subtitle: 'customize_message_settings'.tr,
+                      onTap: () => Get.toNamed(
+                        Routes.INSTANT_MESSAGE,
+                        arguments: InstantMessageParameter(
+                          type: InstantMessageType.noChatId,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-
-              SizedBox(height: 24.h),
+                  ],
+                ),
+                SizedBox(height: 24.h),
+              ],
 
               _buildMenuSection(
                 title: 'support_help'.tr,

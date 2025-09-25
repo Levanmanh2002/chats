@@ -16,19 +16,20 @@ class BottomSendMessView extends GetView<MessageController> {
       color: appTheme.whiteColor,
       child: Row(
         children: [
-          InkWell(
-            onTap: controller.toggleTickers,
-            child: Padding(
-              padding: padding(left: 12),
-              child: const ImageAssetCustom(imagePath: IconsAssets.emojiIcon),
+          if (controller.parameter.isChatBOT == false)
+            InkWell(
+              onTap: controller.toggleTickers,
+              child: Padding(
+                padding: padding(left: 12),
+                child: const ImageAssetCustom(imagePath: IconsAssets.emojiIcon),
+              ),
             ),
-          ),
           Flexible(
             child: TextFormField(
               controller: controller.messageController,
               textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
-                hintText: 'message'.tr,
+                hintText: controller.parameter.isChatBOT == true ? 'Nhập câu hỏi của bạn' : 'message'.tr,
                 border: InputBorder.none,
                 contentPadding: padding(all: 12),
                 hintStyle: StyleThemeData.size14Weight400(color: appTheme.grayColor),
@@ -54,23 +55,26 @@ class BottomSendMessView extends GetView<MessageController> {
                     ),
                   )
                 : controller.messageValue.value.isEmpty
-                    ? Row(
-                        children: [
-                          if (controller.isCheckUserLocal != true)
-                            IconButton(
-                              onPressed: controller.toggleMoreOptions,
-                              icon: ImageAssetCustom(imagePath: IconsAssets.menuDotsIcon, color: appTheme.grayColor),
-                            ),
-                          IconButton(
-                            onPressed: controller.pickedFile,
-                            icon: ImageAssetCustom(imagePath: IconsAssets.paperclipIcon, color: appTheme.grayColor),
-                          ),
-                          IconButton(
-                            onPressed: controller.pickImages,
-                            icon: const ImageAssetCustom(imagePath: IconsAssets.galleryIcon),
-                          ),
-                        ],
-                      )
+                    ? controller.parameter.isChatBOT == true
+                        ? const SizedBox()
+                        : Row(
+                            children: [
+                              if (controller.isCheckUserLocal != true)
+                                IconButton(
+                                  onPressed: controller.toggleMoreOptions,
+                                  icon:
+                                      ImageAssetCustom(imagePath: IconsAssets.menuDotsIcon, color: appTheme.grayColor),
+                                ),
+                              IconButton(
+                                onPressed: controller.pickedFile,
+                                icon: ImageAssetCustom(imagePath: IconsAssets.paperclipIcon, color: appTheme.grayColor),
+                              ),
+                              IconButton(
+                                onPressed: controller.pickImages,
+                                icon: const ImageAssetCustom(imagePath: IconsAssets.galleryIcon),
+                              ),
+                            ],
+                          )
                     : IconButton(
                         onPressed: controller.onSendMessage,
                         icon: const ImageAssetCustom(imagePath: IconsAssets.sendIcon),

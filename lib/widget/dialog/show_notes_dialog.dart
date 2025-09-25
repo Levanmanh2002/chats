@@ -5,6 +5,7 @@ import 'package:chats/models/notes/note_category_model.dart';
 import 'package:chats/models/notes/note_model.dart';
 import 'package:chats/pages/notes/notes_controller.dart';
 import 'package:chats/theme/style/style_theme.dart';
+import 'package:chats/utils/app/note_status.dart';
 import 'package:chats/utils/calendar_config_util.dart';
 import 'package:chats/widget/custom_boder_button_widget.dart';
 import 'package:chats/widget/custom_button.dart';
@@ -19,6 +20,7 @@ void showNotesDialog(NotesController controller, {NoteItem? note}) {
   final TextEditingController contentController = TextEditingController();
 
   Rx<NoteCategoryModel?> selectedCategoryLocal = Rx<NoteCategoryModel?>(null);
+  Rx<NoteStatusEnum?> selectedStatusLocal = Rx<NoteStatusEnum?>(null);
 
   var titleValue = ''.obs;
   var contentValue = ''.obs;
@@ -36,6 +38,9 @@ void showNotesDialog(NotesController controller, {NoteItem? note}) {
     }
     if (note.endDate.isNotEmpty) {
       controller.selectEndReminder(note.endDate.toDateTime);
+    }
+    if (note.noteStatus != null) {
+      selectedStatusLocal.value = NoteStatusEnum.values.firstWhere((e) => e.name == note.noteStatus?.key);
     }
   }
 
@@ -202,6 +207,53 @@ void showNotesDialog(NotesController controller, {NoteItem? note}) {
                         }
                       },
                     ),
+                    if (note != null) ...[
+                      SizedBox(height: 12.w),
+                      Padding(
+                        padding: padding(bottom: 8),
+                        child: Row(
+                          children: [
+                            Text('Trạng thái'.tr, style: StyleThemeData.size12Weight600()),
+                            SizedBox(width: 4.w),
+                            Text('*', style: StyleThemeData.size12Weight600(color: appTheme.errorColor)),
+                          ],
+                        ),
+                      ),
+                      DropdownButtonFormField<NoteStatusEnum>(
+                        value: selectedStatusLocal.value,
+                        dropdownColor: appTheme.whiteColor,
+                        icon: Icon(Icons.keyboard_arrow_down, size: 24.w),
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(style: BorderStyle.solid, width: 1.w, color: appTheme.silverColor),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(style: BorderStyle.solid, width: 1.w, color: appTheme.silverColor),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(style: BorderStyle.solid, width: 1.w, color: appTheme.silverColor),
+                          ),
+                        ),
+                        style: StyleThemeData.size14Weight400(),
+                        borderRadius: BorderRadius.circular(12),
+                        hint: Text(
+                          'Trạng thái'.tr,
+                          style: StyleThemeData.size14Weight400(color: appTheme.hintColor),
+                        ),
+                        items: NoteStatusEnum.values.map((NoteStatusEnum status) {
+                          return DropdownMenuItem(
+                            value: status,
+                            child: Text(status.dislayName.isNotEmpty ? status.dislayName : 'Chọn trạng thái'.tr),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          selectedStatusLocal.value = value;
+                        },
+                      ),
+                    ],
                     // DropdownButtonFormField<String>(
                     //   value: selectedReminder.value,
                     //   dropdownColor: appTheme.whiteColor,
@@ -256,6 +308,7 @@ void showNotesDialog(NotesController controller, {NoteItem? note}) {
                                           title: titleValue.value,
                                           content: contentValue.value,
                                           categoryId: selectedCategoryLocal.value!.id!,
+                                          status: selectedStatusLocal.value,
                                         )
                                       : controller.createNote(
                                           title: titleValue.value,

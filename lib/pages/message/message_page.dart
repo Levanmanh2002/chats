@@ -17,6 +17,7 @@ import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/custom_image_widget.dart';
+import 'package:chats/widget/default_app_bar.dart';
 import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/reponsive/extension.dart';
 import 'package:chats/widget/search_appbar.dart';
@@ -29,167 +30,180 @@ class MessagePage extends GetWidget<MessageController> {
     return Obx(
       () => Scaffold(
         backgroundColor: appTheme.blueFFColor,
-        appBar: SearchAppbar(
-          backgroundColor: appTheme.appColor,
-          isShowBack: true,
-          isOffSearch: true,
-          sizeAction: 16.w,
-          toggleNotifier: controller.isShowSearch.value,
-          onSubmitted: controller.onSearchMessage,
-          isLoadingSearch: controller.isLoadingSearch.isTrue,
-          widgetTitle: Row(
-            children: [
-              IconButton(
-                onPressed: Get.back,
-                icon: ImageAssetCustom(imagePath: IconsAssets.arrowLeftIcon, color: appTheme.whiteColor, size: 24.w),
-              ),
-              Flexible(
-                child: GestureDetector(
-                  onTap: controller.parameter.chatId != null
-                      ? () => Get.toNamed(
-                            Routes.OPTIONS,
-                            arguments: OptionsParameter(
-                              user: controller.parameter.contact,
-                              chatId: controller.parameter.chatId!,
-                              isHideMessage: controller.messageModel.value?.chat?.isHide ?? false,
-                            ),
-                          )
-                      : null,
-                  child: controller.isLoading.isTrue
-                      ? const SizedBox()
-                      : controller.isCheckUserLocal == true
-                          ? Text(
-                              'Cloud của tôi'.tr,
-                              style: StyleThemeData.size18Weight600(color: appTheme.whiteColor),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            )
-                          : Row(
-                              children: [
-                                Stack(
-                                  children: [
-                                    CustomImageWidget(
-                                      imageUrl: controller.parameter.contact?.avatar ??
-                                          (controller.messageModel.value?.chat?.users ?? [])
-                                              .firstWhereOrNull(
-                                                  (e) => e.id != Get.find<ProfileController>().user.value?.id)
-                                              ?.avatar ??
-                                          '',
-                                      size: 46.w,
-                                      colorBoder: appTheme.appColor,
-                                      showBoder: true,
-                                      noImage: false,
-                                      name: controller.parameter.contact?.name ??
-                                          (controller.messageModel.value?.chat?.users ?? [])
-                                              .firstWhereOrNull(
-                                                  (e) => e.id != Get.find<ProfileController>().user.value?.id)
-                                              ?.name ??
-                                          '',
-                                      isShowNameAvatar: true,
-                                    ),
-                                    if (controller.parameter.contact?.isChecked == true)
-                                      Positioned(
-                                        bottom: 0,
-                                        right: 0,
-                                        child: Container(
-                                          padding: padding(all: 2),
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: appTheme.greenColor,
-                                          ),
-                                          child: Icon(
-                                            Icons.check,
-                                            size: 10.w,
-                                            color: appTheme.whiteColor,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                                SizedBox(width: 8.w),
-                                Flexible(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+        appBar: controller.isChatBOT.value == true
+            ? DefaultAppBar(
+                backgroundColor: appTheme.appColor,
+                colorIcon: appTheme.whiteColor,
+                title: 'AI BOT'.tr,
+                colorTitle: appTheme.whiteColor,
+              )
+            : SearchAppbar(
+                backgroundColor: appTheme.appColor,
+                isShowBack: true,
+                isOffSearch: true,
+                sizeAction: 16.w,
+                toggleNotifier: controller.isShowSearch.value,
+                onSubmitted: controller.onSearchMessage,
+                isLoadingSearch: controller.isLoadingSearch.isTrue,
+                widgetTitle: Row(
+                  children: [
+                    IconButton(
+                      onPressed: Get.back,
+                      icon: ImageAssetCustom(
+                        imagePath: IconsAssets.arrowLeftIcon,
+                        color: appTheme.whiteColor,
+                        size: 24.w,
+                      ),
+                    ),
+                    Flexible(
+                      child: GestureDetector(
+                        onTap: controller.parameter.chatId != null
+                            ? () => Get.toNamed(
+                                  Routes.OPTIONS,
+                                  arguments: OptionsParameter(
+                                    user: controller.parameter.contact,
+                                    chatId: controller.parameter.chatId!,
+                                    isHideMessage: controller.messageModel.value?.chat?.isHide ?? false,
+                                    isCheckUserLocal: controller.isCheckUserLocal == true,
+                                  ),
+                                )
+                            : null,
+                        child: controller.isLoading.isTrue
+                            ? const SizedBox()
+                            : controller.isCheckUserLocal == true
+                                ? Text(
+                                    'Cloud của tôi'.tr,
+                                    style: StyleThemeData.size18Weight600(color: appTheme.whiteColor),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                : Row(
                                     children: [
-                                      Text(
-                                        controller.parameter.contact?.name ??
-                                            (controller.messageModel.value?.chat?.users ?? [])
-                                                .firstWhereOrNull(
-                                                    (e) => e.id != Get.find<ProfileController>().user.value?.id)
-                                                ?.name ??
-                                            'not_updated_yet'.tr,
-                                        style: StyleThemeData.size14Weight600(color: appTheme.whiteColor),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
+                                      Stack(
+                                        children: [
+                                          CustomImageWidget(
+                                            imageUrl: controller.parameter.contact?.avatar ??
+                                                (controller.messageModel.value?.chat?.users ?? [])
+                                                    .firstWhereOrNull(
+                                                        (e) => e.id != Get.find<ProfileController>().user.value?.id)
+                                                    ?.avatar ??
+                                                '',
+                                            size: 46.w,
+                                            colorBoder: appTheme.appColor,
+                                            showBoder: true,
+                                            noImage: false,
+                                            name: controller.parameter.contact?.name ??
+                                                (controller.messageModel.value?.chat?.users ?? [])
+                                                    .firstWhereOrNull(
+                                                        (e) => e.id != Get.find<ProfileController>().user.value?.id)
+                                                    ?.name ??
+                                                '',
+                                            isShowNameAvatar: true,
+                                          ),
+                                          if (controller.parameter.contact?.isChecked == true)
+                                            Positioned(
+                                              bottom: 0,
+                                              right: 0,
+                                              child: Container(
+                                                padding: padding(all: 2),
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  color: appTheme.greenColor,
+                                                ),
+                                                child: Icon(
+                                                  Icons.check,
+                                                  size: 10.w,
+                                                  color: appTheme.whiteColor,
+                                                ),
+                                              ),
+                                            ),
+                                        ],
                                       ),
-                                      SizedBox(height: 2.h),
-                                      Text(
-                                        controller.parameter.contact?.lastOnline?.timeAgo ??
-                                            (controller.messageModel.value?.chat?.users ?? [])
-                                                .firstWhereOrNull(
-                                                    (e) => e.id != Get.find<ProfileController>().user.value?.id)
-                                                ?.lastOnline
-                                                ?.timeAgo ??
-                                            '',
-                                        style: StyleThemeData.size10Weight400(color: appTheme.whiteColor),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
+                                      SizedBox(width: 8.w),
+                                      Flexible(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              controller.parameter.contact?.name ??
+                                                  (controller.messageModel.value?.chat?.users ?? [])
+                                                      .firstWhereOrNull(
+                                                          (e) => e.id != Get.find<ProfileController>().user.value?.id)
+                                                      ?.name ??
+                                                  'not_updated_yet'.tr,
+                                              style: StyleThemeData.size14Weight600(color: appTheme.whiteColor),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            SizedBox(height: 2.h),
+                                            Text(
+                                              controller.parameter.contact?.lastOnline?.timeAgo ??
+                                                  (controller.messageModel.value?.chat?.users ?? [])
+                                                      .firstWhereOrNull(
+                                                          (e) => e.id != Get.find<ProfileController>().user.value?.id)
+                                                      ?.lastOnline
+                                                      ?.timeAgo ??
+                                                  '',
+                                              style: StyleThemeData.size10Weight400(color: appTheme.whiteColor),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
-                                ),
-                              ],
-                            ),
-                ),
-              ),
-            ],
-          ),
-          action: controller.isCheckUserLocal != true
-              ? IconButton(
-                  style: IconButton.styleFrom(
-                    minimumSize: Size.zero,
-                    fixedSize: Size(36.w, 36.w),
-                    padding: EdgeInsets.zero,
-                    alignment: Alignment.center,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    maximumSize: Size(36.w, 36.w),
-                  ),
-                  icon: ImageAssetCustom(imagePath: IconsAssets.phoneIcon, color: appTheme.whiteColor),
-                  onPressed: () {
-                    final contact = controller.messageModel.value?.chat?.users?.firstWhereOrNull(
-                      (e) => e.id != Get.find<ProfileController>().user.value?.id,
-                    );
-
-                    if (contact == null) return;
-
-                    Get.toNamed(
-                      Routes.CALL,
-                      arguments: CallCallParameter(
-                        id: contact.id ?? DateTime.now().millisecondsSinceEpoch,
-                        messageId: controller.messageModel.value!.chat!.id!,
-                        callId: null,
-                        name: contact.name ?? '',
-                        avatar: contact.avatar ?? '',
-                        channel: 'channel',
-                        type: CallType.call,
                       ),
-                    );
-                  },
-                )
-              : const SizedBox(),
-        ),
+                    ),
+                  ],
+                ),
+                action: controller.isCheckUserLocal != true
+                    ? IconButton(
+                        style: IconButton.styleFrom(
+                          minimumSize: Size.zero,
+                          fixedSize: Size(36.w, 36.w),
+                          padding: EdgeInsets.zero,
+                          alignment: Alignment.center,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          maximumSize: Size(36.w, 36.w),
+                        ),
+                        icon: ImageAssetCustom(imagePath: IconsAssets.phoneIcon, color: appTheme.whiteColor),
+                        onPressed: () {
+                          final contact = controller.messageModel.value?.chat?.users?.firstWhereOrNull(
+                            (e) => e.id != Get.find<ProfileController>().user.value?.id,
+                          );
+
+                          if (contact == null) return;
+
+                          Get.toNamed(
+                            Routes.CALL,
+                            arguments: CallCallParameter(
+                              id: contact.id ?? DateTime.now().millisecondsSinceEpoch,
+                              messageId: controller.messageModel.value!.chat!.id!,
+                              callId: null,
+                              name: contact.name ?? '',
+                              avatar: contact.avatar ?? '',
+                              channel: 'channel',
+                              type: CallType.call,
+                            ),
+                          );
+                        },
+                      )
+                    : const SizedBox(),
+              ),
         body: Obx(
           () => Column(
             children: [
               // MessageHeaderView(),
-              if (controller.isCheckUserLocal != true) ...[
-                (controller.messageModel.value?.isFriend != true) ? StatusFriendView() : const SizedBox(),
-                (controller.isLoading.isFalse &&
-                        controller.messageModel.value == null &&
-                        (controller.messageModel.value?.listMessages ?? []).isEmpty)
-                    ? InfoContactWidget(contact: controller.parameter.contact)
-                    : const SizedBox(),
-              ],
+              if (controller.parameter.isChatBOT == false)
+                if (controller.isCheckUserLocal != true) ...[
+                  (controller.messageModel.value?.isFriend != true) ? StatusFriendView() : const SizedBox(),
+                  (controller.isLoading.isFalse &&
+                          controller.messageModel.value == null &&
+                          (controller.messageModel.value?.listMessages ?? []).isEmpty)
+                      ? InfoContactWidget(contact: controller.parameter.contact)
+                      : const SizedBox(),
+                ],
               Expanded(
                 child: Stack(
                   children: [

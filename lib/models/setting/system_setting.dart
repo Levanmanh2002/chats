@@ -27,6 +27,8 @@ class SystemSetting {
   @JsonKey(name: 'hide_chat')
   bool hideChat;
 
+  BotModel? bot;
+
   SystemSetting({
     this.pusher,
     this.page,
@@ -36,6 +38,7 @@ class SystemSetting {
     this.androidUrl,
     this.documentUrl,
     this.hideChat = false,
+    this.bot,
   });
 
   factory SystemSetting.fromJson(Map<String, dynamic> json) => _$SystemSettingFromJson(json);
@@ -76,4 +79,20 @@ class PageData {
 
   factory PageData.fromJson(Map<String, dynamic> json) => _$PageDataFromJson(json);
   Map<String, dynamic> toJson() => _$PageDataToJson(this);
+}
+
+@JsonSerializable()
+class BotModel {
+  int? id;
+  String? name;
+  String? avatar;
+
+  BotModel({
+    this.id,
+    this.name,
+    this.avatar,
+  });
+
+  factory BotModel.fromJson(Map<String, dynamic> json) => _$BotModelFromJson(json);
+  Map<String, dynamic> toJson() => _$BotModelToJson(this);
 }

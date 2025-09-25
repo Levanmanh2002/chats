@@ -29,9 +29,10 @@ class OptionsPage extends GetWidget<OptionsController> {
               SizedBox(height: 24.h),
 
               // Contact header section
-              _buildContactHeader(),
-
-              SizedBox(height: 32.h),
+              if (controller.parameter.isCheckUserLocal == false) ...[
+                _buildContactHeader(),
+                SizedBox(height: 32.h),
+              ],
 
               // Quick action
               _buildQuickAction(),

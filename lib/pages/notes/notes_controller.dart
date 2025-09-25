@@ -2,6 +2,7 @@ import 'package:chats/extension/date_time_extension.dart';
 import 'package:chats/models/notes/note_category_model.dart';
 import 'package:chats/models/notes/note_model.dart';
 import 'package:chats/resourese/notes/inotes_repository.dart';
+import 'package:chats/utils/app/note_status.dart';
 import 'package:chats/utils/dialog_utils.dart';
 import 'package:chats/widget/dialog/show_notes_dialog.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,7 @@ class NotesController extends GetxController {
     }
   }
 
-  Future<void> fetchNotes({bool isRefresh = true}) async {
+  Future<void> fetchNotes({bool isRefresh = true}) async {  
     try {
       final response = await notesRepository.getNotesList(
         page: isRefresh ? 1 : (notes.value?.page ?? 1) + 1,
@@ -135,6 +136,7 @@ class NotesController extends GetxController {
     String title = '',
     String content = '',
     required int categoryId,
+    NoteStatusEnum? status,
   }) async {
     try {
       EasyLoading.show(dismissOnTap: false, maskType: EasyLoadingMaskType.clear);
@@ -146,6 +148,7 @@ class NotesController extends GetxController {
         categoryId: categoryId,
         startDate: selectedStartReminder.value?.toyyyyMMdd ?? '',
         endDate: selectedEndReminder.value?.toyyyyMMdd ?? '',
+        status: status?.statusKey ?? '',
       );
 
       if (response.statusCode == 200) {

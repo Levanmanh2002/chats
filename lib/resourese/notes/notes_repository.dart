@@ -111,6 +111,7 @@ class NotesRepository extends INotesRepository {
     required int categoryId,
     String startDate = '',
     String endDate = '',
+    String status = '',
   }) async {
     try {
       final body = {
@@ -119,6 +120,7 @@ class NotesRepository extends INotesRepository {
         'category_id': categoryId,
         "start_date": startDate,
         "end_date": endDate,
+        if (status.isNotEmpty) 'status': status,
       };
       final result = await clientPostData(AppConstants.updateNotesUri(id), body);
 

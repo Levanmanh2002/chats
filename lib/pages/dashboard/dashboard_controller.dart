@@ -11,6 +11,7 @@ import 'package:chats/resourese/dashboard/idashboard_repository.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
 import 'package:chats/resourese/service/socket_service.dart';
 import 'package:chats/routes/pages.dart';
+import 'package:chats/utils/dialog_utils.dart';
 import 'package:chats/utils/local_storage.dart';
 import 'package:chats/utils/shared_key.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,7 @@ class DashboardController extends GetxController {
     ChatsPage(),
     ContactsPage(),
     ProfilePage(),
+    const SizedBox(),
   ];
 
   RxList<TickersModel> tickersModel = <TickersModel>[].obs;
@@ -84,7 +86,11 @@ class DashboardController extends GetxController {
 
   void goToTab(int page) {
     if (page == 2) {
-      onClound(); 
+      onClound();
+      return;
+    }
+    if (page == 6) {
+      onChatBOT();
       return;
     }
     currentPage.value = page;
@@ -115,6 +121,30 @@ class DashboardController extends GetxController {
           Routes.MESSAGE,
           arguments: MessageParameter(contact: profile),
         );
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  void onChatBOT() async {
+    try {
+      EasyLoading.show(dismissOnTap: false, maskType: EasyLoadingMaskType.clear);
+
+      final systemSetting = Get.find<ProfileController>().systemSetting.value;
+
+      if (systemSetting == null) return;
+      final response = await messagesRepository.getIdChatByUser(systemSetting.bot!.id!);
+
+      if (response.statusCode == 200) {
+        Get.toNamed(
+          Routes.MESSAGE,
+          arguments: MessageParameter(chatId: response.body['data']['id'], isChatBOT: true),
+        );
+      } else {
+        DialogUtils.showErrorDialog('Bạn chưa được cấp quyền truy cập ChatBOT, vui lòng liên hệ Admin để được hỗ trợ!');
       }
     } catch (e) {
       print(e);

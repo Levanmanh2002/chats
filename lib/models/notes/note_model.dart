@@ -54,6 +54,9 @@ class NoteItem {
   @JsonKey(name: "start_date")
   String startDate;
 
+  @JsonKey(name: "status")
+  NoteStatus? noteStatus;
+
   @JsonKey(name: "end_date")
   String endDate;
 
@@ -68,6 +71,7 @@ class NoteItem {
     this.description,
     this.category,
     this.startDate = '',
+    this.noteStatus,
     this.endDate = '',
     this.createdAt = '',
   });
@@ -75,4 +79,19 @@ class NoteItem {
   factory NoteItem.fromJson(Map<String, dynamic> json) => _$NoteItemFromJson(json);
 
   Map<String, dynamic> toJson() => _$NoteItemToJson(this);
+}
+
+@JsonSerializable()
+class NoteStatus {
+  String? key;
+  String? name;
+
+  NoteStatus({
+    this.key,
+    this.name,
+  });
+
+  factory NoteStatus.fromJson(Map<String, dynamic> json) => _$NoteStatusFromJson(json);
+
+  Map<String, dynamic> toJson() => _$NoteStatusToJson(this);
 }

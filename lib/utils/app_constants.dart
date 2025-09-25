@@ -5,6 +5,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class AppConstants {
   static const String appName = 'Chat - Nhà Táo';
 
+  static const bool isHideFeatureApp = false;
+
   static const int minNameLength = 2;
   static const int minAddressLength = 12;
   static const int maxNameLength = 255;
