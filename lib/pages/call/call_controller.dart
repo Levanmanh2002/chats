@@ -9,10 +9,7 @@ import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/app_constants.dart';
-import 'package:chats/utils/audio_utils.dart';
-import 'package:chats/utils/dialog_utils.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -37,30 +34,21 @@ class CallController extends GetxController {
 
   final ReceivePort _receivePortReject = ReceivePort();
 
-  Timer? _callCheckTimer;
-  final int _maxCheckSeconds = 30;
-  int _elapsedSeconds = 0;
-
   @override
   void onInit() {
     super.onInit();
-    // initAgora();
     if (parameter.type == CallType.call) {
       _initCall();
     } else if (parameter.type == CallType.incomingCall) {
-      initAgora(token: parameter.token!, channel: parameter.channel!);
+      initAgora(
+        token: parameter.token!,
+        // token:
+        //     "007eJxTYJg8geXALvWIgIWTDuuIrJLI3b2xlSv26rRNpl0S0k/PGS1SYEg2TzJMMkxMNUlJMzQxt7C0sEw2MgcyzJJNjMyTjFOvVD3KaAhkZPiY5sjMyACBID43Q0lqcUm8oZGxsZEhAwMA/cIg1g==",
+        channel: parameter.channel!,
+      );
     }
-    _checkCall();
     _setupIsolated();
-
-    // _generateToken();
   }
-
-  // @override
-  // void onReady() {
-  //   super.onReady();
-  //   _initCall();
-  // }
 
   void _initCall() async {
     try {
@@ -70,6 +58,7 @@ class CallController extends GetxController {
         "call_id": parameter.callId != null ? parameter.callId.toString() : isCallId.value.toString(),
         "receiver_id": parameter.id.toString(),
         "channel_name": channel,
+        // "channel_name": 'test_123321',
         // "uid": '${parameter.id}_${Get.find<ProfileController>().user.value?.id}',
         "uid": '0',
       };
@@ -80,12 +69,13 @@ class CallController extends GetxController {
         log('Call initiated');
         // _generateToken();
         isCallId.value = response.body['data']['id'];
-        await initAgora(token: response.body['data']['call_token'], channel: response.body['data']['channel_name']);
-        // await initAgora(
-        //   token:
-        //       '007eJxTYLiXPp/rq5HErWUOBt5nLr1ptxJtcl27wCn4pWnGARnzUzcUGAyM0iyTklLNzBMTjUwsTZIsEy3MTc3MjQ2SjS0TTS3M/2pJZTQEMjKYveRnZWSAQBCfnyE5IzEvLzUnviS1uCTewJCBAQCr6yKo',
-        //   channel: 'channel_test_01',
-        // );
+        await initAgora(
+          token: response.body['data']['call_token'],
+          // token:
+          //     "007eJxTYJg8geXALvWIgIWTDuuIrJLI3b2xlSv26rRNpl0S0k/PGS1SYEg2TzJMMkxMNUlJMzQxt7C0sEw2MgcyzJJNjMyTjFOvVD3KaAhkZPiY5sjMyACBID43Q0lqcUm8oZGxsZEhAwMA/cIg1g==",
+          channel: response.body['data']['channel_name'],
+          // channel: 'test_123321',
+        );
       } else {
         log('Call initiation failed');
       }
@@ -95,77 +85,83 @@ class CallController extends GetxController {
   }
 
   Future<void> initAgora({required String token, required String channel}) async {
-    // retrieve permissions
-    await [
-      Permission.microphone,
-      // Permission.camera,
-    ].request();
+    try {
+      // retrieve permissions
+      await [
+        Permission.microphone,
+        // Permission.camera,
+      ].request();
 
-    engine = createAgoraRtcEngine();
-    await engine.initialize(RtcEngineContext(
-      // appId: '02f9bbe67aa2494b9a8756730c39a587',
-      appId: AppConstants.callAppId,
-      channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
-    ));
-    await engine.setAudioProfile(
-      profile: AudioProfileType.audioProfileSpeechStandard,
-      scenario: AudioScenarioType.audioScenarioGameStreaming,
-    );
+      engine = createAgoraRtcEngine();
+      await engine.initialize(RtcEngineContext(
+        appId: AppConstants.callAppId,
+        // appId: "c7b1b1ae4df1478989c274786c427b3e",
+        channelProfile: ChannelProfileType.channelProfileCommunication,
+      ));
+      await engine.setAudioProfile(
+        profile: AudioProfileType.audioProfileDefault,
+        scenario: AudioScenarioType.audioScenarioChatroom,
+      );
 
-    engine.registerEventHandler(
-      RtcEngineEventHandler(
-        onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
-          log("local user ${connection.localUid} joined");
-          localUserJoined.value = true;
-          if (parameter.type == CallType.call) {
-            startRingtone();
-          }
+      engine.registerEventHandler(
+        RtcEngineEventHandler(
+          onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
+            log("local user ${connection.localUid} joined");
+            localUserJoined.value = true;
+            // stopRingtone();
+            // if (parameter.type == CallType.call) {
+            //   startRingtone();
+            // }
 
-          Future.delayed(const Duration(seconds: 60), () {
-            if (remoteUidValue.value == 0) {
-              log("Không có ai nhận cuộc gọi, tự động kết thúc.");
-              endCall();
+            Future.delayed(const Duration(seconds: 60), () {
+              if (remoteUidValue.value == 0) {
+                log("Không có ai nhận cuộc gọi, tự động kết thúc.");
+                endCall();
+              }
+            });
+          },
+          onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
+            log("remote user $remoteUid joined");
+            remoteUidValue.value = remoteUid;
+            // stopRingtone();
+            startTimer();
+            _fetchJoinCall();
+            // engine.muteLocalAudioStream(true);
+          },
+          onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) async {
+            log("remote user $remoteUid left channel");
+            remoteUidValue.value = 0;
+            engine.leaveChannel();
+            await _fetchEndCall();
+            if (Get.currentRoute == Routes.CALL) {
+              Get.back();
             }
-          });
-        },
-        onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
-          log("remote user $remoteUid joined");
-          remoteUidValue.value = remoteUid;
-          stopRingtone();
-          startTimer();
-          _fetchJoinCall();
-        },
-        onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) async {
-          log("remote user $remoteUid left channel");
-          remoteUidValue.value = 0;
-          engine.leaveChannel();
-          await _fetchEndCall();
-          if (Get.currentRoute == Routes.CALL) {
-            Get.back();
-          }
-        },
-        onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
-          log('[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
-        },
-        onError: (err, msg) {
-          log('onError: $err, $msg');
-        },
-      ),
-    );
+          },
+          onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
+            log('[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
+          },
+          onError: (err, msg) {
+            log('onError: $err, $msg');
+          },
+        ),
+      );
 
-    await engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
-    await engine.enableVideo();
-    await engine.startPreview();
-
-    await engine.joinChannel(
-      token: token,
-      channelId: channel,
-      uid: parameter.id,
-      options: const ChannelMediaOptions(
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: false,
-      ),
-    );
+      await engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
+      await engine.enableAudio();
+      // await engine.startPreview();
+      // await engine.setEnableSpeakerphone(true);
+      await engine.joinChannel(
+        token: token,
+        channelId: channel,
+        uid: parameter.id,
+        options: const ChannelMediaOptions(
+          autoSubscribeAudio: true,
+          autoSubscribeVideo: false,
+        ),
+      );
+    } catch (e) {
+      print(e);
+    }
   }
 
   void _fetchJoinCall() async {
@@ -201,19 +197,19 @@ class CallController extends GetxController {
   }
 
   // Gọi khi bắt đầu cuộc gọi
-  void startRingtone() {
-    FlutterRingtonePlayer().play(
-      fromAsset: AudioUtils.outgoingCallRingtone,
-      // android: AndroidSounds.notification,
-      ios: IosSounds.glass,
-      looping: true,
-    );
-  }
+  // void startRingtone() {
+  //   FlutterRingtonePlayer().play(
+  //     fromAsset: AudioUtils.outgoingCallRingtone,
+  //     // android: AndroidSounds.notification,
+  //     ios: IosSounds.glass,
+  //     looping: true,
+  //   );
+  // }
 
-  // Dừng khi người nhận nghe máy hoặc hủy cuộc gọi
-  void stopRingtone() {
-    FlutterRingtonePlayer().stop();
-  }
+  // // Dừng khi người nhận nghe máy hoặc hủy cuộc gọi
+  // void stopRingtone() {
+  //   FlutterRingtonePlayer().stop();
+  // }
 
   // Bật/tắt loa ngoài
   void toggleSpeaker() {
@@ -229,9 +225,8 @@ class CallController extends GetxController {
 
   // Kết thúc cuộc gọi
   Future<void> endCall() async {
-    stopCheckingCall();
     await engine.leaveChannel();
-    stopRingtone();
+    // stopRingtone();
     await _endCall();
     Get.back();
   }
@@ -266,47 +261,7 @@ class CallController extends GetxController {
   Future<void> _dispose() async {
     await engine.leaveChannel();
     await engine.release();
-    stopRingtone();
-  }
-
-  Future<void> _onCallEnded() async {
-    try {
-      Map<String, String> params = {
-        "call_id": parameter.callId != null ? parameter.callId.toString() : isCallId.value.toString(),
-      };
-
-      final response = await messagesRepository.checkCall(params);
-
-      if (response.statusCode != 200) {
-        stopCheckingCall();
-        DialogUtils.showErrorDialog('call_ended'.tr);
-        Get.back();
-      }
-    } catch (e) {
-      log(e.toString());
-    }
-  }
-
-  void _checkCall() {
-    _callCheckTimer?.cancel();
-    _elapsedSeconds = 0;
-
-    _callCheckTimer = Timer.periodic(const Duration(seconds: 2), (timer) async {
-      _elapsedSeconds += 2;
-
-      if (_elapsedSeconds <= _maxCheckSeconds) {
-        await _onCallEnded();
-      }
-
-      if (_elapsedSeconds >= _maxCheckSeconds) {
-        timer.cancel();
-        log('Stopped checking after $_maxCheckSeconds seconds.');
-      }
-    });
-  }
-
-  void stopCheckingCall() {
-    _callCheckTimer?.cancel();
+    // stopRingtone();
   }
 
   void _setupIsolated() async {
@@ -335,7 +290,7 @@ class CallController extends GetxController {
   void onClose() {
     _timer?.cancel();
     engine.leaveChannel();
-    stopRingtone();
+    // stopRingtone();
     super.onClose();
   }
 
