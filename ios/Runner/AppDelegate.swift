@@ -104,7 +104,7 @@ import flutter_callkit_incoming
         SwiftFlutterCallkitIncomingPlugin.sharedInstance?.showCallkitIncoming(data, fromPushKit: true)
 
         //Make sure call completion()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             completion()
         }
     }
@@ -187,8 +187,15 @@ import flutter_callkit_incoming
 
     // Func Callback Toggle Audio Session
     func didActivateAudioSession(_ audioSession: AVAudioSession) {
-        try audioSession.setCategory(.playAndRecord, mode: .voiceChat, options: [.defaultToSpeaker, .allowBluetooth, .allowBluetoothA2DP])
-        try audioSession.setActive(true)
+        do {
+            try audioSession.setCategory(.playAndRecord,
+                                        mode: .voiceChat,
+                                        options: [.defaultToSpeaker, .allowBluetooth, .allowBluetoothA2DP])
+            try audioSession.setActive(true)
+            print("✅ Audio session activated")
+        } catch {
+            print("❌ Failed: \(error)")
+        }
     }
 
 
