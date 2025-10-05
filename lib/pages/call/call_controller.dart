@@ -60,8 +60,8 @@ class CallController extends GetxController {
         "receiver_id": parameter.id.toString(),
         "channel_name": channel,
         // "channel_name": 'test_123321',
-        "uid": Get.find<ProfileController>().user.value?.id.toString() ?? '0',
-        // "uid": '0',
+        // "uid": '${parameter.id}_${Get.find<ProfileController>().user.value?.id}',
+        "uid": '0',
       };
 
       final response = await messagesRepository.initCall(params);
