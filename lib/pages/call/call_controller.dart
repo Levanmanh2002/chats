@@ -60,8 +60,8 @@ class CallController extends GetxController {
         "receiver_id": parameter.id.toString(),
         "channel_name": channel,
         // "channel_name": 'test_123321',
-        // "uid": '${parameter.id}_${Get.find<ProfileController>().user.value?.id}',
-        "uid": '0',
+        "uid": Get.find<ProfileController>().user.value?.id.toString() ?? '0',
+        // "uid": '0',
       };
 
       final response = await messagesRepository.initCall(params);
@@ -101,19 +101,23 @@ class CallController extends GetxController {
       ));
       await engine.setAudioProfile(
         profile: AudioProfileType.audioProfileDefault,
-        scenario: AudioScenarioType.audioScenarioChatroom,
+        scenario: AudioScenarioType.audioScenarioDefault,
       );
+
+      // ✅ THÊM: Enable local audio
+      await engine.enableAudio();
+      await engine.enableLocalAudio(true);
+
+      // ✅ THÊM: Set speaker và volume
+      await engine.setDefaultAudioRouteToSpeakerphone(true);
+      await engine.adjustRecordingSignalVolume(100);
+      await engine.adjustPlaybackSignalVolume(100);
 
       engine.registerEventHandler(
         RtcEngineEventHandler(
           onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
             log("local user ${connection.localUid} joined");
             localUserJoined.value = true;
-            // stopRingtone();
-            // if (parameter.type == CallType.call) {
-            //   startRingtone();
-            // }
-
             Future.delayed(const Duration(seconds: 60), () {
               if (remoteUidValue.value == 0) {
                 log("Không có ai nhận cuộc gọi, tự động kết thúc.");
@@ -180,9 +184,14 @@ class CallController extends GetxController {
       );
 
       await engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
-      await engine.enableAudio();
-      // await engine.startPreview();
-      // await engine.setEnableSpeakerphone(true);
+      // await engine.enableAudio();
+      // await engine.enableLocalAudio(true);
+
+      // // ✅ THÊM: Set speaker và volume
+      // await engine.setDefaultAudioRouteToSpeakerphone(true);
+      // await engine.adjustRecordingSignalVolume(100);
+      // await engine.adjustPlaybackSignalVolume(100);
+
       await engine.joinChannel(
         token: token,
         channelId: channel,
@@ -190,6 +199,9 @@ class CallController extends GetxController {
         options: const ChannelMediaOptions(
           autoSubscribeAudio: true,
           autoSubscribeVideo: false,
+          publishMediaPlayerAudioTrack: true,
+          publishMicrophoneTrack: true,
+          clientRoleType: ClientRoleType.clientRoleBroadcaster,
         ),
       );
     } catch (e) {
