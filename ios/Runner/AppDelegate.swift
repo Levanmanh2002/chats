@@ -41,6 +41,7 @@ import flutter_callkit_incoming
                 .allowBluetoothA2DP,
                 .mixWithOthers // ✅ Cho phép mix với CallKit
             ])
+            try session.setActive(true)
             // ✅ KHÔNG setActive ở đây - để CallKit quản lý
             print("✅ AVAudioSession configured for CallKit + Agora")
         } catch {
@@ -113,6 +114,15 @@ import flutter_callkit_incoming
     func onAccept(_ call: Call, _ action: CXAnswerCallAction) {
         let json = ["action": "ACCEPT", "data": call.data.toJSON()] as [String: Any]
         print("LOG: onAccept")
+
+        do {
+            let session = AVAudioSession.sharedInstance()
+            try session.setActive(true, options: [])
+            print("✅ Audio session activated immediately on accept")
+        } catch {
+            print("❌ Failed to activate audio: \(error)")
+        }
+
         self.performRequest(parameters: json) { result in
             switch result {
             case .success(let data):
@@ -177,14 +187,10 @@ import flutter_callkit_incoming
 
     // Func Callback Toggle Audio Session
     func didActivateAudioSession(_ audioSession: AVAudioSession) {
-        //Use if using WebRTC
-        //RTCAudioSession.sharedInstance().audioSessionDidActivate(audioSession)
-        //RTCAudioSession.sharedInstance().isAudioEnabled = true
-        NotificationCenter.default.post(
-            name: NSNotification.Name("CallKitAudioActivated"),
-            object: nil
-        )
+        try audioSession.setCategory(.playAndRecord, mode: .voiceChat, options: [.defaultToSpeaker, .allowBluetooth, .allowBluetoothA2DP])
+        try audioSession.setActive(true)
     }
+
 
     // Func Callback Toggle Audio Session
     func didDeactivateAudioSession(_ audioSession: AVAudioSession) {

@@ -134,20 +134,11 @@ class CallController extends GetxController {
             // engine.muteLocalAudioStream(true);
 
             if (Platform.isIOS) {
-              // Delay nhỏ để đảm bảo CallKit đã sẵn sàng
-              await Future.delayed(const Duration(milliseconds: 800));
-
               try {
-                // Force playback volume cao
-                await engine.adjustPlaybackSignalVolume(400); // ✅ Tăng lên 400%
+                await engine.enableAudio();
+                await engine.adjustPlaybackSignalVolume(400);
                 await engine.adjustRecordingSignalVolume(100);
-
-                // Re-enable speaker
-                await engine.setEnableSpeakerphone(false);
-                await Future.delayed(const Duration(milliseconds: 100));
                 await engine.setEnableSpeakerphone(true);
-
-                log('✅ iOS: Audio force-activated for remote user');
               } catch (e) {
                 log('⚠️ iOS audio activation error: $e');
               }
@@ -195,7 +186,7 @@ class CallController extends GetxController {
       await engine.joinChannel(
         token: token,
         channelId: channel,
-        uid: parameter.id,
+        uid: 0,
         options: const ChannelMediaOptions(
           autoSubscribeAudio: true,
           autoSubscribeVideo: false,
