@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
 
@@ -120,13 +121,33 @@ class CallController extends GetxController {
               }
             });
           },
-          onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
+          onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) async {
             log("remote user $remoteUid joined");
             remoteUidValue.value = remoteUid;
             // stopRingtone();
             startTimer();
             _fetchJoinCall();
             // engine.muteLocalAudioStream(true);
+
+            if (Platform.isIOS) {
+              // Delay nhỏ để đảm bảo CallKit đã sẵn sàng
+              await Future.delayed(const Duration(milliseconds: 800));
+
+              try {
+                // Force playback volume cao
+                await engine.adjustPlaybackSignalVolume(400); // ✅ Tăng lên 400%
+                await engine.adjustRecordingSignalVolume(100);
+
+                // Re-enable speaker
+                await engine.setEnableSpeakerphone(false);
+                await Future.delayed(const Duration(milliseconds: 100));
+                await engine.setEnableSpeakerphone(true);
+
+                log('✅ iOS: Audio force-activated for remote user');
+              } catch (e) {
+                log('⚠️ iOS audio activation error: $e');
+              }
+            }
           },
           onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) async {
             log("remote user $remoteUid left channel");
@@ -139,6 +160,18 @@ class CallController extends GetxController {
           },
           onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
             log('[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
+          },
+          onRemoteAudioStateChanged: (RtcConnection connection, int remoteUid, RemoteAudioState state,
+              RemoteAudioStateReason reason, int elapsed) {
+            log('🎧 Remote audio state: UID=$remoteUid, State=$state, Reason=$reason');
+
+            // ✅ Khi iOS nhận được remote audio, boost volume
+            if (Platform.isIOS &&
+                (state == RemoteAudioState.remoteAudioStateDecoding ||
+                    state == RemoteAudioState.remoteAudioStateStarting)) {
+              engine.adjustPlaybackSignalVolume(400);
+              log('✅ iOS: Volume boosted to 400%');
+            }
           },
           onError: (err, msg) {
             log('onError: $err, $msg');

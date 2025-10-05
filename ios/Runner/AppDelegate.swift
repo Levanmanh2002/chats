@@ -8,23 +8,14 @@ import flutter_callkit_incoming
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate, PKPushRegistryDelegate, CallkitIncomingAppDelegate {
 
-    
+
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         GeneratedPluginRegistrant.register(with: self)
-        
-        // ✅ FIX: Kích hoạt audio session ngay từ đầu
-        do {
-            let session = AVAudioSession.sharedInstance()
-            try session.setCategory(.playAndRecord, options: [.defaultToSpeaker, .allowBluetooth])
-            try session.setMode(.voiceChat)
-            try session.setActive(true)
-            print("✅ AVAudioSession configured successfully.")
-        } catch {
-            print("❌ Failed to set AVAudioSession: \(error)")
-        }
+
+        configureAudioSession()
 
         //Setup VOIP
         let mainQueue = DispatchQueue.main
@@ -35,19 +26,37 @@ import flutter_callkit_incoming
         //Use if using WebRTC
         //RTCAudioSession.sharedInstance().useManualAudio = true
         //RTCAudioSession.sharedInstance().isAudioEnabled = false
-        
+
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
-    
+
+      // ✅ Cấu hình audio session tối ưu cho CallKit + Agora
+    private func configureAudioSession() {
+        do {
+            let session = AVAudioSession.sharedInstance()
+            // ✅ QUAN TRỌNG: allowBluetoothA2DP giúp audio routing tốt hơn
+            try session.setCategory(.playAndRecord, mode: .voiceChat, options: [
+                .defaultToSpeaker,
+                .allowBluetooth,
+                .allowBluetoothA2DP,
+                .mixWithOthers // ✅ Cho phép mix với CallKit
+            ])
+            // ✅ KHÔNG setActive ở đây - để CallKit quản lý
+            print("✅ AVAudioSession configured for CallKit + Agora")
+        } catch {
+            print("❌ Failed to configure AVAudioSession: \(error)")
+        }
+    }
+
     // Call back from Recent history
     override func application(_ application: UIApplication,
                               continue userActivity: NSUserActivity,
                               restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-        
+
         guard let handleObj = userActivity.handle else {
             return false
         }
-        
+
         guard let isVideo = userActivity.isVideo else {
             return false
         }
@@ -58,10 +67,10 @@ import flutter_callkit_incoming
         //set more data...
         //data.nameCaller = nameCaller
         SwiftFlutterCallkitIncomingPlugin.sharedInstance?.startCall(data, fromPushKit: true)
-        
+
         return super.application(application, continue: userActivity, restorationHandler: restorationHandler)
     }
-    
+
     // Handle updated push credentials
     func pushRegistry(_ registry: PKPushRegistry, didUpdate credentials: PKPushCredentials, for type: PKPushType) {
         print(credentials.token)
@@ -70,36 +79,36 @@ import flutter_callkit_incoming
         //Save deviceToken to your server
         SwiftFlutterCallkitIncomingPlugin.sharedInstance?.setDevicePushTokenVoIP(deviceToken)
     }
-    
+
     func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenFor type: PKPushType) {
         print("didInvalidatePushTokenFor")
         SwiftFlutterCallkitIncomingPlugin.sharedInstance?.setDevicePushTokenVoIP("")
     }
-    
+
     // Handle incoming pushes
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
         print("didReceiveIncomingPushWith")
         guard type == .voIP else { return }
-        
+
         let id = payload.dictionaryPayload["id"] as? String ?? ""
         let nameCaller = payload.dictionaryPayload["nameCaller"] as? String ?? ""
         let handle = payload.dictionaryPayload["handle"] as? String ?? ""
         let isVideo = payload.dictionaryPayload["isVideo"] as? Bool ?? false
-        
+
         let data = flutter_callkit_incoming.Data(id: id, nameCaller: nameCaller, handle: handle, type: isVideo ? 1 : 0)
         //set more data
         data.extra = ["user": "abc@123", "platform": "ios"]
         //data.iconName = ...
         //data.....
         SwiftFlutterCallkitIncomingPlugin.sharedInstance?.showCallkitIncoming(data, fromPushKit: true)
-        
+
         //Make sure call completion()
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             completion()
         }
     }
-    
-    
+
+
     // Func Call api for Accept
     func onAccept(_ call: Call, _ action: CXAnswerCallAction) {
         let json = ["action": "ACCEPT", "data": call.data.toJSON()] as [String: Any]
@@ -116,7 +125,7 @@ import flutter_callkit_incoming
             }
         }
     }
-    
+
     // Func Call API for Decline
     func onDecline(_ call: Call, _ action: CXEndCallAction) {
         let json = ["action": "DECLINE", "data": call.data.toJSON()] as [String: Any]
@@ -133,7 +142,7 @@ import flutter_callkit_incoming
             }
         }
     }
-    
+
     // Func Call API for End
     func onEnd(_ call: Call, _ action: CXEndCallAction) {
         let json = ["action": "END", "data": call.data.toJSON()] as [String: Any]
@@ -150,7 +159,7 @@ import flutter_callkit_incoming
             }
         }
     }
-    
+
     // Func Call API for TimeOut
     func onTimeOut(_ call: Call) {
         let json = ["action": "TIMEOUT", "data": call.data.toJSON()] as [String: Any]
@@ -165,28 +174,36 @@ import flutter_callkit_incoming
             }
         }
     }
-    
+
     // Func Callback Toggle Audio Session
     func didActivateAudioSession(_ audioSession: AVAudioSession) {
         //Use if using WebRTC
         //RTCAudioSession.sharedInstance().audioSessionDidActivate(audioSession)
         //RTCAudioSession.sharedInstance().isAudioEnabled = true
+        NotificationCenter.default.post(
+            name: NSNotification.Name("CallKitAudioActivated"),
+            object: nil
+        )
     }
-    
+
     // Func Callback Toggle Audio Session
     func didDeactivateAudioSession(_ audioSession: AVAudioSession) {
         //Use if using WebRTC
         //RTCAudioSession.sharedInstance().audioSessionDidDeactivate(audioSession)
         //RTCAudioSession.sharedInstance().isAudioEnabled = false
+        NotificationCenter.default.post(
+            name: NSNotification.Name("CallKitAudioDeactivated"),
+            object: nil
+        )
     }
-    
+
     func performRequest(parameters: [String: Any], completion: @escaping (Result<Any, Error>) -> Void) {
         if let url = URL(string: "https://webhook.site/e32a591f-0d17-469d-a70d-33e9f9d60727") {
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             //Add header
-            
+
             do {
                 let jsonData = try JSONSerialization.data(withJSONObject: parameters, options: [])
                 request.httpBody = jsonData
@@ -194,13 +211,13 @@ import flutter_callkit_incoming
                 completion(.failure(error))
                 return
             }
-            
+
             let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
                 if let error = error {
                     completion(.failure(error))
                     return
                 }
-                
+
                 guard let data = data else {
                     completion(.failure(NSError(domain: "mobile.app", code: 0, userInfo: [NSLocalizedDescriptionKey: "Empty data"])))
                     return
@@ -218,6 +235,6 @@ import flutter_callkit_incoming
             completion(.failure(NSError(domain: "mobile.app", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])))
         }
     }
-    
-    
+
+
 }
