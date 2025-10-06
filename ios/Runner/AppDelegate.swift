@@ -112,12 +112,17 @@ import flutter_callkit_incoming
         let json = ["action": "ACCEPT", "data": call.data.toJSON()] as [String: Any]
         print("LOG: onAccept")
 
-        do {
-            let session = AVAudioSession.sharedInstance()
-            try session.setActive(true, options: [])
-            print("✅ Audio session activated immediately on accept")
-        } catch {
-            print("❌ Failed to activate audio: \(error)")
+        DispatchQueue.main.async {
+            do {
+                let session = AVAudioSession.sharedInstance()
+                try session.setCategory(.playAndRecord,
+                                    mode: .voiceChat,
+                                    options: [.defaultToSpeaker, .allowBluetooth, .allowBluetoothA2DP])
+                try session.setActive(true, options: [.notifyOthersOnDeactivation])
+                print("✅ Audio session activated immediately on accept")
+            } catch {
+                print("❌ Failed to activate audio: \(error)")
+            }
         }
 
         self.performRequest(parameters: json) { result in
