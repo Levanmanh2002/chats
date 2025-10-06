@@ -30,19 +30,16 @@ import flutter_callkit_incoming
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
 
-      // ✅ Cấu hình audio session tối ưu cho CallKit + Agora
+    // ✅ Cấu hình audio session tối ưu cho CallKit + Agora
     private func configureAudioSession() {
         do {
             let session = AVAudioSession.sharedInstance()
-            // ✅ QUAN TRỌNG: allowBluetoothA2DP giúp audio routing tốt hơn
             try session.setCategory(.playAndRecord, mode: .voiceChat, options: [
                 .defaultToSpeaker,
                 .allowBluetooth,
-                .allowBluetoothA2DP,
-                .mixWithOthers // ✅ Cho phép mix với CallKit
+                .allowBluetoothA2DP
             ])
-            try session.setActive(true)
-            // ✅ KHÔNG setActive ở đây - để CallKit quản lý
+            // ❌ KHÔNG setActive ở đây - để CallKit tự quản lý
             print("✅ AVAudioSession configured for CallKit + Agora")
         } catch {
             print("❌ Failed to configure AVAudioSession: \(error)")
@@ -193,6 +190,12 @@ import flutter_callkit_incoming
                                         options: [.defaultToSpeaker, .allowBluetooth, .allowBluetoothA2DP])
             try audioSession.setActive(true)
             print("✅ Audio session activated")
+
+            // ✅ THÊM: Gửi notification tới Flutter
+            NotificationCenter.default.post(
+                name: NSNotification.Name("CallKitAudioActivated"),
+                object: nil
+            )
         } catch {
             print("❌ Failed: \(error)")
         }

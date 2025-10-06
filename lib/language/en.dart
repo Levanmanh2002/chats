@@ -231,4 +231,5 @@ const Map<String, String> en = {
   'logout_warning': 'If you log out here, all security codes will be deleted and reset to the default state',
   'lock': 'Lock',
   'lock_chat_confirmation': 'Are you sure you want to lock the screen?',
+  'failed_to_start_call': 'Failed to start call'
 };

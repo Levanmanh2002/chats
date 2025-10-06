@@ -10,6 +10,7 @@ import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/app_constants.dart';
+import 'package:chats/utils/dialog_utils.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -53,6 +54,8 @@ class CallController extends GetxController {
 
   void _initCall() async {
     try {
+      await [Permission.microphone].request();
+
       final channel = '${parameter.channel}_${parameter.id}_${Get.find<ProfileController>().user.value?.id}';
 
       Map<String, String> params = {
@@ -78,7 +81,9 @@ class CallController extends GetxController {
           // channel: 'test_123321',
         );
       } else {
-        log('Call initiation failed');
+        DialogUtils.showErrorDialog('failed_to_start_call'.tr);
+        await endCall();
+        Get.back();
       }
     } catch (e) {
       log(e.toString());
@@ -104,20 +109,31 @@ class CallController extends GetxController {
         scenario: AudioScenarioType.audioScenarioDefault,
       );
 
-      // ✅ THÊM: Enable local audio
-      await engine.enableAudio();
-      await engine.enableLocalAudio(true);
-
-      // ✅ THÊM: Set speaker và volume
-      await engine.setDefaultAudioRouteToSpeakerphone(true);
-      await engine.adjustRecordingSignalVolume(100);
-      await engine.adjustPlaybackSignalVolume(100);
+      if (Platform.isIOS) {
+        await engine.enableAudio();
+        await engine.enableLocalAudio(true);
+        await engine.setDefaultAudioRouteToSpeakerphone(true);
+        await engine.adjustRecordingSignalVolume(100);
+        await engine.adjustPlaybackSignalVolume(400);
+        log('✅ iOS: Audio pre-configured before join');
+      }
 
       engine.registerEventHandler(
         RtcEngineEventHandler(
           onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
             log("local user ${connection.localUid} joined");
             localUserJoined.value = true;
+
+            if (Platform.isIOS) {
+              Future.delayed(const Duration(milliseconds: 500), () async {
+                await engine.enableAudio();
+                await engine.enableLocalAudio(true);
+                await engine.setEnableSpeakerphone(true);
+                await engine.adjustRecordingSignalVolume(100);
+                await engine.adjustPlaybackSignalVolume(400);
+                log('✅ iOS audio activated on join');
+              });
+            }
             Future.delayed(const Duration(seconds: 60), () {
               if (remoteUidValue.value == 0) {
                 log("Không có ai nhận cuộc gọi, tự động kết thúc.");
@@ -136,9 +152,11 @@ class CallController extends GetxController {
             if (Platform.isIOS) {
               try {
                 await engine.enableAudio();
+                await engine.enableLocalAudio(true);
                 await engine.adjustPlaybackSignalVolume(400);
                 await engine.adjustRecordingSignalVolume(100);
                 await engine.setEnableSpeakerphone(true);
+                log('✅ iOS audio fully activated');
               } catch (e) {
                 log('⚠️ iOS audio activation error: $e');
               }
