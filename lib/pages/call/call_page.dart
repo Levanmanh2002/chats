@@ -1,121 +1,168 @@
-import 'package:chats/main.dart';
 import 'package:chats/pages/call/call_controller.dart';
-import 'package:chats/theme/style/style_theme.dart';
-import 'package:chats/utils/icons_assets.dart';
-import 'package:chats/utils/images_assets.dart';
-import 'package:chats/widget/custom_image_widget.dart';
-import 'package:chats/widget/default_app_bar.dart';
-import 'package:chats/widget/image_asset_custom.dart';
-import 'package:chats/widget/reponsive/extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class CallPage extends GetWidget<CallController> {
+class CallPage extends GetView<CallController> {
+  const CallPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: appTheme.appColor,
-      appBar: DefaultAppBar(backgroundColor: appTheme.appColor, colorIcon: appTheme.whiteColor),
-      body: Padding(
-        padding: padding(all: 16),
-        child: Center(
-          child: Column(
-            children: [
-              ImageAssetCustom(imagePath: ImagesAssets.logoTitileWhiteImage, size: 61.w),
-              SizedBox(height: 40.h),
-              CustomImageWidget(
-                imageUrl: controller.parameter.avatar,
-                size: 160,
-                noImage: false,
-                showBoder: true,
-                colorBoder: appTheme.blueBFFColor,
-                sizeBorder: 4,
-                name: controller.parameter.name,
-                isShowNameAvatar: true,
-              ),
-              SizedBox(height: 24.h),
-              Text(
-                controller.parameter.name,
-                style: StyleThemeData.size20Weight600(color: appTheme.whiteColor),
-              ),
-              SizedBox(height: 8.h),
-              Obx(() {
-                if (controller.connectionDuration.value > 0) {
-                  final minutes = (controller.connectionDuration.value ~/ 60).toString().padLeft(2, '0');
-                  final seconds = (controller.connectionDuration.value % 60).toString().padLeft(2, '0');
-                  return Text(
-                    '$minutes:$seconds',
-                    style: StyleThemeData.size16Weight400(color: appTheme.greenF00Color),
-                  );
-                }
-                return Text(
-                  'connecting'.tr,
-                  style: StyleThemeData.size16Weight400(color: appTheme.greenF00Color),
-                );
-              }),
-            ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: padding(top: 12, horizontal: 16, bottom: 40),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          mainAxisSize: MainAxisSize.min,
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Stack(
           children: [
-            Flexible(
-              child: Obx(
-                () => Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      onPressed: controller.toggleSpeaker,
-                      icon: ImageAssetCustom(
-                        imagePath: controller.isSpeakerOn.value
-                            ? IconsAssets.audioBorderImage
-                            : IconsAssets.audioOffBorderImage,
-                      ),
-                    ),
-                    SizedBox(height: 4.h),
-                    Text('speaker'.tr, style: StyleThemeData.size12Weight400(color: appTheme.whiteColor)),
-                  ],
-                ),
-              ),
-            ),
-            Flexible(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    onPressed: controller.endCall,
-                    icon: const ImageAssetCustom(imagePath: IconsAssets.phoneBorderImage),
-                  ),
-                  SizedBox(height: 4.h),
-                  Text('end'.tr, style: StyleThemeData.size12Weight400(color: appTheme.whiteColor)),
-                ],
-              ),
-            ),
-            Flexible(
-              child: Obx(
-                () => Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      onPressed: controller.toggleMic,
-                      icon: ImageAssetCustom(
-                        imagePath:
-                            controller.isMicMuted.value ? IconsAssets.micOffBorderImage : IconsAssets.micBorderImage,
-                      ),
-                    ),
-                    SizedBox(height: 4.h),
-                    Text('Mic', style: StyleThemeData.size12Weight400(color: appTheme.whiteColor)),
-                  ],
-                ),
-              ),
+            // Background
+            _buildBackground(),
+
+            // Main content
+            Column(
+              children: [
+                const SizedBox(height: 40),
+                _buildUserInfo(),
+                const Spacer(),
+                _buildCallStatus(),
+                const SizedBox(height: 40),
+                _buildCallControls(),
+                const SizedBox(height: 60),
+              ],
             ),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildBackground() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.blue.shade900,
+            Colors.black,
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUserInfo() {
+    return Column(
+      children: [
+        // Avatar
+        CircleAvatar(
+          radius: 60,
+          backgroundImage: controller.parameter.avatar != null ? NetworkImage(controller.parameter.avatar!) : null,
+          child: controller.parameter.avatar == null ? Icon(Icons.person, size: 60, color: Colors.white) : null,
+        ),
+        const SizedBox(height: 20),
+
+        // Name
+        Text(
+          controller.parameter.name ?? 'Unknown',
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCallStatus() {
+    return Obx(() {
+      if (controller.remoteUidValue.value.isEmpty) {
+        return Column(
+          children: [
+            const CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'calling'.tr,
+              style: const TextStyle(
+                color: Colors.white70,
+                fontSize: 16,
+              ),
+            ),
+          ],
+        );
+      } else {
+        return Text(
+          _formatDuration(controller.connectionDuration.value),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+          ),
+        );
+      }
+    });
+  }
+
+  Widget _buildCallControls() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 40),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          // Speaker button
+          Obx(() => _buildControlButton(
+                icon: controller.isSpeakerOn.value ? Icons.volume_up : Icons.volume_down,
+                onPressed: controller.toggleSpeaker,
+                isActive: controller.isSpeakerOn.value,
+              )),
+
+          // Mic button
+          Obx(() => _buildControlButton(
+                icon: controller.isMicMuted.value ? Icons.mic_off : Icons.mic,
+                onPressed: controller.toggleMic,
+                isActive: !controller.isMicMuted.value,
+              )),
+
+          // End call button
+          _buildControlButton(
+            icon: Icons.call_end,
+            onPressed: controller.endCall,
+            backgroundColor: Colors.red,
+            size: 70,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildControlButton({
+    required IconData icon,
+    required VoidCallback onPressed,
+    bool isActive = true,
+    Color? backgroundColor,
+    double size = 60,
+  }) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          color: backgroundColor ?? (isActive ? Colors.white24 : Colors.white12),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          icon,
+          color: Colors.white,
+          size: size * 0.4,
+        ),
+      ),
+    );
+  }
+
+  String _formatDuration(int seconds) {
+    final minutes = seconds ~/ 60;
+    final remainingSeconds = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
   }
 }

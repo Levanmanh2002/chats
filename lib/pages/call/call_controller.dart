@@ -4,7 +4,6 @@ import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
 
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:chats/pages/call/call_parameter.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
@@ -14,6 +13,7 @@ import 'package:chats/utils/dialog_utils.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:zego_express_engine/zego_express_engine.dart';
 
 class CallController extends GetxController {
   final IMessagesRepository messagesRepository;
@@ -21,7 +21,7 @@ class CallController extends GetxController {
 
   CallController({required this.parameter, required this.messagesRepository});
 
-  var remoteUidValue = 0.obs;
+  var remoteUidValue = ''.obs; // ZegoCloud dùng String cho userID
   var localUserJoined = false.obs;
   var connectionDuration = 0.obs;
 
@@ -29,8 +29,6 @@ class CallController extends GetxController {
   var isMicMuted = false.obs;
 
   var isCallId = 0.obs;
-
-  late RtcEngine engine;
 
   Timer? _timer;
 
@@ -42,11 +40,9 @@ class CallController extends GetxController {
     if (parameter.type == CallType.call) {
       _initCall();
     } else if (parameter.type == CallType.incomingCall) {
-      initAgora(
+      initZego(
         token: parameter.token!,
-        // token:
-        //     "007eJxTYJg8geXALvWIgIWTDuuIrJLI3b2xlSv26rRNpl0S0k/PGS1SYEg2TzJMMkxMNUlJMzQxt7C0sEw2MgcyzJJNjMyTjFOvVD3KaAhkZPiY5sjMyACBID43Q0lqcUm8oZGxsZEhAwMA/cIg1g==",
-        channel: parameter.channel!,
+        roomId: parameter.channel!,
       );
     }
     _setupIsolated();
@@ -62,8 +58,6 @@ class CallController extends GetxController {
         "call_id": parameter.callId != null ? parameter.callId.toString() : isCallId.value.toString(),
         "receiver_id": parameter.id.toString(),
         "channel_name": channel,
-        // "channel_name": 'test_123321',
-        // "uid": '${parameter.id}_${Get.find<ProfileController>().user.value?.id}',
         "uid": '0',
       };
 
@@ -71,14 +65,10 @@ class CallController extends GetxController {
 
       if (response.statusCode == 200) {
         log('Call initiated');
-        // _generateToken();
         isCallId.value = response.body['data']['id'];
-        await initAgora(
+        await initZego(
           token: response.body['data']['call_token'],
-          // token:
-          //     "007eJxTYJg8geXALvWIgIWTDuuIrJLI3b2xlSv26rRNpl0S0k/PGS1SYEg2TzJMMkxMNUlJMzQxt7C0sEw2MgcyzJJNjMyTjFOvVD3KaAhkZPiY5sjMyACBID43Q0lqcUm8oZGxsZEhAwMA/cIg1g==",
-          channel: response.body['data']['channel_name'],
-          // channel: 'test_123321',
+          roomId: response.body['data']['channel_name'],
         );
       } else {
         DialogUtils.showErrorDialog('failed_to_start_call'.tr);
@@ -90,131 +80,165 @@ class CallController extends GetxController {
     }
   }
 
-  Future<void> initAgora({required String token, required String channel}) async {
+  Future<void> initZego({required String token, required String roomId}) async {
     try {
-      // retrieve permissions
-      await [
-        Permission.microphone,
-        // Permission.camera,
-      ].request();
+      // Xin quyền microphone
+      await [Permission.microphone].request();
 
-      engine = createAgoraRtcEngine();
-      await engine.initialize(RtcEngineContext(
-        appId: AppConstants.callAppId,
-        // appId: "c7b1b1ae4df1478989c274786c427b3e",
-        channelProfile: ChannelProfileType.channelProfileCommunication,
+      // Tạo ZegoExpressEngine
+      await ZegoExpressEngine.createEngineWithProfile(ZegoEngineProfile(
+        1867273448, // AppID từ ZegoCloud
+        ZegoScenario.StandardVoiceCall,
+        appSign: '5ee1c36db5afb252dc4ccd22b0256fb2734675bff66805fd84f0f98cdff8445e',
       ));
-      await engine.setAudioProfile(
-        profile: AudioProfileType.audioProfileDefault,
-        scenario: AudioScenarioType.audioScenarioDefault,
-      );
+
+      ZegoExpressEngine.onRoomStreamUpdate = (roomID, updateType, List<ZegoStream> streamList, extendedData) {
+        log('🎵 Stream update: $updateType, streams: ${streamList.length}');
+
+        if (updateType == ZegoUpdateType.Add) {
+          for (var stream in streamList) {
+            log('▶️ Playing stream: ${stream.streamID} from user: ${stream.user.userID}');
+            // ✅ QUAN TRỌNG: Play remote audio stream
+            ZegoExpressEngine.instance.startPlayingStream(stream.streamID);
+          }
+        }
+      };
+
+      // Đăng ký event handlers
+      ZegoExpressEngine.onRoomUserUpdate = (roomID, updateType, List<ZegoUser> userList) {
+        log('Room user update: $updateType');
+        if (updateType == ZegoUpdateType.Add) {
+          if (userList.isNotEmpty) {
+            remoteUidValue.value = userList[0].userID;
+            log("Remote user ${userList[0].userID} joined");
+            startTimer();
+            _fetchJoinCall();
+
+            if (Platform.isIOS) {
+              _enableIOSAudio();
+            }
+          }
+        } else {
+          remoteUidValue.value = '';
+          log("Remote user left");
+          _handleUserLeft();
+        }
+      };
+
+      ZegoExpressEngine.onRoomStateUpdate = (roomID, state, errorCode, extendedData) {
+        log('Room state update: $state, error: $errorCode');
+        if (state == ZegoRoomState.Connected) {
+          localUserJoined.value = true;
+          log("✅ Local user joined room: $roomID");
+
+          if (Platform.isIOS) {
+            Future.delayed(const Duration(milliseconds: 500), () {
+              _enableIOSAudio();
+            });
+          }
+
+          // Timeout nếu không có người join sau 60s
+          Future.delayed(const Duration(seconds: 60), () {
+            if (remoteUidValue.value.isEmpty) {
+              log("Không có ai nhận cuộc gọi, tự động kết thúc.");
+              endCall();
+            }
+          });
+        }
+      };
+
+      ZegoExpressEngine.onRemoteMicStateUpdate = (streamID, state) {
+        log('🎤 Remote mic state: $streamID = $state');
+      };
+
+      ZegoExpressEngine.onRemoteSoundLevelUpdate = (soundLevels) {
+        for (var level in soundLevels.entries) {
+          if (level.value > 0) {
+            log('🔊 Sound from ${level.key}: ${level.value}');
+          }
+        }
+      };
+
+      ZegoExpressEngine.onCapturedSoundLevelUpdate = (soundLevel) {
+        if (soundLevel > 0) {
+          log('🎙️ My mic level: $soundLevel');
+        }
+      };
+
+      // Cấu hình audio
+      await ZegoExpressEngine.instance.setAudioConfig(ZegoAudioConfig.preset(ZegoAudioConfigPreset.StandardQuality));
+
+      await ZegoExpressEngine.instance.setAudioRouteToSpeaker(true); // Force speaker
+
+      // Bật microphone
+      await ZegoExpressEngine.instance.muteMicrophone(false);
+
+      await ZegoExpressEngine.instance.startSoundLevelMonitor(config: ZegoSoundLevelConfig(1000, true));
 
       if (Platform.isIOS) {
-        await engine.enableAudio();
-        await engine.enableLocalAudio(true);
-        await engine.setDefaultAudioRouteToSpeakerphone(true);
-        await engine.adjustRecordingSignalVolume(100);
-        await engine.adjustPlaybackSignalVolume(400);
+        await ZegoExpressEngine.instance.setCaptureVolume(100);
+        await ZegoExpressEngine.instance.setPlayVolume("user_123", 100);
         log('✅ iOS: Audio pre-configured before join');
       }
 
-      engine.registerEventHandler(
-        RtcEngineEventHandler(
-          onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
-            log("local user ${connection.localUid} joined");
-            localUserJoined.value = true;
+      // Tạo user
+      final userId = Get.find<ProfileController>().user.value?.id.toString() ?? '0';
+      final userName = Get.find<ProfileController>().user.value?.name ?? 'User';
+      ZegoUser user = ZegoUser(userId, userName);
 
-            if (Platform.isIOS) {
-              Future.delayed(const Duration(milliseconds: 500), () async {
-                await engine.enableAudio();
-                await engine.enableLocalAudio(true);
-                await engine.setEnableSpeakerphone(true);
-                await engine.adjustRecordingSignalVolume(100);
-                await engine.adjustPlaybackSignalVolume(400);
-                log('✅ iOS audio activated on join');
-              });
-            }
-            Future.delayed(const Duration(seconds: 60), () {
-              if (remoteUidValue.value == 0) {
-                log("Không có ai nhận cuộc gọi, tự động kết thúc.");
-                endCall();
-              }
-            });
-          },
-          onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) async {
-            log("remote user $remoteUid joined");
-            remoteUidValue.value = remoteUid;
-            // stopRingtone();
-            startTimer();
-            _fetchJoinCall();
-            // engine.muteLocalAudioStream(true);
-
-            if (Platform.isIOS) {
-              try {
-                await engine.enableAudio();
-                await engine.enableLocalAudio(true);
-                await engine.adjustPlaybackSignalVolume(400);
-                await engine.adjustRecordingSignalVolume(100);
-                await engine.setEnableSpeakerphone(true);
-                log('✅ iOS audio fully activated');
-              } catch (e) {
-                log('⚠️ iOS audio activation error: $e');
-              }
-            }
-          },
-          onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) async {
-            log("remote user $remoteUid left channel");
-            remoteUidValue.value = 0;
-            engine.leaveChannel();
-            await _fetchEndCall();
-            if (Get.currentRoute == Routes.CALL) {
-              Get.back();
-            }
-          },
-          onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
-            log('[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
-          },
-          onRemoteAudioStateChanged: (RtcConnection connection, int remoteUid, RemoteAudioState state,
-              RemoteAudioStateReason reason, int elapsed) {
-            log('🎧 Remote audio state: UID=$remoteUid, State=$state, Reason=$reason');
-
-            // ✅ Khi iOS nhận được remote audio, boost volume
-            if (Platform.isIOS &&
-                (state == RemoteAudioState.remoteAudioStateDecoding ||
-                    state == RemoteAudioState.remoteAudioStateStarting)) {
-              engine.adjustPlaybackSignalVolume(400);
-              log('✅ iOS: Volume boosted to 400%');
-            }
-          },
-          onError: (err, msg) {
-            log('onError: $err, $msg');
-          },
-        ),
+      // Join room
+      await ZegoExpressEngine.instance.loginRoom(
+        roomId,
+        user,
+        config: ZegoRoomConfig(0, true, token), // token nếu có
       );
 
-      await engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
-      // await engine.enableAudio();
-      // await engine.enableLocalAudio(true);
+      final streamID = 'stream_$userId';
+      await ZegoExpressEngine.instance.startPublishingStream(streamID);
 
-      // // ✅ THÊM: Set speaker và volume
-      // await engine.setDefaultAudioRouteToSpeakerphone(true);
-      // await engine.adjustRecordingSignalVolume(100);
-      // await engine.adjustPlaybackSignalVolume(100);
-
-      await engine.joinChannel(
-        token: token,
-        channelId: channel,
-        uid: 0,
-        options: const ChannelMediaOptions(
-          autoSubscribeAudio: true,
-          autoSubscribeVideo: false,
-          publishMediaPlayerAudioTrack: true,
-          publishMicrophoneTrack: true,
-          clientRoleType: ClientRoleType.clientRoleBroadcaster,
-        ),
-      );
+      // Start playing all streams
+      await ZegoExpressEngine.instance.muteAllPlayStreamAudio(false);
+      await ZegoExpressEngine.instance.muteAllPlayStreamVideo(true); // Voice only
     } catch (e) {
-      print(e);
+      log('Error initializing Zego: $e');
+    }
+  }
+
+  void _enableIOSAudio() async {
+    if (Platform.isIOS) {
+      try {
+        // Unmute microphone
+        await ZegoExpressEngine.instance.muteMicrophone(false);
+
+        // Set speaker on
+        await ZegoExpressEngine.instance.setAudioRouteToSpeaker(true);
+
+        // Set volume
+        await ZegoExpressEngine.instance.setCaptureVolume(100);
+
+        // ✅ Đảm bảo play tất cả stream
+        await ZegoExpressEngine.instance.muteAllPlayStreamAudio(false);
+
+        log('✅ iOS audio fully activated');
+      } catch (e) {
+        log('⚠️ iOS audio activation error: $e');
+      }
+    }
+  }
+
+  void _handleUserLeft() async {
+    // Stop timer
+    _timer?.cancel();
+    connectionDuration.value = 0;
+
+    // Stop all streams
+    await ZegoExpressEngine.instance.stopPublishingStream();
+    await ZegoExpressEngine.instance.logoutRoom();
+
+    await _fetchEndCall();
+
+    if (Get.currentRoute == Routes.CALL) {
+      Get.back();
     }
   }
 
@@ -250,37 +274,23 @@ class CallController extends GetxController {
     }
   }
 
-  // Gọi khi bắt đầu cuộc gọi
-  // void startRingtone() {
-  //   FlutterRingtonePlayer().play(
-  //     fromAsset: AudioUtils.outgoingCallRingtone,
-  //     // android: AndroidSounds.notification,
-  //     ios: IosSounds.glass,
-  //     looping: true,
-  //   );
-  // }
-
-  // // Dừng khi người nhận nghe máy hoặc hủy cuộc gọi
-  // void stopRingtone() {
-  //   FlutterRingtonePlayer().stop();
-  // }
-
   // Bật/tắt loa ngoài
-  void toggleSpeaker() {
+  void toggleSpeaker() async {
     isSpeakerOn.value = !isSpeakerOn.value;
-    engine.setEnableSpeakerphone(isSpeakerOn.value);
+    await ZegoExpressEngine.instance.setAudioRouteToSpeaker(isSpeakerOn.value);
+    log('🔊 Speaker: ${isSpeakerOn.value ? "ON" : "OFF"}');
   }
 
   // Bật/tắt mic
-  void toggleMic() {
+  void toggleMic() async {
     isMicMuted.value = !isMicMuted.value;
-    engine.muteLocalAudioStream(isMicMuted.value);
+    await ZegoExpressEngine.instance.muteMicrophone(isMicMuted.value);
   }
 
   // Kết thúc cuộc gọi
   Future<void> endCall() async {
-    await engine.leaveChannel();
-    // stopRingtone();
+    await ZegoExpressEngine.instance.stopPublishingStream();
+    await ZegoExpressEngine.instance.logoutRoom();
     await _endCall();
     Get.back();
   }
@@ -313,9 +323,9 @@ class CallController extends GetxController {
   }
 
   Future<void> _dispose() async {
-    await engine.leaveChannel();
-    await engine.release();
-    // stopRingtone();
+    await ZegoExpressEngine.instance.stopPublishingStream();
+    await ZegoExpressEngine.instance.logoutRoom();
+    await ZegoExpressEngine.destroyEngine();
   }
 
   void _setupIsolated() async {
@@ -329,9 +339,7 @@ class CallController extends GetxController {
         if (message.data['type'] == 'chat' && message.data['call_action'] == 'reject_call') {
           await _dispose();
           if (Get.currentRoute == Routes.CALL) {
-            if (Get.currentRoute == Routes.CALL) {
-              Get.back();
-            }
+            Get.back();
           }
         }
       } catch (e) {
@@ -343,8 +351,7 @@ class CallController extends GetxController {
   @override
   void onClose() {
     _timer?.cancel();
-    engine.leaveChannel();
-    // stopRingtone();
+    ZegoExpressEngine.instance.logoutRoom();
     super.onClose();
   }
 
