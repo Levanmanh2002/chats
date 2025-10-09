@@ -56,12 +56,10 @@ class CallController extends GetxController {
     try {
       await [Permission.microphone].request();
 
-      final channel =
-          '${parameter.channel}_${parameter.id}_${Get.find<ProfileController>().user.value?.id}';
+      final channel = '${parameter.channel}_${parameter.id}_${Get.find<ProfileController>().user.value?.id}';
 
       Map<String, String> params = {
-        "call_id":
-            parameter.callId != null ? parameter.callId.toString() : isCallId.value.toString(),
+        "call_id": parameter.callId != null ? parameter.callId.toString() : isCallId.value.toString(),
         "receiver_id": parameter.id.toString(),
         "channel_name": channel,
         // "channel_name": 'test_123321',
@@ -95,11 +93,7 @@ class CallController extends GetxController {
 
   Future<void> initAgora({required String token, required String channel}) async {
     try {
-      // retrieve permissions
-      await [
-        Permission.microphone,
-        // Permission.camera,
-      ].request();
+      await [Permission.microphone].request();
 
       engine = createAgoraRtcEngine();
       await engine.initialize(RtcEngineContext(
@@ -152,8 +146,7 @@ class CallController extends GetxController {
             }
             startTimer();
           },
-          onUserOffline:
-              (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) async {
+          onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) async {
             log("remote user $remoteUid left channel");
             remoteUidValue.value = 0;
             engine.leaveChannel();
@@ -165,8 +158,8 @@ class CallController extends GetxController {
           onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
             log('[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
           },
-          onRemoteAudioStateChanged: (RtcConnection connection, int remoteUid,
-              RemoteAudioState state, RemoteAudioStateReason reason, int elapsed) {
+          onRemoteAudioStateChanged: (RtcConnection connection, int remoteUid, RemoteAudioState state,
+              RemoteAudioStateReason reason, int elapsed) {
             log('🎧 Remote audio state: UID=$remoteUid, State=$state, Reason=$reason');
           },
           onError: (err, msg) {
@@ -174,14 +167,6 @@ class CallController extends GetxController {
           },
         ),
       );
-      // await engine.enableAudio();
-      // await engine.enableLocalAudio(true);
-
-      // // ✅ THÊM: Set speaker và volume
-      // await engine.setDefaultAudioRouteToSpeakerphone(true);
-      // await engine.adjustRecordingSignalVolume(100);
-      // await engine.adjustPlaybackSignalVolume(100);
-
       await engine.joinChannel(
         token: token,
         channelId: channel,
@@ -201,8 +186,7 @@ class CallController extends GetxController {
   void _fetchJoinCall() async {
     try {
       Map<String, String> params = {
-        "message_id":
-            parameter.callId != null ? parameter.callId.toString() : isCallId.value.toString(),
+        "message_id": parameter.callId != null ? parameter.callId.toString() : isCallId.value.toString(),
       };
 
       final response = await messagesRepository.joinCall(params);
@@ -269,8 +253,7 @@ class CallController extends GetxController {
   Future<void> _endCall() async {
     try {
       final response = await messagesRepository.endCall({
-        "message_id":
-            parameter.callId != null ? parameter.callId.toString() : isCallId.value.toString(),
+        "message_id": parameter.callId != null ? parameter.callId.toString() : isCallId.value.toString(),
       });
 
       if (response.statusCode == 200) {
@@ -302,8 +285,7 @@ class CallController extends GetxController {
 
   void _setupIsolated() async {
     IsolateNameServer.removePortNameMapping(AppConstants.rejectCallChannelId);
-    IsolateNameServer.registerPortWithName(
-        _receivePortReject.sendPort, AppConstants.rejectCallChannelId);
+    IsolateNameServer.registerPortWithName(_receivePortReject.sendPort, AppConstants.rejectCallChannelId);
 
     _receivePortReject.listen((valueData) async {
       if (valueData is! Map<String, dynamic>) return;
