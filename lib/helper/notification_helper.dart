@@ -46,10 +46,11 @@ Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
       },
     );
 
-    FlutterCallkitIncoming.onEvent.listen((event) {
+    FlutterCallkitIncoming.onEvent.listen((event) async {
       log((event?.body ?? {}).toString(), name: 'CallKitEvent');
       switch (event?.event) {
         case Event.actionCallAccept:
+          await FlutterCallkitIncoming.endAllCalls();
           if (!Get.isRegistered<CallController>()) {
             final extraData = event?.body?['extra'];
 
@@ -148,7 +149,8 @@ class NotificationHelper {
       iOS: initializationSettingsIOS,
     );
 
-    flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
 
     flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
@@ -184,7 +186,8 @@ class NotificationHelper {
 
       if (message.notification != null) {
         if (message.data['type'] == 'chat' && message.data['call_action'] == 'reject_call') {
-          IsolateNameServer.lookupPortByName(AppConstants.rejectCallChannelId)?.send(message.toMap());
+          IsolateNameServer.lookupPortByName(AppConstants.rejectCallChannelId)
+              ?.send(message.toMap());
         }
       }
     });
@@ -202,10 +205,11 @@ class NotificationHelper {
       }
     });
 
-    FlutterCallkitIncoming.onEvent.listen((event) {
+    FlutterCallkitIncoming.onEvent.listen((event) async {
       log((event?.body ?? {}).toString(), name: 'CallKitEvent');
       switch (event?.event) {
         case Event.actionCallAccept:
+          await FlutterCallkitIncoming.endAllCalls();
           if (!Get.isRegistered<CallController>()) {
             final extraData = event?.body?['extra'];
 
@@ -282,14 +286,16 @@ class NotificationHelper {
 
       final relatedId = int.tryParse(message.data['id'] ?? '');
 
-      if (message.data['type'] == 'chat' && (message.data['is_group'] == 0 || message.data['is_group'] == "0")) {
+      if (message.data['type'] == 'chat' &&
+          (message.data['is_group'] == 0 || message.data['is_group'] == "0")) {
         if (relatedId != null) {
           Get.toNamed(
             Routes.MESSAGE,
             arguments: MessageParameter(chatId: relatedId),
           );
         }
-      } else if (message.data['type'] == 'chat' && (message.data['is_group'] == 1 || message.data['is_group'] == "1")) {
+      } else if (message.data['type'] == 'chat' &&
+          (message.data['is_group'] == 1 || message.data['is_group'] == "1")) {
         if (relatedId != null) {
           Get.toNamed(
             Routes.GROUP_MESSAGE,

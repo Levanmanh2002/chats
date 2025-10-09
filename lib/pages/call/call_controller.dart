@@ -56,15 +56,18 @@ class CallController extends GetxController {
     try {
       await [Permission.microphone].request();
 
-      final channel = '${parameter.channel}_${parameter.id}_${Get.find<ProfileController>().user.value?.id}';
+      final channel =
+          '${parameter.channel}_${parameter.id}_${Get.find<ProfileController>().user.value?.id}';
 
       Map<String, String> params = {
-        "call_id": parameter.callId != null ? parameter.callId.toString() : isCallId.value.toString(),
+        "call_id":
+            parameter.callId != null ? parameter.callId.toString() : isCallId.value.toString(),
         "receiver_id": parameter.id.toString(),
         "channel_name": channel,
         // "channel_name": 'test_123321',
         // "uid": '${parameter.id}_${Get.find<ProfileController>().user.value?.id}',
-        "uid": '0',
+        // "uid": math.Random().nextInt(255).toString(),
+        "uid": "0",
       };
 
       final response = await messagesRepository.initCall(params);
@@ -105,18 +108,9 @@ class CallController extends GetxController {
         channelProfile: ChannelProfileType.channelProfileCommunication,
       ));
       await engine.setAudioProfile(
-        profile: AudioProfileType.audioProfileDefault,
+        profile: AudioProfileType.audioProfileSpeechStandard,
         scenario: AudioScenarioType.audioScenarioDefault,
       );
-
-      if (Platform.isIOS) {
-        await engine.enableAudio();
-        await engine.enableLocalAudio(true);
-        await engine.setDefaultAudioRouteToSpeakerphone(true);
-        await engine.adjustRecordingSignalVolume(100);
-        await engine.adjustPlaybackSignalVolume(400);
-        log('✅ iOS: Audio pre-configured before join');
-      }
 
       engine.registerEventHandler(
         RtcEngineEventHandler(
@@ -129,12 +123,10 @@ class CallController extends GetxController {
                 await engine.enableAudio();
                 await engine.enableLocalAudio(true);
                 await engine.setEnableSpeakerphone(true);
-                await engine.adjustRecordingSignalVolume(100);
-                await engine.adjustPlaybackSignalVolume(400);
                 log('✅ iOS audio activated on join');
               });
             }
-            Future.delayed(const Duration(seconds: 60), () {
+            Future.delayed(const Duration(seconds: 300), () {
               if (remoteUidValue.value == 0) {
                 log("Không có ai nhận cuộc gọi, tự động kết thúc.");
                 endCall();
@@ -145,7 +137,6 @@ class CallController extends GetxController {
             log("remote user $remoteUid joined");
             remoteUidValue.value = remoteUid;
             // stopRingtone();
-            startTimer();
             _fetchJoinCall();
             // engine.muteLocalAudioStream(true);
 
@@ -153,16 +144,16 @@ class CallController extends GetxController {
               try {
                 await engine.enableAudio();
                 await engine.enableLocalAudio(true);
-                await engine.adjustPlaybackSignalVolume(400);
-                await engine.adjustRecordingSignalVolume(100);
                 await engine.setEnableSpeakerphone(true);
                 log('✅ iOS audio fully activated');
               } catch (e) {
                 log('⚠️ iOS audio activation error: $e');
               }
             }
+            startTimer();
           },
-          onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) async {
+          onUserOffline:
+              (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) async {
             log("remote user $remoteUid left channel");
             remoteUidValue.value = 0;
             engine.leaveChannel();
@@ -174,25 +165,15 @@ class CallController extends GetxController {
           onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
             log('[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
           },
-          onRemoteAudioStateChanged: (RtcConnection connection, int remoteUid, RemoteAudioState state,
-              RemoteAudioStateReason reason, int elapsed) {
+          onRemoteAudioStateChanged: (RtcConnection connection, int remoteUid,
+              RemoteAudioState state, RemoteAudioStateReason reason, int elapsed) {
             log('🎧 Remote audio state: UID=$remoteUid, State=$state, Reason=$reason');
-
-            // ✅ Khi iOS nhận được remote audio, boost volume
-            if (Platform.isIOS &&
-                (state == RemoteAudioState.remoteAudioStateDecoding ||
-                    state == RemoteAudioState.remoteAudioStateStarting)) {
-              engine.adjustPlaybackSignalVolume(400);
-              log('✅ iOS: Volume boosted to 400%');
-            }
           },
           onError: (err, msg) {
             log('onError: $err, $msg');
           },
         ),
       );
-
-      await engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
       // await engine.enableAudio();
       // await engine.enableLocalAudio(true);
 
@@ -206,10 +187,9 @@ class CallController extends GetxController {
         channelId: channel,
         uid: 0,
         options: const ChannelMediaOptions(
-          autoSubscribeAudio: true,
-          autoSubscribeVideo: false,
-          publishMediaPlayerAudioTrack: true,
-          publishMicrophoneTrack: true,
+          autoSubscribeAudio: true, // Automatically subscribe to all audio streams
+          publishMicrophoneTrack: true, // Publish microphone-captured audio
+          // Use clientRoleBroadcaster to act as a host or clientRoleAudience for audience
           clientRoleType: ClientRoleType.clientRoleBroadcaster,
         ),
       );
@@ -221,7 +201,8 @@ class CallController extends GetxController {
   void _fetchJoinCall() async {
     try {
       Map<String, String> params = {
-        "message_id": parameter.callId != null ? parameter.callId.toString() : isCallId.value.toString(),
+        "message_id":
+            parameter.callId != null ? parameter.callId.toString() : isCallId.value.toString(),
       };
 
       final response = await messagesRepository.joinCall(params);
@@ -288,7 +269,8 @@ class CallController extends GetxController {
   Future<void> _endCall() async {
     try {
       final response = await messagesRepository.endCall({
-        "message_id": parameter.callId != null ? parameter.callId.toString() : isCallId.value.toString(),
+        "message_id":
+            parameter.callId != null ? parameter.callId.toString() : isCallId.value.toString(),
       });
 
       if (response.statusCode == 200) {
@@ -320,7 +302,8 @@ class CallController extends GetxController {
 
   void _setupIsolated() async {
     IsolateNameServer.removePortNameMapping(AppConstants.rejectCallChannelId);
-    IsolateNameServer.registerPortWithName(_receivePortReject.sendPort, AppConstants.rejectCallChannelId);
+    IsolateNameServer.registerPortWithName(
+        _receivePortReject.sendPort, AppConstants.rejectCallChannelId);
 
     _receivePortReject.listen((valueData) async {
       if (valueData is! Map<String, dynamic>) return;
@@ -350,9 +333,10 @@ class CallController extends GetxController {
 
   @override
   void dispose() {
-    super.dispose();
     _timer?.cancel();
     _dispose();
     _receivePortReject.close();
+
+    super.dispose();
   }
 }
