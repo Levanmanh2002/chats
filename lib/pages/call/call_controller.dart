@@ -48,6 +48,7 @@ class CallController extends GetxController {
         //     "007eJxTYJg8geXALvWIgIWTDuuIrJLI3b2xlSv26rRNpl0S0k/PGS1SYEg2TzJMMkxMNUlJMzQxt7C0sEw2MgcyzJJNjMyTjFOvVD3KaAhkZPiY5sjMyACBID43Q0lqcUm8oZGxsZEhAwMA/cIg1g==",
         channel: parameter.channel!,
       );
+      _fetchCheckCall();
     }
     _setupIsolated();
   }
@@ -209,6 +210,23 @@ class CallController extends GetxController {
 
       if (response.statusCode == 200) {
         log('Call ended');
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  void _fetchCheckCall() async {
+    try {
+      Map<String, String> params = {
+        "message_id": parameter.callId != null ? parameter.callId.toString() : isCallId.value.toString(),
+      };
+
+      final response = await messagesRepository.checkCall(params);
+
+      if (response.statusCode != 200) {
+        DialogUtils.showErrorDialog(response.body['message']);
+        Get.back();
       }
     } catch (e) {
       log(e.toString());
