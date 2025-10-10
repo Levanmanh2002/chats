@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:chats/models/call/end_call_model.dart';
 import 'package:chats/models/chats/chat_data_model.dart';
 import 'package:chats/models/chats/chats_models.dart';
 import 'package:chats/models/contact/friend_request.dart';
@@ -10,6 +11,7 @@ import 'package:chats/models/socket/chat_socket_model.dart';
 import 'package:chats/models/socket/group_socket_model.dart';
 import 'package:chats/models/socket/message_socket_model.dart';
 import 'package:chats/models/socket/socket_model.dart';
+import 'package:chats/pages/call/call_controller.dart';
 import 'package:chats/pages/contacts/contacts_controller.dart';
 import 'package:chats/resourese/chats/ichats_repository.dart';
 import 'package:chats/resourese/messages/imessages_repository.dart';
@@ -247,6 +249,16 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
             } else if (pusherModel.type == PusherType.ACCEPTED_INVITE_EVENT) {
               Get.find<ContactsController>().updateContact(pusherModel.data!.receiver!);
             } else if (pusherModel.type == PusherType.UNFRIEND_EVENT) {}
+          } catch (_) {}
+
+          try {
+            final callJson = EndCallModel.fromJson(json);
+            if (callJson.callAction == PusherType.END_CALL_EVENT ||
+                callJson.callAction == PusherType.REJECT_CALL_EVENT) {
+              if (Get.isRegistered<CallController>()) {
+                Get.find<CallController>().endCall();
+              }
+            }
           } catch (_) {}
         }
       },

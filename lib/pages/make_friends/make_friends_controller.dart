@@ -27,7 +27,7 @@ class MakeFriendsController extends GetxController {
   var isLoadingMessage = false.obs;
 
   void addFriend() async {
-    try { 
+    try {
       if (contact == null) return;
       isLoadingAdd.value = true;
 
@@ -93,13 +93,15 @@ class MakeFriendsController extends GetxController {
     try {
       isLoadingMessage.value = true;
 
-      final response = await messagesRepository.getIdChatByUser(parameter.contact!.id!);
+      final response = await messagesRepository.getChatIdByUserCheckHide(parameter.contact!.id!);
 
       if (response.statusCode == 200) {
         Get.toNamed(
           Routes.MESSAGE,
           arguments: MessageParameter(chatId: response.body['data']['id'], contact: contact),
         );
+      } else if (response.statusCode == 400) {
+        DialogUtils.showErrorDialog(response.body['message']);
       } else {
         Get.toNamed(
           Routes.MESSAGE,

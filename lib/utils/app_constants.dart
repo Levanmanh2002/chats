@@ -51,6 +51,7 @@ class AppConstants {
   static const String contactAcceptedUri = '/api/v1/contact/friends';
   static const String unfriendUri = '/api/v1/contact/unfriend';
   static String getIdChatByUser(int userId) => '/api/v1/message/$userId/get-chat-id-by-user';
+  static String getChatIdByUserCheckHide(int userId) => '/api/v1/message/$userId/get-chat-id-by-user-check-hide';
   static const String sendMessageUri = '/api/v1/message/send-message-to-user';
   static String messageList(int chatId, {int page = 1, int limit = 10, String search = ''}) =>
       '/api/v1/message/$chatId/conversion?page=$page&size=$limit&search=$search';

@@ -17,6 +17,18 @@ class MessagesRepository extends IMessagesRepository {
   }
 
   @override
+  Future<Response> getChatIdByUserCheckHide(int userId) async {
+    try {
+      final result = await clientGetData(AppConstants.getChatIdByUserCheckHide(userId));
+
+      return result;
+    } catch (error) {
+      handleError(error);
+      rethrow;
+    }
+  }
+
+  @override
   Future<Response> sendMessage(Map<String, String> body, List<MultipartBody> multipartBody) async {
     try {
       final result = await clientPostMultipartData(AppConstants.sendMessageUri, body, multipartBody);
@@ -243,7 +255,7 @@ class MessagesRepository extends IMessagesRepository {
       rethrow;
     }
   }
-  
+
   @override
   Future<Response> checkCall(Map<String, String> params) async{
     try {
