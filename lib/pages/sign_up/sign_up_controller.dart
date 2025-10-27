@@ -87,7 +87,8 @@ class SignUpController extends GetxController {
       String phone = phoneController.text.trim();
       String password = passwordController.text.trim();
 
-      String numberWithCountryCode = phoneCode.value.getCodeAsString() + phone;
+      String numberWithCountryCode =
+          phoneCode.value.getCodeAsString() + (phone.startsWith('0') ? phone.substring(1) : phone);
       PhoneValid phoneValid = await CustomValidator.isPhoneValid(numberWithCountryCode);
       numberWithCountryCode = phoneValid.phone;
 

@@ -53,7 +53,9 @@ class SignInController extends GetxController {
       String phone = phoneController.text.trim();
       String password = passwordController.text.trim();
 
-      String numberWithCountryCode = phoneCode.value.getCodeAsString() + phone.substring(1);
+      String numberWithCountryCode =
+          phoneCode.value.getCodeAsString() + (phone.startsWith('0') ? phone.substring(1) : phone);
+
       PhoneValid phoneValid = await CustomValidator.isPhoneValid(numberWithCountryCode);
       numberWithCountryCode = phoneValid.phone;
 

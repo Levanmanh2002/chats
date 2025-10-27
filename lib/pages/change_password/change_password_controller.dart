@@ -49,7 +49,10 @@ class ChangePasswordController extends GetxController {
     try {
       isLoading.value = true;
 
-      String numberWithCountryCode = phoneCode.value.getCodeAsString() + parameter.phone;
+      String phone = parameter.phone;
+
+      String numberWithCountryCode =
+          phoneCode.value.getCodeAsString() + (phone.startsWith('0') ? phone.substring(1) : phone);
       PhoneValid phoneValid = await CustomValidator.isPhoneValid(numberWithCountryCode);
       numberWithCountryCode = phoneValid.phone;
 

@@ -1,5 +1,6 @@
 import 'package:chats/utils/app_constants.dart';
 import 'package:chats/utils/util.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:phone_number/phone_number.dart';
 
@@ -11,6 +12,22 @@ class CustomValidator {
       r'^(?!.*[ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯưĂâđêôơư])(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[#?!@$%^&*-])\S{8,}$');
 
   static Future<PhoneValid> isPhoneValid(String number) async {
+    if (kIsWeb) {
+      String cleaned = number.replaceAll(RegExp(r'\s+|-'), '');
+
+      if (cleaned.startsWith('0')) {
+        cleaned = '+84${cleaned.substring(1)}';
+      }
+
+      final regex = RegExp(
+        r'^(?:\+84|84|0)(3[2-9]|5[6|8|9]|7[0|6-9]|8[1-5]|9[0-9])[0-9]{7}$',
+      );
+
+      final isValid = regex.hasMatch(number);
+
+      return PhoneValid(isValid: isValid, phone: cleaned);
+    }
+
     String phone = number;
     try {
       PhoneNumber phoneNumber = await PhoneNumberUtil().parse(number);

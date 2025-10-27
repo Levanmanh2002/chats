@@ -59,7 +59,11 @@ class OtpController extends GetxController {
       if (parameter.contact == null) return;
       EasyLoading.show(dismissOnTap: false, maskType: EasyLoadingMaskType.clear);
 
-      String numberWithCountryCode = phoneCode.value.getCodeAsString() + parameter.contact!;
+      String phone = parameter.contact!;
+
+      String numberWithCountryCode =
+          phoneCode.value.getCodeAsString() + (phone.startsWith('0') ? phone.substring(1) : phone);
+
       PhoneValid phoneValid = await CustomValidator.isPhoneValid(numberWithCountryCode);
       numberWithCountryCode = phoneValid.phone;
 
@@ -84,8 +88,11 @@ class OtpController extends GetxController {
   void onConfirm() async {
     try {
       clearError();
+      String phone = parameter.contact!;
 
-      String numberWithCountryCode = phoneCode.value.getCodeAsString() + parameter.contact!;
+      String numberWithCountryCode =
+          phoneCode.value.getCodeAsString() + (phone.startsWith('0') ? phone.substring(1) : phone);
+
       PhoneValid phoneValid = await CustomValidator.isPhoneValid(numberWithCountryCode);
       numberWithCountryCode = phoneValid.phone;
 

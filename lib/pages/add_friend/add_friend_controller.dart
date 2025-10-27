@@ -38,7 +38,7 @@ class AddFriendController extends GetxController {
 
       String phone = phoneController.text.trim();
       String numberWithCountryCode =
-          PhoneCodeModel().getCodeAsString() + (phone.startsWith('0') ? phone.substring(1) : phone);
+          phoneCode.value.getCodeAsString() + (phone.startsWith('0') ? phone.substring(1) : phone);
 
       final response = await contactRepository.searchContactPhone(numberWithCountryCode);
 

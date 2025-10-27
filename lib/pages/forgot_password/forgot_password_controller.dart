@@ -41,8 +41,9 @@ class ForgotPasswordController extends GetxController {
 
       String phone = phoneController.text.trim();
 
-      String numberWithCountryCode = phoneCode.value.getCodeAsString() + phone;
-      PhoneValid phoneValid = await CustomValidator.isPhoneValid(numberWithCountryCode);
+      String numberWithCountryCode =
+          phoneCode.value.getCodeAsString() + (phone.startsWith('0') ? phone.substring(1) : phone);
+      PhoneValid phoneValid = await CustomValidator.isPhoneValid(phone);
       numberWithCountryCode = phoneValid.phone;
 
       final response = await contactRepository.findAccount(numberWithCountryCode);
