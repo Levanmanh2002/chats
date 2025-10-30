@@ -56,6 +56,10 @@ class GroupBottomSendMessWebView extends GetView<ChatsController> {
                         child: Row(
                           children: [
                             IconButton(
+                              onPressed: () => controller.pickVideo(isGroup: true),
+                              icon: ImageAssetCustom(imagePath: IconsAssets.videoIcon, color: appTheme.grayColor),
+                            ),
+                            IconButton(
                               onPressed: () => controller.pickedFile(isGroup: true),
                               icon: ImageAssetCustom(imagePath: IconsAssets.paperclipIcon, color: appTheme.grayColor),
                             ),
