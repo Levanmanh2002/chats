@@ -45,9 +45,15 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
           }
           return ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: AspectRatio(
-              aspectRatio: _controller.value.aspectRatio,
-              child: VideoPlayer(_controller),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: appTheme.grayColor.withOpacity(0.5),
+              ),
+              child: AspectRatio(
+                aspectRatio: _controller.value.aspectRatio,
+                child: VideoPlayer(_controller),
+              ),
             ),
           );
         },

@@ -351,6 +351,30 @@ class MessageController extends GetxController {
     }
   }
 
+  void pickVideo({bool isGroup = false}) async {
+    isTickers.value = false;
+    final XFile? pickedVideo = await ImagePicker().pickVideo(
+      source: ImageSource.gallery,
+      maxDuration: const Duration(minutes: 10), // optional
+    );
+
+    if (pickedVideo == null) return;
+
+    final bytes = await pickedVideo.readAsBytes();
+    if (bytes.isEmpty) {
+      debugPrint("⚠️ Video bytes is empty");
+      return;
+    }
+
+    // imageBytes.value = bytes;
+    // imageName.value = pickedVideo.name;
+
+    imageFile.clear();
+    imageFile.add(pickedVideo);
+
+    onSendMessage();
+  }
+
   void sendTicker(TickersModel ticker) {
     selectedTickers.value = ticker;
     isTickers.value = false;
