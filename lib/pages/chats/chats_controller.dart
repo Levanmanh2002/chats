@@ -453,6 +453,34 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
     }
   }
 
+  void pickVideo({bool isGroup = false}) async {
+    isTickers.value = false;
+    final XFile? pickedVideo = await ImagePicker().pickVideo(
+      source: ImageSource.gallery,
+      maxDuration: const Duration(minutes: 10), // optional
+    );
+
+    if (pickedVideo == null) return;
+
+    final bytes = await pickedVideo.readAsBytes();
+    if (bytes.isEmpty) {
+      debugPrint("⚠️ Video bytes is empty");
+      return;
+    }
+
+    imageBytes.value = bytes;
+    imageName.value = pickedVideo.name;
+
+    imageFile.clear();
+    imageFile.add(pickedVideo);
+
+    if (isGroup) {
+      onSendGroupMessage();
+    } else {
+      onSendMessage();
+    }
+  }
+
   Rx<Uint8List?> imageBytes = Rx<Uint8List?>(null);
   var imageName = ''.obs;
 
