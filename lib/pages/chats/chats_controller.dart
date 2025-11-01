@@ -475,9 +475,9 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
     imageFile.add(pickedVideo);
 
     if (isGroup) {
-      onSendGroupMessage();
+      onSendGroupMessage(isVideo: true);
     } else {
-      onSendMessage();
+      onSendMessage(isVideo: true);
     }
   }
 
@@ -523,7 +523,7 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
     onSendMessage();
   }
 
-  void onSendMessage() async {
+  void onSendMessage({bool isVideo = false}) async {
     try {
       final messageText = messageController.text.trim();
       final imageFile = this.imageFile.toList();
@@ -538,7 +538,7 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
               .map((file) => FilesModels(
                     id: DateTime.now().millisecondsSinceEpoch,
                     fileUrl: file.path,
-                    fileType: file.path.resolveMimeType,
+                    fileType: isVideo ? 'video/mp4' : file.path.resolveMimeType,
                     isLocal: true,
                   ))
               .toList()
@@ -1045,7 +1045,7 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
 
   /* ================================================== */
 
-  void onSendGroupMessage() async {
+  void onSendGroupMessage({bool isVideo = false}) async {
     try {
       final messageText = messageController.text.trim();
       final imageFile = this.imageFile.toList();
@@ -1060,7 +1060,7 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
               .map((file) => FilesModels(
                     id: DateTime.now().millisecondsSinceEpoch,
                     fileUrl: file.path,
-                    fileType: file.path.resolveMimeType,
+                    fileType: isVideo ? 'video/mp4' : file.path.resolveMimeType,
                     isLocal: true,
                   ))
               .toList()

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:chats/main.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -21,13 +22,23 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   @override
   void initState() {
     super.initState();
-    _controller = widget.isLocal
-        ? VideoPlayerController.file(File(widget.videoPath))
-        : VideoPlayerController.networkUrl(Uri.parse(widget.videoPath))
-      ..initialize().then((_) {
-        _isInitializedNotifier.value = true;
-        _isPlayingNotifier.value = _controller.value.isPlaying;
-      });
+    if (kIsWeb) {
+      _controller = widget.isLocal
+          ? VideoPlayerController.networkUrl(Uri.parse(widget.videoPath))
+          : VideoPlayerController.networkUrl(Uri.parse(widget.videoPath))
+        ..initialize().then((_) {
+          _isInitializedNotifier.value = true;
+          _isPlayingNotifier.value = _controller.value.isPlaying;
+        });
+    } else {
+      _controller = widget.isLocal
+          ? VideoPlayerController.file(File(widget.videoPath))
+          : VideoPlayerController.networkUrl(Uri.parse(widget.videoPath))
+        ..initialize().then((_) {
+          _isInitializedNotifier.value = true;
+          _isPlayingNotifier.value = _controller.value.isPlaying;
+        });
+    }
 
     _controller.addListener(() {
       _isPlayingNotifier.value = _controller.value.isPlaying;

@@ -66,8 +66,10 @@ extension FileExtension on String {
   }
 
   String get resolveMimeType {
-    String extension = toLowerCase().split('.').last;
+    final extension = toLowerCase().split('.').last;
+
     switch (extension) {
+      // 🖼 Ảnh
       case 'jpg':
       case 'jpeg':
         return 'image/jpeg';
@@ -75,6 +77,15 @@ extension FileExtension on String {
         return 'image/png';
       case 'gif':
         return 'image/gif';
+      case 'bmp':
+        return 'image/bmp';
+      case 'webp':
+        return 'image/webp';
+      case 'heic':
+      case 'heif':
+        return 'image/heic';
+
+      // 🎥 Video
       case 'mp4':
         return 'video/mp4';
       case 'mov':
@@ -83,21 +94,67 @@ extension FileExtension on String {
         return 'video/x-msvideo';
       case 'mkv':
         return 'video/x-matroska';
+      case '3gp':
+        return 'video/3gpp';
+      case '3g2':
+        return 'video/3gpp2';
+      case 'm4v':
+        return 'video/x-m4v';
+      case 'webm':
+        return 'video/webm';
+      case 'flv':
+        return 'video/x-flv';
+      case 'ts':
+      case 'm2ts':
+        return 'video/mp2t';
+
+      // 🎵 Audio
       case 'mp3':
         return 'audio/mpeg';
       case 'wav':
         return 'audio/wav';
+      case 'aac':
+        return 'audio/aac';
+      case 'ogg':
+        return 'audio/ogg';
+      case 'oga':
+        return 'audio/ogg';
+      case 'm4a':
+        return 'audio/mp4';
+      case 'flac':
+        return 'audio/flac';
+      case 'amr':
+        return 'audio/amr';
+
+      // 📄 Tài liệu
       case 'pdf':
         return 'application/pdf';
       case 'doc':
-      case 'docx':
         return 'application/msword';
+      case 'docx':
+        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
       case 'xls':
-      case 'xlsx':
         return 'application/vnd.ms-excel';
+      case 'xlsx':
+        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
       case 'ppt':
-      case 'pptx':
         return 'application/vnd.ms-powerpoint';
+      case 'pptx':
+        return 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
+      case 'txt':
+        return 'text/plain';
+      case 'csv':
+        return 'text/csv';
+      case 'json':
+        return 'application/json';
+      case 'zip':
+        return 'application/zip';
+      case 'rar':
+        return 'application/vnd.rar';
+      case '7z':
+        return 'application/x-7z-compressed';
+
+      // ❓ Mặc định
       default:
         return 'application/octet-stream';
     }
