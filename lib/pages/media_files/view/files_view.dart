@@ -1,9 +1,9 @@
 import 'package:chats/main.dart';
 import 'package:chats/models/messages/media_file_model.dart';
 import 'package:chats/pages/media_files/media_files_controller.dart';
-import 'package:chats/pages/media_files/widget/attach_file_widget.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/launch_url.dart';
+import 'package:chats/widget/chats/attach_file_widget.dart';
 import 'package:chats/widget/list_loader.dart';
 import 'package:chats/widget/no_data_widget.dart';
 import 'package:chats/widget/reponsive/extension.dart';
@@ -23,6 +23,7 @@ class FilesView extends GetView<MediaFilesController> {
               child: SingleChildScrollView(
                 child: (controller.mediaFileModel.value?.items ?? []).isNotEmpty
                     ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: (controller.mediaFileModel.value?.items ?? []).groupByMonth().entries.map((entry) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

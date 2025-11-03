@@ -8,7 +8,7 @@ import 'package:chats/utils/launch_url.dart';
 import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/images/selectable_image_widget.dart';
 import 'package:chats/widget/reponsive/extension.dart';
-import 'package:chats/widget/video/video_thumbnail_view.dart';
+import 'package:chats/widget/video/video_preview_view.dart';
 import 'package:flutter/material.dart';
 
 class AttachFileWidget extends StatelessWidget {
@@ -36,8 +36,9 @@ class AttachFileWidget extends StatelessWidget {
           borderRadius: borderRadius,
         );
       case FileCategory.VIDEO:
-        return WebVideoThumbnail(
+        return VideoPreview(
           videoUrl: item.fileUrl ?? '',
+          isLocal: item.isLocal,
         );
       // return Stack(
       //   alignment: Alignment.center,

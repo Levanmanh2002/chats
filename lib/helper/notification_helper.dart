@@ -10,8 +10,6 @@ import 'package:chats/pages/message/message_parameter.dart';
 import 'package:chats/resourese/messages/messages_repository.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/app_constants.dart';
-import 'package:chats/utils/local_storage.dart';
-import 'package:chats/utils/shared_key.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_callkit_incoming/entities/android_params.dart';
@@ -30,22 +28,6 @@ Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
   handleIncomingCall(message.data);
 
   if (message.data['type'] == 'chat' && message.data['call_token'] != null) {
-    log('handleIncomingCall: ${message.data.toString()}', name: 'handleIncomingCall');
-    print('handleIncomingCall: ${message.data.toString()}');
-    await LocalStorage.init();
-    LocalStorage.setJSON(
-      SharedKey.CALL_CHAT_EVENT,
-      {
-        "id": message.data['id'] ?? '',
-        "user_id": message.data['user_id'] ?? '',
-        "call_id": message.data['call_id'] ?? '',
-        "call_token": message.data['call_token'] ?? '',
-        "channel_name": message.data['channel_name'] ?? '',
-        "user_name": message.data['user_name'] ?? '',
-        "user_avatar": message.data['user_avatar'] ?? '',
-      },
-    );
-
     FlutterCallkitIncoming.onEvent.listen((event) async {
       log((event?.body ?? {}).toString(), name: 'CallKitEvent');
       switch (event?.event) {
@@ -110,6 +92,33 @@ Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
 }
 
 class NotificationHelper {
+  static Future<void> showLocalNotification(RemoteMessage message) async {
+    const AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
+      AppConstants.notificationChannelId,
+      'Chat Notifications',
+      importance: Importance.max,
+      priority: Priority.high,
+      icon: '@mipmap/ic_launcher',
+    );
+    const DarwinNotificationDetails iOSNotificationDetails = DarwinNotificationDetails(
+      presentBadge: true,
+      presentAlert: true,
+      presentSound: true,
+    );
+    const NotificationDetails notificationDetails = NotificationDetails(
+      android: androidNotificationDetails,
+      iOS: iOSNotificationDetails,
+    );
+    int notificationId = DateTime.now().microsecond;
+    return flutterLocalNotificationsPlugin.show(
+      notificationId,
+      message.notification?.title ?? '',
+      message.notification?.body ?? '',
+      notificationDetails,
+      payload: jsonEncode(message.toMap()),
+    );
+  }
+
   static Future<void> initialize() async {
     await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
       alert: true,
@@ -149,8 +158,7 @@ class NotificationHelper {
       iOS: initializationSettingsIOS,
     );
 
-    flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+    flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
 
     flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
@@ -158,17 +166,12 @@ class NotificationHelper {
         try {
           final message = RemoteMessage.fromMap(jsonDecode(payload.payload ?? '{}'));
           if (message.data.isEmpty) return;
-          _handleDirectMessage(message);
+          _handleDirectMessage(message.data);
         } catch (e) {
           log(e.toString());
         }
       },
     );
-
-    final RemoteMessage? remoteMessage = await FirebaseMessaging.instance.getInitialMessage();
-    if (remoteMessage != null) {
-      _handleDirectMessage(remoteMessage);
-    }
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       if (message.data['type'] == 'chat' && message.data['call_token'] != null) {
@@ -186,23 +189,13 @@ class NotificationHelper {
 
       if (message.notification != null) {
         if (message.data['type'] == 'chat' && message.data['call_action'] == 'reject_call') {
-          IsolateNameServer.lookupPortByName(AppConstants.rejectCallChannelId)
-              ?.send(message.toMap());
+          IsolateNameServer.lookupPortByName(AppConstants.rejectCallChannelId)?.send(message.toMap());
         }
       }
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      _handleDirectMessage(message);
-
-      RemoteNotification? map = message.notification;
-
-      if (kDebugMode) {
-        print(
-          "onMessageOpenedApp: ${map?.title}/${map?.body}/${map?.titleLocKey}",
-        );
-        print("onMessageOpenedApp type: ${message.data['type']}/${message.data}");
-      }
+      _handleDirectMessage(message.data);
     });
 
     FlutterCallkitIncoming.onEvent.listen((event) async {
@@ -254,58 +247,63 @@ class NotificationHelper {
     });
   }
 
-  static Future<void> showLocalNotification(RemoteMessage message) async {
-    const AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
-      AppConstants.notificationChannelId,
-      '',
-      importance: Importance.max,
-      priority: Priority.high,
-    );
-    const DarwinNotificationDetails iOSNotificationDetails = DarwinNotificationDetails(
-      presentBadge: true,
-      presentAlert: true,
-      presentSound: true,
-    );
-    const NotificationDetails notificationDetails = NotificationDetails(
-      android: androidNotificationDetails,
-      iOS: iOSNotificationDetails,
-    );
-    int notificationId = DateTime.now().microsecond;
-    return flutterLocalNotificationsPlugin.show(
-      notificationId,
-      message.notification?.title ?? '',
-      message.notification?.body ?? '',
-      notificationDetails,
-      payload: jsonEncode(message.toMap()),
-    );
+  void _onDidReceiveNotificationResponse(NotificationResponse notificationResponse) {
+    _handleDirectMessage((jsonDecode(notificationResponse.payload ?? '{}') as Map<String, dynamic>));
   }
 
-  static Future<void> _handleDirectMessage(RemoteMessage message) async {
+  Future<void> onHandleInitialMessage() async {
+    final lastMessage = await FirebaseMessaging.instance.getInitialMessage();
+    if (lastMessage != null) {
+      _handleDirectMessage(lastMessage.data);
+      return;
+    }
+
+    final lastNotification = await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+    if (lastNotification != null &&
+        lastNotification.didNotificationLaunchApp &&
+        lastNotification.notificationResponse != null) {
+      _onDidReceiveNotificationResponse(lastNotification.notificationResponse!);
+    }
+  }
+
+  static Future<void> _handleDirectMessage(Map<String, dynamic> payload) async {
     try {
-      log(message.data.toString());
+      log(payload.toString());
 
-      final relatedId = int.tryParse(message.data['id'] ?? '');
+      final relatedId = int.tryParse(payload['id'] ?? '');
 
-      if (message.data['type'] == 'chat' &&
-          (message.data['is_group'] == 0 || message.data['is_group'] == "0")) {
+      if (payload['type'] == 'chat' && (payload['is_group'] == 0 || payload['is_group'] == "0")) {
         if (relatedId != null) {
           Get.toNamed(
             Routes.MESSAGE,
             arguments: MessageParameter(chatId: relatedId),
           );
         }
-      } else if (message.data['type'] == 'chat' &&
-          (message.data['is_group'] == 1 || message.data['is_group'] == "1")) {
+      } else if (payload['type'] == 'chat' && (payload['is_group'] == 1 || payload['is_group'] == "1")) {
         if (relatedId != null) {
           Get.toNamed(
             Routes.GROUP_MESSAGE,
             arguments: GroupMessageParameter(chatId: relatedId),
           );
         }
-      } else if (message.data['type'] == 'friend_request') {
+      } else if (payload['type'] == 'friend_request') {
         if (relatedId != null) {
           Get.toNamed(Routes.SENT_REQUEST_CONTACT);
         }
+      } else if (payload['type'] == 'chat' && payload['call_token'] != null) {
+        Get.toNamed(
+          Routes.CALL,
+          arguments: CallCallParameter(
+            id: int.tryParse(payload['user_id'] ?? '') ?? 0,
+            messageId: int.tryParse(payload['id'] ?? '') ?? 0,
+            callId: int.tryParse(payload['call_id'] ?? '') ?? 0,
+            name: payload['user_name'] ?? '',
+            avatar: payload['user_avatar'] ?? '',
+            channel: payload['channel_name'] ?? '',
+            token: payload['call_token'] ?? '',
+            type: CallType.incomingCall,
+          ),
+        );
       }
     } catch (e) {
       log(e.toString());

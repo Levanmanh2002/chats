@@ -1,13 +1,10 @@
+import 'package:chats/helper/notification_helper.dart';
 import 'package:chats/models/tickers/tickers_model.dart';
-import 'package:chats/pages/call/call_parameter.dart';
 import 'package:chats/pages/chats/chats_page.dart';
 import 'package:chats/pages/contacts/contacts_page.dart';
 import 'package:chats/pages/profile/profile_page.dart';
 import 'package:chats/resourese/dashboard/idashboard_repository.dart';
 import 'package:chats/resourese/service/socket_service.dart';
-import 'package:chats/routes/pages.dart';
-import 'package:chats/utils/local_storage.dart';
-import 'package:chats/utils/shared_key.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -32,35 +29,11 @@ class DashboardController extends GetxController {
   void onInit() async {
     super.onInit();
     pageController = PageController(initialPage: 0);
-    _callEvent();
     _updateFcmToken();
     _fetchTickers();
-  }
-
-  void _callEvent() async {
-    try {
-      final extraData = await LocalStorage.getJSON(SharedKey.CALL_CHAT_EVENT);
-
-      if (extraData != null) {
-        Get.toNamed(
-          Routes.CALL,
-          arguments: CallCallParameter(
-            id: int.tryParse(extraData['user_id'] ?? '') ?? 0,
-            messageId: int.tryParse(extraData['id'] ?? '') ?? 0,
-            callId: int.tryParse(extraData['call_id'] ?? '') ?? 0,
-            name: extraData['user_name'] ?? '',
-            avatar: extraData['user_avatar'] ?? '',
-            channel: extraData['channel_name'] ?? '',
-            token: extraData['call_token'] ?? '',
-            type: CallType.incomingCall,
-          ),
-        );
-      }
-    } catch (e) {
-      print(e);
-    } finally {
-      LocalStorage.remove(SharedKey.CALL_CHAT_EVENT);
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      NotificationHelper().onHandleInitialMessage();
+    });
   }
 
   void animateToTab(int page) {
