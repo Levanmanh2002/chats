@@ -59,6 +59,7 @@ dependencies:
   open_filex: ^4.7.0
   device_info_plus: ^11.3.0
   socket_io_client: ^3.1.2
+  get_thumbnail_video: ^0.7.3
 
 dev_dependencies:
   flutter_test:

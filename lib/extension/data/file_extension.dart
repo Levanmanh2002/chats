@@ -39,6 +39,15 @@ extension FileExtension on String {
   }
 
   FileCategory get getFileCategory {
+    final lower = toLowerCase();
+
+    if (lower.startsWith('video/')) return FileCategory.VIDEO;
+    if (lower.startsWith('audio/')) return FileCategory.AUDIO;
+    if (lower.startsWith('image/')) return FileCategory.IMAGE;
+    if (lower.startsWith('application/pdf') || lower.startsWith('application/msword') || lower.contains('text')) {
+      return FileCategory.DOCUMENT;
+    }
+
     if (toLowerCase().contains('pdf') ||
         toLowerCase().contains('doc') || // doc, docx
         toLowerCase().contains('xls') || // xls, xlsx
