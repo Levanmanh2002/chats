@@ -7,6 +7,7 @@ import 'package:chats/main.dart';
 import 'package:chats/pages/attachment_fullscreen/attachment_fullscreen_controller.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/app/file_content_type.dart';
+import 'package:chats/utils/dialog_utils.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/utils/images_assets.dart';
 import 'package:chats/widget/custom_image_widget.dart';
@@ -126,8 +127,15 @@ class AttachmentFullscreenPage extends GetWidget<AttachmentFullscreenController>
                           onPressed: () {
                             final attachment =
                                 controller.parameter.files?[controller.pageController.page?.toInt() ?? 0];
-                            if (attachment?.fileUrl != null) {
+                            if (attachment?.fileUrl != null &&
+                                attachment?.fileType?.getFileCategory == FileCategory.IMAGE) {
                               controller.saveImage(attachment?.fileUrl ?? '');
+                            } else {
+                              if (attachment?.isLocal == true) {
+                                DialogUtils.showErrorDialog('video_save_local_not_supported'.tr);
+                                return;
+                              }
+                              controller.saveVideo(attachment?.fileUrl ?? '');
                             }
                           },
                         ),

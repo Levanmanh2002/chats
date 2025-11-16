@@ -232,4 +232,5 @@ const Map<String, String> vi = {
   'logout_warning': 'Nếu đăng xuất tại đây, tất cả các mã khóa sẽ được xóa và đặt về trạng thái ban đầu',
   'lock': 'Khóa',
   'lock_chat_confirmation': 'Bạn có chắc chắn muốn khóa màn hình lại không?',
+  'video_save_local_not_supported': 'Vui lòng đợi video tải lên hoàn tất trước khi lưu',
 };
