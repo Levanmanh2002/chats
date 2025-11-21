@@ -26,7 +26,6 @@ class ChatAllView extends GetView<ChatsController> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      // Detect nếu width nhỏ hơn 300px thì chỉ hiện avatar
       final isCompactMode = constraints.maxWidth < 300;
 
       return Obx(

@@ -67,6 +67,9 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
   StreamSubscription? _chatSubscription;
   StreamSubscription? _chatSubscriptionMessage;
 
+  final RxBool isShowChatList = true.obs;
+  final RxBool isMobileView = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -81,6 +84,15 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
         isTickers.value = false;
       }
     });
+  }
+
+  void toggleChatView() {
+    isShowChatList.toggle();
+  }
+
+  // ✅ Method để update từ UI
+  void updateViewMode(bool isMobile) {
+    isMobileView.value = isMobile;
   }
 
   Future<void> fetchChatList({bool isRefresh = true, String search = '', bool isShowLoad = true}) async {
@@ -378,6 +390,9 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
           requestFriend: model.requestFriend,
         );
 
+        if (isRefresh && isMobileView.value) {
+          isShowChatList.value = false;
+        }
         // await PusherService().connect();
         _initStreamMessage();
       }

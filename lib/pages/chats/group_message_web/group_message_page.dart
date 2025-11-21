@@ -21,6 +21,8 @@ import 'package:get/get.dart';
 class GroupMessageWebPage extends GetWidget<ChatsController> {
   @override
   Widget build(BuildContext context) {
+    final isMobileView = MediaQuery.of(context).size.width < 768;
+
     return Obx(
       () => Scaffold(
         backgroundColor: appTheme.blueFFColor,
@@ -34,7 +36,16 @@ class GroupMessageWebPage extends GetWidget<ChatsController> {
           isLoadingSearch: controller.isLoadingSearch.isTrue,
           widgetTitle: Row(
             children: [
-              SizedBox(width: 24.w),
+              isMobileView
+                  ? IconButton(
+                      onPressed: () => controller.isShowChatList.value = true,
+                      icon: ImageAssetCustom(
+                        imagePath: IconsAssets.arrowLeftIcon,
+                        size: 24.w,
+                        color: appTheme.whiteColor,
+                      ),
+                    )
+                  : SizedBox(width: 24.w),
               Flexible(
                 child: GestureDetector(
                   onTap: controller.messageModel.value != null

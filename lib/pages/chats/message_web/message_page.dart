@@ -27,6 +27,8 @@ import 'package:get/get.dart';
 class MessageWebPage extends GetWidget<ChatsController> {
   @override
   Widget build(BuildContext context) {
+    final isMobileView = MediaQuery.of(context).size.width < 768;
+
     return Obx(() {
       final otherUsers = controller.messageModel.value?.chat?.users
           ?.firstWhereOrNull((e) => e.id != Get.find<ProfileController>().user.value?.id);
@@ -43,7 +45,16 @@ class MessageWebPage extends GetWidget<ChatsController> {
           isLoadingSearch: controller.isLoadingSearch.isTrue,
           widgetTitle: Row(
             children: [
-              SizedBox(width: 24.w),
+              isMobileView
+                  ? IconButton(
+                      onPressed: () => controller.isShowChatList.value = true,
+                      icon: ImageAssetCustom(
+                        imagePath: IconsAssets.arrowLeftIcon,
+                        size: 24.w,
+                        color: appTheme.whiteColor,
+                      ),
+                    )
+                  : SizedBox(width: 24.w),
               Flexible(
                 child: GestureDetector(
                   onTap: controller.messageModel.value != null
@@ -88,15 +99,8 @@ class MessageWebPage extends GetWidget<ChatsController> {
                               right: 0,
                               child: Container(
                                 padding: padding(all: 2),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: appTheme.greenColor,
-                                ),
-                                child: Icon(
-                                  Icons.check,
-                                  size: 10.w,
-                                  color: appTheme.whiteColor,
-                                ),
+                                decoration: BoxDecoration(shape: BoxShape.circle, color: appTheme.greenColor),
+                                child: Icon(Icons.check, size: 10.w, color: appTheme.whiteColor),
                               ),
                             ),
                         ],
