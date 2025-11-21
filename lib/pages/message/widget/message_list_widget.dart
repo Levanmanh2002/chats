@@ -28,112 +28,117 @@ class MessageListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: padding(vertical: 2),
-      child: Align(
-        alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Container(
-              constraints: BoxConstraints(maxWidth: 300.w),
-              padding: padding(all: 8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: isCurrentUser ? appTheme.appColor : appTheme.whiteColor,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: isCurrentUser ? CrossAxisAlignment.start : CrossAxisAlignment.end,
-                children: [
-                  replyMessage != null
-                      ? Padding(
-                          padding: padding(bottom: 10),
-                          child: (replyMessage?.files ?? []).isNotEmpty
-                              ? Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    AttachFileWidget(item: replyMessage!.files!.first, size: 32.w, borderRadius: 2),
-                                    SizedBox(width: 8.w),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          replyMessage?.sender?.name ?? '',
-                                          style: StyleThemeData.size12Weight600(color: appTheme.whiteColor),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        SizedBox(height: 2.h),
-                                        Text(
-                                          replyMessage?.files?.first.fileType?.getFileCategory == FileCategory.IMAGE
-                                              ? 'image_line'.tr
-                                              : replyMessage?.files?.first.fileType?.getFileCategory ==
-                                                      FileCategory.VIDEO
-                                                  ? 'video_line'.tr
-                                                  : 'attachment_line'.tr,
-                                          style: StyleThemeData.size8Weight400(color: appTheme.blueBFFColor),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                )
-                              : Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const ImageAssetCustom(imagePath: IconsAssets.replyBorderIcon),
-                                    SizedBox(width: 8.w),
-                                    Flexible(
-                                      child: Column(
+    return LayoutBuilder(builder: (context, constraints) {
+      final availableWidth = constraints.maxWidth;
+      final maxBubbleWidth = (availableWidth * 0.7).clamp(200.0, 600.0);
+
+      return Padding(
+        padding: padding(vertical: 2),
+        child: Align(
+          alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Container(
+                constraints: BoxConstraints(maxWidth: maxBubbleWidth),
+                padding: padding(all: 8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: isCurrentUser ? appTheme.appColor : appTheme.whiteColor,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: isCurrentUser ? CrossAxisAlignment.start : CrossAxisAlignment.end,
+                  children: [
+                    replyMessage != null
+                        ? Padding(
+                            padding: padding(bottom: 10),
+                            child: (replyMessage?.files ?? []).isNotEmpty
+                                ? Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      AttachFileWidget(item: replyMessage!.files!.first, size: 32.w, borderRadius: 2),
+                                      SizedBox(width: 8.w),
+                                      Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             replyMessage?.sender?.name ?? '',
-                                            style: StyleThemeData.size10Weight600(
-                                              color: isCurrentUser ? appTheme.whiteColor : appTheme.blackColor,
-                                            ),
+                                            style: StyleThemeData.size12Weight600(color: appTheme.whiteColor),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                           SizedBox(height: 2.h),
                                           Text(
-                                            replyMessage?.message ?? '',
-                                            style: StyleThemeData.size10Weight400(
-                                              color: isCurrentUser ? appTheme.blueBFFColor : appTheme.grayColor,
-                                            ),
+                                            replyMessage?.files?.first.fileType?.getFileCategory == FileCategory.IMAGE
+                                                ? 'image_line'.tr
+                                                : replyMessage?.files?.first.fileType?.getFileCategory ==
+                                                        FileCategory.VIDEO
+                                                    ? 'video_line'.tr
+                                                    : 'attachment_line'.tr,
+                                            style: StyleThemeData.size8Weight400(color: appTheme.blueBFFColor),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                         ],
                                       ),
-                                    ),
-                                  ],
-                                ),
-                        )
-                      : const SizedBox(),
-                  MessageTextView(
-                    message: text,
-                    textStyle: StyleThemeData.size14Weight400(
+                                    ],
+                                  )
+                                : Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const ImageAssetCustom(imagePath: IconsAssets.replyBorderIcon),
+                                      SizedBox(width: 8.w),
+                                      Flexible(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              replyMessage?.sender?.name ?? '',
+                                              style: StyleThemeData.size10Weight600(
+                                                color: isCurrentUser ? appTheme.whiteColor : appTheme.blackColor,
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            SizedBox(height: 2.h),
+                                            Text(
+                                              replyMessage?.message ?? '',
+                                              style: StyleThemeData.size10Weight400(
+                                                color: isCurrentUser ? appTheme.blueBFFColor : appTheme.grayColor,
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                          )
+                        : const SizedBox(),
+                    MessageTextView(
+                      message: text,
+                      textStyle: StyleThemeData.size14Weight400(
+                        color: isCurrentUser ? appTheme.whiteColor : appTheme.blackColor,
+                      ),
                       color: isCurrentUser ? appTheme.whiteColor : appTheme.blackColor,
                     ),
-                    color: isCurrentUser ? appTheme.whiteColor : appTheme.blackColor,
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            if (status == MessageStatus.sending) ...[
-              SizedBox(width: 4.w),
-              Icon(Icons.watch_later, size: 16, color: appTheme.cardSendTimeColor),
-            ] else if (status == MessageStatus.failed) ...[
-              SizedBox(width: 4.w),
-              Icon(Icons.error, size: 16, color: appTheme.errorColor),
+              if (status == MessageStatus.sending) ...[
+                SizedBox(width: 4.w),
+                Icon(Icons.watch_later, size: 16, color: appTheme.cardSendTimeColor),
+              ] else if (status == MessageStatus.failed) ...[
+                SizedBox(width: 4.w),
+                Icon(Icons.error, size: 16, color: appTheme.errorColor),
+              ],
             ],
-          ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

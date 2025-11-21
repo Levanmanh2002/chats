@@ -23,7 +23,11 @@ class NoDataWidget extends StatelessWidget {
               ? Image.asset(ImagesAssets.searchEmptyImage, width: 140.w)
               : Image.asset(ImagesAssets.noFolderImage),
           SizedBox(height: 12.h),
-          Text('refresh_no_more'.tr, style: StyleThemeData.size16Weight600(color: appTheme.grayColor)),
+          Text(
+            'refresh_no_more'.tr,
+            style: StyleThemeData.size16Weight600(color: appTheme.grayColor),
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     );

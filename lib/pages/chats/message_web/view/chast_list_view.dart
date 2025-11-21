@@ -26,6 +26,18 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 class ChastListWebView extends GetView<ChatsController> {
   @override
   Widget build(BuildContext context) {
+    double calculateMaxFileWidth(double availableWidth) {
+      if (availableWidth < 600) {
+        return (availableWidth * 0.8).clamp(200.0, 350.0);
+      } else if (availableWidth < 1024) {
+        return (availableWidth * 0.7).clamp(300.0, 500.0);
+      } else if (availableWidth < 1440) {
+        return (availableWidth * 0.6).clamp(400.0, 600.0);
+      } else {
+        return (availableWidth * 0.5).clamp(500.0, 700.0);
+      }
+    }
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Obx(() {
@@ -159,53 +171,58 @@ class ChastListWebView extends GetView<ChatsController> {
                                         onLeftSwipe: (details) {
                                           controller.updateReplyMessage(item);
                                         },
-                                        child: Align(
-                                          alignment: item.sender?.id == Get.find<ProfileController>().user.value?.id
-                                              ? Alignment.centerRight
-                                              : Alignment.centerLeft,
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment: CrossAxisAlignment.end,
-                                            children: [
-                                              Container(
-                                                constraints: BoxConstraints(maxWidth: 300.w),
-                                                child: DynamicGridItemView<FilesModels>(
-                                                  items: item.files ?? [],
-                                                  borderRadius: 8,
-                                                  itemBuilder: (file, index) {
-                                                    return LayoutBuilder(
-                                                      builder: (context, constraint) => Padding(
-                                                        padding: padding(all: 4),
-                                                        child: InkWell(
-                                                          onTap: () => Get.toNamed(
-                                                            Routes.ATTACHMENT_FULLSCREEN,
-                                                            arguments: AttachmentFullscreenParameter(
-                                                              files: item.files ?? [],
-                                                              index: index,
-                                                              user: item.sender,
+                                        child: LayoutBuilder(builder: (context, constraints) {
+                                          final availableWidth = constraints.maxWidth;
+                                          final maxFileWidth = calculateMaxFileWidth(availableWidth);
+
+                                          return Align(
+                                            alignment: item.sender?.id == Get.find<ProfileController>().user.value?.id
+                                                ? Alignment.centerRight
+                                                : Alignment.centerLeft,
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              crossAxisAlignment: CrossAxisAlignment.end,
+                                              children: [
+                                                Container(
+                                                  constraints: BoxConstraints(maxWidth: maxFileWidth),
+                                                  child: DynamicGridItemView<FilesModels>(
+                                                    items: item.files ?? [],
+                                                    borderRadius: 8,
+                                                    itemBuilder: (file, index) {
+                                                      return LayoutBuilder(
+                                                        builder: (context, constraint) => Padding(
+                                                          padding: padding(all: 4),
+                                                          child: InkWell(
+                                                            onTap: () => Get.toNamed(
+                                                              Routes.ATTACHMENT_FULLSCREEN,
+                                                              arguments: AttachmentFullscreenParameter(
+                                                                files: item.files ?? [],
+                                                                index: index,
+                                                                user: item.sender,
+                                                              ),
+                                                            ),
+                                                            borderRadius: BorderRadius.circular(8),
+                                                            child: AttachFileWidget(
+                                                              item: file,
+                                                              size: constraint.maxWidth.w,
                                                             ),
                                                           ),
-                                                          borderRadius: BorderRadius.circular(8),
-                                                          child: AttachFileWidget(
-                                                            item: file,
-                                                            size: constraint.maxWidth.w,
-                                                          ),
                                                         ),
-                                                      ),
-                                                    );
-                                                  },
+                                                      );
+                                                    },
+                                                  ),
                                                 ),
-                                              ),
-                                              if (item.status == MessageStatus.sending) ...[
-                                                SizedBox(width: 4.w),
-                                                Icon(Icons.watch_later, size: 16, color: appTheme.cardSendTimeColor),
-                                              ] else if (item.status == MessageStatus.failed) ...[
-                                                SizedBox(width: 4.w),
-                                                Icon(Icons.error, size: 16, color: appTheme.errorColor),
+                                                if (item.status == MessageStatus.sending) ...[
+                                                  SizedBox(width: 4.w),
+                                                  Icon(Icons.watch_later, size: 16, color: appTheme.cardSendTimeColor),
+                                                ] else if (item.status == MessageStatus.failed) ...[
+                                                  SizedBox(width: 4.w),
+                                                  Icon(Icons.error, size: 16, color: appTheme.errorColor),
+                                                ],
                                               ],
-                                            ],
-                                          ),
-                                        ),
+                                            ),
+                                          );
+                                        }),
                                       ),
                                     ),
                                   ],

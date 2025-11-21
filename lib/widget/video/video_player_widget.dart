@@ -1,8 +1,9 @@
 import 'dart:io';
+
+import 'package:chats/main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'package:chats/main.dart';
 
 class VideoPlayerWidget extends StatefulWidget {
   final String videoPath;
@@ -18,8 +19,7 @@ class VideoPlayerWidget extends StatefulWidget {
   State<VideoPlayerWidget> createState() => _VideoPlayerWidgetState();
 }
 
-class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
-    with AutomaticKeepAliveClientMixin {
+class _VideoPlayerWidgetState extends State<VideoPlayerWidget> with AutomaticKeepAliveClientMixin {
   VideoPlayerController? _controller;
   bool _isInitialized = false;
   String? _currentPath;
@@ -41,9 +41,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
 
     final controller = kIsWeb
         ? VideoPlayerController.networkUrl(Uri.parse(path))
-        : (widget.isLocal
-            ? VideoPlayerController.file(File(path))
-            : VideoPlayerController.networkUrl(Uri.parse(path)));
+        : (widget.isLocal ? VideoPlayerController.file(File(path)) : VideoPlayerController.networkUrl(Uri.parse(path)));
 
     setState(() => _isInitialized = false);
 
@@ -79,7 +77,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
     if (!_isInitialized || _controller == null) {
       return Container(
         alignment: Alignment.center,
-        height: 180,
+        height: 1220,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           color: appTheme.grayColor.withOpacity(0.2),
@@ -96,8 +94,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
           alignment: Alignment.center,
           children: [
             VideoPlayer(_controller!),
-            if (!_controller!.value.isPlaying)
-              const Icon(Icons.play_circle_fill, color: Colors.white70, size: 48),
+            if (!_controller!.value.isPlaying) const Icon(Icons.play_circle_fill, color: Colors.white70, size: 48),
             Positioned.fill(
               child: GestureDetector(
                 onTap: () {

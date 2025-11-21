@@ -32,13 +32,7 @@ class AttachFileWidget extends StatelessWidget {
         borderRadius: borderRadius,
       );
     } else if (category == FileCategory.VIDEO) {
-      return Stack(
-        alignment: Alignment.center,
-        children: [
-          VideoPlayerWidget(videoPath: item.fileUrl ?? ''),
-          const ImageAssetCustom(imagePath: IconsAssets.playVideoIcon),
-        ],
-      );
+      return VideoPlayerWidget(videoPath: item.fileUrl ?? '');
     } else if (category == FileCategory.DOCUMENT) {
       return Row(
         children: [

@@ -9,6 +9,7 @@ import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
 import 'package:chats/utils/app/file_content_type.dart';
 import 'package:chats/utils/icons_assets.dart';
+import 'package:chats/utils/images_assets.dart';
 import 'package:chats/widget/custom_image_widget.dart';
 import 'package:chats/widget/custom_text_field.dart';
 import 'package:chats/widget/dialog/show_common_dialog.dart';
@@ -24,93 +25,107 @@ import 'package:get/get.dart';
 class ChatAllView extends GetView<ChatsController> {
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => ListLoader(
-        onRefresh: () => controller.fetchChatList(isShowLoad: false),
-        onLoad: () => controller.fetchChatList(isRefresh: false),
-        hasNext: controller.chatsModels.value?.hasNext ?? false,
-        forceScrollable: true,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: double.infinity,
-              height: kToolbarHeight + 20.h,
-              padding: padding(all: 16),
-              decoration: BoxDecoration(
-                color: appTheme.appColor,
-              ),
-              child: Text(
-                'chat'.tr,
-                style: StyleThemeData.size24Weight600(color: appTheme.whiteColor),
-              ),
-            ),
-            Padding(
-              padding: padding(all: 12),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: CustomTextField(
-                      controller: controller.searchController,
-                      hintText: 'search'.tr,
-                      onSubmit: controller.onSearchChat,
-                      showLine: false,
-                      colorBorder: appTheme.hintColor,
-                      onChanged: (value) {
-                        controller.searchValue.value = value;
-                      },
-                      suffixIcon: IconButton(
-                        onPressed: () {
-                          controller.onSearchChat(controller.searchController.text);
-                        },
-                        icon: ImageAssetCustom(
-                          imagePath: IconsAssets.searchIcon,
-                          size: 24.w,
-                          color: appTheme.appColor,
-                        ),
+    return LayoutBuilder(builder: (context, constraints) {
+      // Detect nếu width nhỏ hơn 300px thì chỉ hiện avatar
+      final isCompactMode = constraints.maxWidth < 300;
+
+      return Obx(
+        () => ListLoader(
+          onRefresh: () => controller.fetchChatList(isShowLoad: false),
+          onLoad: () => controller.fetchChatList(isRefresh: false),
+          hasNext: controller.chatsModels.value?.hasNext ?? false,
+          forceScrollable: true,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: double.infinity,
+                height: kToolbarHeight + 20.h,
+                padding: padding(all: 16),
+                decoration: BoxDecoration(
+                  color: appTheme.appColor,
+                ),
+                child: isCompactMode
+                    ? ImageAssetCustom(imagePath: ImagesAssets.logoNoBgImage, size: 32.w)
+                    : Text(
+                        'chat'.tr,
+                        style: StyleThemeData.size24Weight600(color: appTheme.whiteColor),
                       ),
-                    ),
-                  ),
-                  Obx(() {
-                    if (Get.find<ProfileController>().user.value?.isEnableSecurityScreen == true) {
-                      return Padding(
-                        padding: padding(left: 8),
-                        child: IconButton(
-                          onPressed: () => _showLockConfirmation(),
-                          icon: Icon(
-                            Icons.lock_outline,
-                            size: 24.w,
+              ),
+              Padding(
+                padding: padding(all: isCompactMode ? 8 : 12),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: CustomTextField(
+                        controller: controller.searchController,
+                        hintText: isCompactMode ? '' : 'search'.tr,
+                        onSubmit: controller.onSearchChat,
+                        showLine: false,
+                        colorBorder: appTheme.hintColor,
+                        onChanged: (value) {
+                          controller.searchValue.value = value;
+                        },
+                        suffixIcon: IconButton(
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          onPressed: () {
+                            controller.onSearchChat(controller.searchController.text);
+                          },
+                          icon: ImageAssetCustom(
+                            imagePath: IconsAssets.searchIcon,
+                            size: isCompactMode ? 20.w : 24.w,
                             color: appTheme.appColor,
                           ),
                         ),
-                      );
-                    }
-                    return const SizedBox();
-                  })
-                ],
-              ),
-            ),
-            (controller.chatsModels.value?.chat ?? []).isNotEmpty
-                ? Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: List.generate((controller.chatsModels.value?.chat ?? []).length, (index) {
-                          return _buildChatItem(
-                            (controller.chatsModels.value?.chat ?? [])[index],
-                            isShowLine: index != (controller.chatsModels.value?.chat ?? []).length - 1,
-                          );
-                        }),
                       ),
                     ),
-                  )
-                : const Center(child: NoDataWidget()),
-          ],
+                    Obx(() {
+                      if (Get.find<ProfileController>().user.value?.isEnableSecurityScreen == true) {
+                        return Padding(
+                          padding: padding(left: isCompactMode ? 4 : 8),
+                          child: IconButton(
+                            onPressed: () => _showLockConfirmation(),
+                            icon: Icon(
+                              Icons.lock_outline,
+                              size: isCompactMode ? 20.w : 24.w,
+                              color: appTheme.appColor,
+                            ),
+                          ),
+                        );
+                      }
+                      return const SizedBox();
+                    })
+                  ],
+                ),
+              ),
+              (controller.chatsModels.value?.chat ?? []).isNotEmpty
+                  ? Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: List.generate((controller.chatsModels.value?.chat ?? []).length, (index) {
+                            return _buildChatItem(
+                              (controller.chatsModels.value?.chat ?? [])[index],
+                              isShowLine: index != (controller.chatsModels.value?.chat ?? []).length - 1,
+                              isCompactMode: isCompactMode,
+                            );
+                          }),
+                        ),
+                      ),
+                    )
+                  : const Center(child: NoDataWidget()),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
-  Widget _buildChatItem(ChatDataModel e, {bool isShowLine = true}) {
+  Widget _buildChatItem(
+    ChatDataModel e, {
+    bool isShowLine = true,
+    bool isCompactMode = false,
+  }) {
     final otherUsers = e.users?.firstWhereOrNull((e) => e.id != Get.find<ProfileController>().user.value?.id);
 
     return Column(
@@ -127,10 +142,14 @@ class ChatAllView extends GetView<ChatsController> {
             return null;
           },
           background: Container(
-            padding: padding(horizontal: 20),
+            padding: padding(horizontal: isCompactMode ? 8 : 20),
             color: appTheme.errorColor,
             alignment: Alignment.centerRight,
-            child: ImageAssetCustom(imagePath: IconsAssets.trashBinIcon, size: 24.w, color: appTheme.whiteColor),
+            child: ImageAssetCustom(
+              imagePath: IconsAssets.trashBinIcon,
+              size: isCompactMode ? 20.w : 24.w,
+              color: appTheme.whiteColor,
+            ),
           ),
           child: InkWell(
             onTap: () {
@@ -156,7 +175,7 @@ class ChatAllView extends GetView<ChatsController> {
               controller.updateReadStatus(e.latestMessage!.chatId!);
             },
             child: Container(
-              padding: padding(vertical: 12, horizontal: 16),
+              padding: padding(vertical: isCompactMode ? 8 : 12, horizontal: isCompactMode ? 8 : 16),
               child: Row(
                 children: [
                   e.isGroup == 1
@@ -211,10 +230,11 @@ class ChatAllView extends GetView<ChatsController> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            Text(
-                              e.latestMessage?.createdAt?.formattedTimeAgoChats ?? '',
-                              style: StyleThemeData.size12Weight400(color: appTheme.grayColor),
-                            ),
+                            if (!isCompactMode)
+                              Text(
+                                e.latestMessage?.createdAt?.formattedTimeAgoChats ?? '',
+                                style: StyleThemeData.size12Weight400(color: appTheme.grayColor),
+                              ),
                           ],
                         ),
                         SizedBox(height: 2.h),
@@ -258,7 +278,7 @@ class ChatAllView extends GetView<ChatsController> {
                               ),
                             ),
                             if (e.isRead == false) ...[
-                              SizedBox(width: 12.w),
+                              SizedBox(width: isCompactMode ? 2.w : 12.w),
                               Container(
                                 width: 9.w,
                                 height: 9.w,
@@ -277,7 +297,7 @@ class ChatAllView extends GetView<ChatsController> {
         ),
         if (isShowLine)
           Padding(
-            padding: padding(left: (16 + 54 + 8).w),
+            padding: padding(left: isCompactMode ? 0 : (16 + 54 + 8).w),
             child: LineWidget(color: appTheme.allSidesColor),
           ),
       ],

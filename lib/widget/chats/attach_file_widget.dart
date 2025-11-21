@@ -18,12 +18,16 @@ class AttachFileWidget extends StatelessWidget {
     required this.size,
     this.borderRadius = 8.0,
     this.isCurrentUser,
+    this.widthVideo,
+    this.heightVideo,
   });
 
   final FilesModels item;
   final double size;
   final double borderRadius;
   final bool? isCurrentUser;
+  final double? widthVideo;
+  final double? heightVideo;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +42,8 @@ class AttachFileWidget extends StatelessWidget {
       case FileCategory.VIDEO:
         return WebVideoThumbnail(
           videoUrl: item.fileUrl ?? '',
+          width: widthVideo ?? 200,
+          height: heightVideo ?? 120,
         );
       // return Stack(
       //   alignment: Alignment.center,
