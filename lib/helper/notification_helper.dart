@@ -83,7 +83,10 @@ Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
           log("Cuộc gọi đến");
           break;
         case Event.actionCallTimeout:
-          log("Cuộc gọi đã hết hạn");
+          final extraData = event?.body?['extra'];
+          if (extraData != null) {
+            sendCallDeclinedToServer(messageId: extraData['call_id']);
+          }
           break;
         case Event.actionCallCallback:
           log("Bắt đầu cuộc gọi");

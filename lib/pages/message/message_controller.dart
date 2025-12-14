@@ -460,8 +460,12 @@ class MessageController extends GetxController {
     TickersModel? sticker,
   ) async {
     try {
+      final otherUsers = messageModel.value?.chat?.users
+          ?.firstWhereOrNull((e) => e.id != Get.find<ProfileController>().user.value?.id);
+
       Map<String, String> params = {
-        "receiver_id": parameter.contact?.id.toString() ?? '',
+        "receiver_id":
+            parameter.contact != null ? parameter.contact?.id.toString() ?? '' : otherUsers?.id.toString() ?? '',
         if (messageText.isNotEmpty) "message": messageText,
         if (reply != null) "reply_message_id": reply.id.toString(),
         if (sticker != null) "sticker_id": sticker.id.toString(),
