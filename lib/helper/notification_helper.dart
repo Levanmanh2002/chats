@@ -113,6 +113,8 @@ Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
 }
 
 class NotificationHelper {
+  static Map<String, dynamic>? pendingNotification;
+
   static Future<void> showLocalNotification(RemoteMessage message) async {
     const AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
       AppConstants.notificationChannelId,
@@ -120,6 +122,7 @@ class NotificationHelper {
       importance: Importance.max,
       priority: Priority.high,
       icon: '@mipmap/ic_launcher',
+      sound: RawResourceAndroidNotificationSound('notification'),
     );
     const DarwinNotificationDetails iOSNotificationDetails = DarwinNotificationDetails(
       presentBadge: true,
@@ -165,7 +168,11 @@ class NotificationHelper {
       ?..requestNotificationsPermission();
 
     androidPlugin?.createNotificationChannel(
-      const AndroidNotificationChannel(AppConstants.notificationChannelId, 'Normal CHATS channel'),
+      const AndroidNotificationChannel(
+        AppConstants.notificationChannelId,
+        'Normal CHATS channel',
+        sound: RawResourceAndroidNotificationSound('notification'),
+      ),
     );
 
     DarwinInitializationSettings initializationSettingsIOS = const DarwinInitializationSettings(
@@ -187,7 +194,7 @@ class NotificationHelper {
         try {
           final message = RemoteMessage.fromMap(jsonDecode(payload.payload ?? '{}'));
           if (message.data.isEmpty) return;
-          _handleDirectMessage(message.data);
+          handleDirectMessage(message.data);
         } catch (e) {
           log(e.toString());
         }
@@ -198,7 +205,27 @@ class NotificationHelper {
       if (message.data['type'] == 'chat' && message.data['call_token'] != null) {
         handleIncomingCall(message.data);
       } else {
-        showLocalNotification(message);
+        final relatedId = int.tryParse(message.data['id'] ?? '');
+
+        if (Get.currentRoute == Routes.MESSAGE || Get.currentRoute == Routes.GROUP_MESSAGE) {
+          final currentRoute = Get.currentRoute;
+
+          if (relatedId == null) return;
+          final isMessageRoute = currentRoute == Routes.MESSAGE;
+          final isGroupMessageRoute = currentRoute == Routes.GROUP_MESSAGE;
+          if (!isMessageRoute && !isGroupMessageRoute) return;
+          final isSameChat = isMessageRoute
+              ? (Get.arguments as MessageParameter).chatId == relatedId
+              : (Get.arguments as GroupMessageParameter).chatId == relatedId;
+
+          if (isSameChat) {
+            return;
+          } else {
+            showLocalNotification(message);
+          }
+        } else {
+          showLocalNotification(message);
+        }
       }
 
       if (kDebugMode) {
@@ -216,7 +243,7 @@ class NotificationHelper {
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      _handleDirectMessage(message.data);
+      handleDirectMessage(message.data);
     });
 
     FlutterCallkitIncoming.onEvent.listen((event) async {
@@ -269,13 +296,13 @@ class NotificationHelper {
   }
 
   void _onDidReceiveNotificationResponse(NotificationResponse notificationResponse) {
-    _handleDirectMessage((jsonDecode(notificationResponse.payload ?? '{}') as Map<String, dynamic>));
+    handleDirectMessage((jsonDecode(notificationResponse.payload ?? '{}') as Map<String, dynamic>));
   }
 
   Future<void> onHandleInitialMessage() async {
     final lastMessage = await FirebaseMessaging.instance.getInitialMessage();
     if (lastMessage != null) {
-      _handleDirectMessage(lastMessage.data);
+      handleDirectMessage(lastMessage.data);
       return;
     }
 
@@ -287,7 +314,7 @@ class NotificationHelper {
     }
   }
 
-  static Future<void> _handleDirectMessage(Map<String, dynamic> payload) async {
+  static Future<void> handleDirectMessage(Map<String, dynamic> payload) async {
     try {
       log(payload.toString());
 
@@ -295,6 +322,10 @@ class NotificationHelper {
 
       if (payload['type'] == 'chat' && (payload['is_group'] == 0 || payload['is_group'] == "0")) {
         if (relatedId != null) {
+          if (Get.currentRoute == Routes.CONFIRM_SECURITY_CODE) {
+            pendingNotification = payload;
+            return;
+          }
           Get.toNamed(
             Routes.MESSAGE,
             arguments: MessageParameter(chatId: relatedId),
@@ -302,6 +333,10 @@ class NotificationHelper {
         }
       } else if (payload['type'] == 'chat' && (payload['is_group'] == 1 || payload['is_group'] == "1")) {
         if (relatedId != null) {
+          if (Get.currentRoute == Routes.CONFIRM_SECURITY_CODE) {
+            pendingNotification = payload;
+            return;
+          }
           Get.toNamed(
             Routes.GROUP_MESSAGE,
             arguments: GroupMessageParameter(chatId: relatedId),
@@ -309,6 +344,10 @@ class NotificationHelper {
         }
       } else if (payload['type'] == 'friend_request') {
         if (relatedId != null) {
+          if (Get.currentRoute == Routes.CONFIRM_SECURITY_CODE) {
+            pendingNotification = payload;
+            return;
+          }
           Get.toNamed(Routes.SENT_REQUEST_CONTACT);
         }
       }

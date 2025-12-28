@@ -30,7 +30,7 @@ class ConfirmSecurityCodeController extends GetxController {
     }
   }
 
-  void deleteLast() {
+  void deleteLast() { 
     if (inputNumber.value.isNotEmpty) {
       int lastIndex = inputNumber.value.length - 1;
       inputNumber.value = inputNumber.value.substring(0, lastIndex);

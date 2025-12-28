@@ -39,7 +39,17 @@ class DashboardController extends GetxController {
     _fetchTickers();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       NotificationHelper().onHandleInitialMessage();
+      _onVerifySuccess();
     });
+  }
+
+  void _onVerifySuccess() {
+    if (NotificationHelper.pendingNotification != null) {
+      final data = NotificationHelper.pendingNotification!;
+      NotificationHelper.pendingNotification = null;
+
+      NotificationHelper.handleDirectMessage(data);
+    }
   }
 
   void _callEvent() async {

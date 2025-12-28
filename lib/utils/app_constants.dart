@@ -21,7 +21,7 @@ class AppConstants {
   static String pusherChannel = dotenv.get('PUSHER_CHANNEL');
   static String userType = 'client';
 
-  static const String notificationChannelId = 'CHATS-NOTIFICATION-CHANNEL-ID';
+  static const String notificationChannelId = 'notification';
   static const String rejectCallChannelId = 'CHATS-REJECT-CALL-CHANNEL-ID';
 
   static const String signInUri = '/api/v1/auth/login';

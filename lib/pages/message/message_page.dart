@@ -45,16 +45,31 @@ class MessagePage extends GetWidget<MessageController> {
               ),
               Flexible(
                 child: GestureDetector(
-                  onTap: controller.parameter.chatId != null
-                      ? () => Get.toNamed(
-                            Routes.OPTIONS,
-                            arguments: OptionsParameter(
-                              user: controller.parameter.contact,
-                              chatId: controller.parameter.chatId!,
-                              isHideMessage: controller.messageModel.value?.chat?.isHide ?? false,
-                            ),
-                          )
-                      : null,
+                  onTap: () {
+                    if (controller.parameter.chatId != null && controller.parameter.contact != null) {
+                      Get.toNamed(
+                        Routes.OPTIONS,
+                        arguments: OptionsParameter(
+                          user: controller.parameter.contact,
+                          chatId: controller.parameter.chatId!,
+                          isHideMessage: controller.messageModel.value?.chat?.isHide ?? false,
+                        ),
+                      );
+                    } else {
+                      final contact = controller.messageModel.value?.chat?.users?.firstWhereOrNull(
+                        (e) => e.id != Get.find<ProfileController>().user.value?.id,
+                      );
+
+                      Get.toNamed(
+                        Routes.OPTIONS,
+                        arguments: OptionsParameter(
+                          user: contact,
+                          chatId: controller.parameter.chatId!,
+                          isHideMessage: controller.messageModel.value?.chat?.isHide ?? false,
+                        ),
+                      );
+                    }
+                  },
                   child: Row(
                     children: [
                       Stack(
