@@ -1,4 +1,3 @@
-import 'package:chats/models/response/phone_code_model.dart';
 import 'package:chats/resourese/chats/ichats_repository.dart';
 import 'package:chats/utils/app_constants.dart';
 import 'package:get/get_connect/http/src/response/response.dart';
@@ -7,11 +6,29 @@ class ChatsRepository extends IChatsRepository {
   @override
   Future<Response> chatListAll({required int page, required int limit, String search = ''}) async {
     try {
-      String numberWithCountryCode =
-          PhoneCodeModel().getCodeAsString() + (search.startsWith('0') ? search.substring(1) : search);
+      // String numberWithCountryCode =
+      //     PhoneCodeModel().getCodeAsString() + (search.startsWith('0') ? search.substring(1) : search);
+
+      String formatPhone(String search) {
+        if (search.length == 4) return search;
+
+        if (search.length > 8) {
+          if (search.startsWith('0')) {
+            return '+84${search.substring(1)}';
+          } else if (search.startsWith('+84')) {
+            return search;
+          } else {
+            return '+84$search';
+          }
+        }
+
+        return search;
+      }
+
+      final phone = formatPhone(search);
 
       final result = await clientGetData(
-        '${AppConstants.chatListAllUri}?page=$page&limit=$limit&search=$numberWithCountryCode',
+        '${AppConstants.chatListAllUri}?page=$page&limit=$limit&search=$phone',
       );
 
       return result;

@@ -56,8 +56,6 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
 
   final TextEditingController searchController = TextEditingController();
 
-  var searchValue = ''.obs;
-
   Rx<ChatsModels?> chatsModels = Rx<ChatsModels?>(null);
   RxList<QuickMessage> quickMessagesList = <QuickMessage>[].obs;
   Rx<QuickMessage?> quickMessage = Rx<QuickMessage?>(null);
@@ -69,6 +67,8 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
 
   final RxBool isShowChatList = true.obs;
   final RxBool isMobileView = false.obs;
+
+  var searchValue = ''.obs;
 
   @override
   void onInit() {
@@ -95,6 +95,12 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
     isMobileView.value = isMobile;
   }
 
+  void onReloadChatHideden() {
+    searchValue.value = '';
+    searchController.clear();
+    fetchChatList();
+  }
+
   Future<void> fetchChatList({bool isRefresh = true, String search = '', bool isShowLoad = true}) async {
     try {
       if (isShowLoad && isRefresh) isLoading.value = true;
@@ -102,7 +108,7 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
       final response = await chatsRepository.chatListAll(
         page: isRefresh ? 1 : (chatsModels.value?.page ?? 1) + 1,
         limit: 10,
-        search: search,
+        search: search.isNotEmpty ? search : searchValue.value,
       );
 
       if (response.statusCode == 200) {

@@ -33,11 +33,7 @@ class ChatsPage extends GetWidget<ChatsController> {
                             return Row(
                               children: [
                                 Flexible(flex: 3, child: ChatAllView()),
-                                VerticalDivider(
-                                  thickness: 1,
-                                  width: 0.5,
-                                  color: appTheme.background,
-                                ),
+                                VerticalDivider(thickness: 1, width: 0.5, color: appTheme.background),
                                 Flexible(
                                   flex: 8,
                                   child: Obx(
