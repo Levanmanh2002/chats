@@ -45,6 +45,10 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
     await Permission.microphone.request();
   }
 
+  void onReloadChatHiveMessages() {
+    fetchChatList();
+  }
+
   Future<void> fetchChatList({bool isRefresh = true, String search = '', bool isShowLoad = true}) async {
     try {
       if (isShowLoad && isRefresh) isLoading.value = true;

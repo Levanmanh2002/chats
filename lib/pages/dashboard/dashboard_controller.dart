@@ -1,6 +1,7 @@
 import 'package:chats/helper/notification_helper.dart';
 import 'package:chats/models/tickers/tickers_model.dart';
 import 'package:chats/pages/call/call_parameter.dart';
+import 'package:chats/pages/chats/chats_controller.dart';
 import 'package:chats/pages/chats/chats_page.dart';
 import 'package:chats/pages/contacts/contacts_page.dart';
 import 'package:chats/pages/profile/profile_page.dart';
@@ -88,6 +89,9 @@ class DashboardController extends GetxController {
   }
 
   void goToTab(int page) {
+    if (page != 0) {
+      Get.find<ChatsController>().onReloadChatHiveMessages();
+    }
     currentPage.value = page;
     pageController.jumpToPage(page);
   }
