@@ -80,6 +80,62 @@ class ChatAllView extends GetView<ChatsController> {
                       ),
                     ),
                     Obx(() {
+                      final hasFilters = controller.selectedFilterTagIds.isNotEmpty;
+                      return Padding(
+                        padding: padding(left: isCompactMode ? 4 : 8),
+                        child: Stack(
+                          children: [
+                            IconButton(
+                              onPressed: () => controller.showFilterTagsDialog(),
+                              icon: Icon(
+                                Icons.filter_list,
+                                size: isCompactMode ? 20.w : 24.w,
+                                color: hasFilters ? appTheme.appColor : appTheme.grayColor,
+                              ),
+                              tooltip: 'filter_by_tags'.tr,
+                            ),
+                            if (hasFilters)
+                              Positioned(
+                                right: 6,
+                                top: 6,
+                                child: Container(
+                                  padding: padding(all: 4),
+                                  decoration: BoxDecoration(
+                                    color: appTheme.errorColor,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  constraints: BoxConstraints(
+                                    minWidth: 16.w,
+                                    minHeight: 16.w,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      controller.selectedFilterTagIds.length.toString(),
+                                      style: StyleThemeData.size10Weight600(
+                                        color: appTheme.whiteColor,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      );
+                    }),
+                    Padding(
+                      padding: padding(left: isCompactMode ? 4 : 8),
+                      child: IconButton(
+                        onPressed: () => controller.showTagManagementDialog(),
+                        icon: Icon(
+                          Icons.label_outline,
+                          size: isCompactMode ? 20.w : 24.w,
+                          color: appTheme.appColor,
+                        ),
+                        tooltip: 'manage_tags'.tr,
+                      ),
+                    ),
+                    Obx(() {
                       if (Get.find<ProfileController>().user.value?.isEnableSecurityScreen == true) {
                         return Padding(
                           padding: padding(left: isCompactMode ? 4 : 8),
@@ -237,6 +293,39 @@ class ChatAllView extends GetView<ChatsController> {
                           ],
                         ),
                         SizedBox(height: 2.h),
+                        if ((e.tags ?? []).isNotEmpty) ...[
+                          Wrap(
+                            spacing: 4.w,
+                            runSpacing: 4.h,
+                            children: (e.tags ?? []).map((tag) {
+                              final tagColor = _parseColor(tag.color);
+                              return Container(
+                                padding: padding(horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: tagColor.withOpacity(0.15),
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(color: tagColor.withOpacity(0.3), width: 0.5),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(tag.icon ?? '🏷️', style: StyleThemeData.size10Weight400()),
+                                    if (!isCompactMode) ...[
+                                      SizedBox(width: 2.w),
+                                      Text(
+                                        tag.name ?? '',
+                                        style: StyleThemeData.size10Weight600(color: tagColor),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                          SizedBox(height: 2.h),
+                        ],
                         Row(
                           children: [
                             Expanded(
@@ -289,6 +378,15 @@ class ChatAllView extends GetView<ChatsController> {
                       ],
                     ),
                   ),
+                  if (!isCompactMode) ...[
+                    SizedBox(width: 12.w),
+                    IconButton(
+                      icon: Icon(Icons.more_vert, size: 20.w, color: appTheme.grayColor),
+                      onPressed: () => _showChatOptions(e),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -311,5 +409,68 @@ class ChatAllView extends GetView<ChatsController> {
       },
       buttonTitle: 'lock'.tr,
     );
+  }
+
+  void _showChatOptions(ChatDataModel chat) {
+    Get.bottomSheet(
+      backgroundColor: appTheme.whiteColor,
+      Container(
+        decoration: BoxDecoration(
+          color: appTheme.whiteColor,
+          borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(height: 8.h),
+            Container(
+              width: 40.w,
+              height: 4.h,
+              decoration: BoxDecoration(
+                color: appTheme.grayColor.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            SizedBox(height: 16.h),
+            ListTile(
+              leading: Icon(Icons.label_outline, color: appTheme.appColor),
+              title: Text(
+                'assign_tags'.tr,
+                style: StyleThemeData.size14Weight600(),
+              ),
+              onTap: () {
+                Get.back();
+                controller.showAssignTagsDialog(chat);
+              },
+            ),
+            Divider(color: appTheme.allSidesColor, height: 1.h),
+            ListTile(
+              leading: Icon(Icons.delete_outline, color: appTheme.errorColor),
+              title: Text(
+                'delete_conversation'.tr,
+                style: StyleThemeData.size14Weight600(color: appTheme.errorColor),
+              ),
+              onTap: () {
+                Get.back();
+                showCommonDialog(
+                  title: 'are_you_sure_you_want_to_delete_the_conversation'.tr,
+                  onSubmit: () => controller.deleteChat(chat.id!),
+                );
+              },
+            ),
+            SizedBox(height: 24.h),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Color _parseColor(String? colorHex) {
+    if (colorHex == null || colorHex.isEmpty) return appTheme.appColor;
+    try {
+      return Color(int.parse(colorHex.replaceFirst('#', '0xFF')));
+    } catch (e) {
+      return appTheme.appColor;
+    }
   }
 }

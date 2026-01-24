@@ -1,3 +1,4 @@
+import 'package:chats/models/chat_tags/chat_tags_model.dart';
 import 'package:chats/models/messages/message_data_model.dart';
 import 'package:chats/models/profile/user_model.dart';
 import 'package:chats/utils/json_utils.dart';
@@ -28,6 +29,9 @@ class ChatDataModel {
   @JsonKey(name: 'created_at')
   String? createdAt;
 
+  @JsonKey(name: 'tags')
+  List<ChatCategory>? tags;
+
   ChatDataModel({
     this.id,
     this.name,
@@ -38,6 +42,7 @@ class ChatDataModel {
     this.latestMessage,
     this.isHide,
     this.createdAt,
+    this.tags,
   });
 
   factory ChatDataModel.fromJson(Map<String, dynamic> json) => _$ChatDataModelFromJson(json);

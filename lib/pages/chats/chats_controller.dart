@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:chats/constant/date_format_constants.dart';
 import 'package:chats/extension/data/file_extension.dart';
+import 'package:chats/models/chat_tags/chat_tags_model.dart';
 import 'package:chats/models/chats/chat_data_model.dart';
 import 'package:chats/models/chats/chats_models.dart';
 import 'package:chats/models/contact/friend_request.dart';
@@ -33,6 +34,10 @@ import 'package:chats/resourese/service/socket_service.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/utils/app/pusher_type.dart';
 import 'package:chats/utils/dialog_utils.dart';
+import 'package:chats/widget/dialog/assign_tags_dialog.dart';
+import 'package:chats/widget/dialog/chat_tag_management_dialog.dart';
+import 'package:chats/widget/dialog/filter_tags_dialog.dart';
+import 'package:chats/widget/dialog/show_common_dialog.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -70,6 +75,17 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
 
   var searchValue = ''.obs;
 
+  final Rx<ChatTagsModel?> chatTagsModel = Rx<ChatTagsModel?>(null);
+  final RxBool isLoadingTags = false.obs;
+  final RxList<ChatCategory> selectedTags = <ChatCategory>[].obs;
+  final RxList<int> selectedFilterTagIds = <int>[].obs;
+  final TextEditingController tagSearchController = TextEditingController();
+  final RxString tagSearchValue = ''.obs;
+
+  var isLoadingCreateTag = false.obs;
+  var isLoadingUpdateTag = false.obs;
+  var isLodingTag = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -101,7 +117,12 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
     fetchChatList();
   }
 
-  Future<void> fetchChatList({bool isRefresh = true, String search = '', bool isShowLoad = true}) async {
+  Future<void> fetchChatList({
+    bool isRefresh = true,
+    String search = '',
+    bool isShowLoad = true,
+    List<int>? tagId,
+  }) async {
     try {
       if (isShowLoad && isRefresh) isLoading.value = true;
 
@@ -109,6 +130,7 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
         page: isRefresh ? 1 : (chatsModels.value?.page ?? 1) + 1,
         limit: 10,
         search: search.isNotEmpty ? search : searchValue.value,
+        tagId: tagId,
       );
 
       if (response.statusCode == 200) {
@@ -1310,6 +1332,225 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
     messageData.value = null;
     messageModel.refresh();
     isGroup.value = false;
+  }
+
+  Future<void> fetchChatTags({bool isRefresh = true, String search = ''}) async {
+    try {
+      if (isRefresh) {
+        isLoadingTags.value = true;
+        chatTagsModel.value = null;
+      }
+
+      final page = isRefresh ? 1 : (chatTagsModel.value?.page ?? 0) + 1;
+      final response = await chatsRepository.chatTagsAll(
+        page: page,
+        limit: 20,
+        name: search,
+      );
+
+      if (response.statusCode == 200) {
+        final newData = ChatTagsModel.fromJson(response.body['data']);
+
+        chatTagsModel.value = ChatTagsModel(
+          data: [
+            ...(chatTagsModel.value?.data ?? []),
+            ...(newData.data ?? []),
+          ],
+          totalPage: newData.totalPage,
+          totalCount: newData.totalCount,
+          page: newData.page,
+          size: newData.size,
+        );
+      }
+    } catch (e) {
+      print('Error fetching tags: $e');
+    } finally {
+      isLoadingTags.value = false;
+    }
+  }
+
+  Future<void> createTag({required String name, String? color, String? icon, int? order}) async {
+    try {
+      isLoadingCreateTag.value = true;
+
+      final result = await chatsRepository.createChatTag(
+        name: name,
+        color: color,
+        icon: icon,
+        order: order,
+      );
+
+      if (result != null) {
+        await fetchChatTags(isRefresh: true);
+        Get.back();
+        DialogUtils.showSuccessDialog('tag_created_successfully'.tr);
+      }
+    } catch (e) {
+      print('Error creating tag: $e');
+    } finally {
+      isLoadingCreateTag.value = false;
+    }
+  }
+
+  Future<void> updateTag({
+    required int id,
+    required String name,
+    String? color,
+    String? icon,
+    int? order,
+    bool? isActive,
+  }) async {
+    try {
+      isLoadingUpdateTag.value = true;
+
+      final result = await chatsRepository.updateChatTag(
+        id,
+        name: name,
+        color: color,
+        icon: icon,
+        order: order,
+        isActive: isActive,
+      );
+
+      if (result != null) {
+        await fetchChatTags(isRefresh: true);
+        await fetchChatList(isShowLoad: false);
+        Get.back();
+        DialogUtils.showSuccessDialog('tag_updated_successfully'.tr);
+      }
+    } catch (e) {
+      print('Error updating tag: $e');
+    } finally {
+      isLoadingUpdateTag.value = false;
+    }
+  }
+
+  Future<void> deleteTag(int id, int chatsCount) async {
+    if (chatsCount > 0) {
+      showCommonDialog(
+        title: 'tag_is_being_used_by_chats'.trParams({'count': chatsCount.toString()}),
+        onSubmit: () async {
+          Get.back();
+          await _performDeleteTag(id);
+        },
+      );
+    } else {
+      await _performDeleteTag(id);
+    }
+  }
+
+  Future<void> _performDeleteTag(int id) async {
+    try {
+      EasyLoading.show(dismissOnTap: false, maskType: EasyLoadingMaskType.clear);
+
+      final success = await chatsRepository.deleteChatTag(id: id);
+
+      if (success) {
+        await fetchChatTags(isRefresh: true);
+        await fetchChatList(isRefresh: true, isShowLoad: false);
+        DialogUtils.showSuccessDialog('tag_deleted_successfully'.tr);
+      }
+    } catch (e) {
+      print('Error deleting tag: $e');
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
+  Future<void> assignTagsToChat(int chatId, List<int> tagIds) async {
+    try {
+      isLodingTag.value = true;
+
+      await chatsRepository.assignChatTag(chatId: chatId, tagId: tagIds);
+
+      final chatIndex = chatsModels.value?.chat?.indexWhere((c) => c.id == chatId);
+      if (chatIndex != null && chatIndex >= 0) {
+        final chat = chatsModels.value!.chat![chatIndex];
+        final newTags = chatTagsModel.value?.data?.where((tag) => tagIds.contains(tag.id)).toList() ?? [];
+
+        chat.tags = newTags;
+        chatsModels.refresh();
+      }
+
+      Get.back();
+      DialogUtils.showSuccessDialog('tags_assigned_successfully'.tr);
+    } catch (e) {
+      print('Error assigning tags: $e');
+    } finally {
+      isLodingTag.value = false;
+    }
+  }
+
+  Future<void> removeTagsFromChat(int chatId, List<int> tagIds) async {
+    try {
+      isLodingTag.value = true;
+
+      await chatsRepository.removeChatTag(chatId: chatId, tagId: tagIds);
+
+      final chatIndex = chatsModels.value?.chat?.indexWhere((c) => c.id == chatId);
+      if (chatIndex != null && chatIndex >= 0) {
+        final chat = chatsModels.value!.chat![chatIndex];
+        chat.tags?.removeWhere((tag) => tagIds.contains(tag.id));
+        chatsModels.refresh();
+      }
+
+      DialogUtils.showSuccessDialog('tags_removed_successfully'.tr);
+    } catch (e) {
+      print('Error removing tags: $e');
+    } finally {
+      isLodingTag.value = false;
+    }
+  }
+
+  void onSearchTag(String value) {
+    tagSearchValue.value = value;
+    fetchChatTags(isRefresh: true, search: value);
+  }
+
+  void showTagManagementDialog() {
+    fetchChatTags(isRefresh: true);
+    Get.dialog(
+      ChatTagManagementDialog(),
+      barrierDismissible: true,
+    );
+  }
+
+  void showAssignTagsDialog(ChatDataModel chat) {
+    selectedTags.value = List<ChatCategory>.from(chat.tags ?? []);
+    fetchChatTags(isRefresh: true);
+    Get.dialog(
+      AssignTagsDialog(chat: chat),
+      barrierDismissible: true,
+    );
+  }
+
+  void showFilterTagsDialog() {
+    fetchChatTags(isRefresh: true);
+    Get.dialog(
+      FilterTagsDialog(),
+      barrierDismissible: true,
+    );
+  }
+
+  void toggleFilterTag(int tagId) {
+    if (selectedFilterTagIds.contains(tagId)) {
+      selectedFilterTagIds.remove(tagId);
+    } else {
+      selectedFilterTagIds.add(tagId);
+    }
+  }
+
+  void applyTagFilter() {
+    fetchChatList(
+      isRefresh: true,
+      isShowLoad: false,
+      tagId: selectedFilterTagIds.isNotEmpty ? selectedFilterTagIds : null,
+    );
+  }
+
+  void clearTagFilter() {
+    selectedFilterTagIds.clear();
+    fetchChatList(isRefresh: true, isShowLoad: false);
   }
 
   @override

@@ -98,4 +98,9 @@ class AppConstants {
 
   static const String checkCallUri = '/api/v1/call/check-call';
   static const String logoutPasscodeUri = '/api/v1/account/logout-passcode';
+
+  static const String chatTagsAllUri = '/api/v1/chat-tags';
+  static const String createChatTagUri = '/api/v1/chat-tags/create';
+  static const String assignChatTagUri = '/api/v1/chat-tags/assign';
+  static const String removeChatTagUri = '/api/v1/chat-tags/remove-from-chat';
 }
