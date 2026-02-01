@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:chats/constant/date_format_constants.dart';
 import 'package:chats/extension/data/file_extension.dart';
+import 'package:chats/extension/date_time_extension.dart';
 import 'package:chats/models/chat_tags/chat_tags_model.dart';
 import 'package:chats/models/chats/chat_data_model.dart';
 import 'package:chats/models/chats/chats_models.dart';
@@ -1551,6 +1552,34 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
   void clearTagFilter() {
     selectedFilterTagIds.clear();
     fetchChatList(isRefresh: true, isShowLoad: false);
+  }
+
+  bool isSameDay(String? date1String, String? date2String) {
+    final date1 = date1String?.toDateTime;
+    final date2 = date2String?.toDateTime;
+
+    if (date1 == null || date2 == null) return false;
+    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
+  }
+
+  String formatDate(String? dateString) {
+    final date = dateString?.toDateTime;
+    if (date == null) return '';
+
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final messageDate = DateTime(date.year, date.month, date.day);
+
+    // Hôm nay
+    if (messageDate == today) {
+      return 'today'.tr;
+    }
+
+    // Các ngày khác: T2 18/01/2025, CN 18/01/2025
+    final weekdays = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+    final weekday = weekdays[date.weekday % 7];
+
+    return '$weekday ${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
   }
 
   @override

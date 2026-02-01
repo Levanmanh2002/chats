@@ -62,6 +62,9 @@ class GroupChastListWebView extends GetView<ChatsController> {
               final item = data[index];
               final previousItem = index < data.length - 1 ? data[index + 1] : null;
 
+              final shouldShowDate =
+                  previousItem == null || !controller.isSameDay(item.createdAt, previousItem.createdAt);
+
               final shouldShowTime = previousItem == null ||
                   item.createdAt?.formatToHourMinute != previousItem.createdAt?.formatToHourMinute;
 
@@ -84,6 +87,19 @@ class GroupChastListWebView extends GetView<ChatsController> {
 
               return Column(
                 children: [
+                  if (shouldShowDate)
+                    Container(
+                      margin: padding(all: 16),
+                      padding: padding(horizontal: 16, vertical: 6),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        color: appTheme.grayB9Color,
+                      ),
+                      child: Text(
+                        controller.formatDate(item.createdAt),
+                        style: StyleThemeData.size12Weight400(color: appTheme.whiteColor),
+                      ),
+                    ),
                   if (shouldShowTimeHours)
                     Container(
                       margin: padding(all: 12),
