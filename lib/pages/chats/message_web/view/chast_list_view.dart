@@ -160,6 +160,7 @@ class ChastListWebView extends GetView<ChatsController> {
                                               item.sender?.id == Get.find<ProfileController>().user.value?.id,
                                           status: item.status,
                                           replyMessage: item.replyMessage,
+                                          createdAt: item.createdAt ?? '',
                                         ),
                                       ),
                                     ),

@@ -151,6 +151,7 @@ class ChastListView extends GetView<MessageController> {
                                               item.sender?.id == Get.find<ProfileController>().user.value?.id,
                                           status: item.status,
                                           replyMessage: item.replyMessage,
+                                          createdAt: item.createdAt ?? '',
                                         ),
                                       ),
                                     ),

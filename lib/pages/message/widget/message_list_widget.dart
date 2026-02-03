@@ -1,4 +1,5 @@
 import 'package:chats/extension/data/file_extension.dart';
+import 'package:chats/extension/date_time_extension.dart';
 import 'package:chats/main.dart';
 import 'package:chats/models/messages/message_data_model.dart';
 import 'package:chats/models/messages/reply_message.dart';
@@ -19,12 +20,14 @@ class MessageListWidget extends StatelessWidget {
     required this.isCurrentUser,
     this.status = MessageStatus.success,
     this.replyMessage,
+    this.createdAt = '',
   });
 
   final String text;
   final bool isCurrentUser;
   final MessageStatus status;
   final ReplyMessage? replyMessage;
+  final String createdAt;
 
   @override
   Widget build(BuildContext context) {
@@ -125,6 +128,15 @@ class MessageListWidget extends StatelessWidget {
                       ),
                       color: isCurrentUser ? appTheme.whiteColor : appTheme.blackColor,
                     ),
+                    if (createdAt.toHm.isNotEmpty) ...[
+                      SizedBox(height: 4.h),
+                      Text(
+                        createdAt.toHm,
+                        style: StyleThemeData.size8Weight400(
+                          color: isCurrentUser ? appTheme.whiteColor : appTheme.grayColor,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),
