@@ -65,11 +65,10 @@ extension DateFormatter on String? {
 
   String get toHm {
     if (this == null || this!.isEmpty) return '';
-    try {
-      return this!.substring(0, 5);
-    } catch (e) {
-      return '';
-    }
+
+    final dateTime = DateTime.parse(this ?? '');
+
+    return DateFormat(DateConstants.hhmm).format(dateTime);
   }
 
   String get toDayMonthYear {
