@@ -312,7 +312,7 @@ class MessageController extends GetxController {
     // imageFile.assignAll(files);
 
     for (var file in pickedFiles) {
-      if (imageFile.length >= 3) {
+      if (imageFile.length >= 10) {
         imageFile.removeLast();
       }
       imageFile.insert(0, file);
