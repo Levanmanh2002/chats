@@ -342,13 +342,54 @@ class MessageController extends GetxController {
 
     if (result != null && result.files.isNotEmpty) {
       PlatformFile platformFile = result.files.first;
-      XFile file = XFile(platformFile.path!);
-      log("File selected: ${platformFile.name}");
+      if (platformFile.bytes != null) {
+        XFile file = XFile.fromData(
+          platformFile.bytes!,
+          name: platformFile.name,
+          mimeType: _getMimeType(platformFile.extension),
+        );
 
-      selectedFile.value = file;
-      if (selectedFile.value != null) {
-        onSendMessage();
+        log("File selected (Web): ${platformFile.name}");
+        selectedFile.value = file;
+
+        if (selectedFile.value != null) {
+          onSendMessage();
+        }
+      } else {
+        DialogUtils.showErrorDialog('Không thể đọc file');
       }
+    }
+  }
+
+  String? _getMimeType(String? extension) {
+    if (extension == null) return null;
+
+    final mimeTypes = {
+      'pdf': 'application/pdf',
+      'doc': 'application/msword',
+      'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'xls': 'application/vnd.ms-excel',
+      'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'ppt': 'application/vnd.ms-powerpoint',
+      'pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      'txt': 'text/plain',
+    };
+
+    return mimeTypes[extension.toLowerCase()];
+  }
+
+  void pickVideo({bool isGroup = false}) async {
+    isTickers.value = false;
+    final XFile? pickedVideo = await ImagePicker().pickVideo(
+      source: ImageSource.gallery,
+      maxDuration: const Duration(minutes: 10), // optional
+    );
+
+    if (pickedVideo == null) return;
+
+    selectedFile.value = pickedVideo;
+    if (selectedFile.value != null) {
+      onSendMessage();
     }
   }
 
@@ -366,6 +407,7 @@ class MessageController extends GetxController {
     try {
       final messageText = messageController.text.trim();
       final imageFile = this.imageFile.toList();
+      final selectedFile = this.selectedFile.value;
       final replyMessageLocal = messageReply.value;
 
       final tempFiles = imageFile.isNotEmpty
@@ -377,12 +419,12 @@ class MessageController extends GetxController {
                     isLocal: true,
                   ))
               .toList()
-          : selectedFile.value != null
+          : selectedFile != null
               ? [
                   FilesModels(
                     id: DateTime.now().millisecondsSinceEpoch,
-                    fileUrl: selectedFile.value?.path ?? '',
-                    fileType: selectedFile.value?.name,
+                    fileUrl: selectedFile.path,
+                    fileType: selectedFile.name,
                     isLocal: true,
                   )
                 ]
@@ -422,7 +464,17 @@ class MessageController extends GetxController {
 
       clearMessage();
 
-      _sendAndUpdateMessageLocal(tempMessage, messageText, imageFile, replyMessageLocal, tempSticker);
+      _sendAndUpdateMessageLocal(
+        tempMessage,
+        messageText,
+        imageFile.isNotEmpty
+            ? imageFile
+            : selectedFile != null
+                ? [selectedFile]
+                : [],
+        replyMessageLocal,
+        tempSticker,
+      );
       scrollToBottom();
     } catch (e) {
       print(e);
@@ -444,10 +496,15 @@ class MessageController extends GetxController {
         if (sticker != null) "sticker_id": sticker.id.toString(),
       };
 
-      List<MultipartBody> multipartBody = [
-        if (imageFile.isNotEmpty) ...imageFile.map((file) => MultipartBody('files[]', file)),
-        if (selectedFile.value != null) MultipartBody('files[]', selectedFile.value),
-      ];
+      List<MultipartBody> multipartBody = [];
+
+      if (imageFile.isNotEmpty) {
+        final allBytes = await Future.wait(imageFile.map((file) => file.readAsBytes()));
+
+        for (int i = 0; i < imageFile.length; i++) {
+          multipartBody.add(MultipartBody.web('files[]', allBytes[i], imageFile[i].name));
+        }
+      }
 
       final response = await messagesRepository.sendMessage(params, multipartBody);
 

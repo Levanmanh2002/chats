@@ -59,6 +59,10 @@ class BottomSendMessView extends GetView<MessageController> {
                         child: Row(
                           children: [
                             IconButton(
+                              onPressed: controller.pickVideo,
+                              icon: ImageAssetCustom(imagePath: IconsAssets.videoIcon, color: appTheme.grayColor),
+                            ),
+                            IconButton(
                               onPressed: controller.pickedFile,
                               icon: ImageAssetCustom(imagePath: IconsAssets.paperclipIcon, color: appTheme.grayColor),
                             ),

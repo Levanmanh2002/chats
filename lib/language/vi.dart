@@ -266,4 +266,5 @@ const Map<String, String> vi = {
   'clear_filters': 'Xoá bộ lọc',
   'apply_filters': 'Áp dụng bộ lọc',
   "chats_count": "@count cuộc trò chuyện",
+  'error_file': 'Không thể đọc file. Vui lòng thử lại!',
 };

@@ -542,19 +542,38 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
     if (result != null && result.files.isNotEmpty) {
       PlatformFile platformFile = result.files.first;
 
-      fileBytes.value = platformFile.bytes!;
-      fileName.value = platformFile.name;
+      if (platformFile.bytes != null) {
+        fileBytes.value = platformFile.bytes!;
+        fileName.value = platformFile.name;
 
-      log("File selected: ${platformFile.name}");
+        log("File selected (Web): ${platformFile.name}");
 
-      if (fileBytes.value != null && fileName.value.isNotEmpty) {
         if (isGroup == true) {
           onSendGroupMessage();
         } else {
           onSendMessage();
         }
+      } else {
+        DialogUtils.showErrorDialog('Không thể đọc file');
       }
     }
+
+    // if (result != null && result.files.isNotEmpty) {
+    //   PlatformFile platformFile = result.files.first;
+
+    //   fileBytes.value = platformFile.bytes!;
+    //   fileName.value = platformFile.name;
+
+    //   log("File selected: ${platformFile.name}");
+
+    //   if (fileBytes.value != null && fileName.value.isNotEmpty) {
+    //     if (isGroup == true) {
+    //       onSendGroupMessage();
+    //     } else {
+    //       onSendMessage();
+    //     }
+    //   }
+    // }
   }
 
   void sendTicker(TickersModel ticker) {
@@ -670,16 +689,19 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
         if (sticker != null) "sticker_id": sticker.id.toString(),
       };
 
-      List<MultipartBody> multipartBody = [
-        if (imageFile.isNotEmpty)
-          ...imageFile.map(
-            (file) => MultipartBody.web('files[]', imageBytes!, imageName),
-          ),
+      List<MultipartBody> multipartBody = [];
 
-        // if (imageFile.isNotEmpty) ...imageFile.map((file) => MultipartBody('files[]', file)),
-        // if (selectedFile.value != null) MultipartBody('files[]', selectedFile.value),
-        if (fileBytes != null && (fileName ?? '').isNotEmpty) MultipartBody.web('files[]', fileBytes, fileName),
-      ];
+      if (fileBytes != null && fileName != null && fileName.isNotEmpty) {
+        multipartBody.add(MultipartBody.web('files[]', fileBytes, fileName));
+      }
+
+      if (imageFile.isNotEmpty) {
+        final allBytes = await Future.wait(imageFile.map((file) => file.readAsBytes()));
+
+        for (int i = 0; i < imageFile.length; i++) {
+          multipartBody.add(MultipartBody.web('files[]', allBytes[i], imageFile[i].name));
+        }
+      }
 
       final response = await messagesRepository.sendMessage(params, multipartBody);
 
@@ -1189,15 +1211,19 @@ class ChatsController extends GetxController with GetSingleTickerProviderStateMi
         if (sticker != null) "sticker_id": sticker.id.toString(),
       };
 
-      List<MultipartBody> multipartBody = [
-        // if (imageFile.isNotEmpty) ...imageFile.map((file) => MultipartBody('files[]', file)),
-        if (imageFile.isNotEmpty)
-          ...imageFile.map(
-            (file) => MultipartBody.web('files[]', imageBytes!, imageName),
-          ),
-        // if (selectedFile.value != null) MultipartBody('files[]', selectedFile.value),
-        if (fileBytes != null && (fileName ?? '').isNotEmpty) MultipartBody.web('files[]', fileBytes, fileName),
-      ];
+      List<MultipartBody> multipartBody = [];
+
+      if (fileBytes != null && fileName != null && fileName.isNotEmpty) {
+        multipartBody.add(MultipartBody.web('files[]', fileBytes, fileName));
+      }
+
+      if (imageFile.isNotEmpty) {
+        final allBytes = await Future.wait(imageFile.map((file) => file.readAsBytes()));
+
+        for (int i = 0; i < imageFile.length; i++) {
+          multipartBody.add(MultipartBody.web('files[]', allBytes[i], imageFile[i].name));
+        }
+      }
 
       final response = await groupsRepository.sendMessageGroup(params, multipartBody);
 

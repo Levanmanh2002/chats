@@ -267,5 +267,6 @@ const Map<String, String> en = {
   'clear_all': 'Clear All',
   'clear_filters': 'Clear Filters',
   'apply_filters': 'Apply Filters',
-  "chats_count": "@count chats"
+  "chats_count": "@count chats",
+  'error_file': 'Cannot read file. Please try again!',
 };
