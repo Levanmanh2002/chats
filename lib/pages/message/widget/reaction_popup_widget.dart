@@ -14,6 +14,7 @@ void showReactionPopup(
   VoidCallback? onHeart,
   VoidCallback? onReply,
   VoidCallback? onForward,
+  VoidCallback? onCopy,
 }) {
   showModalBottomSheet(
     context: Get.context!,
@@ -131,6 +132,23 @@ void showReactionPopup(
                                 ImageAssetCustom(imagePath: IconsAssets.unreadIcon, size: 24.w),
                                 SizedBox(height: 4.h),
                                 Text('revoke'.tr, style: StyleThemeData.size12Weight400()),
+                              ],
+                            ),
+                          ),
+                        ),
+                      if (onCopy != null)
+                        InkWell(
+                          onTap: () {
+                            Get.back();
+                            onCopy();
+                          },
+                          child: Padding(
+                            padding: padding(all: 12),
+                            child: Column(
+                              children: [
+                                Icon(Icons.copy, size: 24.w, color: appTheme.blackColor),
+                                SizedBox(height: 4.h),
+                                Text('copy'.tr, style: StyleThemeData.size12Weight400()),
                               ],
                             ),
                           ),

@@ -231,4 +231,7 @@ const Map<String, String> vi = {
   'lock_chat_confirmation': 'Bạn có chắc chắn muốn khóa màn hình lại không?',
   'failed_to_start_call': 'Không thể bắt đầu cuộc gọi',
   'video_save_local_not_supported': 'Vui lòng đợi video tải lên hoàn tất trước khi lưu',
+  'copied_to_clipboard': 'Đã sao chép vào bộ nhớ tạm',
+  'copy': 'Sao chép',
+  'copied': 'Đã sao chép',
 };

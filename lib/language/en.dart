@@ -233,4 +233,7 @@ const Map<String, String> en = {
   'lock_chat_confirmation': 'Are you sure you want to lock the screen?',
   'failed_to_start_call': 'Failed to start call',
   'video_save_local_not_supported': 'Saving local videos is not supported',
+  'copied_to_clipboard': 'Copied to clipboard',
+  'copy': 'Copy',
+  'copied': 'Copied',
 };

@@ -11,6 +11,7 @@ import 'package:chats/pages/message/widget/reaction_popup_widget.dart';
 import 'package:chats/pages/profile/profile_controller.dart';
 import 'package:chats/routes/pages.dart';
 import 'package:chats/theme/style/style_theme.dart';
+import 'package:chats/utils/dialog_utils.dart';
 import 'package:chats/utils/icons_assets.dart';
 import 'package:chats/widget/animation/animation_reply_message.dart';
 import 'package:chats/widget/chats/attach_file_widget.dart';
@@ -20,6 +21,7 @@ import 'package:chats/widget/image_asset_custom.dart';
 import 'package:chats/widget/list_loader.dart';
 import 'package:chats/widget/reponsive/extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
@@ -156,6 +158,12 @@ class GroupChastListView extends GetView<GroupMessageController> {
                                               onForward: item.id != null
                                                   ? () => controller.onForward(item.id, files: item.files ?? [])
                                                   : null,
+                                              onCopy: (item.message ?? '').isNotEmpty
+                                                  ? () {
+                                                      Clipboard.setData(ClipboardData(text: item.message!));
+                                                      DialogUtils.showSuccessDialog('copied_to_clipboard'.tr);
+                                                    }
+                                                  : null,
                                             );
                                           },
                                           child: AnimationReplyMessage(
@@ -191,6 +199,12 @@ class GroupChastListView extends GetView<GroupMessageController> {
                                               onHeart: () => controller.onHeartMessageLocal(item.id),
                                               onForward: item.id != null
                                                   ? () => controller.onForward(item.id, files: item.files ?? [])
+                                                  : null,
+                                              onCopy: (item.message ?? '').isNotEmpty
+                                                  ? () {
+                                                      Clipboard.setData(ClipboardData(text: item.message!));
+                                                      DialogUtils.showSuccessDialog('copied_to_clipboard'.tr);
+                                                    }
                                                   : null,
                                             );
                                           },
